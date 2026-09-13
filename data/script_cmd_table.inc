@@ -254,6 +254,33 @@ gScriptCmdTable::
 	script_cmd_table_entry SCR_OP_HIDEFOLLOWER                  ScrCmd_hidefollower,                requests_effects=1  @ 0xe5
 	script_cmd_table_entry SCR_OP_GETBRAILLESTRINGWIDTH         ScrCmd_getbraillestringwidth,       requests_effects=1  @ 0xe6
 
+
+	@ --- CrystalDust script commands (Phase 1) ---
+	script_cmd_table_entry SCR_OP_BUFFERCONTESTTYPESTRING          ScrCmd_buffercontesttypestring,       @ 0xe7
+	script_cmd_table_entry SCR_OP_CHECKMONEVENTLEGAL               ScrCmd_checkmoneventlegal,            @ 0xe8
+	script_cmd_table_entry SCR_OP_CHECKPARTYMOVE                   ScrCmd_checkpartymove,                @ 0xe9
+	script_cmd_table_entry SCR_OP_CLOSEUNOWNMESSAGE                ScrCmd_closeunownmessage,             @ 0xea
+	script_cmd_table_entry SCR_OP_COMPARE_ADDR_TO_ADDR             ScrCmd_compare_addr_to_addr,          @ 0xeb
+	script_cmd_table_entry SCR_OP_COMPARE_ADDR_TO_LOCAL            ScrCmd_compare_addr_to_local,         @ 0xec
+	script_cmd_table_entry SCR_OP_COMPARE_ADDR_TO_VALUE            ScrCmd_compare_addr_to_value,         @ 0xed
+	script_cmd_table_entry SCR_OP_COMPARE_LOCAL_TO_ADDR            ScrCmd_compare_local_to_addr,         @ 0xee
+	script_cmd_table_entry SCR_OP_GETPRICEREDUCTION                ScrCmd_getpricereduction,             @ 0xef
+	script_cmd_table_entry SCR_OP_GOTORAM                          ScrCmd_gotoram,                       @ 0xf0
+	script_cmd_table_entry SCR_OP_KILLSCRIPT                       ScrCmd_killscript,                    @ 0xf1
+	script_cmd_table_entry SCR_OP_LOADBYTEFROMADDR                 ScrCmd_loadbytefromaddr,              @ 0xf2
+	script_cmd_table_entry SCR_OP_POKEGEARCALL                     ScrCmd_pokegearcall,                  @ 0xf3
+	script_cmd_table_entry SCR_OP_RESETOBJECTPRIORITY              ScrCmd_resetobjectpriority,           @ 0xf4
+	script_cmd_table_entry SCR_OP_SETFLASHRADIUS                   ScrCmd_setflashradius,                @ 0xf5
+	script_cmd_table_entry SCR_OP_SETMONEVENTLEGAL                 ScrCmd_setmoneventlegal,              @ 0xf6
+	script_cmd_table_entry SCR_OP_SETOBJECTPRIORITY                ScrCmd_setobjectpriority,             @ 0xf7
+	script_cmd_table_entry SCR_OP_SPECIALVAR_                      ScrCmd_specialvar_,                   @ 0xf8
+	script_cmd_table_entry SCR_OP_TRAINERBATTLEBEGIN               ScrCmd_trainerbattlebegin,            @ 0xf9
+	script_cmd_table_entry SCR_OP_UNOWNMESSAGE                     ScrCmd_unownmessage,                  @ 0xfa
+	script_cmd_table_entry SCR_OP_VLOADPTR                         ScrCmd_vloadptr,                      @ 0xfb
+	script_cmd_table_entry SCR_OP_WARPSOOTOPOLISLEGEND             ScrCmd_warpsootopolislegend,          @ 0xfc
+	script_cmd_table_entry SCR_OP_WARPTELEPORT2                    ScrCmd_warpteleport2,                 @ 0xfd
+	script_cmd_table_entry SCR_OP_WRITEBYTETOADDR                  ScrCmd_writebytetoaddr,               @ 0xfe
+
 	.if ALLOCATE_SCRIPT_CMD_TABLE
 gScriptCmdTableEnd::
 	.4byte ScrCmd_nop

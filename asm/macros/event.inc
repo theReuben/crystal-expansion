@@ -3011,3 +3011,192 @@
 	getbraillestringwidth \text
 	call EventScript_BrailleCursorWaitButton
 	.endm
+
+
+@ ============================================================
+@ CrystalDust script commands, merged in Phase 1.
+@ Opcodes are REASSIGNED: CrystalDust's original values collide with
+@ commands pokeemerald-expansion added after CrystalDust forked.
+@ ============================================================
+
+@ CrystalDust (was 0xe1)
+	.macro buffercontesttypestring out:req, word:req
+	.byte 0xe7
+	.byte \out
+	.2byte \word
+	.endm
+
+@ CrystalDust (was 0xce)
+	.macro checkmoneventlegal slot:req
+	.byte 0xe8
+	.2byte \slot
+	.endm
+
+@ CrystalDust (was 0x7c)
+	.macro checkpartymove index:req
+	.byte 0xe9
+	.2byte \index
+	.endm
+
+@ CrystalDust (was 0xda)
+	.macro closeunownmessage
+	.byte 0xea
+	.endm
+
+@ CrystalDust (was 0x20)
+	.macro compare_addr_to_addr a:req, b:req
+	.byte 0xeb
+	.4byte \a
+	.4byte \b
+	.endm
+
+@ CrystalDust (was 0x1e)
+	.macro compare_addr_to_local a:req, b:req
+	.byte 0xec
+	.4byte \a
+	.byte \b
+	.endm
+
+@ CrystalDust (was 0x1f)
+	.macro compare_addr_to_value a:req, b:req
+	.byte 0xed
+	.4byte \a
+	.byte \b
+	.endm
+
+@ CrystalDust (was 0x1d)
+	.macro compare_local_to_addr a:req, b:req
+	.byte 0xee
+	.byte \a
+	.4byte \b
+	.endm
+
+@ CrystalDust (was 0x96)
+	.macro getpricereduction index:req
+	.byte 0xef
+	.2byte \index
+	.endm
+
+@ CrystalDust (wrapper, no opcode)
+	.macro givetmhm_msg msg:req, item:req
+	giveitem_msg \msg, \item, 1, MUS_OBTAIN_TMHM
+	.endm
+
+@ CrystalDust (was 0xcf)
+	.macro gotoram
+	.byte 0xf0
+	.endm
+
+@ CrystalDust (was 0x0d)
+	.macro killscript
+	.byte 0xf1
+	.endm
+
+@ CrystalDust (was 0x12)
+	.macro loadbytefromaddr destination:req, source:req
+	.byte 0xf2
+	.byte \destination
+	.4byte \source
+	.endm
+
+@ CrystalDust (was 0xdf)
+	.macro pokegearcall pointer:req, callerid:req
+	.byte 0xf3
+	.4byte \pointer
+	.byte \callerid
+	.endm
+
+@ CrystalDust (wrapper, no opcode)
+	.macro registerphonecontact contactflag:req
+	setflag \contactflag
+	setvar VAR_0x8003, \contactflag
+	special FindPhoneContactNameFromFlag
+	callstd STD_REGISTER_MATCH_CALL
+	.endm
+
+@ CrystalDust (was 0xa9)
+	.macro resetobjectpriority index:req, map:req
+	.byte 0xf4
+	.2byte \index
+	map \map
+	.endm
+
+@ CrystalDust (was 0x99)
+	.macro setflashradius word:req
+	.byte 0xf5
+	.2byte \word
+	.endm
+
+@ CrystalDust (wrapper, no opcode)
+	.macro setgymtrainers gym:req
+	setvar VAR_0x8008, \gym
+	call Common_EventScript_SetGymTrainers
+	.endm
+
+@ CrystalDust (was 0xcd)
+	.macro setmoneventlegal slot:req
+	.byte 0xf6
+	.2byte \slot
+	.endm
+
+@ CrystalDust (was 0xa8)
+	.macro setobjectpriority index:req, map:req, priority:req
+	.byte 0xf7
+	.2byte \index
+	map \map
+	.byte \priority
+	.endm
+
+@ CrystalDust (was 0x26)
+	.macro specialvar_ output:req, functionId:req
+	.byte 0xf8
+	.2byte \output
+	.2byte \functionId
+	.endm
+
+@ CrystalDust (wrapper, no opcode)
+	.macro trainerbattle_wintext trainer:req, mode:req, lose_text:req, win_text:req
+	trainerbattle TRAINER_BATTLE_CONTINUE_SCRIPT_WINTEXT, \trainer, \mode, \lose_text, \win_text
+	.endm
+
+@ CrystalDust (was 0x5d)
+	.macro trainerbattlebegin
+	.byte 0xf9
+	.endm
+
+@ CrystalDust (was 0x78)
+	.macro unownmessage text:req
+	.byte 0xfa
+	.4byte \text
+	.endm
+
+@ CrystalDust (was 0xbe)
+	.macro vloadptr pointer:req
+	.byte 0xfb
+	.4byte \pointer
+	.endm
+
+@ CrystalDust (was 0xe0)
+	.macro warpsootopolislegend map:req, byte:req, word1:req, word2:req
+	.byte 0xfc
+	map \map
+	.byte \byte
+	.2byte \word1
+	.2byte \word2
+	.endm
+
+@ CrystalDust (was 0xd1)
+	.macro warpteleport2 map:req, warp:req, x:req, y:req
+	.byte 0xfd
+	map \map
+	.byte \warp
+	.2byte \x
+	.2byte \y
+	.endm
+
+@ CrystalDust (was 0x11)
+	.macro writebytetoaddr value:req, offset:req
+	.byte 0xfe
+	.byte \value
+	.4byte \offset
+	.endm
