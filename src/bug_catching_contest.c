@@ -849,7 +849,7 @@ static int GetMaxBugCatchingContestLevelForSpecies(u16 species)
 static const struct WildPokemon *GetBugCatchingContestWildMons(void)
 {
     int i;
-    u8 timeOfDay = GetCurrentTimeOfDay();
+    u8 timeOfDay = GetTimeOfDay();
 
     for (i = 0; ; i++)
     {

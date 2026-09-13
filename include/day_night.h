@@ -14,8 +14,8 @@ struct PaletteOverride
 extern EWRAM_DATA u16 gPlttBufferPreDN[];
 extern EWRAM_DATA struct PaletteOverride *gPaletteOverrides[];
 
-u8 GetCurrentTimeOfDay(void);
-u8 GetTimeOfDay(s8 hours);
+// GetCurrentTimeOfDay / GetTimeOfDay(s8) removed in Phase 2: expansion's
+// GetTimeOfDay(void) in rtc.h is now the single clock reader. See D7.
 void LoadCompressedPaletteDayNight(const void *src, u16 offset, u16 size);
 void LoadPaletteDayNight(const void *src, u16 offset, u16 size);
 void CheckClockForImmediateTimeEvents(void);

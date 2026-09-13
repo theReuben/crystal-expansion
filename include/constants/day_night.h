@@ -10,10 +10,9 @@
 #define HOUR_MIDNIGHT_0 0
 #define HOUR_MIDNIGHT_24 24
 
-#define TIME_MORNING 0
-#define TIME_DAY 1
-#define TIME_NIGHT 2
-#define TIMES_OF_DAY_COUNT 3
+// TIME_MORNING / TIME_DAY / TIME_NIGHT / TIMES_OF_DAY_COUNT now come from
+// constants/rtc.h as enum TimeOfDay. CrystalDust numbered TIME_NIGHT 2;
+// expansion numbers it 3 and uses 2 for TIME_EVENING. See decision D7.
 
 #define DAY_SUNDAY 0
 #define DAY_MONDAY 1

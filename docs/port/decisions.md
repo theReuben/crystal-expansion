@@ -177,10 +177,10 @@ assemble, so the scope call can be made later on its merits instead of being
 forced by a build error. If Q3 comes back "out of scope", these are deleted
 then — as a decision, not as a side effect.
 
-## D7 — Day/night: two complete implementations collide (DECISION NEEDED)
+## D7 — Day/night: two complete implementations collide (RESOLVED)
 
-**Status: open. Flagging rather than deciding, because either choice drops
-something visible.**
+**Status: resolved. No feature dropped, and no new config flag needed — the
+exact behaviour CrystalDust had is already an existing expansion preset.**
 
 **What was found.** `include/rtc.h` produced `conflicting types for
 'GetTimeOfDay'`. The header is expansion's, unmodified. The conflict is that
@@ -219,3 +219,59 @@ done deliberately — it is a visible gameplay difference, not a detail.
 
 **Do not** resolve this by deleting `day_night.c`. That would silently drop the
 per-slot palette overrides and Johto would lose its night look.
+
+
+### D7 resolution
+
+The cost I originally flagged — "night falls at different in-game times" — turned
+out not to exist. Measuring both sides:
+
+| Preset | Morning | Day | Evening | Night |
+|---|---|---|---|---|
+| CrystalDust | 4–10 | 10–20 | (none) | 20–4 |
+| `OW_TIMES_OF_DAY GEN_2` | 4–10 | 10–18 | (none) | 18–4 |
+| `OW_TIMES_OF_DAY GEN_3` | (none) | 12–24 | (none) | 0–12 |
+| **`OW_TIMES_OF_DAY GEN_4`** | **4–10** | **10–20** | **(none)** | **20–4** |
+| `GEN_6` | 4–11 | 11–18 | 18–21 | 21–4 |
+| `GEN_7` | 6–10 | 10–17 | 17–18 | 18–6 |
+| `GEN_8`/`GEN_9` (`GEN_LATEST`, the default) | 6–10 | 10–19 | 19–20 | 20–6 |
+
+**CrystalDust's bands are `GEN_4` exactly.** So the fix is a one-line config
+change, not a new flag: `OW_TIMES_OF_DAY` is set to `GEN_4`. Expansion's empty
+evening band is handled correctly — `IsBetweenHours(h, 0, 0)` is always false,
+so `TIME_EVENING` is simply never returned.
+
+Applied:
+1. `OW_TIMES_OF_DAY` set to `GEN_4` in `include/config/overworld.h`.
+2. CrystalDust's `GetTimeOfDay(s8)` and `GetCurrentTimeOfDay()` deleted;
+   expansion's `GetTimeOfDay(void)` is now the single clock reader. There were
+   only four call sites.
+3. CrystalDust's `PaletteOverride` layer in `day_night.c` is **kept** — it now
+   asks expansion's clock. Johto keeps its night palettes.
+
+**A numbering trap worth recording.** `include/constants/day_night.h` (CD) and
+`include/constants/rtc.h` (expansion) both defined `TIME_MORNING`/`TIME_DAY`/
+`TIME_NIGHT`/`TIMES_OF_DAY_COUNT`, and **they disagree**: CD numbers
+`TIME_NIGHT` 2, expansion numbers it 3 and uses 2 for `TIME_EVENING`. CD's were
+`#define`s and expansion's an `enum`, so CD's would have textually rewritten
+expansion's enumerators. Removed CD's four defines in favour of the enum.
+
+**Follow-up, not yet done.** `src/radio.c:287` does
+`Random() % TIMES_OF_DAY_COUNT`, which was 3 and is now 4. Under `GEN_4` the
+fourth value (`TIME_EVENING`) never occurs naturally, so a radio show could be
+selected for a time of day that never happens. Must be checked when radio.c is
+ported (Group B). Noted here so it is not lost.
+
+### Related: duplicate make targets
+
+CD's `wild_encounters.h` rule in `json_data_rules.mk` overrode expansion's
+(`Makefile:254`) and required a `wild_encounters.json.txt` that does not exist,
+breaking the build once the config change forced a regeneration. Removed CD's
+rule: expansion's generator is time-of-day aware and reads
+`config/overworld.h`, which CD's jsonproc rule is not.
+
+74 further duplicate targets remain in the appended rule blocks (72 in
+`graphics_file_rules.mk`, 2 in `map_data_rules.mk`). They are warnings only and
+currently resolve to CrystalDust's rules, which is the intended outcome for
+CD-replaced art. Left alone deliberately rather than mass-edited; revisit if one
+of them misbuilds.

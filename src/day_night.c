@@ -79,22 +79,7 @@ const u8 *const gDayOfWeekTable[] =
     gText_Saturday
 };
 
-u8 GetCurrentTimeOfDay(void)
-{
-    return GetTimeOfDay(gLocalTime.hours);
-}
 
-u8 GetTimeOfDay(s8 hours)
-{
-    if (hours < HOUR_MORNING)
-        return TIME_NIGHT;
-    else if (hours < HOUR_DAY)
-        return TIME_MORNING;
-    else if (hours < HOUR_NIGHT)
-        return TIME_DAY;
-    else
-        return TIME_NIGHT;
-}
 
 const u8 *GetDayOfWeekString(u8 dayOfWeek)
 {
@@ -289,7 +274,7 @@ void ProcessImmediateTimeEvents(void)
     s8 hour, nextHour;
     u8 hourPhase;
     u16 period;
-    u8 timeOfDay = GetCurrentTimeOfDay();
+    u8 timeOfDay = GetTimeOfDay();
 
     if (ShouldTintOverworld())
     {

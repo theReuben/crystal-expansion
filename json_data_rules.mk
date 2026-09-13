@@ -38,8 +38,10 @@ $(DATA_SRC_SUBDIR)/items.h: $(DATA_SRC_SUBDIR)/items.json $(DATA_SRC_SUBDIR)/ite
 
 $(C_BUILDDIR)/item.o: c_dep += $(DATA_SRC_SUBDIR)/items.h
 
-AUTO_GEN_TARGETS += $(DATA_SRC_SUBDIR)/wild_encounters.h
-$(DATA_SRC_SUBDIR)/wild_encounters.h: $(DATA_SRC_SUBDIR)/wild_encounters.json $(DATA_SRC_SUBDIR)/wild_encounters.json.txt
-	$(JSONPROC) $^ $@
+# CrystalDust's wild_encounters.h rule removed in Phase 2: it overrode
+# expansion's rule in Makefile:254 and required a wild_encounters.json.txt
+# template that does not exist here. Expansion's generator is also time-of-day
+# aware (it reads config/overworld.h), which CrystalDust's jsonproc rule is not.
+# See decision D7.
 
 $(C_BUILDDIR)/wild_encounter.o: c_dep += $(DATA_SRC_SUBDIR)/wild_encounters.h
