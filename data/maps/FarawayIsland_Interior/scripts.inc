@@ -1,5 +1,3 @@
-@ Note: LOCALID_FARAWAY_ISLAND_MEW is a local id for this map used elsewhere. It's defined in event_objects.h
-
 FarawayIsland_Interior_MapScripts::
 	map_script MAP_SCRIPT_ON_RESUME, FarawayIsland_Interior_OnResume
 	map_script MAP_SCRIPT_ON_TRANSITION, FarawayIsland_Interior_OnTransition
@@ -13,14 +11,10 @@ FarawayIsland_Interior_OnReturnToField:
 
 FarawayIsland_Interior_EventScript_TrySetMewAboveGrass::
 	specialvar VAR_RESULT, GetBattleOutcome
-	compare VAR_RESULT, B_OUTCOME_WON
-	goto_if_eq FarawayIsland_Interior_EventScript_SetMewAboveGrass
-	compare VAR_RESULT, B_OUTCOME_RAN
-	goto_if_eq FarawayIsland_Interior_EventScript_SetMewAboveGrass
-	compare VAR_RESULT, B_OUTCOME_PLAYER_TELEPORTED
-	goto_if_eq FarawayIsland_Interior_EventScript_SetMewAboveGrass
-	compare VAR_RESULT, B_OUTCOME_MON_TELEPORTED
-	goto_if_eq FarawayIsland_Interior_EventScript_SetMewAboveGrass
+	goto_if_eq VAR_RESULT, B_OUTCOME_WON, FarawayIsland_Interior_EventScript_SetMewAboveGrass
+	goto_if_eq VAR_RESULT, B_OUTCOME_RAN, FarawayIsland_Interior_EventScript_SetMewAboveGrass
+	goto_if_eq VAR_RESULT, B_OUTCOME_PLAYER_TELEPORTED, FarawayIsland_Interior_EventScript_SetMewAboveGrass
+	goto_if_eq VAR_RESULT, B_OUTCOME_MON_TELEPORTED, FarawayIsland_Interior_EventScript_SetMewAboveGrass
 	return
 
 FarawayIsland_Interior_EventScript_SetMewAboveGrass::
@@ -34,8 +28,7 @@ FarawayIsland_Interior_OnResume:
 
 FarawayIsland_Interior_EventScript_TryRemoveMew::
 	specialvar VAR_RESULT, GetBattleOutcome
-	compare VAR_RESULT, B_OUTCOME_CAUGHT
-	goto_if_ne Common_EventScript_NopReturn
+	goto_if_ne VAR_RESULT, B_OUTCOME_CAUGHT, Common_EventScript_NopReturn
 	removeobject VAR_LAST_TALKED
 	return
 
@@ -126,35 +119,23 @@ FarawayIsland_Interior_EventScript_Mew::
 	special SetMewAboveGrass
 	message FarawayIsland_Interior_Text_Mew
 	waitse
-	playmoncry SPECIES_MEW, 2
-	compare VAR_FACING, DIR_NORTH
-	call_if_eq FarawayIsland_Interior_EventScript_FoundMewNorth
-	compare VAR_FACING, DIR_SOUTH
-	call_if_eq FarawayIsland_Interior_EventScript_FoundMewSouth
-	compare VAR_FACING, DIR_WEST
-	call_if_eq FarawayIsland_Interior_EventScript_FoundMewWest
-	compare VAR_FACING, DIR_EAST
-	call_if_eq FarawayIsland_Interior_EventScript_FoundMewEast
+	playmoncry SPECIES_MEW, CRY_MODE_ENCOUNTER
+	call_if_eq VAR_FACING, DIR_NORTH, FarawayIsland_Interior_EventScript_FoundMewNorth
+	call_if_eq VAR_FACING, DIR_SOUTH, FarawayIsland_Interior_EventScript_FoundMewSouth
+	call_if_eq VAR_FACING, DIR_WEST, FarawayIsland_Interior_EventScript_FoundMewWest
+	call_if_eq VAR_FACING, DIR_EAST, FarawayIsland_Interior_EventScript_FoundMewEast
 	special DestroyMewEmergingGrassSprite
 	delay 40
 	waitmoncry
-	setvar VAR_0x8004, SPECIES_MEW
-	setvar VAR_0x8005, 30 @ level
-	setvar VAR_0x8006, ITEM_NONE
-	special CreateEventLegalEnemyMon
+	seteventmon SPECIES_MEW, 30
 	setflag FLAG_SYS_CTRL_OBJ_DELETE
 	special BattleSetup_StartLegendaryBattle
-	waitstate
 	clearflag FLAG_SYS_CTRL_OBJ_DELETE
 	specialvar VAR_RESULT, GetBattleOutcome
-	compare VAR_RESULT, B_OUTCOME_WON
-	goto_if_eq FarawayIsland_Interior_EventScript_MewDefeated
-	compare VAR_RESULT, B_OUTCOME_RAN
-	goto_if_eq FarawayIsland_Interior_EventScript_PlayerOrMewRan
-	compare VAR_RESULT, B_OUTCOME_PLAYER_TELEPORTED
-	goto_if_eq FarawayIsland_Interior_EventScript_PlayerOrMewRan
-	compare VAR_RESULT, B_OUTCOME_MON_TELEPORTED
-	goto_if_eq FarawayIsland_Interior_EventScript_PlayerOrMewRan
+	goto_if_eq VAR_RESULT, B_OUTCOME_WON, FarawayIsland_Interior_EventScript_MewDefeated
+	goto_if_eq VAR_RESULT, B_OUTCOME_RAN, FarawayIsland_Interior_EventScript_PlayerOrMewRan
+	goto_if_eq VAR_RESULT, B_OUTCOME_PLAYER_TELEPORTED, FarawayIsland_Interior_EventScript_PlayerOrMewRan
+	goto_if_eq VAR_RESULT, B_OUTCOME_MON_TELEPORTED, FarawayIsland_Interior_EventScript_PlayerOrMewRan
 	setflag FLAG_CAUGHT_MEW
 	release
 	end

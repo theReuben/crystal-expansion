@@ -1,5 +1,3 @@
-.set LOCALID_ATTENDANT, 1
-
 BattleFrontier_BattleTowerElevator_MapScripts::
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, BattleFrontier_BattleTowerElevator_OnFrame
 	map_script MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE, BattleFrontier_BattleTowerElevator_OnWarp
@@ -11,49 +9,44 @@ BattleFrontier_BattleTowerElevator_OnFrame:
 
 BattleFrontier_BattleTowerElevator_EventScript_EnterElevator::
 	setvar VAR_TEMP_0, 1
-	applymovement LOCALID_ATTENDANT, BattleFrontier_BattleTowerElevator_Movement_AttendantEnter
-	applymovement OBJ_EVENT_ID_PLAYER, BattleFrontier_BattleTowerElevator_Movement_PlayerEnter
+	applymovement LOCALID_TOWER_ELEVATOR_ATTENDANT, BattleFrontier_BattleTowerElevator_Movement_AttendantEnter
+	applymovement LOCALID_PLAYER, BattleFrontier_BattleTowerElevator_Movement_PlayerEnter
 	waitmovement 0
 	special BufferBattleTowerElevatorFloors
 	waitse
 	special MoveElevator
-	waitstate
 	delay 48
-	applymovement LOCALID_ATTENDANT, BattleFrontier_BattleTowerElevator_Movement_AttendantExit
-	applymovement OBJ_EVENT_ID_PLAYER, BattleFrontier_BattleTowerElevator_Movement_PlayerExit
+	applymovement LOCALID_TOWER_ELEVATOR_ATTENDANT, BattleFrontier_BattleTowerElevator_Movement_AttendantExit
+	applymovement LOCALID_PLAYER, BattleFrontier_BattleTowerElevator_Movement_PlayerExit
 	waitmovement 0
 	call BattleFrontier_BattleTowerElevator_EventScript_WarpToNextRoom
 	end
 
 BattleFrontier_BattleTowerElevator_EventScript_WarpToNextRoom::
-	compare VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_SINGLES
-	call_if_eq BattleFrontier_BattleTowerElevator_EventScript_WarpToCorridor
-	compare VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_DOUBLES
-	call_if_eq BattleFrontier_BattleTowerElevator_EventScript_WarpToCorridor
-	compare VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_MULTIS
-	call_if_eq BattleFrontier_BattleTowerElevator_EventScript_WarpToNextRoomMulti
-	compare VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_LINK_MULTIS
-	call_if_eq BattleFrontier_BattleTowerElevator_EventScript_WarpToCorridorMulti
+	call_if_eq VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_SINGLES, BattleFrontier_BattleTowerElevator_EventScript_WarpToCorridor
+	call_if_eq VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_DOUBLES, BattleFrontier_BattleTowerElevator_EventScript_WarpToCorridor
+	call_if_eq VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_MULTIS, BattleFrontier_BattleTowerElevator_EventScript_WarpToNextRoomMulti
+	call_if_eq VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_LINK_MULTIS, BattleFrontier_BattleTowerElevator_EventScript_WarpToCorridorMulti
 	return
 
 BattleFrontier_BattleTowerElevator_EventScript_WarpToCorridor::
-	warp MAP_BATTLE_FRONTIER_BATTLE_TOWER_CORRIDOR, 255, 8, 1
+	warp MAP_BATTLE_FRONTIER_BATTLE_TOWER_CORRIDOR, 8, 1
 	waitstate
 	return
 
 BattleFrontier_BattleTowerElevator_EventScript_WarpToNextRoomMulti::
 	goto_if_unset FLAG_CHOSEN_MULTI_BATTLE_NPC_PARTNER, BattleFrontier_BattleTowerElevator_EventScript_WarpToPartnerRoom
-	warp MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_CORRIDOR, 255, 7, 2
+	warp MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_CORRIDOR, 7, 2
 	waitstate
 	return
 
 BattleFrontier_BattleTowerElevator_EventScript_WarpToCorridorMulti::
-	warp MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_CORRIDOR, 255, 7, 2
+	warp MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_CORRIDOR, 7, 2
 	waitstate
 	return
 
 BattleFrontier_BattleTowerElevator_EventScript_WarpToPartnerRoom::
-	warp MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_PARTNER_ROOM, 255, 10, 1
+	warp MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_PARTNER_ROOM, 10, 1
 	waitstate
 	return
 
@@ -87,6 +80,6 @@ BattleFrontier_BattleTowerElevator_OnWarp:
 
 BattleFrontier_BattleTowerElevator_EventScript_TurnPlayerNorth::
 	setvar VAR_TEMP_1, 1
-	turnobject OBJ_EVENT_ID_PLAYER, DIR_NORTH
+	turnobject LOCALID_PLAYER, DIR_NORTH
 	end
 

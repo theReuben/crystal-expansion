@@ -19,16 +19,11 @@ ContestHall_OnTransition:
 ContestHall_EventScript_ReadyContestMusic::
 	call ContestHall_EventScript_TryWaitForLink
 	special GetContestMultiplayerId
-	compare VAR_RESULT, 0
-	call_if_eq ContestHall_EventScript_SaveContestMusicPlayer1
-	compare VAR_RESULT, 1
-	call_if_eq ContestHall_EventScript_SaveContestMusicPlayer2
-	compare VAR_RESULT, 2
-	call_if_eq ContestHall_EventScript_SaveContestMusicPlayer3
-	compare VAR_RESULT, 3
-	call_if_eq ContestHall_EventScript_SaveContestMusicPlayer4
-	compare VAR_RESULT, 4
-	call_if_eq ContestHall_EventScript_SaveContestMusic
+	call_if_eq VAR_RESULT, 0, ContestHall_EventScript_SaveContestMusicPlayer1
+	call_if_eq VAR_RESULT, 1, ContestHall_EventScript_SaveContestMusicPlayer2
+	call_if_eq VAR_RESULT, 2, ContestHall_EventScript_SaveContestMusicPlayer3
+	call_if_eq VAR_RESULT, 3, ContestHall_EventScript_SaveContestMusicPlayer4
+	call_if_eq VAR_RESULT, 4, ContestHall_EventScript_SaveContestMusic
 	return
 
 ContestHall_EventScript_SaveContestMusicPlayer1::
@@ -52,8 +47,7 @@ ContestHall_EventScript_SaveContestMusic::
 	return
 
 ContestHall_OnResume:
-	compare VAR_TEMP_9, 1
-	call_if_eq ContestHall_EventScript_ReShowAudience
+	call_if_eq VAR_TEMP_9, 1, ContestHall_EventScript_ReShowAudience
 	end
 
 ContestHall_EventScript_ReShowAudience::
@@ -75,7 +69,7 @@ ContestHall_EventScript_Contest::
 
 ContestHall_EventScript_SetContestObjects::
 	special LoadLinkContestPlayerPalettes
-	hideobjectat OBJ_EVENT_ID_PLAYER, MAP_NEW_BARK_TOWN
+	hideobjectat LOCALID_PLAYER, MAP_LITTLEROOT_TOWN
 	call ContestHall_EventScript_CreateAudience
 	end
 
@@ -84,8 +78,7 @@ ContestHall_EventScript_SetContestObjects::
 ContestHall_EventScript_AddRandomAudienceMembers::
 	call ContestHall_EventScript_GetRandomAudienceGfxId
 	call ContestHall_EventScript_SetRandomAudienceGfx
-	compare VAR_TEMP_0, 8
-	goto_if_lt ContestHall_EventScript_AddRandomAudienceMembers
+	goto_if_lt VAR_TEMP_0, 8, ContestHall_EventScript_AddRandomAudienceMembers
 	return
 
 ContestHall_EventScript_SetRandomAudienceGfx::
@@ -174,11 +167,11 @@ ContestHall_EventScript_GetRandomAudienceGfxId::
 	end
 
 ContestHall_EventScript_RandomAudienceNinjaBoy::
-	setvar VAR_TEMP_1, OBJ_EVENT_GFX_ZNINJA_BOY
+	setvar VAR_TEMP_1, OBJ_EVENT_GFX_NINJA_BOY
 	return
 
-ContestHall_EventScript_RandomAudienceTwin:: @ 823BA71
-	setvar VAR_TEMP_1, OBJ_EVENT_GFX_BILL
+ContestHall_EventScript_RandomAudienceTwin::
+	setvar VAR_TEMP_1, OBJ_EVENT_GFX_TWIN
 	return
 
 ContestHall_EventScript_RandomAudienceBoy1::
@@ -186,11 +179,11 @@ ContestHall_EventScript_RandomAudienceBoy1::
 	return
 
 ContestHall_EventScript_RandomAudienceGirl1::
-	setvar VAR_TEMP_1, OBJ_EVENT_GFX_LASS
+	setvar VAR_TEMP_1, OBJ_EVENT_GFX_GIRL_1
 	return
 
 ContestHall_EventScript_RandomAudienceGirl2::
-	setvar VAR_TEMP_1, OBJ_EVENT_GFX_GIRL
+	setvar VAR_TEMP_1, OBJ_EVENT_GFX_GIRL_2
 	return
 
 ContestHall_EventScript_RandomAudienceLittleBoy::
@@ -202,15 +195,15 @@ ContestHall_EventScript_RandomAudienceGirl::
 	return
 
 ContestHall_EventScript_RandomAudienceBoy3::
-	setvar VAR_TEMP_1, OBJ_EVENT_GFX_BLUE
+	setvar VAR_TEMP_1, OBJ_EVENT_GFX_BOY_3
 	return
 
 ContestHall_EventScript_RandomAudienceGirl3::
-	setvar VAR_TEMP_1, OBJ_EVENT_GFX_BATTLE_GIRL
+	setvar VAR_TEMP_1, OBJ_EVENT_GFX_GIRL_3
 	return
 
 ContestHall_EventScript_RandomAudienceRichBoy::
-	setvar VAR_TEMP_1, OBJ_EVENT_GFX_ZRICH_BOY
+	setvar VAR_TEMP_1, OBJ_EVENT_GFX_RICH_BOY
 	return
 
 ContestHall_EventScript_RandomAudienceFatMan::
@@ -222,27 +215,27 @@ ContestHall_EventScript_RandomAudiencePokefanF::
 	return
 
 ContestHall_EventScript_RandomAudienceMan1::
-	setvar VAR_TEMP_1, OBJ_EVENT_GFX_POKEFAN_M
+	setvar VAR_TEMP_1, OBJ_EVENT_GFX_MAN_1
 	return
 
 ContestHall_EventScript_RandomAudienceWoman2::
-	setvar VAR_TEMP_1, OBJ_EVENT_GFX_BEAUTY
+	setvar VAR_TEMP_1, OBJ_EVENT_GFX_WOMAN_2
 	return
 
-ContestHall_EventScript_RandomAudienceExpertM:: @ 823BABF
-	setvar VAR_TEMP_1, OBJ_EVENT_GFX_MR_POKEMON
+ContestHall_EventScript_RandomAudienceExpertM::
+	setvar VAR_TEMP_1, OBJ_EVENT_GFX_EXPERT_M
 	return
 
-ContestHall_EventScript_RandomAudienceExpertF:: @ 823BAC5
-	setvar VAR_TEMP_1, OBJ_EVENT_GFX_PROF_OAK
+ContestHall_EventScript_RandomAudienceExpertF::
+	setvar VAR_TEMP_1, OBJ_EVENT_GFX_EXPERT_F
 	return
 
-ContestHall_EventScript_RandomAudiencePokefanM:: @ 823BACB
-	setvar VAR_TEMP_1, OBJ_EVENT_GFX_SAGE
+ContestHall_EventScript_RandomAudiencePokefanM::
+	setvar VAR_TEMP_1, OBJ_EVENT_GFX_POKEFAN_M
 	return
 
 ContestHall_EventScript_RandomAudienceWoman4::
-	setvar VAR_TEMP_1, OBJ_EVENT_GFX_POKEFAN_F
+	setvar VAR_TEMP_1, OBJ_EVENT_GFX_WOMAN_4
 	return
 
 ContestHall_EventScript_RandomAudienceCook::
@@ -266,11 +259,11 @@ ContestHall_EventScript_RandomAudiencePicnicker::
 	return
 
 ContestHall_EventScript_RandomAudienceMan3::
-	setvar VAR_TEMP_1, OBJ_EVENT_GFX_WORKER_M
+	setvar VAR_TEMP_1, OBJ_EVENT_GFX_MAN_3
 	return
 
 ContestHall_EventScript_RandomAudienceWoman5::
-	setvar VAR_TEMP_1, OBJ_EVENT_GFX_COOLTRAINER_F
+	setvar VAR_TEMP_1, OBJ_EVENT_GFX_WOMAN_5
 	return
 
 ContestHall_EventScript_RandomAudienceYoungster::
@@ -282,7 +275,7 @@ ContestHall_EventScript_RandomAudienceBugCatcher::
 	return
 
 ContestHall_EventScript_RandomAudiencePsychicM::
-	setvar VAR_TEMP_1, OBJ_EVENT_GFX_COOLTRAINER_M
+	setvar VAR_TEMP_1, OBJ_EVENT_GFX_PSYCHIC_M
 	return
 
 ContestHall_EventScript_RandomAudienceSchoolKidM::
@@ -293,18 +286,17 @@ ContestHall_EventScript_RandomAudienceBlackBelt::
 	setvar VAR_TEMP_1, OBJ_EVENT_GFX_BLACK_BELT
 	return
 
-ContestHall_EventScript_RandomAudienceBeauty:: @ 823BB1F
-	setvar VAR_TEMP_1, OBJ_EVENT_GFX_BUENA
+ContestHall_EventScript_RandomAudienceBeauty::
+	setvar VAR_TEMP_1, OBJ_EVENT_GFX_BEAUTY
 	return
 
-ContestHall_EventScript_RandomAudienceScientist1:: @ 823BB25
-	setvar VAR_TEMP_1, OBJ_EVENT_GFX_SCIENTIST
+ContestHall_EventScript_RandomAudienceScientist1::
+	setvar VAR_TEMP_1, OBJ_EVENT_GFX_SCIENTIST_1
 	return
 
 ContestHall_EventScript_CreateAudience::
 	specialvar VAR_RESULT, IsWirelessContest
-	compare VAR_RESULT, TRUE
-	goto_if_eq ContestHall_EventScript_CreateWirelessContestAudience
+	goto_if_eq VAR_RESULT, TRUE, ContestHall_EventScript_CreateWirelessContestAudience
 	switch VAR_CONTEST_TYPE
 	case CONTEST_TYPE_NPC_NORMAL, ContestHall_EventScript_CreateNormalContestAudience
 	case CONTEST_TYPE_NPC_SUPER, ContestHall_EventScript_CreateSuperContestAudience
@@ -314,97 +306,97 @@ ContestHall_EventScript_CreateAudience::
 	return
 
 ContestHall_EventScript_CreateNormalContestAudience::
-	createvobject OBJ_EVENT_GFX_ZNINJA_BOY, 20, 3, 2, 3, DIR_SOUTH
-	createvobject OBJ_EVENT_GFX_SCIENTIST, 24, 11, 2, 3, DIR_SOUTH
+	createvobject OBJ_EVENT_GFX_NINJA_BOY, 20, 3, 2, 3, DIR_SOUTH
+	createvobject OBJ_EVENT_GFX_SCIENTIST_1, 24, 11, 2, 3, DIR_SOUTH
 	return
 
-ContestHall_EventScript_CreateSuperContestAudience:: @ 823BB8B
-	createvobject OBJ_EVENT_GFX_BUENA, 0, 2, 3, 3, DIR_EAST
-	createvobject OBJ_EVENT_GFX_ROCKER, 1, 2, 4, 3, DIR_EAST
+ContestHall_EventScript_CreateSuperContestAudience::
+	createvobject OBJ_EVENT_GFX_BEAUTY, 0, 2, 3, 3, DIR_EAST
+	createvobject OBJ_EVENT_GFX_MAN_5, 1, 2, 4, 3, DIR_EAST
 	createvobject OBJ_EVENT_GFX_HIKER, 2, 2, 7, 3, DIR_EAST
-	createvobject OBJ_EVENT_GFX_SCIENTIST, 3, 2, 8, 3, DIR_EAST
-	createvobject OBJ_EVENT_GFX_ZNINJA_BOY, 10, 12, 3, 3, DIR_WEST
-	createvobject OBJ_EVENT_GFX_BEAUTY, 11, 12, 4, 3, DIR_WEST
-	createvobject OBJ_EVENT_GFX_WORKER_F, 12, 12, 7, 3, DIR_WEST
+	createvobject OBJ_EVENT_GFX_SCIENTIST_1, 3, 2, 8, 3, DIR_EAST
+	createvobject OBJ_EVENT_GFX_NINJA_BOY, 10, 12, 3, 3, DIR_WEST
+	createvobject OBJ_EVENT_GFX_WOMAN_2, 11, 12, 4, 3, DIR_WEST
+	createvobject OBJ_EVENT_GFX_WOMAN_3, 12, 12, 7, 3, DIR_WEST
 	createvobject OBJ_EVENT_GFX_LITTLE_GIRL, 13, 12, 8, 3, DIR_WEST
 	createvobject OBJ_EVENT_GFX_LASS, 20, 3, 2, 3, DIR_SOUTH
-	createvobject OBJ_EVENT_GFX_SCIENTIST, 24, 11, 2, 3, DIR_SOUTH
+	createvobject OBJ_EVENT_GFX_SCIENTIST_1, 24, 11, 2, 3, DIR_SOUTH
 	return
 
-ContestHall_EventScript_CreateHyperContestAudience:: @ 823BBE6
-	createvobject OBJ_EVENT_GFX_BUENA, 0, 2, 3, 3, DIR_EAST
-	createvobject OBJ_EVENT_GFX_ROCKER, 1, 2, 4, 3, DIR_EAST
+ContestHall_EventScript_CreateHyperContestAudience::
+	createvobject OBJ_EVENT_GFX_BEAUTY, 0, 2, 3, 3, DIR_EAST
+	createvobject OBJ_EVENT_GFX_MAN_5, 1, 2, 4, 3, DIR_EAST
 	createvobject OBJ_EVENT_GFX_HIKER, 2, 2, 7, 3, DIR_EAST
 	createvobject OBJ_EVENT_GFX_GENTLEMAN, 3, 2, 8, 3, DIR_EAST
-	createvobject OBJ_EVENT_GFX_ZNINJA_BOY, 10, 12, 3, 3, DIR_WEST
-	createvobject OBJ_EVENT_GFX_BEAUTY, 11, 12, 4, 3, DIR_WEST
-	createvobject OBJ_EVENT_GFX_WORKER_F, 12, 12, 7, 3, DIR_WEST
-	createvobject OBJ_EVENT_GFX_BUENA, 13, 12, 8, 3, DIR_WEST
-	createvobject OBJ_EVENT_GFX_SAGE, 20, 3, 2, 3, DIR_SOUTH
-	createvobject OBJ_EVENT_GFX_GYM_GUIDE, 20, 6, 2, 3, DIR_SOUTH
-	createvobject OBJ_EVENT_GFX_COOLTRAINER_F, 20, 7, 2, 3, DIR_SOUTH
-	createvobject OBJ_EVENT_GFX_SCIENTIST, 24, 8, 2, 3, DIR_SOUTH
+	createvobject OBJ_EVENT_GFX_NINJA_BOY, 10, 12, 3, 3, DIR_WEST
+	createvobject OBJ_EVENT_GFX_WOMAN_2, 11, 12, 4, 3, DIR_WEST
+	createvobject OBJ_EVENT_GFX_WOMAN_3, 12, 12, 7, 3, DIR_WEST
+	createvobject OBJ_EVENT_GFX_BEAUTY, 13, 12, 8, 3, DIR_WEST
+	createvobject OBJ_EVENT_GFX_EXPERT_F, 20, 3, 2, 3, DIR_SOUTH
+	createvobject OBJ_EVENT_GFX_MAN_2, 20, 6, 2, 3, DIR_SOUTH
+	createvobject OBJ_EVENT_GFX_WOMAN_5, 20, 7, 2, 3, DIR_SOUTH
+	createvobject OBJ_EVENT_GFX_SCIENTIST_1, 24, 8, 2, 3, DIR_SOUTH
 	createvobject OBJ_EVENT_GFX_GENTLEMAN, 24, 11, 2, 3, DIR_SOUTH
 	createvobject OBJ_EVENT_GFX_LITTLE_BOY, 25, 3, 9, 3, DIR_NORTH
 	createvobject OBJ_EVENT_GFX_YOUNGSTER, 26, 4, 9, 3, DIR_NORTH
 	createvobject OBJ_EVENT_GFX_FAT_MAN, 27, 5, 9, 3, DIR_NORTH
-	createvobject OBJ_EVENT_GFX_KURT, 28, 9, 9, 3, DIR_NORTH
+	createvobject OBJ_EVENT_GFX_HEX_MANIAC, 28, 9, 9, 3, DIR_NORTH
 	createvobject OBJ_EVENT_GFX_SCHOOL_KID_M, 29, 10, 9, 3, DIR_NORTH
 	createvobject OBJ_EVENT_GFX_MART_EMPLOYEE, 30, 11, 9, 3, DIR_NORTH
 	return
 
-ContestHall_EventScript_CreateMasterContestAudience:: @ 823BC92
-	createvobject OBJ_EVENT_GFX_BUENA, 0, 2, 3, 3, DIR_EAST
-	createvobject OBJ_EVENT_GFX_ROCKER, 1, 2, 4, 3, DIR_EAST
+ContestHall_EventScript_CreateMasterContestAudience::
+	createvobject OBJ_EVENT_GFX_BEAUTY, 0, 2, 3, 3, DIR_EAST
+	createvobject OBJ_EVENT_GFX_MAN_5, 1, 2, 4, 3, DIR_EAST
 	createvobject OBJ_EVENT_GFX_HIKER, 2, 2, 7, 3, DIR_EAST
 	createvobject OBJ_EVENT_GFX_LITTLE_GIRL, 3, 2, 8, 3, DIR_EAST
-	createvobject OBJ_EVENT_GFX_POKEMANIAC, 4, 1, 3, 3, DIR_EAST
-	createvobject OBJ_EVENT_GFX_COOLTRAINER_F, 6, 1, 5, 3, DIR_EAST
-	createvobject OBJ_EVENT_GFX_POKEFAN_F, 7, 1, 6, 3, DIR_EAST
+	createvobject OBJ_EVENT_GFX_MANIAC, 4, 1, 3, 3, DIR_EAST
+	createvobject OBJ_EVENT_GFX_WOMAN_5, 6, 1, 5, 3, DIR_EAST
+	createvobject OBJ_EVENT_GFX_WOMAN_4, 7, 1, 6, 3, DIR_EAST
 	createvobject OBJ_EVENT_GFX_GENTLEMAN, 9, 1, 8, 3, DIR_EAST
-	createvobject OBJ_EVENT_GFX_ZNINJA_BOY, 10, 12, 3, 3, DIR_WEST
-	createvobject OBJ_EVENT_GFX_BEAUTY, 11, 12, 4, 3, DIR_WEST
-	createvobject OBJ_EVENT_GFX_WORKER_F, 12, 12, 7, 3, DIR_WEST
-	createvobject OBJ_EVENT_GFX_BUENA, 13, 12, 8, 3, DIR_WEST
+	createvobject OBJ_EVENT_GFX_NINJA_BOY, 10, 12, 3, 3, DIR_WEST
+	createvobject OBJ_EVENT_GFX_WOMAN_2, 11, 12, 4, 3, DIR_WEST
+	createvobject OBJ_EVENT_GFX_WOMAN_3, 12, 12, 7, 3, DIR_WEST
+	createvobject OBJ_EVENT_GFX_BEAUTY, 13, 12, 8, 3, DIR_WEST
 	createvobject OBJ_EVENT_GFX_FISHERMAN, 14, 13, 3, 3, DIR_WEST
-	createvobject OBJ_EVENT_GFX_MACHOP, 15, 13, 4, 3, DIR_WEST
-	createvobject OBJ_EVENT_GFX_MAN, 17, 13, 6, 3, DIR_WEST
+	createvobject OBJ_EVENT_GFX_RUNNING_TRIATHLETE_F, 15, 13, 4, 3, DIR_WEST
+	createvobject OBJ_EVENT_GFX_MAN_4, 17, 13, 6, 3, DIR_WEST
 	createvobject OBJ_EVENT_GFX_MART_EMPLOYEE, 18, 13, 7, 3, DIR_WEST
-	createvobject OBJ_EVENT_GFX_KURT_LYING_DOWN, 19, 13, 8, 3, DIR_WEST
-	createvobject OBJ_EVENT_GFX_SAGE, 20, 3, 2, 3, DIR_SOUTH
+	createvobject OBJ_EVENT_GFX_DEVON_EMPLOYEE, 19, 13, 8, 3, DIR_WEST
+	createvobject OBJ_EVENT_GFX_POKEFAN_M, 20, 3, 2, 3, DIR_SOUTH
 	createvobject OBJ_EVENT_GFX_CAMPER, 21, 6, 2, 3, DIR_SOUTH
-	createvobject OBJ_EVENT_GFX_WORKER_M, 22, 7, 2, 3, DIR_SOUTH
-	createvobject OBJ_EVENT_GFX_SCIENTIST, 24, 11, 2, 3, DIR_SOUTH
+	createvobject OBJ_EVENT_GFX_MAN_3, 22, 7, 2, 3, DIR_SOUTH
+	createvobject OBJ_EVENT_GFX_SCIENTIST_1, 24, 11, 2, 3, DIR_SOUTH
 	createvobject OBJ_EVENT_GFX_SAILOR, 25, 3, 9, 3, DIR_NORTH
 	createvobject OBJ_EVENT_GFX_YOUNGSTER, 26, 4, 9, 3, DIR_NORTH
 	createvobject OBJ_EVENT_GFX_GENTLEMAN, 27, 5, 9, 3, DIR_NORTH
-	createvobject OBJ_EVENT_GFX_KURT, 28, 9, 9, 3, DIR_NORTH
+	createvobject OBJ_EVENT_GFX_HEX_MANIAC, 28, 9, 9, 3, DIR_NORTH
 	createvobject OBJ_EVENT_GFX_SCHOOL_KID_M, 29, 10, 9, 3, DIR_NORTH
 	createvobject OBJ_EVENT_GFX_MART_EMPLOYEE, 30, 11, 9, 3, DIR_NORTH
 	return
 
-ContestHall_EventScript_CreateWirelessContestAudience:: @ 823BD86
-	createvobject OBJ_EVENT_GFX_BUENA, 0, 2, 3, 3, DIR_EAST
-	createvobject OBJ_EVENT_GFX_ROCKER, 1, 2, 4, 3, DIR_EAST
+ContestHall_EventScript_CreateWirelessContestAudience::
+	createvobject OBJ_EVENT_GFX_BEAUTY, 0, 2, 3, 3, DIR_EAST
+	createvobject OBJ_EVENT_GFX_MAN_5, 1, 2, 4, 3, DIR_EAST
 	createvobject OBJ_EVENT_GFX_HIKER, 2, 2, 7, 3, DIR_EAST
 	createvobject OBJ_EVENT_GFX_LITTLE_GIRL, 3, 2, 8, 3, DIR_EAST
-	createvobject OBJ_EVENT_GFX_POKEMANIAC, 4, 1, 3, 3, DIR_EAST
-	createvobject OBJ_EVENT_GFX_COOLTRAINER_F, 6, 1, 5, 3, DIR_EAST
-	createvobject OBJ_EVENT_GFX_POKEFAN_F, 7, 1, 6, 3, DIR_EAST
+	createvobject OBJ_EVENT_GFX_MANIAC, 4, 1, 3, 3, DIR_EAST
+	createvobject OBJ_EVENT_GFX_WOMAN_5, 6, 1, 5, 3, DIR_EAST
+	createvobject OBJ_EVENT_GFX_WOMAN_4, 7, 1, 6, 3, DIR_EAST
 	createvobject OBJ_EVENT_GFX_GENTLEMAN, 9, 1, 8, 3, DIR_EAST
-	createvobject OBJ_EVENT_GFX_ZNINJA_BOY, 10, 12, 3, 3, DIR_WEST
-	createvobject OBJ_EVENT_GFX_BEAUTY, 11, 12, 4, 3, DIR_WEST
-	createvobject OBJ_EVENT_GFX_WORKER_F, 12, 12, 7, 3, DIR_WEST
-	createvobject OBJ_EVENT_GFX_BUENA, 13, 12, 8, 3, DIR_WEST
+	createvobject OBJ_EVENT_GFX_NINJA_BOY, 10, 12, 3, 3, DIR_WEST
+	createvobject OBJ_EVENT_GFX_WOMAN_2, 11, 12, 4, 3, DIR_WEST
+	createvobject OBJ_EVENT_GFX_WOMAN_3, 12, 12, 7, 3, DIR_WEST
+	createvobject OBJ_EVENT_GFX_BEAUTY, 13, 12, 8, 3, DIR_WEST
 	createvobject OBJ_EVENT_GFX_FISHERMAN, 14, 13, 3, 3, DIR_WEST
-	createvobject OBJ_EVENT_GFX_MACHOP, 15, 13, 4, 3, DIR_WEST
-	createvobject OBJ_EVENT_GFX_MAN, 17, 13, 6, 3, DIR_WEST
+	createvobject OBJ_EVENT_GFX_RUNNING_TRIATHLETE_F, 15, 13, 4, 3, DIR_WEST
+	createvobject OBJ_EVENT_GFX_MAN_4, 17, 13, 6, 3, DIR_WEST
 	createvobject OBJ_EVENT_GFX_MART_EMPLOYEE, 18, 13, 7, 3, DIR_WEST
-	createvobject OBJ_EVENT_GFX_KURT_LYING_DOWN, 19, 13, 8, 3, DIR_WEST
-	createvobject OBJ_EVENT_GFX_SAGE, 20, 3, 2, 3, DIR_SOUTH
+	createvobject OBJ_EVENT_GFX_DEVON_EMPLOYEE, 19, 13, 8, 3, DIR_WEST
+	createvobject OBJ_EVENT_GFX_POKEFAN_M, 20, 3, 2, 3, DIR_SOUTH
 	createvobject OBJ_EVENT_GFX_CAMPER, 21, 6, 2, 3, DIR_SOUTH
-	createvobject OBJ_EVENT_GFX_WORKER_M, 22, 7, 2, 3, DIR_SOUTH
-	createvobject OBJ_EVENT_GFX_SCIENTIST, 24, 11, 2, 3, DIR_SOUTH
+	createvobject OBJ_EVENT_GFX_MAN_3, 22, 7, 2, 3, DIR_SOUTH
+	createvobject OBJ_EVENT_GFX_SCIENTIST_1, 24, 11, 2, 3, DIR_SOUTH
 	return
 
 ContestHall_EventScript_SetExitWarp::
@@ -418,36 +410,34 @@ ContestHall_EventScript_SetExitWarp::
 	return
 
 ContestHall_EventScript_SetExitWarpNormalContest::
-	warp MAP_LILYCOVE_CITY_CONTEST_LOBBY, 255, 14, 4
+	warp MAP_LILYCOVE_CITY_CONTEST_LOBBY, 14, 4
 	waitstate
 	end
 
 ContestHall_EventScript_SetExitWarpSuperContest::
-	warp MAP_LILYCOVE_CITY_CONTEST_LOBBY, 255, 14, 4
+	warp MAP_LILYCOVE_CITY_CONTEST_LOBBY, 14, 4
 	waitstate
 	end
 
 ContestHall_EventScript_SetExitWarpHyperContest::
-	warp MAP_LILYCOVE_CITY_CONTEST_LOBBY, 255, 14, 4
+	warp MAP_LILYCOVE_CITY_CONTEST_LOBBY, 14, 4
 	waitstate
 	end
 
 ContestHall_EventScript_SetExitWarpMasterContest::
-	warp MAP_LILYCOVE_CITY_CONTEST_LOBBY, 255, 14, 4
+	warp MAP_LILYCOVE_CITY_CONTEST_LOBBY, 14, 4
 	waitstate
 	end
 
 ContestHall_EventScript_SetExitWarpLinkContest::
-	warp MAP_LILYCOVE_CITY_CONTEST_LOBBY, 255, 15, 4
+	warp MAP_LILYCOVE_CITY_CONTEST_LOBBY, 15, 4
 	waitstate
 	end
 
 LilycoveCity_ContestLobby_EventScript_SetPlayerGfx::
 	checkplayergender
-	compare VAR_RESULT, MALE
-	goto_if_eq LilycoveCity_ContestLobby_EventScript_SetPlayerGfxBrendan
-	compare VAR_RESULT, FEMALE
-	goto_if_eq LilycoveCity_ContestLobby_EventScript_SetPlayerGfxMay
+	goto_if_eq VAR_RESULT, MALE, LilycoveCity_ContestLobby_EventScript_SetPlayerGfxBrendan
+	goto_if_eq VAR_RESULT, FEMALE, LilycoveCity_ContestLobby_EventScript_SetPlayerGfxMay
 	return
 
 LilycoveCity_ContestLobby_EventScript_SetPlayerGfxBrendan::

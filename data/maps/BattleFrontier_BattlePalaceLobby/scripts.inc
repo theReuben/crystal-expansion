@@ -1,6 +1,3 @@
-.set LOCALID_ATTENDANT_SINGLES, 1
-.set LOCALID_ATTENDANT_DOUBLES, 6
-
 BattleFrontier_BattlePalaceLobby_MapScripts::
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, BattleFrontier_BattlePalaceLobby_OnFrame
 	map_script MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE, BattleFrontier_BattlePalaceLobby_OnWarp
@@ -12,15 +9,15 @@ BattleFrontier_BattlePalaceLobby_OnWarp:
 
 BattleFrontier_BattlePalaceLobby_EventScript_TurnPlayerNorth::
 	setvar VAR_TEMP_1, 1
-	turnobject OBJ_EVENT_ID_PLAYER, DIR_NORTH
+	turnobject LOCALID_PLAYER, DIR_NORTH
 	end
 
 BattleFrontier_BattlePalaceLobby_OnFrame:
-	map_script_2 VAR_TEMP_0, 0, BattleFrontier_BattlePalaceLobby_EventScript_GetChallengeStatus
-	map_script_2 VAR_TEMP_0, CHALLENGE_STATUS_SAVING, BattleFrontier_BattlePalaceLobby_EventScript_QuitWithoutSaving
-	map_script_2 VAR_TEMP_0, CHALLENGE_STATUS_PAUSED, BattleFrontier_BattlePalaceLobby_EventScript_ResumeChallenge
-	map_script_2 VAR_TEMP_0, CHALLENGE_STATUS_WON, BattleFrontier_BattlePalaceLobby_EventScript_WonChallenge
-	map_script_2 VAR_TEMP_0, CHALLENGE_STATUS_LOST, BattleFrontier_BattlePalaceLobby_EventScript_LostChallenge
+	map_script_2 VAR_TEMP_CHALLENGE_STATUS, 0, BattleFrontier_BattlePalaceLobby_EventScript_GetChallengeStatus
+	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_SAVING, BattleFrontier_BattlePalaceLobby_EventScript_QuitWithoutSaving
+	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_PAUSED, BattleFrontier_BattlePalaceLobby_EventScript_ResumeChallenge
+	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_WON, BattleFrontier_BattlePalaceLobby_EventScript_WonChallenge
+	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_LOST, BattleFrontier_BattlePalaceLobby_EventScript_LostChallenge
 	.2byte 0
 
 BattleFrontier_BattlePalaceLobby_EventScript_GetChallengeStatus::
@@ -34,15 +31,14 @@ BattleFrontier_BattlePalaceLobby_EventScript_QuitWithoutSaving::
 	palace_set PALACE_DATA_WIN_STREAK, 0
 	palace_set PALACE_DATA_WIN_STREAK_ACTIVE, FALSE
 	frontier_set FRONTIER_DATA_CHALLENGE_STATUS, 0
-	setvar VAR_TEMP_0, 255
+	setvar VAR_TEMP_CHALLENGE_STATUS, 255
 	releaseall
 	end
 
 BattleFrontier_BattlePalaceLobby_EventScript_WonChallenge::
 	lockall
 	frontier_isbrain
-	compare VAR_RESULT, TRUE
-	goto_if_eq BattleFrontier_BattlePalaceLobby_EventScript_DefeatedMaven
+	goto_if_eq VAR_RESULT, TRUE, BattleFrontier_BattlePalaceLobby_EventScript_DefeatedMaven
 	msgbox BattleFrontier_BattlePalaceLobby_Text_FirmTrueBondsFor7WinStreak, MSGBOX_DEFAULT
 	goto BattleFrontier_BattlePalaceLobby_EventScript_GiveBattlePoints
 
@@ -57,7 +53,7 @@ BattleFrontier_BattlePalaceLobby_EventScript_GiveBattlePoints::
 	call BattleFrontier_BattlePalaceLobby_EventScript_SaveAfterChallenge
 	msgbox BattleFrontier_BattlePalaceLobby_Text_ReturnWhenFortified, MSGBOX_DEFAULT
 	closemessage
-	setvar VAR_TEMP_0, 255
+	setvar VAR_TEMP_CHALLENGE_STATUS, 255
 	releaseall
 	end
 
@@ -69,7 +65,7 @@ BattleFrontier_BattlePalaceLobby_EventScript_LostChallenge::
 	call BattleFrontier_BattlePalaceLobby_EventScript_SaveAfterChallenge
 	msgbox BattleFrontier_BattlePalaceLobby_Text_ReturnWhenFortified, MSGBOX_DEFAULT
 	closemessage
-	setvar VAR_TEMP_0, 255
+	setvar VAR_TEMP_CHALLENGE_STATUS, 255
 	releaseall
 	end
 
@@ -77,12 +73,12 @@ BattleFrontier_BattlePalaceLobby_EventScript_SaveAfterChallenge::
 	frontier_checkairshow
 	special LoadPlayerParty
 	special HealPlayerParty
+	callnative UpdateFollowingPokemon
 	palace_save 0
 	playse SE_SAVE
 	waitse
 	call BattleFrontier_EventScript_GetCantRecordBattle
-	compare VAR_RESULT, TRUE
-	goto_if_eq BattleFrontier_BattlePalaceLobby_EventScript_EndSaveAfterChallenge
+	goto_if_eq VAR_RESULT, TRUE, BattleFrontier_BattlePalaceLobby_EventScript_EndSaveAfterChallenge
 	message BattleFrontier_BattlePalaceLobby_Text_LikeToRecordMatch
 	waitmessage
 	multichoicedefault 20, 8, MULTI_YESNO, 1, FALSE
@@ -105,7 +101,7 @@ BattleFrontier_BattlePalaceLobby_EventScript_ResumeChallenge::
 	playse SE_SAVE
 	waitse
 	frontier_set FRONTIER_DATA_PAUSED, FALSE
-	setvar VAR_TEMP_0, 255
+	setvar VAR_TEMP_CHALLENGE_STATUS, 255
 	goto BattleFrontier_BattlePalaceLobby_EventScript_EnterChallenge
 
 BattleFrontier_BattlePalaceLobby_EventScript_SinglesAttendant::
@@ -126,18 +122,13 @@ BattleFrontier_BattlePalaceLobby_EventScript_DoublesAttendant::
 
 BattleFrontier_BattlePalaceLobby_EventScript_Attendant::
 	palace_get PALACE_DATA_PRIZE
-	compare VAR_RESULT, ITEM_NONE
-	goto_if_ne BattleFrontier_BattlePalaceLobby_EventScript_WonChallenge
+	goto_if_ne VAR_RESULT, ITEM_NONE, BattleFrontier_BattlePalaceLobby_EventScript_WonChallenge
 	special SavePlayerParty
-	compare VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_SINGLES
-	call_if_eq BattleFrontier_BattlePalaceLobby_EventScript_WelcomeForSingleBattle
-	compare VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_DOUBLES
-	call_if_eq BattleFrontier_BattlePalaceLobby_EventScript_WelcomeForDoubleBattle
+	call_if_eq VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_SINGLES, BattleFrontier_BattlePalaceLobby_EventScript_WelcomeForSingleBattle
+	call_if_eq VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_DOUBLES, BattleFrontier_BattlePalaceLobby_EventScript_WelcomeForDoubleBattle
 BattleFrontier_BattlePalaceLobby_EventScript_AskTakeChallenge::
-	compare VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_SINGLES
-	call_if_eq BattleFrontier_BattlePalaceLobby_EventScript_AskTakeSingleBattleChallenge
-	compare VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_DOUBLES
-	call_if_eq BattleFrontier_BattlePalaceLobby_EventScript_AskTakeDoubleBattleChallenge
+	call_if_eq VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_SINGLES, BattleFrontier_BattlePalaceLobby_EventScript_AskTakeSingleBattleChallenge
+	call_if_eq VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_DOUBLES, BattleFrontier_BattlePalaceLobby_EventScript_AskTakeDoubleBattleChallenge
 	waitmessage
 	multichoice 17, 6, MULTI_CHALLENGEINFO, FALSE
 	switch VAR_RESULT
@@ -154,18 +145,16 @@ BattleFrontier_BattlePalaceLobby_EventScript_TryEnterChallenge::
 	case FRONTIER_LVL_TENT, BattleFrontier_BattlePalaceLobby_EventScript_CancelChallenge
 	case MULTI_B_PRESSED, BattleFrontier_BattlePalaceLobby_EventScript_CancelChallenge
 	frontier_checkineligible
-	compare VAR_0x8004, TRUE
-	goto_if_eq BattleFrontier_BattlePalaceLobby_EventScript_NotEnoughValidMons
+	goto_if_eq VAR_0x8004, TRUE, BattleFrontier_BattlePalaceLobby_EventScript_NotEnoughValidMons
 	frontier_set FRONTIER_DATA_LVL_MODE, VAR_RESULT
 	msgbox BattleFrontier_BattlePalaceLobby_Text_NowSelectThreeMons, MSGBOX_DEFAULT
 	fadescreen FADE_TO_BLACK
+	callnative RemoveFollowingPokemon
 	call BattleFrontier_EventScript_GetLvlMode
 	copyvar VAR_0x8004, VAR_RESULT
 	setvar VAR_0x8005, FRONTIER_PARTY_SIZE
 	special ChoosePartyForBattleFrontier
-	waitstate
-	compare VAR_RESULT, 0
-	goto_if_eq BattleFrontier_BattlePalaceLobby_EventScript_LoadPartyAndCancelChallenge
+	goto_if_eq VAR_RESULT, 0, BattleFrontier_BattlePalaceLobby_EventScript_LoadPartyAndCancelChallenge
 	msgbox BattleFrontier_BattlePalaceLobby_Text_MustSaveBeforeChallenge2, MSGBOX_YESNO
 	switch VAR_RESULT
 	case NO, BattleFrontier_BattlePalaceLobby_EventScript_LoadPartyAndCancelChallenge
@@ -173,7 +162,7 @@ BattleFrontier_BattlePalaceLobby_EventScript_TryEnterChallenge::
 	case MULTI_B_PRESSED, BattleFrontier_BattlePalaceLobby_EventScript_LoadPartyAndCancelChallenge
 
 BattleFrontier_BattlePalaceLobby_EventScript_SaveBeforeChallenge::
-	setvar VAR_TEMP_0, 0
+	setvar VAR_TEMP_CHALLENGE_STATUS, 0
 	frontier_set FRONTIER_DATA_SELECTED_MON_ORDER
 	palace_init
 	palace_set PALACE_DATA_WIN_STREAK_ACTIVE, TRUE
@@ -183,23 +172,21 @@ BattleFrontier_BattlePalaceLobby_EventScript_SaveBeforeChallenge::
 	closemessage
 	delay 2
 	call Common_EventScript_SaveGame
-	setvar VAR_TEMP_0, 255
-	compare VAR_RESULT, 0
-	goto_if_eq BattleFrontier_BattlePalaceLobby_EventScript_CancelChallengeSaveFailed
+	setvar VAR_TEMP_CHALLENGE_STATUS, 255
+	goto_if_eq VAR_RESULT, 0, BattleFrontier_BattlePalaceLobby_EventScript_CancelChallengeSaveFailed
 BattleFrontier_BattlePalaceLobby_EventScript_EnterChallenge::
 	special SavePlayerParty
 	frontier_setpartyorder FRONTIER_PARTY_SIZE
 	msgbox BattleFrontier_BattlePalaceLobby_Text_FollowMe, MSGBOX_DEFAULT
 	closemessage
 	call BattleFrontier_BattlePalaceLobby_EventScript_WalkToDoor
-	warp MAP_BATTLE_FRONTIER_BATTLE_PALACE_CORRIDOR, 255, 8, 13
-	setvar VAR_TEMP_0, 0
+	warp MAP_BATTLE_FRONTIER_BATTLE_PALACE_CORRIDOR, 8, 13
+	setvar VAR_TEMP_CHALLENGE_STATUS, 0
 	waitstate
 	end
 
 BattleFrontier_BattlePalaceLobby_EventScript_ExplainChallenge::
-	compare VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_DOUBLES
-	goto_if_eq BattleFrontier_BattlePalaceLobby_EventScript_ExplainDoublesChallenge
+	goto_if_eq VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_DOUBLES, BattleFrontier_BattlePalaceLobby_EventScript_ExplainDoublesChallenge
 	msgbox BattleFrontier_BattlePalaceLobby_Text_ExplainSingleBattleChallenge, MSGBOX_DEFAULT
 	goto BattleFrontier_BattlePalaceLobby_EventScript_AskTakeChallenge
 
@@ -214,10 +201,14 @@ BattleFrontier_BattlePalaceLobby_EventScript_NotEnoughValidMons::
 
 BattleFrontier_BattlePalaceLobby_EventScript_NotEnoughValidMonsLv50::
 	msgbox BattleFrontier_BattlePalaceLobby_Text_NotEnoughValidMonsLv50, MSGBOX_DEFAULT
+	call BattleFrontier_ShowCaughtBannedSpecies
+	msgbox BattleFrontier_BattlePalaceLobby_Text_NotEnoughValidMonsEnd, MSGBOX_DEFAULT
 	goto BattleFrontier_BattlePalaceLobby_EventScript_EndCancelChallenge
 
 BattleFrontier_BattlePalaceLobby_EventScript_NotEnoughValidMonsLvOpen::
 	msgbox BattleFrontier_BattlePalaceLobby_Text_NotEnoughValidMonsLvOpen, MSGBOX_DEFAULT
+	call BattleFrontier_ShowCaughtBannedSpecies
+	msgbox BattleFrontier_BattlePalaceLobby_Text_NotEnoughValidMonsEnd, MSGBOX_DEFAULT
 	goto BattleFrontier_BattlePalaceLobby_EventScript_EndCancelChallenge
 
 BattleFrontier_BattlePalaceLobby_EventScript_CancelChallengeSaveFailed::
@@ -226,6 +217,7 @@ BattleFrontier_BattlePalaceLobby_EventScript_CancelChallengeSaveFailed::
 
 BattleFrontier_BattlePalaceLobby_EventScript_LoadPartyAndCancelChallenge::
 	special LoadPlayerParty
+	callnative LoadPlayerParty
 BattleFrontier_BattlePalaceLobby_EventScript_CancelChallenge::
 	msgbox BattleFrontier_BattlePalaceLobby_Text_ReturnWhenFortified, MSGBOX_DEFAULT
 BattleFrontier_BattlePalaceLobby_EventScript_EndCancelChallenge::
@@ -249,34 +241,28 @@ BattleFrontier_BattlePalaceLobby_EventScript_AskTakeDoubleBattleChallenge::
 	return
 
 BattleFrontier_BattlePalaceLobby_EventScript_WalkToDoor::
-	compare VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_SINGLES
-	call_if_eq BattleFrontier_BattlePalaceLobby_EventScript_TalkedToSinglesAttendant
-	compare VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_DOUBLES
-	call_if_eq BattleFrontier_BattlePalaceLobby_EventScript_TalkedToDoublesAttendant
+	call_if_eq VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_SINGLES, BattleFrontier_BattlePalaceLobby_EventScript_TalkedToSinglesAttendant
+	call_if_eq VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_DOUBLES, BattleFrontier_BattlePalaceLobby_EventScript_TalkedToDoublesAttendant
 	applymovement VAR_LAST_TALKED, BattleFrontier_BattlePalaceLobby_Movement_WalkToDoor
-	applymovement OBJ_EVENT_ID_PLAYER, BattleFrontier_BattlePalaceLobby_Movement_WalkToDoor
+	applymovement LOCALID_PLAYER, BattleFrontier_BattlePalaceLobby_Movement_WalkToDoor
 	waitmovement 0
-	compare VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_SINGLES
-	call_if_eq BattleFrontier_BattlePalaceLobby_EventScript_OpenSinglesHallDoor
-	compare VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_DOUBLES
-	call_if_eq BattleFrontier_BattlePalaceLobby_EventScript_OpenDoublesHallDoor
+	call_if_eq VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_SINGLES, BattleFrontier_BattlePalaceLobby_EventScript_OpenSinglesHallDoor
+	call_if_eq VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_DOUBLES, BattleFrontier_BattlePalaceLobby_EventScript_OpenDoublesHallDoor
 	waitdooranim
 	applymovement VAR_LAST_TALKED, BattleFrontier_BattlePalaceLobby_Movement_AttendantEnterDoor
-	applymovement OBJ_EVENT_ID_PLAYER, BattleFrontier_BattlePalaceLobby_Movement_PlayerEnterDoor
+	applymovement LOCALID_PLAYER, BattleFrontier_BattlePalaceLobby_Movement_PlayerEnterDoor
 	waitmovement 0
-	compare VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_SINGLES
-	call_if_eq BattleFrontier_BattlePalaceLobby_EventScript_CloseSinglesHallDoor
-	compare VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_DOUBLES
-	call_if_eq BattleFrontier_BattlePalaceLobby_EventScript_CloseDoublesHallDoor
+	call_if_eq VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_SINGLES, BattleFrontier_BattlePalaceLobby_EventScript_CloseSinglesHallDoor
+	call_if_eq VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_DOUBLES, BattleFrontier_BattlePalaceLobby_EventScript_CloseDoublesHallDoor
 	waitdooranim
 	return
 
 BattleFrontier_BattlePalaceLobby_EventScript_TalkedToSinglesAttendant::
-	setvar VAR_LAST_TALKED, LOCALID_ATTENDANT_SINGLES
+	setvar VAR_LAST_TALKED, LOCALID_PALACE_ATTENDANT_SINGLES
 	return
 
 BattleFrontier_BattlePalaceLobby_EventScript_TalkedToDoublesAttendant::
-	setvar VAR_LAST_TALKED, LOCALID_ATTENDANT_DOUBLES
+	setvar VAR_LAST_TALKED, LOCALID_PALACE_ATTENDANT_DOUBLES
 	return
 
 BattleFrontier_BattlePalaceLobby_EventScript_OpenSinglesHallDoor::
@@ -410,13 +396,13 @@ BattleFrontier_BattlePalaceLobby_Text_ExplainSingleBattleChallenge:
 	.string "the usual way, except with one crucial\l"
 	.string "rule that must be obeyed.\p"
 	.string "TRAINERS are permitted only to switch\n"
-	.string "their {POKEMON} in and out.\p"
+	.string "their POKéMON in and out.\p"
 	.string "TRAINERS are otherwise forbidden to\n"
-	.string "command their {POKEMON}.\p"
-	.string "The {POKEMON} are to behave according\n"
+	.string "command their POKéMON.\p"
+	.string "The POKéMON are to behave according\n"
 	.string "to their nature and battle on their own.\p"
 	.string "You must put your trust in your\n"
-	.string "{POKEMON} and watch over them.\p"
+	.string "POKéMON and watch over them.\p"
 	.string "If you achieve the honor of beating\n"
 	.string "seven TRAINERS in succession,\l"
 	.string "we will present you with Battle Points.\p"
@@ -427,7 +413,7 @@ BattleFrontier_BattlePalaceLobby_Text_ExplainSingleBattleChallenge:
 
 BattleFrontier_BattlePalaceLobby_Text_ReturnWhenFortified:
 	.string "When you have fortified your heart\n"
-	.string "and {POKEMON}, you must return.$"
+	.string "and POKéMON, you must return.$"
 
 BattleFrontier_BattlePalaceLobby_Text_WhichChallenge:
 	.string "There are two BATTLE HALLS,\n"
@@ -436,33 +422,33 @@ BattleFrontier_BattlePalaceLobby_Text_WhichChallenge:
 
 BattleFrontier_BattlePalaceLobby_Text_NotEnoughValidMonsLv50:
 	.string "Sigh…\p"
-	.string "You do not have the three {POKEMON}\n"
+	.string "You do not have the three POKéMON\n"
 	.string "required for the challenge.\p"
 	.string "To enter, you must provide three\n"
-	.string "different kinds of {POKEMON}.\p"
-	.string "These {POKEMON} must all be of\n"
+	.string "different kinds of POKéMON.\p"
+	.string "These POKéMON must all be of\n"
 	.string "Level 50 or lower.\p"
 	.string "They also must not be holding\n"
 	.string "the same kinds of items.\p"
-	.string "EGGS{STR_VAR_1} ineligible.\p"
+	.string "EGGS{STR_VAR_1}.$"
+
+BattleFrontier_BattlePalaceLobby_Text_NotEnoughValidMonsEnd:
 	.string "Come back when you have made\n"
 	.string "your preparations.$"
 
 BattleFrontier_BattlePalaceLobby_Text_NotEnoughValidMonsLvOpen:
 	.string "Sigh…\p"
-	.string "You do not have the three {POKEMON}\n"
+	.string "You do not have the three POKéMON\n"
 	.string "required for the challenge.\p"
 	.string "To enter, you must provide three\n"
-	.string "different kinds of {POKEMON}.\p"
+	.string "different kinds of POKéMON.\p"
 	.string "They also must not be holding\n"
 	.string "the same kinds of items.\p"
-	.string "EGGS{STR_VAR_1} ineligible.\p"
-	.string "Come back when you have made\n"
-	.string "your preparations.$"
+	.string "EGGS{STR_VAR_1}.$"
 
 BattleFrontier_BattlePalaceLobby_Text_NowSelectThreeMons:
 	.string "Good. Now, you must select your\n"
-	.string "three {POKEMON}.$"
+	.string "three POKéMON.$"
 
 BattleFrontier_BattlePalaceLobby_Text_MustSaveBeforeChallenge2:
 	.string "I must save before I show you to\n"
@@ -474,14 +460,14 @@ BattleFrontier_BattlePalaceLobby_Text_FollowMe:
 
 BattleFrontier_BattlePalaceLobby_Text_ResultsWillBeRecorded:
 	.string "I feel privileged for having seen\n"
-	.string "your {POKEMON}'s exploits.\p"
+	.string "your POKéMON's exploits.\p"
 	.string "The results will be recorded.\n"
 	.string "I must ask you to briefly wait.$"
 
 BattleFrontier_BattlePalaceLobby_Text_FirmTrueBondsFor7WinStreak:
 	.string "To achieve a 7-win streak…\p"
 	.string "The bonds that bind your heart with\n"
-	.string "your {POKEMON} seem firm and true.$"
+	.string "your POKéMON seem firm and true.$"
 
 BattleFrontier_BattlePalaceLobby_Text_FeatWillBeRecorded:
 	.string "Your feat will be recorded.\n"
@@ -489,8 +475,8 @@ BattleFrontier_BattlePalaceLobby_Text_FeatWillBeRecorded:
 
 @ Unused
 BattleFrontier_BattlePalaceLobby_Text_BattlePointsFor7WinStreak:
-    .string "For the feat of your 7-win streak,\n"
-    .string "we present you with Battle Point(s).$"
+	.string "For the feat of your 7-win streak,\n"
+	.string "we present you with Battle Point(s).$"
 
 BattleFrontier_BattlePalaceLobby_Text_NoSpaceForPrize:
 	.string "You seem to have no space for\n"
@@ -519,7 +505,7 @@ BattleFrontier_BattlePalaceLobby_Text_ReceivedPrize:
 
 BattleFrontier_BattlePalaceLobby_Text_LadyCanTellWhatMonsThink:
 	.string "For a hardy fellow like me,\n"
-	.string "hardy {POKEMON} are the best.\p"
+	.string "hardy POKéMON are the best.\p"
 	.string "Offense is the best defense!\n"
 	.string "A relentless attack is the ultimate!\p"
 	.string "But that's not what I wanted to chat\n"
@@ -527,7 +513,7 @@ BattleFrontier_BattlePalaceLobby_Text_LadyCanTellWhatMonsThink:
 	.string "Every so often a really cute lady\n"
 	.string "swings by here.\p"
 	.string "She says that she can tell what\n"
-	.string "{POKEMON} are thinking.\p"
+	.string "POKéMON are thinking.\p"
 	.string "I don't know about that part,\n"
 	.string "but she is really cute.\p"
 	.string "Huh?\n"
@@ -535,19 +521,19 @@ BattleFrontier_BattlePalaceLobby_Text_LadyCanTellWhatMonsThink:
 
 BattleFrontier_BattlePalaceLobby_Text_NatureAndMovesKeyHere:
 	.string "Hmm…\p"
-	.string "It appears that the nature of {POKEMON}\n"
+	.string "It appears that the nature of POKéMON\n"
 	.string "and the moves that they have been\l"
 	.string "taught are the keys to battle here.\p"
 	.string "To be more precise, it's how well\n"
 	.string "the moves match the nature of\l"
-	.string "the {POKEMON}.\p"
-	.string "If your {POKEMON} is in trouble and\n"
+	.string "the POKéMON.\p"
+	.string "If your POKéMON is in trouble and\n"
 	.string "unable to live up to its potential,\l"
 	.string "you may need to examine how well\l"
 	.string "its moves match its nature.$"
 
 BattleFrontier_BattlePalaceLobby_Text_MonDocileButTransforms:
-	.string "My {POKEMON} is usually very docile.\p"
+	.string "My POKéMON is usually very docile.\p"
 	.string "But when it's in a BATTLE HALL,\n"
 	.string "it sometimes seems to become\l"
 	.string "transformed into something wicked!\p"
@@ -555,7 +541,7 @@ BattleFrontier_BattlePalaceLobby_Text_MonDocileButTransforms:
 	.string "It's shocking, even.$"
 
 BattleFrontier_BattlePalaceLobby_Text_WhatNatureFavorsChippingAway:
-	.string "I wonder what sort of nature a {POKEMON}\n"
+	.string "I wonder what sort of nature a POKéMON\n"
 	.string "would have if it favored enfeebling its\l"
 	.string "opponents and chipping away slowly.\p"
 	.string "I'd be surprised if it was a LAX nature.\p"
@@ -580,13 +566,13 @@ BattleFrontier_BattlePalaceLobby_Text_ExplainDoubleBattleChallenge:
 	.string "the usual way, except with one crucial\l"
 	.string "rule that must be obeyed.\p"
 	.string "TRAINERS are permitted only to switch\n"
-	.string "their {POKEMON} in and out.\p"
+	.string "their POKéMON in and out.\p"
 	.string "TRAINERS are otherwise forbidden to\n"
-	.string "command their {POKEMON}.\p"
-	.string "The {POKEMON} are to behave according\n"
+	.string "command their POKéMON.\p"
+	.string "The POKéMON are to behave according\n"
 	.string "to their nature and battle on their own.\p"
 	.string "You must put your trust in your\n"
-	.string "{POKEMON} and watch over them.\p"
+	.string "POKéMON and watch over them.\p"
 	.string "If you achieve the honor of beating\n"
 	.string "seven TRAINERS in succession,\l"
 	.string "we will present you with Battle Points.\p"
@@ -601,7 +587,7 @@ BattleFrontier_BattlePalaceLobby_Text_ToDefeatMavenAnd7Trainers:
 
 BattleFrontier_BattlePalaceLobby_Text_PresentYouWithBattlePoints:
 	.string "In honor of the bond you share with\n"
-	.string "your {POKEMON}, we present you with\l"
+	.string "your POKéMON, we present you with\l"
 	.string "these Battle Point(s).$"
 
 BattleFrontier_BattlePalaceLobby_Text_LikeToRecordMatch:
@@ -616,20 +602,20 @@ BattleFrontier_BattlePalaceLobby_Text_ReadWhichHeading:
 	.string "Which heading do you want to read?$"
 
 BattleFrontier_BattlePalaceLobby_Text_ExplainRulesBasics:
-	.string "Here, {POKEMON} are required to think\n"
+	.string "Here, POKéMON are required to think\n"
 	.string "and battle by themselves.\p"
-	.string "Unlike in the wild, {POKEMON} that live\n"
+	.string "Unlike in the wild, POKéMON that live\n"
 	.string "with people behave differently\l"
 	.string "depending on their nature.$"
 
 BattleFrontier_BattlePalaceLobby_Text_ExplainRulesNature:
-	.string "Depending on its nature, a {POKEMON}\n"
+	.string "Depending on its nature, a POKéMON\n"
 	.string "may prefer to attack no matter what.\p"
-	.string "Another {POKEMON} may prefer to protect\n"
+	.string "Another POKéMON may prefer to protect\n"
 	.string "itself from any harm.\p"
 	.string "Yet another may enjoy vexing or\n"
 	.string "confounding its foes.\p"
-	.string "Due to its nature, a {POKEMON}\n"
+	.string "Due to its nature, a POKéMON\n"
 	.string "will have favorite moves that it is good\l"
 	.string "at using.\p"
 	.string "It may also dislike certain moves that\n"
@@ -645,23 +631,23 @@ BattleFrontier_BattlePalaceLobby_Text_ExplainRulesMoves:
 	.string "moves that may enfeeble the foes with\l"
 	.string "stat problems including poison and \l"
 	.string "paralysis.\p"
-	.string "{POKEMON} will consider using moves in\n"
+	.string "POKéMON will consider using moves in\n"
 	.string "these three categories.$"
 
 BattleFrontier_BattlePalaceLobby_Text_ExplainRulesUnderpowered:
 	.string "When not under command by its TRAINER,\n"
-	.string "a {POKEMON} may be unable to effectively\l"
+	.string "a POKéMON may be unable to effectively\l"
 	.string "use certain moves.\p"
-	.string "A {POKEMON} is not good at using any\n"
+	.string "A POKéMON is not good at using any\n"
 	.string "move that it dislikes.\p"
-	.string "If a {POKEMON} only knows moves that\n"
+	.string "If a POKéMON only knows moves that\n"
 	.string "do not match its nature, it will often\l"
 	.string "be unable to live up to its potential.$"
 
 BattleFrontier_BattlePalaceLobby_Text_ExplainRulesWhenInDanger:
-	.string "Depending on its nature, a {POKEMON} may\n"
+	.string "Depending on its nature, a POKéMON may\n"
 	.string "start using moves that don't match its\l"
 	.string "nature when it is in trouble.\p"
-	.string "If a {POKEMON} begins behaving oddly\n"
+	.string "If a POKéMON begins behaving oddly\n"
 	.string "in a pinch, watch it carefully.$"
 

@@ -148,3 +148,31 @@ is flagged in-file as probably incomplete.
 
 **Also required before publishing** (plan section 7): tell the CrystalDust
 developers directly. Not done; it is premature while the project does not build.
+
+## D6 — Hoenn/event-island map scripts: take expansion's version, defer Q3/Q4
+
+**Decision.** For 48 `data/maps/*/scripts.inc` files covering Battle Frontier,
+the Battle Tents, Contest Hall, Southern Island, Birth Island, Faraway Island,
+Navel Rock, Trainer Hill, and the Mystery Events House, take
+pokeemerald-expansion's version rather than the CrystalDust copy the Phase 1
+merge had installed.
+
+**Why.** They failed to assemble with `expected symbol name` on lines like
+`.set LOCALID_PLAYER, 1`. Expansion promoted `LOCALID_PLAYER` to a global
+constant (`include/constants/event_objects.h`, value 255), so the C preprocessor
+rewrites the `.set` to `.set 255, 1` before the assembler sees it. CrystalDust's
+copies predate that promotion. Diffing confirmed the only differences are
+expansion's newer conventions — named vars (`VAR_TEMP_FRONTIER_TUTOR_ID` for
+`VAR_TEMP_E`), global local-IDs (`LOCALID_SOUTHERN_ISLAND_LATI`), and the
+compressed `goto_if_ne` form. CrystalDust made no gameplay changes here; it
+simply never touched this Hoenn content.
+
+**No feature dropped.** This is Hoenn content Crystal has no analogue for, and
+CrystalDust does not use it. Taking expansion's version *restores* working
+content rather than removing any. The files stay present and building.
+
+**Relationship to Q3/Q4.** This deliberately does not answer whether the Battle
+Frontier ships. It removes the question from the critical path: the maps now
+assemble, so the scope call can be made later on its merits instead of being
+forced by a build error. If Q3 comes back "out of scope", these are deleted
+then — as a decision, not as a side effect.
