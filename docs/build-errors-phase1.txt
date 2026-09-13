@@ -1,0 +1,159 @@
+Crystal Expansion — Phase 1 build error inventory
+=================================================
+Generated: 2026-09-13
+Build:     gmake -k -j8 modern   (GNU Make 4.4.1, devkitARM 15.2.0)
+Tree:      commit 8949bac5 (Phase 1 scaffold + CD merge)
+Result:    1391 errors across 64 files, 524 failed targets, 1005 objects unbuilt.
+Wall time: 2m37s.
+
+This is the Phase 2 work queue. Errors are grouped by root cause, not by file,
+because most files fail for one of a small number of shared reasons.
+
+-----------------------------------------------------------------------
+PRECONDITION: build with gmake, not /usr/bin/make
+-----------------------------------------------------------------------
+Apple's /usr/bin/make is GNU Make 3.81. With the merged rule files it does not
+fail -- it hangs, spinning at 100% CPU with no child processes. `sample` shows
+deep self-recursion inside make's implicit-rule search: 3.81's search is
+exponential in the number of pattern rules, and the merge roughly triples them
+(graphics_file_rules.mk 313 -> 869 lines, spritesheet_rules.mk 25 -> 829).
+GNU Make 4.4.1 (homebrew `gmake`) runs the identical rule set to completion in
+3.8 seconds. This is a toolchain constraint, not a defect in the merge; see
+decision D4. All Phase 2 builds must use gmake.
+
+-----------------------------------------------------------------------
+GROUP A — Pokenav rewritten upstream (approx. 480 errors, 10 files)
+-----------------------------------------------------------------------
+  src/pokenav_conditions_1.c            128
+  src/pokenav_conditions_2.c             64
+  src/pokenav_conditions_3.c             64
+  src/pokenav_match_call_2.c             46
+  src/pokenav_ribbons_1.c                45
+  src/pokenav_ribbons_2.c                37
+  src/pokenav_menu_handler_2.c           36
+  src/pokenav_match_call_ui.c            35
+  src/pokenav_match_call_1.c             16
+
+Dominant symptom: `invalid use of undefined type 'struct PokenavSub18'` (124),
+plus POKENAV_SUBSTRUCT_* enumerators and sub_81C8xxx helpers undeclared.
+CrystalDust forked while pokeemerald still had the unnamed `PokenavSubN` /
+`sub_XXXXXXX` symbols; expansion inherited pret's later renaming pass, so the
+types and enumerators now exist under real names.
+Work: these are NOT feature differences. Map CD's legacy names onto expansion's
+current Pokenav symbols. Mostly mechanical rename; verify struct layouts match
+before trusting the rename, since pret changed some field types during the
+naming pass.
+
+-----------------------------------------------------------------------
+GROUP B — Pokegear: CD's genuinely new subsystem (approx. 430 errors, 6 files)
+-----------------------------------------------------------------------
+  src/radio.c                           230
+  src/phone_contact.c                   118
+  src/pokegear.c                         58
+  src/phone_script.c                     21
+  src/buenas_password.c                  15
+  src/unk_text_util_2.c                  16
+
+This is real Crystal content with no expansion counterpart: the radio, the phone
+contact list, Buena's password. It fails on the same legacy pokeemerald API that
+Group A does (StringGetEnd10, IsTextPrinterActive, sub_8199DF0,
+LoadThinWindowBorderGfx, gScriptStringVars, TEXT_SPEED_FF, struct
+TextPrinterSubStruct) rather than on anything Pokegear-specific.
+Work: port onto expansion's current text/window API. Highest-value group --
+no Pokegear means no Crystal. Do this before the map work.
+
+-----------------------------------------------------------------------
+GROUP C — CD gameplay systems on legacy API (approx. 120 errors, 8 files)
+-----------------------------------------------------------------------
+  src/bug_catching_contest.c             41
+  src/item_pc.c                          37
+  src/day_night.c                        24
+  src/mom_bank.c                         16
+  src/apricorn_menu.c                    13
+  src/fruit_tree.c                       11
+  src/fldeff_headbutt.c                   9
+  src/card_flip.c                         6
+  src/gbs.c                               8
+
+Same legacy-API root cause, plus missing constants CD defines in headers that
+were not merged: APRICORN_COUNT, VAR_KURT_GIVEN_APRICORN(_QTY),
+FLAG_FRUIT_TREES_START, BG_EVENT_FRUIT_TREE, FLAG_SYS_HAS_EXPN_CARD,
+gText_WhichApricorn / gText_HowManyApricorns / gText_ConfirmApricorns.
+`EnableBothScriptContexts` and `ScriptContext1_Stop` were renamed upstream
+(ScriptContext_Enable / ScriptContext_Stop).
+Work: merge the missing constant and string definitions, then rename the
+script-context and text calls. day_night.c and fruit_tree.c also need the RTC
+struct fields (.dayOfWeek, .twentyFourHourClock) added -- see Group E.
+
+-----------------------------------------------------------------------
+GROUP D — Assembly: script macros and map scripts (approx. 190 errors)
+-----------------------------------------------------------------------
+  asm/macros/event.inc                   52   non-constant expression in .if
+  sound/song_table.inc                   77   expected symbol name
+  asm/macros/map.inc                      9   undefined map
+  data/maps/*/scripts.inc                ~60  bad instruction walk_in_place_fastest_*
+
+Four distinct causes:
+  D1. event.inc `.if` failures -- CD macros test symbols that do not exist in
+      expansion's constant set. 52 errors.
+  D2. song_table.inc -- the deferred sound/*.inc hand-merge (already a known
+      Phase 2 item). CD song symbols are referenced but never defined because
+      songs.mk was copied while expansion uses audio_rules.mk. 77 errors.
+  D3. walk_in_place_fastest_{up,down,left,right} -- expansion renamed these
+      movement macros. ~60 errors across map scripts, purely mechanical.
+  D4. `undefined map (check for typos)` x9 in asm/macros/map.inc -- maps
+      referenced by CD scripts that were not merged (Battle Frontier and
+      Contest Hall scripts dominate). See the scope note below.
+
+-----------------------------------------------------------------------
+GROUP E — Struct field mismatches (approx. 113 errors)
+-----------------------------------------------------------------------
+`has no member named` on: .boxId/.monId (16 each), .dayOfWeek (13),
+.unk14/.unk8/.unk6, .bankedMoney (7), .stat, .data, .gameBuild, .gbsTempo,
+.berryTreeId, .listFunc, .twentyFourHourClock.
+CD added fields to SaveBlock and RTC structs, and still uses pre-rename `unkN`
+names for fields expansion has since named. include/rtc.h itself has 5 errors.
+Work: extend expansion's structs with CD's genuinely new fields (bankedMoney,
+gameBuild, gbsTempo, dayOfWeek, twentyFourHourClock) and rename the unkN
+references. Note that touching SaveBlock layout affects save compatibility --
+irrelevant now, but fix the layout before any playtesting begins.
+
+-----------------------------------------------------------------------
+GROUP F — Signature and type drift (approx. 60 errors)
+-----------------------------------------------------------------------
+  40  too many arguments to function X
+  14  incompatible type for argument 1 of X
+   8  array index in initializer not of integer type
+   7  conflicting types for X
+   3  enumeration value X not handled in switch [-Werror=switch]
+   2  static assertion failed: "source potentially unaligned"
+   2  control reaches end of non-void function [-Werror=return-type]
+
+Expansion changed function signatures CD calls. The two static-assert failures
+are alignment assertions in expansion's code triggered by CD data -- these
+indicate a real data layout problem, not a rename; investigate rather than
+silence. The -Werror=switch cases are new expansion enum values CD does not
+handle, and each needs a deliberate behavioural decision.
+
+-----------------------------------------------------------------------
+SCOPE NOTE — Battle Frontier and Contest Hall (open questions Q3/Q4)
+-----------------------------------------------------------------------
+About 50 errors come from data/maps/BattleFrontier_* and
+LilycoveCity_Contest{Hall,Lobby} scripts. These are Hoenn content CrystalDust
+never used and Crystal has no analogue for. If Q3 is answered "Battle Frontier
+out of scope", these files are deleted rather than fixed and the count drops.
+Flagging rather than deciding: deleting them silently would drop a feature.
+
+-----------------------------------------------------------------------
+SUGGESTED PHASE 2 ORDER
+-----------------------------------------------------------------------
+1. D3 movement-macro rename and the script-context renames -- largest error
+   drop for the least risk, and unblocks map script assembly.
+2. Group E structs and the missing Group C constants -- unblocks compilation
+   broadly.
+3. Group B Pokegear -- the critical path for Crystal content.
+4. Group A Pokenav renames.
+5. Group C remaining systems.
+6. D2 sound hand-merge.
+7. Group F, individually; do not batch these, and do not silence the static
+   assertions.
