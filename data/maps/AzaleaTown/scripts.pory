@@ -100,7 +100,7 @@ script AzaleaTown_EventScript_RivalTrigger_All {
     addobject(OBJ_RIVAL)
 	fadenewbgm(0)
     textcolor(MSG_COLOR_BLUE)
-    applymovement(OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFastestRight)
+    applymovement(OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFasterRight)
 	waitmovement(0)
 	playse(SE_PIN)
 	applymovement(OBJ_EVENT_ID_PLAYER, Common_Movement_ExclamationMark)
@@ -159,7 +159,7 @@ script AzaleaTown_EventScript_RivalTrigger_All {
            "like you is only a distraction.")
     closemessage
 
-    applymovement(OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFastestLeft)
+    applymovement(OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFasterLeft)
     if (var(VAR_TEMP_1) == 0 || var(VAR_TEMP_1) == 2)
     {
         applymovement(OBJ_RIVAL, AzaleaTown_Movement_RivalExitUpper)
@@ -194,22 +194,22 @@ text AzaleaTown_Text_RivalWon {
 
 movement AzaleaTown_Movement_PlayerWatchRivalDown {
     delay_16 * 6
-    walk_in_place_fastest_down
+    walk_in_place_faster_down
 }
 
 movement AzaleaTown_Movement_PlayerWatchRivalUp {
     delay_16 * 6
-    walk_in_place_fastest_up
+    walk_in_place_faster_up
 }
 
 movement AzaleaTown_Movement_RivalToPlayerUp {
     walk_left * 8
-    walk_in_place_fastest_up
+    walk_in_place_faster_up
 }
 
 movement AzaleaTown_Movement_RivalToPlayerDown {
     walk_left * 8
-    walk_in_place_fastest_down
+    walk_in_place_faster_down
 }
 
 movement AzaleaTown_Movement_RivalExitUpper {

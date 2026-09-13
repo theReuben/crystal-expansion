@@ -51,7 +51,7 @@ script VioletCity_Earl {
 		closemessage
 		applymovement(1, VioletCity_Movement_EarlSpin)
 		waitmovement(0)
-		applymovement(1, Common_Movement_WalkInPlaceFastestUp)
+		applymovement(1, Common_Movement_WalkInPlaceFasterUp)
 		waitmovement(0)
 		opendoor(37, 19)
 		waitdooranim

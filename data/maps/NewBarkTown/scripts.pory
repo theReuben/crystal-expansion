@@ -121,7 +121,7 @@ script NewBarkTown_EventScript_TeacherTriggers{
 	turnobject(2, DIR_WEST)
 	msgbox("Wait, {PLAYER}!")
 	closemessage
-	applymovement(OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFastestRight)
+	applymovement(OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFasterRight)
 	waitmovement(0)
 	delay(10)
     switch(var(VAR_TEMP_1))
@@ -161,7 +161,7 @@ script NewBarkTown_EventScript_TeacherTriggers{
     walk_left * 5
 }movement(local) NewBarkTown_Movement_PlayerTurnAfterWaitingForTeacher{
     delay_16 * 6
-    walk_in_place_fastest_up
+    walk_in_place_faster_up
 }movement(local) NewBarkTown_Movement_TeacherToMiddleSpot{
     walk_left * 6
     face_down

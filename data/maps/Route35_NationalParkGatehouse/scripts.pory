@@ -125,13 +125,13 @@ movement Route35_NationalParkGatehouse_Movement_EnterContestFromLeft {
 }
 
 movement Route35_NationalParkGatehouse_Movement_OfficerWatchPlayerEnterFromBelow {
-    walk_in_place_fastest_right
+    walk_in_place_faster_right
 }
 
 movement Route35_NationalParkGatehouse_Movement_OfficerWatchPlayerEnterFromLeft {
-    walk_in_place_fastest_down
+    walk_in_place_faster_down
     delay_16 * 2
-    walk_in_place_fastest_right
+    walk_in_place_faster_right
 }
 
 script Route35_NationalParkGatehouse_NoContestOfficer {

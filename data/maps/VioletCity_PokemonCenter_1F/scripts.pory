@@ -73,7 +73,7 @@ script VioletCity_PokemonCenter_1F_EventScript_Aide {
             }
             else
             {
-                applymovement(OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFastestDown)
+                applymovement(OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFasterDown)
                 applymovement(ELMS_AIDE, VioletCity_PokemonCenter_1F_Movement_AideStraightOut)
                 waitmovement(0)
             }
@@ -208,7 +208,7 @@ movement VioletCity_PokemonCenter_1F_Movement_AideFromPlayerLeft {
 
 movement VioletCity_PokemonCenter_1F_Movement_PlayerWatchesAide {
     delay_16
-    walk_in_place_fastest_right
+    walk_in_place_faster_right
     delay_16
-    walk_in_place_fastest_down
+    walk_in_place_faster_down
 }

@@ -36,7 +36,7 @@ script GoldenrodCity_DeptStore_Rooftop_EventScript_GatchaGuy {
            "I'm going to be back every day to\n"
            "collect all the dolls!")
     closemessage
-    applymovement(VAR_LAST_TALKED, Common_Movement_WalkInPlaceFastestUp)
+    applymovement(VAR_LAST_TALKED, Common_Movement_WalkInPlaceFasterUp)
     waitmovement(0)
     release
 }
@@ -52,7 +52,7 @@ script GoldenrodCity_DeptStore_Rooftop_EventScript_BinocularJerk {
     faceplayer
     msgbox("Will you quit bothering me?")
     closemessage
-    applymovement(VAR_LAST_TALKED, Common_Movement_WalkInPlaceFastestRight)
+    applymovement(VAR_LAST_TALKED, Common_Movement_WalkInPlaceFasterRight)
     waitmovement(0)
     release
 }

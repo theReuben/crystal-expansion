@@ -410,6 +410,6 @@ static void ApricornMenu_Exit(u8 taskId)
     ApricornMenu_RemoveScrollIndicator();
     DestroyListMenuTask(sApricornMenu->listMenuTaskId, NULL, NULL);
     RemoveAllWindows();
-    EnableBothScriptContexts();
+    ScriptContext_Enable();
     DestroyTask(taskId);
 }

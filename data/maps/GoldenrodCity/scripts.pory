@@ -208,7 +208,7 @@ script GoldenrodCity_EventScript_RocketScout {
     msgbox("What do you want, you pest?\n"
            "Scram!")
     closemessage
-    applymovement(VAR_LAST_TALKED, Common_Movement_WalkInPlaceFastestUp)
+    applymovement(VAR_LAST_TALKED, Common_Movement_WalkInPlaceFasterUp)
     waitmovement(0)
     release
 }

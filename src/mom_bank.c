@@ -370,7 +370,7 @@ static void MomBank_AcceptTransaction(u8 taskId)
 
 static void MomBank_Exit(u8 taskId)
 {
-    EnableBothScriptContexts();
+    ScriptContext_Enable();
     DestroyTask(taskId);
 }
 

@@ -303,7 +303,7 @@ script NewBarkTown_ProfessorElmsLab_EventScript_ElmIntroduction {
     waitmovement(0)
     applymovement(OBJ_EVENT_ID_ELM, Common_Movement_Delay48)
     waitmovement(0)
-    applymovement(OBJ_EVENT_ID_ELM, Common_Movement_WalkInPlaceFastestRight)
+    applymovement(OBJ_EVENT_ID_ELM, Common_Movement_WalkInPlaceFasterRight)
     waitmovement(0)
     msgbox("ELM: {PLAYER}!\n"
            "There you are!\l"
@@ -348,7 +348,7 @@ script NewBarkTown_ProfessorElmsLab_EventScript_ElmPostBegging {
     waitmovement(0)
     applymovement(OBJ_EVENT_ID_ELM, Common_Movement_Delay48)
     waitmovement(0)
-    applymovement(OBJ_EVENT_ID_ELM, Common_Movement_WalkInPlaceFastestDown)
+    applymovement(OBJ_EVENT_ID_ELM, Common_Movement_WalkInPlaceFasterDown)
     waitmovement(0)
     msgbox("Oh, hey!\n"
            "I got an e-mail!\p"
@@ -357,7 +357,7 @@ script NewBarkTown_ProfessorElmsLab_EventScript_ElmPostBegging {
            "Okay…")
     closemessage
     delay(30)
-    applymovement(OBJ_EVENT_ID_ELM, Common_Movement_WalkInPlaceFastestRight)
+    applymovement(OBJ_EVENT_ID_ELM, Common_Movement_WalkInPlaceFasterRight)
     waitmovement(0)
     msgbox("Hey, listen.\p"
            "I have an acquaintance called\n"
@@ -394,9 +394,9 @@ movement NewBarkTown_ProfessorElmsLab_Movement_PlayerStepToElm {
 
 movement NewBarkTown_ProfessorElmsLab_Movement_PlayerWatchElmWalk {
 	delay_16
-	walk_in_place_fastest_up
+	walk_in_place_faster_up
 	delay_16
-	walk_in_place_fastest_right
+	walk_in_place_faster_right
 }
 
 movement NewBarkTown_ProfessorElmsLab_Movement_ElmWalkToPokeBalls {
@@ -539,7 +539,7 @@ script NewBarkTown_EventScript_PokeBallMain {
                             applymovement(OBJ_EVENT_ID_PLAYER, NewBarkTown_ProfessorElmsLab_Movement_WalkToElmFrom105)
                     }
                 case DIR_EAST:
-                    applymovement(OBJ_EVENT_ID_ELM, Common_Movement_WalkInPlaceFastestDown)
+                    applymovement(OBJ_EVENT_ID_ELM, Common_Movement_WalkInPlaceFasterDown)
                     applymovement(OBJ_EVENT_ID_PLAYER, NewBarkTown_ProfessorElmsLab_Movement_WalkToElmFrom74)
             }
             waitmovement(0)
@@ -557,13 +557,13 @@ script NewBarkTown_EventScript_PokeBallMain {
             msgbox("{PLAYER} got PROF. ELM's phone\n"
                    "number.")
             waitfanfare
-            applymovement(OBJ_EVENT_ID_ELM, Common_Movement_WalkInPlaceFastestLeft)
+            applymovement(OBJ_EVENT_ID_ELM, Common_Movement_WalkInPlaceFasterLeft)
             waitmovement(0)
             textcolor(MSG_COLOR_BLUE)
             msgbox("If your {POKEMON} is hurt, you should\n"
                    "heal it with this machine.\l"
                    "Feel free to use it anytime.")
-            applymovement(OBJ_EVENT_ID_ELM, Common_Movement_WalkInPlaceFastestDown)
+            applymovement(OBJ_EVENT_ID_ELM, Common_Movement_WalkInPlaceFasterDown)
             waitmovement(0)
             msgbox("{PLAYER}, I'm counting on you!")
             setvar(VAR_ELM_LAB_STATE, 2)
@@ -575,7 +575,7 @@ script NewBarkTown_EventScript_PokeBallMain {
 
 movement NewBarkTown_ProfessorElmsLab_Movement_Delay32FaceDown {
 	delay_16 * 2
-	walk_in_place_fastest_down
+	walk_in_place_faster_down
 }
 
 movement NewBarkTown_ProfessorElmsLab_Movement_WalkToElmFrom83 {
@@ -587,7 +587,7 @@ movement NewBarkTown_ProfessorElmsLab_Movement_WalkToElmFrom83 {
 
 movement NewBarkTown_ProfessorElmsLab_Movement_Delay48FaceDown {
 	delay_16 * 3
-	walk_in_place_fastest_down
+	walk_in_place_faster_down
 }
 
 movement NewBarkTown_ProfessorElmsLab_Movement_WalkToElmFrom93 {
@@ -599,7 +599,7 @@ movement NewBarkTown_ProfessorElmsLab_Movement_WalkToElmFrom93 {
 
 movement NewBarkTown_ProfessorElmsLab_Movement_Delay64FaceDown {
 	delay_16 * 4
-	walk_in_place_fastest_down
+	walk_in_place_faster_down
 }
 
 movement NewBarkTown_ProfessorElmsLab_Movement_WalkToElmFrom103 {
@@ -616,7 +616,7 @@ movement NewBarkTown_ProfessorElmsLab_Movement_WalkToElmFrom74 {
 
 movement NewBarkTown_ProfessorElmsLab_Movement_Delay16FaceDown {
 	delay_16
-	walk_in_place_fastest_down
+	walk_in_place_faster_down
 }
 
 movement NewBarkTown_ProfessorElmsLab_Movement_WalkToElmFrom85 {
@@ -720,7 +720,7 @@ script NewBarkTown_ProfessorElmsLab_EventScript_Officer1 {
 
 movement NewBarkTown_ProfessorElmsLab_Movement_OfficerWaitFaceLeft {
 	delay_16 * 3
-	walk_in_place_fastest_left
+	walk_in_place_faster_left
 }
 
 movement NewBarkTown_ProfessorElmsLab_Movement_PlayerToOfficerFromLeft {
@@ -738,7 +738,7 @@ script NewBarkTown_ProfessorElmsLab_EventScript_Officer2 {
 
 movement NewBarkTown_ProfessorElmsLab_Movement_OfficerWaitFaceLeftFromCenter {
 	delay_16 * 4
-	walk_in_place_fastest_left
+	walk_in_place_faster_left
 }
 
 movement NewBarkTown_ProfessorElmsLab_Movement_PlayerToOfficerFromCenter {
@@ -757,7 +757,7 @@ script NewBarkTown_ProfessorElmsLab_EventScript_Officer3 {
 
 movement NewBarkTown_ProfessorElmsLab_Movement_OfficerWaitFaceRight {
 	delay_16 * 3
-	walk_in_place_fastest_right
+	walk_in_place_faster_right
 }
 
 movement NewBarkTown_ProfessorElmsLab_Movement_PlayerToOfficerFromRight {

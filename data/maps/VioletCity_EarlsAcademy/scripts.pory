@@ -93,7 +93,7 @@ script VioletCity_EarlsAcademy_EventScript_Notes {
                        "GYMS and defeat other TRAINERS.\p"
                        "The next page is…\n"
                        "Blank!")
-                applymovement(NOTES_KID, Common_Movement_WalkInPlaceFastestUp)
+                applymovement(NOTES_KID, Common_Movement_WalkInPlaceFasterUp)
                 waitmovement(0)
                 textcolor(MSG_COLOR_BLUE)
                 msgbox("BOY: Ehehe…\n"
@@ -199,7 +199,7 @@ script VioletCity_EarlsAcademy_EventScript_TradingKid1 {
     msgbox("I traded my best {POKEMON} to the\n"
             "guy beside me.")
     closemessage
-    applymovement(GBKID_1, Common_Movement_WalkInPlaceFastestDown)
+    applymovement(GBKID_1, Common_Movement_WalkInPlaceFasterDown)
     waitmovement(0)
     release
 }
@@ -210,7 +210,7 @@ script VioletCity_EarlsAcademy_EventScript_TradingKid2 {
     msgbox("Huh? The {POKEMON} I just got is\n"
             "holding something!")
     closemessage
-    applymovement(GBKID_2, Common_Movement_WalkInPlaceFastestDown)
+    applymovement(GBKID_2, Common_Movement_WalkInPlaceFasterDown)
     waitmovement(0)
     release
 }

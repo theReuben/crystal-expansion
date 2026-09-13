@@ -1354,7 +1354,7 @@ void PlayCardFlip(void)
 {
     u8 taskId;
 
-    ScriptContext1_Stop();
+    ScriptContext_Stop();
     sCardFlip = AllocZeroed(sizeof(*sCardFlip));
     sCardFlip->returnMainCallback = CB2_ReturnToFieldContinueScriptPlayMapMusic;
     //sCardFlip->numCoinsEntry = SanitizeNumCoinsEntry(gSpecialVar_0x8004);

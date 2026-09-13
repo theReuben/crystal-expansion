@@ -444,7 +444,7 @@ void ShowDebugMenu(void)
     }
     LoadMessageBoxAndBorderGfx();
     DebugMenu_InitMainMenu();
-    ScriptContext2_Enable();
+    LockPlayerFieldControls();
 }
 
 static int GetMaxWidthInDebugMenuTable(const struct DebugMenuAction *str, int arg1)
@@ -556,7 +556,7 @@ static void DebugMenu_Exit(u8 taskId)
 {
     DebugMenu_RemoveMenu(taskId);
     ScriptUnfreezeObjectEvents();
-    ScriptContext2_Disable();
+    UnlockPlayerFieldControls();
     DestroyTask(taskId);
 }
 
@@ -1499,11 +1499,11 @@ static void DebugMenu_Pokedex_ProfOakRating(u8 taskId)
 
 static void WaitForScript(u8 taskId)
 {
-    if (ScriptContext1_IsScriptSetUp() != TRUE)
+    if (ScriptContext_IsEnabled() != TRUE)
     {
         PlaySE(SE_SELECT);
         HideFieldMessageBox();
-        ScriptContext2_Enable();
+        LockPlayerFieldControls();
         gTasks[taskId].func = *(void **)(&gTasks[taskId].data[4]);
     }
 }
@@ -1568,7 +1568,7 @@ static void DebugMenu_Pokedex_ProfOakRating_ProcessInput(u8 taskId)
 
         gTasks[taskId].func = WaitForScript;
         *(void **)(&gTasks[taskId].data[4]) = DebugMenu_Pokedex_ProfOakRating_ProcessInput;
-        ScriptContext1_SetupScript(PokedexRating_EventScript_ShowRatingMessage);
+        ScriptContext_SetupScript(PokedexRating_EventScript_ShowRatingMessage);
     }
 
     if (JOY_NEW(B_BUTTON))

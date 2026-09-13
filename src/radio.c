@@ -925,7 +925,7 @@ void Task_FieldRadio_2(u8 taskId)
     if (JOY_NEW(A_BUTTON | B_BUTTON))
     {
         ClearDialogWindowAndFrame(0, TRUE);
-        EnableBothScriptContexts();
+        ScriptContext_Enable();
 
         DestroyTask(gTasks[taskId].tRadioShowTaskId);
         DestroyTask(taskId);

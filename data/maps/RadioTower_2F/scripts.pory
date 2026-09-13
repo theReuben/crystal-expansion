@@ -162,7 +162,7 @@ script RadioTower_2F_EventScript_Buena {
                        "Come on, {PLAYER}.\n"
                        "Join the show!")
                 closemessage
-                applymovement(BUENA, Common_Movement_WalkInPlaceFastestRight)
+                applymovement(BUENA, Common_Movement_WalkInPlaceFasterRight)
                 waitmovement(0)
                 if (var(VAR_FACING) == DIR_EAST)
                 {
@@ -171,13 +171,13 @@ script RadioTower_2F_EventScript_Buena {
                 }
                 else
                 {
-                    applymovement(OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFastestRight)
+                    applymovement(OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFasterRight)
                     waitmovement(0)
                 }
                 msgbox("BUENA: Everyone ready?\p"
                        "I want to hear you shout out today's\n"
                        "password for {PLAYER}!")
-                applymovement(BUENA, Common_Movement_WalkInPlaceFastestDown)
+                applymovement(BUENA, Common_Movement_WalkInPlaceFasterDown)
                 waitmovement(0)
                 message("BUENA: So, how about it?\n"
                         "What's my password?")
@@ -205,7 +205,7 @@ script RadioTower_2F_EventScript_Buena {
                     waitse
                     waitbuttonpress
                 }
-                applymovement(BUENA, Common_Movement_WalkInPlaceFastestRight)
+                applymovement(BUENA, Common_Movement_WalkInPlaceFasterRight)
                 waitmovement(0)
                 msgbox("BUENA: Yup!\n"
                        "Our contestant was {PLAYER}.\l"
@@ -218,9 +218,9 @@ script RadioTower_2F_EventScript_Buena {
                 {
                     delay(20)
                     // TODO: Check for phone #
-                    applymovement(BUENA, Common_Movement_WalkInPlaceFastestDown)
+                    applymovement(BUENA, Common_Movement_WalkInPlaceFasterDown)
                     waitmovement(0)
-                    applymovement(OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFastestUp)
+                    applymovement(OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFasterUp)
                     waitmovement(0)
 
                     if (!flag(FLAG_BUENA_OFFERED_NUMBER))
@@ -245,7 +245,7 @@ script RadioTower_2F_EventScript_Buena {
                         call(RadioTower_2F_EventScript_Buena_OfferNumberAgain)
                     }
                     closemessage
-                    applymovement(BUENA, Common_Movement_WalkInPlaceFastestRight)
+                    applymovement(BUENA, Common_Movement_WalkInPlaceFasterRight)
                     waitmovement(0)
                 }
             }
@@ -256,7 +256,7 @@ script RadioTower_2F_EventScript_Buena {
                        "Catch ya later!")
                 fadedefaultbgm
                 closemessage
-                applymovement(BUENA, Common_Movement_WalkInPlaceFastestRight)
+                applymovement(BUENA, Common_Movement_WalkInPlaceFasterRight)
                 waitmovement(0)
             }
         }
@@ -281,7 +281,7 @@ script RadioTower_2F_EventScript_Buena_OfferNumberIfNotGiven {
         call(RadioTower_2F_EventScript_Buena_OfferNumberAgain)
     }
     closemessage
-    applymovement(BUENA, Common_Movement_WalkInPlaceFastestRight)
+    applymovement(BUENA, Common_Movement_WalkInPlaceFasterRight)
     waitmovement(0)
 }
 

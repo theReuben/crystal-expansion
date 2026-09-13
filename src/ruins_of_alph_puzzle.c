@@ -300,7 +300,7 @@ void DoRuinsOfAlphPuzzle(void)
     u8 taskId;
     int i;
 
-    ScriptContext1_Stop();
+    ScriptContext_Stop();
     sRuinsOfAlphPuzzle = AllocZeroed(sizeof(*sRuinsOfAlphPuzzle));
     sRuinsOfAlphPuzzle->puzzleId = gSpecialVar_0x8004;
     for (i = 0; i < NUM_PUZZLE_PIECES; i++)

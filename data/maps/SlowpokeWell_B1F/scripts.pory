@@ -82,7 +82,7 @@ script SlowpokeWell_B1F_EventScript_RocketBossDefeated {
     applymovement(SLOWPOKE_2, SlowpokeWell_B1F_SecondSlowpokeWaitTurn)
     applymovement(KURT_ON_FEET, SlowpokeWell_B1F_KurtToSlowpokes)
     waitmovement(0)
-    applymovement(OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFastestRight)
+    applymovement(OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFasterRight)
     waitmovement(0)
     msgbox("KURT: Way to go, {PLAYER}!\n"
            "TEAM ROCKET has taken off.\p"
@@ -123,7 +123,7 @@ movement SlowpokeWell_B1F_KurtToSlowpokes {
     walk_up * 3
     delay_16
     delay_8
-    walk_in_place_fastest_left
+    walk_in_place_faster_left
 }
 
 script SlowpokeWell_B1F_EventScript_SlowpokeWithMail {

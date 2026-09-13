@@ -27,7 +27,7 @@ mapscripts OlivineCity_Port_MapScripts {
             applymovement(OBJ_EVENT_ID_PLAYER, OlivineCity_Port_Movement_PlayerExitsShip)
             waitmovement(0)
             addobject(6)
-            applymovement(6, Common_Movement_WalkInPlaceFastestUp)
+            applymovement(6, Common_Movement_WalkInPlaceFasterUp)
             playse(SE_EXIT)
             applymovement(OBJ_EVENT_ID_PLAYER, OlivineCity_Port_Movement_PlayerExitsDock)
             waitmovement(0)

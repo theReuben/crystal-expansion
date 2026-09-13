@@ -30,7 +30,7 @@ script Route32_EventScript_RoadblockManTrigger_All {
     waitmovement(0)
     applymovement(ROADBLOCK_MAN, Common_Movement_Delay48)
     waitmovement(0)
-    applymovement(OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFastestRight)
+    applymovement(OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFasterRight)
     waitmovement(0)
     textcolor(MSG_COLOR_BLUE)
     msgbox("Wait up!\nWhat's the hurry?")
@@ -164,7 +164,7 @@ script Route32_EventScript_SlowpokeTailManTrigger_All {
 }
 
 movement Route32_Movement_FaceUp {
-    walk_in_place_fastest_up
+    walk_in_place_faster_up
 }
 
 movement Route32_Movement_StepUp {

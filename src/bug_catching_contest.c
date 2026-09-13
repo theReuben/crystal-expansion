@@ -386,7 +386,7 @@ bool8 CheckBugCatchingContestTimerExpired(void)
         curSeconds = GetTotalSeconds(&gLocalTime);
         if (curSeconds - gBugCatchingContestStartSeconds > BUG_CONTEST_DURATION_SECONDS)
         {
-            ScriptContext1_SetupScript(EventScript_BugCatchingContestTimeExpired);
+            ScriptContext_SetupScript(EventScript_BugCatchingContestTimeExpired);
             return TRUE;
         }
     }
@@ -530,7 +530,7 @@ void DetermineBugCatchingContestStandings(void)
 
 void BugCatchingContestQuitPrompt(void)
 {
-    ScriptContext1_SetupScript(BugCatchingContest_StartMenuPrompt);
+    ScriptContext_SetupScript(BugCatchingContest_StartMenuPrompt);
 }
 
 u16 DetermineBugCatchingContestPrize(void)
@@ -559,7 +559,7 @@ void CB2_EndBugCatchingContestBattle(void)
 
     if (IsPlayerDefeated(gBattleOutcome))
     {
-        ScriptContext2_RunNewScript(EventScript_BugContest_WhiteOut);
+        RunScriptImmediately(EventScript_BugContest_WhiteOut);
         WarpIntoMap();
         gFieldCallback = FieldCB_ReturnToFieldNoScriptCheckMusic;
         SetMainCallback2(CB2_LoadMap);
@@ -570,7 +570,7 @@ void CB2_EndBugCatchingContestBattle(void)
     }
     else if (gBattleOutcome == B_OUTCOME_NO_PARK_BALLS)
     {
-        ScriptContext2_RunNewScript(EventScript_RanOutOfParkBalls);
+        RunScriptImmediately(EventScript_RanOutOfParkBalls);
         WarpIntoMap();
         gFieldCallback = FieldCB_ReturnToFieldNoScriptCheckMusic;
         SetMainCallback2(CB2_LoadMap);
@@ -578,8 +578,8 @@ void CB2_EndBugCatchingContestBattle(void)
     else if (gBattleOutcome == B_OUTCOME_CAUGHT)
     {
         // Player caught mon, but has no more Park Balls.
-        ScriptContext1_SetupScript(EventScript_CaughtButRanOutOfParkBalls);
-        ScriptContext1_Stop();
+        ScriptContext_SetupScript(EventScript_CaughtButRanOutOfParkBalls);
+        ScriptContext_Stop();
         SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
     }
 }

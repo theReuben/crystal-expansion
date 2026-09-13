@@ -322,11 +322,11 @@ movement IlexForest_Movement_Farfetchd_5to7 {
 
 movement IlexForest_Movement_Farfetchd_5to4East {
 	walk_fast_right * 3
-	walk_in_place_fastest_up
+	walk_in_place_faster_up
 	delay_4
-	walk_in_place_fastest_down
+	walk_in_place_faster_down
 	delay_4
-	walk_in_place_fastest_up
+	walk_in_place_faster_up
 	delay_4
 	walk_fast_down * 2
 	lock_facing_direction

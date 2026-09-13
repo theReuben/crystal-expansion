@@ -104,43 +104,43 @@ script PalletTown_ProfessorOaksLab_EventScript_Oak {
     release
     end
 }movement(local) PalletTown_ProfessorOaksLab_Movement_OakUpgradesPokedexFacingUp{
-    walk_in_place_fastest_up
+    walk_in_place_faster_up
     delay_16
 	delay_4
-    walk_in_place_fastest_up
+    walk_in_place_faster_up
     delay_16
 	delay_4
-    walk_in_place_fastest_up
+    walk_in_place_faster_up
     delay_16
 	delay_4
 }movement(local) PalletTown_ProfessorOaksLab_Movement_OakUpgradesPokedexFacingDown{
-    walk_in_place_fastest_down
+    walk_in_place_faster_down
     delay_16
 	delay_4
-    walk_in_place_fastest_down
+    walk_in_place_faster_down
     delay_16
 	delay_4
-    walk_in_place_fastest_down
+    walk_in_place_faster_down
     delay_16
 	delay_4
 }movement(local) PalletTown_ProfessorOaksLab_Movement_OakUpgradesPokedexFacingLeft{
-    walk_in_place_fastest_left
+    walk_in_place_faster_left
     delay_16
 	delay_4
-    walk_in_place_fastest_left
+    walk_in_place_faster_left
     delay_16
 	delay_4
-    walk_in_place_fastest_left
+    walk_in_place_faster_left
     delay_16
 	delay_4
 }movement(local) PalletTown_ProfessorOaksLab_Movement_OakUpgradesPokedexFacingRight{
-    walk_in_place_fastest_right
+    walk_in_place_faster_right
     delay_16
 	delay_4
-    walk_in_place_fastest_right
+    walk_in_place_faster_right
     delay_16
 	delay_4
-    walk_in_place_fastest_right
+    walk_in_place_faster_right
     delay_16
 	delay_4
 }

@@ -92,7 +92,7 @@ script AzaleaTown_KurtsHouse_EventScript_Kurt{
         }
         else
         {
-            applymovement(OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFastestDown)
+            applymovement(OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFasterDown)
             applymovement(KURT, AzaleaTown_KurtsHouse_Movement_KurtStraightOut)
             waitmovement(0)
         }
@@ -310,9 +310,9 @@ script AzaleaTown_KurtsHouse_EventScript_Kurt_ItllTakeADay {
 
 movement AzaleaTown_KurtsHouse_Movement_PlayerWatchesKurt {
     delay_8
-    walk_in_place_fastest_right
+    walk_in_place_faster_right
     delay_8
-    walk_in_place_fastest_down
+    walk_in_place_faster_down
 }
 
 movement AzaleaTown_KurtsHouse_Movement_KurtAroundPlayer {

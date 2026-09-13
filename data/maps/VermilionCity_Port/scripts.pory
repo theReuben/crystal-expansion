@@ -18,7 +18,7 @@ mapscripts VermilionCity_Port_MapScripts {
             applymovement(OBJ_EVENT_ID_PLAYER, OlivineCity_Port_Movement_PlayerExitsShip)
             waitmovement(0)
             addobject(3)
-            applymovement(3, Common_Movement_WalkInPlaceFastestUp)
+            applymovement(3, Common_Movement_WalkInPlaceFasterUp)
             playse(SE_EXIT)
             applymovement(OBJ_EVENT_ID_PLAYER, OlivineCity_Port_Movement_PlayerExitsDock)
             waitmovement(0)

@@ -53,7 +53,7 @@ mapscripts CinnabarIsland_MapScripts {
 	walk_left * 3
 	walk_slow_left * 2
 }movement(local) CinnabarIsland_Movement_BoardBoat{
-    walk_in_place_fastest_down
+    walk_in_place_faster_down
     delay_4
     set_invisible
 }

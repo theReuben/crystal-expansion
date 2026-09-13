@@ -414,7 +414,7 @@ script Route36_EventScript_Floria {
 }
 
 movement Route36_Movement_PlayerWatchFloriaLeftRight {
-    walk_in_place_fastest_down
+    walk_in_place_faster_down
 }
 
 movement Route36_Movement_FloriaLeaveFromLeft {
@@ -428,9 +428,9 @@ movement Route36_Movement_FloriaLeaveFromRight {
 }
 
 movement Route36_Movement_PlayerWatchFloriaFromBelow {
-    walk_in_place_fastest_left
+    walk_in_place_faster_left
     delay_16 * 2
-    walk_in_place_fastest_down
+    walk_in_place_faster_down
 }
 
 movement Route36_Movement_FloriaLeaveFromBelow {
@@ -517,7 +517,7 @@ script Route36_EventScript_SierraPoopsTheParty {
 
 movement Route36_Movement_NoticeSierra {
     delay_16 * 3
-    walk_in_place_fastest_left
+    walk_in_place_faster_left
 }
 
 movement Route36_Movement_SierraToPlayerBelow {

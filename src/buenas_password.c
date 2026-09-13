@@ -163,7 +163,7 @@ static void PasswordMenu_Exit(u8 taskId, s32 chosenIndex)
     ClearWindowTilemap(tListMenuWindowId);
     ScheduleBgCopyTilemapToVram(0);
     RemoveWindow(tListMenuWindowId);
-    EnableBothScriptContexts();
+    ScriptContext_Enable();
     DestroyTask(taskId);
 }
 

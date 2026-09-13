@@ -137,7 +137,7 @@ script IndigoPlateau_LancesRoom_EventScript_StairTriggers{
 }movement(local) IndigoPlateau_LancesRoom_Movement_PlayerToLanceAfterBattle{
     walk_right
 }movement(local) IndigoPlateau_LancesRoom_Movement_MaryToPlayer1{
-    walk_fastest_up * 5
+    walk_faster_up * 5
     face_down
 }movement(local) IndigoPlateau_LancesRoom_Movement_OakEnters{
     walk_up * 4

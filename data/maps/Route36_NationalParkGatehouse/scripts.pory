@@ -329,7 +329,7 @@ movement Route36_NationalParkGatehouse_Movement_EnterContestFromRight {
 }
 
 movement Route36_NationalParkGatehouse_Movement_OfficerWatchPlayerEnterFromRight {
-    walk_in_place_fastest_down
+    walk_in_place_faster_down
 }
 
 script Route36_NationalParkGatehouse_BehindCounterOfficer {

@@ -135,10 +135,10 @@ script CherrygroveCity_EventScript_GuideGent{
 	walk_left * 4
 	walk_up
 	walk_left
-	walk_in_place_fastest_up
+	walk_in_place_faster_up
 }movement(local) CherrygroveCity_Movement_PlayerFromLeft{
     walk_down
-	walk_in_place_fastest_up
+	walk_in_place_faster_up
 	delay_8
 	delay_4
 	walk_up
@@ -148,7 +148,7 @@ script CherrygroveCity_EventScript_GuideGent{
     walk_left * 4
 	walk_up
 	walk_left
-	walk_in_place_fastest_up
+	walk_in_place_faster_up
 }movement(local) CherrygroveCity_Movement_PlayerFromBelow{
     walk_up
 	walk_left * 4
@@ -157,22 +157,22 @@ script CherrygroveCity_EventScript_GuideGent{
     walk_left * 4
 	walk_up
 	walk_left
-	walk_in_place_fastest_up
+	walk_in_place_faster_up
 }movement(local) CherrygroveCity_Movement_PlayerFromRight{
     walk_left * 5
 	walk_up
 }movement(local) CherrygroveCity_Movement_ToMart{
     walk_left * 6
-	walk_in_place_fastest_up
+	walk_in_place_faster_up
 }movement(local) CherrygroveCity_Movement_ToRoute30{
     walk_left * 10
-	walk_in_place_fastest_up
+	walk_in_place_faster_up
 }movement(local) CherrygroveCity_Movement_GuideGentToSea{
     walk_left * 4
 	walk_down
 	walk_left * 3
 	walk_down
-	walk_in_place_fastest_left
+	walk_in_place_faster_left
 }movement(local) CherrygroveCity_Movement_PlayerToSea{
     walk_left * 5
 	walk_down
@@ -182,13 +182,13 @@ script CherrygroveCity_EventScript_GuideGent{
 	walk_right * 13
 	walk_down
 	walk_right * 5
-	walk_in_place_fastest_up
+	walk_in_place_faster_up
 }movement(local) CherrygroveCity_Movement_PlayerToGuideGentsHouse{
     walk_down * 5
 	walk_right * 13
 	walk_down
 	walk_right * 4
-	walk_in_place_fastest_up
+	walk_in_place_faster_up
 }movement(local) CherrygroveCity_Movement_WalkUp{
     walk_up
 }
@@ -254,7 +254,7 @@ script CherrygroveCity_EventScript_RivalTriggers{
 	lock_facing_direction
 	walk_fast_down
 	unlock_facing_direction
-	walk_in_place_fastest_left
+	walk_in_place_faster_left
 }movement(local) CherrygroveCity_Movement_RivalRunsAway{
     walk_fast_left * 5
 	walk_fast_up * 2

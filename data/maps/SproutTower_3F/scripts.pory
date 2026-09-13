@@ -61,7 +61,7 @@ script SproutTower_3F_EventScript_RivalScene {
            "that can win.\p"
            "I really couldn't care less about\n"
            "weak {POKEMON}.")
-    applymovement(RIVAL_ID, Common_Movement_WalkInPlaceFastestUp)
+    applymovement(RIVAL_ID, Common_Movement_WalkInPlaceFasterUp)
     waitmovement(0)
     textcolor(MSG_COLOR_PREV)
     msgbox("{RIVAL} used the\n"
@@ -125,7 +125,7 @@ movement SproutTower_3F_Movement_RivalToSage {
 
 movement SproutTower_3F_Movement_RivalExclamationFaceSouth {
     emote_exclamation_mark
-    walk_in_place_fastest_down
+    walk_in_place_faster_down
 }
 
 movement SproutTower_3F_Movement_RivalToPlayer {

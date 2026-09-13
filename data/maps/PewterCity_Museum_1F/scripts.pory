@@ -130,7 +130,7 @@ script PewterCity_Museum_1F_EventScript_Triggers{
         }
     }
     lockall
-    applymovement(OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFastestRight)
+    applymovement(OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFasterRight)
     waitmovement(0)
     textcolor(0)
     showmoneybox(0, 0, 0)
