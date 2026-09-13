@@ -275,3 +275,64 @@ rule: expansion's generator is time-of-day aware and reads
 currently resolve to CrystalDust's rules, which is the intended outcome for
 CD-replaced art. Left alone deliberately rather than mass-edited; revisit if one
 of them misbuilds.
+
+## D8 — OW_TIMES_OF_DAY set to GEN_LATEST (supersedes the GEN_4 choice in D7)
+
+**Decision (user's).** Follow expansion's latest-by-default convention rather
+than matching CrystalDust exactly.
+
+**What changes versus CrystalDust.** Morning starts at 6 rather than 4, day ends
+at 19 rather than 20, night runs 20–6, and **an evening band (19–20) exists that
+CrystalDust never had**.
+
+**Consequence being tracked.** `TIME_EVENING` is now a reachable state, so
+CrystalDust content that assumes three times of day can be reached with a fourth.
+The surface turned out to be small — a tree-wide scan found only two places in
+CrystalDust code that care:
+  - `src/radio.c:287` — `Random() % TIMES_OF_DAY_COUNT`, now 4 rather than 3.
+    Under GEN_LATEST evening genuinely occurs, so this is no longer the
+    "impossible value" bug noted in D7; it now means radio programming needs an
+    evening schedule or a deliberate fallback.
+  - `src/radio.c:814` — `GetTimeOfDay() == TIME_MORNING`.
+Everything else indexing `TIMES_OF_DAY_COUNT` (`debug.c`, `wild_encounter.h`) is
+expansion's and already four-aware.
+
+CrystalDust's `PaletteOverride` entries are keyed on `startHour`/`endHour`, not
+on `TIME_*`, so the night palettes are unaffected by the band change.
+
+## D9 — CrystalDust strings were dropped by the Phase 1 merge; 782 restored
+
+**Found.** `src/strings.c` and `include/strings.h` were byte-identical to
+expansion's. Both projects had edited them, and the Phase 1 three-way
+classification resolved the conflict in expansion's favour, which silently
+discarded every string CrystalDust added — including all the radio, Pokégear,
+and phone text. This was the single largest silent loss in the merge.
+
+**Restored.** 782 CrystalDust-only strings, appended to `src/strings.c` with
+declarations in `include/strings.h`.
+
+**How "CrystalDust-only" was determined.** Not by comparing `strings.h` alone.
+A first attempt did that and broke 11 files, because some `gText_` symbols are
+defined in expansion's `strings.c` without a header declaration, and others are
+declared `static` inside `main_menu.c` and `option_menu.c` — adding an `extern`
+for those produced "static declaration follows non-static declaration". The
+exclusion set is now built by scanning every `.c` and `.h` under `src/`,
+`include/`, and `gflib/` for both definitions and declarations. 53 further
+symbols are declared in CrystalDust's header but never defined in its
+`strings.c`; those are skipped and listed in the build log rather than faked.
+
+**Not done here.** 934 names exist in both projects. Those kept EXPANSION's
+wording, which for Crystal-specific text is likely wrong. Auditing shared
+strings against Crystal is the Phase 5 text sweep and is deliberately out of
+scope for this merge — flagged so it is not mistaken for finished.
+
+**Lesson for the rest of Phase 2.** Any file the Phase 1 log recorded as
+"conflict-kept" may have dropped CrystalDust content the same way. That list is
+in `docs/port/phase1-asset-merge.txt` and should be re-audited file by file.
+
+### Known issue, not yet fixed
+
+`data/tilesets/secondary/inside_ship/tiles.png` now builds with
+`num_tiles=342`, over the 256 maximum, and fails. This comes from the duplicate
+graphics rules noted in D7 (CrystalDust's rule winning over expansion's).
+Tracked for the graphics pass.
