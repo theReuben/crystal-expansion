@@ -1,6 +1,7 @@
 # Phase 0 — Baselines
 
-Status: both baseline ROMs **build**. Boot confirmation pending (see "Open" below).
+Status: **gate passed.** Both baseline ROMs build, boot, and reach their title
+screens. Evidence in `docs/shots/`.
 
 ## Pins
 
@@ -67,21 +68,54 @@ declaration-after-statement in at least `event_object_movement.c`,
 
 Resulting ROM: `CrystalDust.gba`, 16 MB.
 
-## ROM size — act on this now
+## ROM size — measured, and less alarming than it first looks
 
-Expansion 1.17.0 alone occupies **26.7 MB of the 32 MB ceiling (79.7%)** with no
-CrystalDust content in it at all. The plan's "act if it climbs past ~28 MB"
-tripwire is 1.3 MB away at baseline, and Phase 1 adds 27 MB of graphics, 12 MB
-of tilesets and 11 MB of sound before any deduplication.
+Expansion 1.17.0 uses 26.7 MB of the 32 MB ceiling (79.7%), which at first
+glance leaves almost no room for two regions of content. Breaking the map file
+down by object file shows that reading is wrong:
 
-This is not a Phase 4 problem. It is a Phase 1 problem, and it bears directly on
-the section 6 decision: expansion's post-Gen-3 species data is a large part of
-that 26.7 MB, so "field-merge only, species toggles off" may be forced rather
-than chosen.
+| | expansion 1.17.0 | CrystalDust |
+|---|---|---|
+| `data/sound_data.o` | 10.47 MB | 2.66 MB |
+| `src/pokemon.o` | 5.94 MB | — (split across several) |
+| `src/graphics.o` | 0.94 MB | 2.38 MB |
+| tilesets | 0.69 MB | 1.03 MB |
+| maps | 0.69 MB | 0.63 MB |
+| **attributed total** | **25.1 MB** | **12.7 MB** |
 
-## Open
+Two things follow.
 
-- Neither ROM has been **booted**. mGBA on macOS ships only as a GUI `.app`;
-  it has no headless or screenshot mode and swallows stdout, so the boot half
-  of the Phase 0 gate cannot be automated from here. Needs a human to launch
-  both ROMs once.
+**Sound dominates, and it gets replaced, not added.** Emerald's `sound_data` is
+10.5 MB; CrystalDust's is 2.7 MB. CD substitutes the soundtrack rather than
+appending to it, so the merge *frees* roughly 7.8 MB rather than consuming any.
+The same is true of maps and tilesets — CD replaces Hoenn with Johto/Kanto, and
+its `maps.o` is actually slightly smaller than Emerald's.
+
+**The real swing factor is `src/pokemon.o` at 5.94 MB** — expansion ships front
+and back sprites, palettes and icons for every species through Gen 9, where
+CrystalDust needs 251. That single file is where the section 6 "leave the
+post-Gen-3 species toggled off" decision cashes out in bytes.
+
+Rough merged estimate, keeping *all* of expansion's species:
+
+```
+26.7  expansion baseline
+-7.8  soundtrack swap
++1.4  CD graphics over Emerald's
++0.3  CD tilesets over Emerald's
++0.5  CD-only source
+----
+~21 MB, roughly 11 MB of headroom
+```
+
+So size is a thing to track at each gate, not a thing to design around now, and
+the plan's ~28 MB tripwire is the right one. Re-measure after Phase 1, when the
+substitutions are real rather than projected.
+
+## Verification harness
+
+`tools/romshot/` builds a headless screenshotter against `libmgba` — runs a ROM
+for N frames with scripted button presses and writes a PNG. Homebrew ships only
+mGBA's Qt app, so `libmgba` is built from source into `sources/mgba-build`; see
+that directory's README. This is how the Phase 3 and Phase 4 checklists get
+verified without a human driving an emulator.
