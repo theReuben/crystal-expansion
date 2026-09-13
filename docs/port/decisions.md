@@ -176,3 +176,46 @@ Frontier ships. It removes the question from the critical path: the maps now
 assemble, so the scope call can be made later on its merits instead of being
 forced by a build error. If Q3 comes back "out of scope", these are deleted
 then — as a decision, not as a side effect.
+
+## D7 — Day/night: two complete implementations collide (DECISION NEEDED)
+
+**Status: open. Flagging rather than deciding, because either choice drops
+something visible.**
+
+**What was found.** `include/rtc.h` produced `conflicting types for
+'GetTimeOfDay'`. The header is expansion's, unmodified. The conflict is that
+*both* projects implement day/night, and they disagree on the signature:
+
+    expansion   enum TimeOfDay GetTimeOfDay(void);      // reads the clock itself
+    CrystalDust u8             GetTimeOfDay(s8 hours);  // classifies a given hour
+
+pokeemerald-expansion 1.17 ships a time-of-day system CrystalDust never had. It
+is wired into things CD's is not: time-of-day wild encounter tables
+(`OW_TIME_OF_DAY_ENCOUNTERS`), the Pokédex (`GetTimeOfDayForDex`), configurable
+generational time bands (`GenConfigTimeOfDay`, `OW_TIMES_OF_DAY`), a fake-RTC
+debug mode (`OW_USE_FAKE_RTC`), and palette tinting in `field_weather.c` /
+`overworld.c`.
+
+CrystalDust's `day_night.c` is a parallel implementation whose distinctive part
+is `struct PaletteOverride` — per-slot palette swaps gated on `startHour`/
+`endHour`, with a `gPlttBufferPreDN` shadow buffer. That is what gives Johto lit
+windows at night and the Crystal-specific palette feel. Expansion's tinting is a
+global weather-style blend and does not do per-slot scheduled overrides.
+
+**Recommendation.** Expansion's `GetTimeOfDay` becomes the single source of
+truth for *what time it is*, since the encounter, Pokédex, and config wiring all
+depend on it and reimplementing that on CD's function would be a large
+regression. CrystalDust's `PaletteOverride` layer is kept for *how it looks*,
+rewritten to ask expansion's `GetTimeOfDay()` rather than its own clock reader,
+and CD's `GetTimeOfDay(s8)` is renamed `ClassifyHourAsTimeOfDay(s8)` to end the
+collision.
+
+**What that costs, explicitly.** The two projects divide the day differently.
+CrystalDust follows Crystal's bands; expansion's default is `OW_TIMES_OF_DAY`
+set per generation. Adopting expansion's boundaries means night falls at
+different in-game times than in CrystalDust unless `OW_TIMES_OF_DAY` is tuned to
+match Crystal. That tuning is a config change, not a code change, and should be
+done deliberately — it is a visible gameplay difference, not a detail.
+
+**Do not** resolve this by deleting `day_night.c`. That would silently drop the
+per-slot palette overrides and Johto would lose its night look.
