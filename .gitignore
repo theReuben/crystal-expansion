@@ -1,0 +1,5 @@
+sources/
+*.gba
+*.elf
+*.map
+build/

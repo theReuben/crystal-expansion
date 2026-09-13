@@ -1,0 +1,46 @@
+diff --git a/Makefile b/Makefile
+index 78fddc6..45a365a 100644
+--- a/Makefile
++++ b/Makefile
+@@ -115,14 +115,14 @@ LIBPATH := -L ../../tools/agbcc/lib
+ LIB := $(LIBPATH) -lgcc -lc -L../../libagbsyscall -lagbsyscall
+ else
+ CC1              = $(shell $(PATH_MODERNCC) --print-prog-name=cc1) -quiet
+-override CFLAGS += -mthumb -mthumb-interwork -mabi=apcs-gnu -mtune=arm7tdmi -march=armv4t -fno-toplevel-reorder -Wno-pointer-to-int-cast -g
++override CFLAGS += -std=gnu11 -mthumb -mthumb-interwork -mabi=apcs-gnu -mtune=arm7tdmi -march=armv4t -fno-toplevel-reorder -Wno-pointer-to-int-cast -g
+ ROM := $(MODERN_ROM_NAME)
+ OBJ_DIR := $(MODERN_OBJ_DIR_NAME)
+ LIBPATH := -L "$(dir $(shell $(PATH_MODERNCC) -mthumb -print-file-name=libgcc.a))" -L "$(dir $(shell $(PATH_MODERNCC) -mthumb -print-file-name=libnosys.a))" -L "$(dir $(shell $(PATH_MODERNCC) -mthumb -print-file-name=libc.a))"
+ LIB := $(LIBPATH) -lc -lnosys -lgcc -L../../libagbsyscall -lagbsyscall
+ endif
+ 
+-CPPFLAGS := -iquote include -iquote $(GFLIB_SUBDIR) -Wno-trigraphs -DDEBUG=$(DEBUG) -DMODERN=$(MODERN) -DRELEASE_ID=$(RELEASE_ID)
++CPPFLAGS := -std=gnu11 -iquote include -iquote $(GFLIB_SUBDIR) -Wno-trigraphs -DDEBUG=$(DEBUG) -DMODERN=$(MODERN) -DRELEASE_ID=$(RELEASE_ID)
+ ifneq ($(MODERN),1)
+ CPPFLAGS += -I tools/agbcc/include -I tools/agbcc -nostdinc -undef
+ endif
+diff --git a/src/gbs.c b/src/gbs.c
+index 9da5b4d..6830c82 100644
+--- a/src/gbs.c
++++ b/src/gbs.c
+@@ -705,7 +705,7 @@ static void LoadWavePattern(struct GBSTrack *track, int patternID)
+         {
+             u32* mainPattern = (u32 *)(REG_ADDR_WAVE_RAM0);
+             memcpy(mainPattern, sWaveTrackPatterns[patternID], sizeof(sWaveTrackPatterns[patternID]));
+-            soundInfo->cgbChans[CGBCHANNEL_WAVE].currentPointer = (u32)sWaveTrackPatterns[patternID];
++            soundInfo->cgbChans[CGBCHANNEL_WAVE].currentPointer = (u32 *)sWaveTrackPatterns[patternID];
+         }
+ 
+         *velocity = track->velocity << 5;
+diff --git a/tools/mapjson/Makefile b/tools/mapjson/Makefile
+index 3831a85..100e809 100644
+--- a/tools/mapjson/Makefile
++++ b/tools/mapjson/Makefile
+@@ -1,6 +1,6 @@
+ CXX ?= g++
+ 
+-CXXFLAGS := -Wall -std=c++11 -O2 --static
++CXXFLAGS := -Wall -std=c++11 -O2
+ 
+ SRCS := json11.cpp mapjson.cpp
+ 
