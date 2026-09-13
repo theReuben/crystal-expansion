@@ -3,7 +3,6 @@
   "name": "NavelRock_Top",
   "layout": "LAYOUT_NAVEL_ROCK_TOP",
   "music": "MUS_RG_SEVII_CAVE",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_NAVEL_ROCK",
   "requires_flash": false,
   "weather": "WEATHER_SHADE",
@@ -16,7 +15,6 @@
   "connections": null,
   "object_events": [
     {
-      "local_id": "LOCALID_NAVEL_ROCK_HO_OH",
       "graphics_id": "OBJ_EVENT_GFX_HOOH",
       "x": 12,
       "y": 4,
@@ -25,6 +23,7 @@
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
+      "type": "original",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
       "flag": "FLAG_HIDE_HO_OH"
@@ -36,7 +35,7 @@
       "y": 20,
       "elevation": 3,
       "dest_map": "MAP_NAVEL_ROCK_UP4",
-      "dest_warp_id": "1"
+      "dest_warp_id": 1
     }
   ],
   "coord_events": [
@@ -59,5 +58,6 @@
       "item": "ITEM_SACRED_ASH",
       "flag": "FLAG_HIDDEN_ITEM_NAVEL_ROCK_TOP_SACRED_ASH"
     }
-  ]
+  ],
+  "phone_service": true
 }

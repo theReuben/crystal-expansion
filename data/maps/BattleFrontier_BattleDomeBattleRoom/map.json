@@ -3,7 +3,6 @@
   "name": "BattleFrontier_BattleDomeBattleRoom",
   "layout": "LAYOUT_BATTLE_FRONTIER_BATTLE_DOME_BATTLE_ROOM",
   "music": "MUS_B_DOME",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_BATTLE_FRONTIER",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -12,13 +11,15 @@
   "allow_escaping": false,
   "allow_running": false,
   "show_map_name": false,
-  "write_specialvar_iseffect": true,
+  "floor_number": 0,
+  "phone_service": true,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
-  "connections": null,
+  "connections": 0,
   "object_events": [
     {
-      "local_id": "LOCALID_DOME_ANNOUNCER",
-      "graphics_id": "OBJ_EVENT_GFX_REPORTER_M",
+      "type": "original",
+      "graphics_id": "OBJ_EVENT_GFX_ZREPORTER_M",
+      "in_connection": false,
       "x": 5,
       "y": 4,
       "elevation": 0,
@@ -31,8 +32,9 @@
       "flag": "0"
     },
     {
-      "local_id": "LOCALID_DOME_AUDIENCE_TWIN",
-      "graphics_id": "OBJ_EVENT_GFX_TWIN",
+      "type": "original",
+      "graphics_id": "OBJ_EVENT_GFX_LITTLE_GIRL",
+      "in_connection": false,
       "x": 7,
       "y": 2,
       "elevation": 0,
@@ -45,7 +47,9 @@
       "flag": "0"
     },
     {
+      "type": "original",
       "graphics_id": "OBJ_EVENT_GFX_BOY_1",
+      "in_connection": false,
       "x": 9,
       "y": 2,
       "elevation": 0,
@@ -58,7 +62,9 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BOY_2",
+      "type": "original",
+      "graphics_id": "OBJ_EVENT_GFX_MAN",
+      "in_connection": false,
       "x": 11,
       "y": 2,
       "elevation": 0,
@@ -71,7 +77,9 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_NINJA_BOY",
+      "type": "original",
+      "graphics_id": "OBJ_EVENT_GFX_LITTLE_BOY",
+      "in_connection": false,
       "x": 16,
       "y": 2,
       "elevation": 0,
@@ -84,8 +92,9 @@
       "flag": "0"
     },
     {
-      "local_id": "LOCALID_DOME_AUDIENCE_WALKING",
-      "graphics_id": "OBJ_EVENT_GFX_MAN_1",
+      "type": "original",
+      "graphics_id": "OBJ_EVENT_GFX_POKEFAN_M",
+      "in_connection": false,
       "x": 4,
       "y": 2,
       "elevation": 0,
@@ -98,7 +107,9 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_EXPERT_M",
+      "type": "original",
+      "graphics_id": "OBJ_EVENT_GFX_OLD_MAN",
+      "in_connection": false,
       "x": 16,
       "y": 1,
       "elevation": 0,
@@ -111,7 +122,9 @@
       "flag": "0"
     },
     {
+      "type": "original",
       "graphics_id": "OBJ_EVENT_GFX_CAMPER",
+      "in_connection": false,
       "x": 8,
       "y": 1,
       "elevation": 0,
@@ -124,8 +137,9 @@
       "flag": "0"
     },
     {
-      "local_id": "LOCALID_DOME_REFEREE",
-      "graphics_id": "OBJ_EVENT_GFX_MAN_2",
+      "type": "original",
+      "graphics_id": "OBJ_EVENT_GFX_WORKER_M",
+      "in_connection": false,
       "x": 0,
       "y": 4,
       "elevation": 0,
@@ -138,7 +152,9 @@
       "flag": "0"
     },
     {
+      "type": "original",
       "graphics_id": "OBJ_EVENT_GFX_FAT_MAN",
+      "in_connection": false,
       "x": 12,
       "y": 1,
       "elevation": 0,
@@ -151,7 +167,9 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_GIRL_2",
+      "type": "original",
+      "graphics_id": "OBJ_EVENT_GFX_WOMAN",
+      "in_connection": false,
       "x": 13,
       "y": 2,
       "elevation": 0,
@@ -164,7 +182,9 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_GIRL_1",
+      "type": "original",
+      "graphics_id": "OBJ_EVENT_GFX_GIRL",
+      "in_connection": false,
       "x": 10,
       "y": 2,
       "elevation": 0,
@@ -177,8 +197,9 @@
       "flag": "0"
     },
     {
-      "local_id": "LOCALID_DOME_PLAYER",
+      "type": "original",
       "graphics_id": "OBJ_EVENT_GFX_VAR_1",
+      "in_connection": false,
       "x": 4,
       "y": 9,
       "elevation": 4,
@@ -191,7 +212,9 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_WOMAN_3",
+      "type": "original",
+      "graphics_id": "OBJ_EVENT_GFX_WORKER_F",
+      "in_connection": false,
       "x": 14,
       "y": 2,
       "elevation": 0,
@@ -204,8 +227,9 @@
       "flag": "0"
     },
     {
-      "local_id": "LOCALID_DOME_OPPONENT",
+      "type": "original",
       "graphics_id": "OBJ_EVENT_GFX_VAR_0",
+      "in_connection": false,
       "x": 11,
       "y": 6,
       "elevation": 0,
@@ -218,7 +242,13 @@
       "flag": "0"
     }
   ],
-  "warp_events": [],
-  "coord_events": [],
-  "bg_events": []
+  "warp_events": [
+
+  ],
+  "coord_events": [
+
+  ],
+  "bg_events": [
+
+  ]
 }

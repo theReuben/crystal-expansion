@@ -3,7 +3,6 @@
   "name": "ContestHall",
   "layout": "LAYOUT_CONTEST_HALL",
   "music": "MUS_CONTEST",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_DYNAMIC",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -12,12 +11,15 @@
   "allow_escaping": false,
   "allow_running": false,
   "show_map_name": false,
+  "floor_number": 0,
+  "phone_service": true,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
-  "connections": null,
+  "connections": 0,
   "object_events": [
     {
-      "local_id": "LOCALID_CONTEST_MC",
-      "graphics_id": "OBJ_EVENT_GFX_WOMAN_3",
+      "type": "original",
+      "graphics_id": "OBJ_EVENT_GFX_WORKER_F",
+      "in_connection": false,
       "x": 6,
       "y": 4,
       "elevation": 3,
@@ -30,8 +32,9 @@
       "flag": "0"
     },
     {
-      "local_id": "LOCALID_CONTEST_JUDGE",
-      "graphics_id": "OBJ_EVENT_GFX_CONTEST_JUDGE",
+      "type": "original",
+      "graphics_id": "OBJ_EVENT_GFX_ZCONTEST_JUDGE",
+      "in_connection": false,
       "x": 7,
       "y": 4,
       "elevation": 3,
@@ -44,8 +47,9 @@
       "flag": "0"
     },
     {
-      "local_id": "LOCALID_CONTESTANT_1",
+      "type": "original",
       "graphics_id": "OBJ_EVENT_GFX_VAR_0",
+      "in_connection": false,
       "x": 4,
       "y": 7,
       "elevation": 3,
@@ -58,8 +62,9 @@
       "flag": "0"
     },
     {
-      "local_id": "LOCALID_CONTESTANT_2",
+      "type": "original",
       "graphics_id": "OBJ_EVENT_GFX_VAR_1",
+      "in_connection": false,
       "x": 6,
       "y": 7,
       "elevation": 3,
@@ -72,8 +77,9 @@
       "flag": "0"
     },
     {
-      "local_id": "LOCALID_CONTESTANT_3",
+      "type": "original",
       "graphics_id": "OBJ_EVENT_GFX_VAR_2",
+      "in_connection": false,
       "x": 8,
       "y": 7,
       "elevation": 3,
@@ -86,8 +92,9 @@
       "flag": "0"
     },
     {
-      "local_id": "LOCALID_CONTEST_AUDIENCE_1",
+      "type": "original",
       "graphics_id": "OBJ_EVENT_GFX_VAR_4",
+      "in_connection": false,
       "x": 2,
       "y": 6,
       "elevation": 3,
@@ -100,8 +107,9 @@
       "flag": "0"
     },
     {
-      "local_id": "LOCALID_CONTEST_AUDIENCE_3",
+      "type": "original",
       "graphics_id": "OBJ_EVENT_GFX_VAR_6",
+      "in_connection": false,
       "x": 4,
       "y": 2,
       "elevation": 3,
@@ -114,8 +122,9 @@
       "flag": "0"
     },
     {
-      "local_id": "LOCALID_CONTEST_AUDIENCE_4",
+      "type": "original",
       "graphics_id": "OBJ_EVENT_GFX_VAR_7",
+      "in_connection": false,
       "x": 5,
       "y": 2,
       "elevation": 3,
@@ -128,8 +137,9 @@
       "flag": "0"
     },
     {
-      "local_id": "LOCALID_CONTEST_AUDIENCE_5",
+      "type": "original",
       "graphics_id": "OBJ_EVENT_GFX_VAR_8",
+      "in_connection": false,
       "x": 9,
       "y": 2,
       "elevation": 3,
@@ -142,8 +152,9 @@
       "flag": "0"
     },
     {
-      "local_id": "LOCALID_CONTEST_AUDIENCE_6",
+      "type": "original",
       "graphics_id": "OBJ_EVENT_GFX_VAR_9",
+      "in_connection": false,
       "x": 10,
       "y": 2,
       "elevation": 3,
@@ -156,8 +167,9 @@
       "flag": "0"
     },
     {
-      "local_id": "LOCALID_CONTEST_AUDIENCE_7",
+      "type": "original",
       "graphics_id": "OBJ_EVENT_GFX_VAR_A",
+      "in_connection": false,
       "x": 12,
       "y": 5,
       "elevation": 3,
@@ -170,8 +182,9 @@
       "flag": "0"
     },
     {
-      "local_id": "LOCALID_CONTEST_AUDIENCE_2",
+      "type": "original",
       "graphics_id": "OBJ_EVENT_GFX_VAR_5",
+      "in_connection": false,
       "x": 2,
       "y": 5,
       "elevation": 3,
@@ -184,8 +197,9 @@
       "flag": "0"
     },
     {
-      "local_id": "LOCALID_CONTEST_POKEBALL",
+      "type": "original",
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
+      "in_connection": false,
       "x": 7,
       "y": 5,
       "elevation": 3,
@@ -198,8 +212,9 @@
       "flag": "FLAG_HIDE_CONTEST_POKE_BALL"
     },
     {
-      "local_id": "LOCALID_CONTESTANT_4",
+      "type": "original",
       "graphics_id": "OBJ_EVENT_GFX_VAR_3",
+      "in_connection": false,
       "x": 10,
       "y": 7,
       "elevation": 3,
@@ -212,8 +227,9 @@
       "flag": "0"
     },
     {
-      "local_id": "LOCALID_CONTEST_ARTIST",
-      "graphics_id": "OBJ_EVENT_GFX_ARTIST",
+      "type": "original",
+      "graphics_id": "OBJ_EVENT_GFX_SUPER_NERD",
+      "in_connection": false,
       "x": 12,
       "y": 6,
       "elevation": 3,
@@ -226,7 +242,13 @@
       "flag": "0"
     }
   ],
-  "warp_events": [],
-  "coord_events": [],
-  "bg_events": []
+  "warp_events": [
+
+  ],
+  "coord_events": [
+
+  ],
+  "bg_events": [
+
+  ]
 }

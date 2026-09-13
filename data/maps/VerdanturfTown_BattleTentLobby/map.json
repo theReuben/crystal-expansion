@@ -3,8 +3,7 @@
   "name": "VerdanturfTown_BattleTentLobby",
   "layout": "LAYOUT_BATTLE_TENT_LOBBY",
   "music": "MUS_B_TOWER_RS",
-  "region": "REGION_HOENN",
-  "region_map_section": "MAPSEC_VERDANTURF_TOWN",
+  "region_map_section": "MAPSEC_LAVENDER_RADIO_TOWER",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
   "map_type": "MAP_TYPE_INDOOR",
@@ -16,70 +15,74 @@
   "connections": null,
   "object_events": [
     {
-      "local_id": "LOCALID_VERDANTURF_TENT_ATTENDANT",
-      "graphics_id": "OBJ_EVENT_GFX_EXPERT_M",
+      "graphics_id": "OBJ_EVENT_GFX_MR_POKEMON",
       "x": 6,
       "y": 5,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
       "movement_range_x": 1,
       "movement_range_y": 1,
-      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_type": "0",
+      "type": "original",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "VerdanturfTown_BattleTentLobby_EventScript_Attendant",
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_GIRL_1",
+      "graphics_id": "OBJ_EVENT_GFX_LASS",
       "x": 0,
       "y": 5,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
       "movement_range_x": 1,
       "movement_range_y": 1,
-      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_type": "0",
+      "type": "original",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "VerdanturfTown_BattleTentLobby_EventScript_AttractGiver",
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BOY_3",
+      "graphics_id": "OBJ_EVENT_GFX_BOY_1",
       "x": 9,
       "y": 7,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
       "movement_range_x": 1,
       "movement_range_y": 1,
-      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_type": "0",
+      "type": "original",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "VerdanturfTown_BattleTentLobby_EventScript_Boy1",
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BOY_2",
+      "graphics_id": "OBJ_EVENT_GFX_BOY_1",
       "x": 1,
       "y": 8,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
       "movement_range_x": 1,
       "movement_range_y": 1,
-      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_type": "0",
+      "type": "original",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "VerdanturfTown_BattleTentLobby_EventScript_Boy2",
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_SCOTT",
+      "graphics_id": "OBJ_EVENT_GFX_ZSCOTT",
       "x": 12,
       "y": 6,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
       "movement_range_x": 1,
       "movement_range_y": 1,
-      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_type": "0",
+      "type": "original",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "VerdanturfTown_BattleTentLobby_EventScript_Scott",
-      "flag": "FLAG_HIDE_VERDANTURF_TOWN_SCOTT"
+      "flag": "FLAG_HIDE_GOLDENROD_CITY_GAME_CORNER_NERD"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_LITTLE_BOY",
@@ -89,7 +92,8 @@
       "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
       "movement_range_x": 1,
       "movement_range_y": 1,
-      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_type": "0",
+      "type": "original",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "VerdanturfTown_BattleTentLobby_EventScript_LittleBoy",
       "flag": "0"
@@ -100,15 +104,15 @@
       "x": 6,
       "y": 9,
       "elevation": 0,
-      "dest_map": "MAP_VERDANTURF_TOWN",
-      "dest_warp_id": "0"
+      "dest_map": "MAP_NONE",
+      "dest_warp_id": 0
     },
     {
       "x": 7,
       "y": 9,
       "elevation": 0,
-      "dest_map": "MAP_VERDANTURF_TOWN",
-      "dest_warp_id": "0"
+      "dest_map": "MAP_NONE",
+      "dest_warp_id": 0
     }
   ],
   "coord_events": [],
@@ -121,5 +125,6 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "VerdanturfTown_BattleTentLobby_EventScript_RulesBoard"
     }
-  ]
+  ],
+  "phone_service": true
 }

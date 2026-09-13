@@ -1,10 +1,12 @@
+.set LOCALID_OLD_WOMAN, 2
+
 BattleFrontier_Mart_MapScripts::
 	.byte 0
 
 BattleFrontier_Mart_EventScript_Clerk::
 	lock
 	faceplayer
-	message gText_HowMayIServeYou
+	message gText_HowMayIHelpYou
 	waitmessage
 	pokemart BattleFrontier_Mart_Pokemart
 	msgbox gText_PleaseComeAgain, MSGBOX_DEFAULT
@@ -26,7 +28,9 @@ BattleFrontier_Mart_Pokemart:
 	.2byte ITEM_ZINC
 	.2byte ITEM_CARBOS
 	.2byte ITEM_HP_UP
-	pokemartlistend
+	.2byte ITEM_NONE
+	release
+	end
 
 BattleFrontier_Mart_EventScript_OldMan::
 	msgbox BattleFrontier_Mart_Text_ChaperonGrandson, MSGBOX_NPC
@@ -34,7 +38,7 @@ BattleFrontier_Mart_EventScript_OldMan::
 
 BattleFrontier_Mart_EventScript_OldWoman::
 	lock
-	applymovement LOCALID_FRONTIER_MART_OLD_WOMAN, Common_Movement_FaceDown
+	applymovement LOCALID_OLD_WOMAN, Common_Movement_FaceDown
 	waitmovement 0
 	msgbox BattleFrontier_Mart_Text_ProteinMakeNiceGift, MSGBOX_DEFAULT
 	release

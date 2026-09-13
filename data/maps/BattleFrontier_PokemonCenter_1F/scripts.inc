@@ -1,6 +1,7 @@
+.set LOCALID_NURSE, 1
+
 BattleFrontier_PokemonCenter_1F_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, BattleFrontier_PokemonCenter_1F_OnTransition
-	map_script MAP_SCRIPT_ON_RESUME, CableClub_OnResume
 	.byte 0
 
 BattleFrontier_PokemonCenter_1F_OnTransition:
@@ -8,7 +9,8 @@ BattleFrontier_PokemonCenter_1F_OnTransition:
 	end
 
 BattleFrontier_PokemonCenter_1F_EventScript_Nurse::
-	setvar VAR_0x800B, LOCALID_FRONTIER_NURSE
+	setvar VAR_0x800B, LOCALID_NURSE
+	@callnative CableClub_OnResumeFunc
 	call Common_EventScript_PkmnCenterNurse
 	waitmessage
 	waitbuttonpress
@@ -31,7 +33,7 @@ BattleFrontier_PokemonCenter_1F_EventScript_Skitty::
 	lock
 	faceplayer
 	waitse
-	playmoncry SPECIES_SKITTY, CRY_MODE_NORMAL
+	playmoncry SPECIES_SKITTY, 0
 	msgbox BattleFrontier_PokemonCenter_1F_Text_Skitty, MSGBOX_DEFAULT
 	waitmoncry
 	release
@@ -39,15 +41,15 @@ BattleFrontier_PokemonCenter_1F_EventScript_Skitty::
 
 BattleFrontier_PokemonCenter_1F_Text_NeverSeenPokemon:
 	.string "There was someone here using a \n"
-	.string "POKéMON I've never seen before.\p"
+	.string "{POKEMON} I've never seen before.\p"
 	.string "I never learned about it at\n"
 	.string "TRAINER'S SCHOOL at least.\p"
-	.string "I wonder where you can catch POKéMON\n"
+	.string "I wonder where you can catch {POKEMON}\n"
 	.string "like that.$"
 
 BattleFrontier_PokemonCenter_1F_Text_NextStopBattleArena:
 	.string "Okay! Next stop, the BATTLE ARENA!\n"
-	.string "I'd better get the right POKéMON from\l"
+	.string "I'd better get the right {POKEMON} from\l"
 	.string "the PC Storage System.$"
 
 BattleFrontier_PokemonCenter_1F_Text_GoingThroughEveryChallenge:

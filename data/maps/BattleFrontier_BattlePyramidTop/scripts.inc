@@ -1,3 +1,6 @@
+.set LOCALID_ATTENDANT, 1
+.set LOCALID_BRANDON, 2
+
 BattleFrontier_BattlePyramidTop_MapScripts::
 	map_script MAP_SCRIPT_ON_RESUME, BattleFrontier_BattlePyramidTop_OnResume
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, BattleFrontier_BattlePyramidTop_OnFrame
@@ -16,41 +19,46 @@ BattleFrontier_BattlePyramidTop_OnWarp:
 
 BattleFrontier_BattlePyramidTop_EventScript_SetUpObjects::
 	setvar VAR_TEMP_1, 1
-	turnobject LOCALID_PLAYER, DIR_NORTH
-	goto_if_ne VAR_TEMP_C, 0, BattleFrontier_BattlePyramidTop_EventScript_EndSetUpObjects
+	turnobject OBJ_EVENT_ID_PLAYER, DIR_NORTH
+	compare VAR_TEMP_C, 0
+	goto_if_ne BattleFrontier_BattlePyramidTop_EventScript_EndSetUpObjects
 	setobjectxyperm LOCALID_BRANDON, 0, 0
 BattleFrontier_BattlePyramidTop_EventScript_EndSetUpObjects::
 	end
 
 BattleFrontier_BattlePyramidTop_OnResume:
 	frontier_getbrainstatus
-	goto_if_eq VAR_RESULT, FRONTIER_BRAIN_NOT_READY, BattleFrontier_BattlePyramidTop_EventScript_CheckChallengeStatus
+	compare VAR_RESULT, FRONTIER_BRAIN_NOT_READY
+	goto_if_eq BattleFrontier_BattlePyramidTop_EventScript_CheckChallengeStatus
 	call BattleFrontier_EventScript_SetBrainObjectGfx
 BattleFrontier_BattlePyramidTop_EventScript_CheckChallengeStatus::
 	copyvar VAR_TEMP_C, VAR_RESULT
 	frontier_getstatus
-	switch VAR_TEMP_CHALLENGE_STATUS
+	switch VAR_TEMP_0
 	case 0, BattleFrontier_BattlePyramidTop_EventScript_ReadyChallenge
 	case CHALLENGE_STATUS_SAVING, BattleFrontier_BattlePyramid_EventScript_WarpToLobby
 	case CHALLENGE_STATUS_PAUSED, BattleFrontier_BattlePyramidTop_EventScript_ReadyChallenge
 	frontier_get FRONTIER_DATA_BATTLE_OUTCOME
-	goto_if_eq VAR_RESULT, B_OUTCOME_LOST, BattleFrontier_BattlePyramid_EventScript_WarpToLobbyLost
-	goto_if_eq VAR_RESULT, B_OUTCOME_DREW, BattleFrontier_BattlePyramid_EventScript_WarpToLobbyLost
-	goto_if_eq VAR_RESULT, B_OUTCOME_FORFEITED, BattleFrontier_BattlePyramid_EventScript_WarpToLobbyLost
+	compare VAR_RESULT, B_OUTCOME_LOST
+	goto_if_eq BattleFrontier_BattlePyramid_EventScript_WarpToLobbyLost
+	compare VAR_RESULT, B_OUTCOME_DREW
+	goto_if_eq BattleFrontier_BattlePyramid_EventScript_WarpToLobbyLost
+	compare VAR_RESULT, B_OUTCOME_FORFEITED
+	goto_if_eq BattleFrontier_BattlePyramid_EventScript_WarpToLobbyLost
 	end
 
 BattleFrontier_BattlePyramidTop_OnFrame:
-	map_script_2 VAR_TEMP_PLAYING_PYRAMID_MUSIC, 0, BattleFrontier_BattlePyramidTop_EventScript_PlayPyramidMusic
+	map_script_2 VAR_TEMP_E, 0, BattleFrontier_BattlePyramidTop_EventScript_PlayPyramidMusic
 	map_script_2 VAR_TEMP_F, 1, BattleFrontier_BattlePyramidTop_EventScript_ShowMapName
 	.2byte 0
 
 BattleFrontier_BattlePyramidTop_EventScript_PlayPyramidMusic::
 	playbgm MUS_B_PYRAMID_TOP, FALSE
-	setvar VAR_TEMP_PLAYING_PYRAMID_MUSIC, 1
+	setvar VAR_TEMP_E, 1
 	end
 
 BattleFrontier_BattlePyramidTop_EventScript_ShowMapName::
-	special ShowMapNamePopup
+	special Special_ShowMapNamePopup
 	setvar VAR_TEMP_F, 0
 	end
 
@@ -66,15 +74,17 @@ BattleFrontier_BattlePyramidTop_EventScript_ReadyChallenge::
 BattleFrontier_BattlePyramidTop_EventScript_Attendant::
 	lock
 	faceplayer
-	goto_if_ne VAR_TEMP_D, 0, BattleFrontier_BattlePyramidTop_EventScript_StepForwardWhenReady
-	goto_if_ne VAR_TEMP_C, FRONTIER_BRAIN_NOT_READY, BattleFrontier_BattlePyramidTop_EventScript_BrandonHereMoveAside
+	compare VAR_TEMP_D, 0
+	goto_if_ne BattleFrontier_BattlePyramidTop_EventScript_StepForwardWhenReady
+	compare VAR_TEMP_C, FRONTIER_BRAIN_NOT_READY
+	goto_if_ne BattleFrontier_BattlePyramidTop_EventScript_BrandonHereMoveAside
 	msgbox BattleFrontier_BattlePyramidTop_Text_ReachedSummitUpYouGo, MSGBOX_DEFAULT
 	closemessage
-	applymovement LOCALID_PYRAMID_TOP_ATTENDANT, BattleFrontier_BattlePyramidTop_Movement_AttendantMoveAside
+	applymovement LOCALID_ATTENDANT, BattleFrontier_BattlePyramidTop_Movement_AttendantMoveAside
 	waitmovement 0
-	applymovement LOCALID_PLAYER, BattleFrontier_BattlePyramidTop_Movement_PlayerClimbToTop
+	applymovement OBJ_EVENT_ID_PLAYER, BattleFrontier_BattlePyramidTop_Movement_PlayerClimbToTop
 	waitmovement 0
-	applymovement LOCALID_PYRAMID_TOP_ATTENDANT, BattleFrontier_BattlePyramidTop_Movement_AttendantBlockPath
+	applymovement LOCALID_ATTENDANT, BattleFrontier_BattlePyramidTop_Movement_AttendantBlockPath
 	waitmovement 0
 	message BattleFrontier_BattlePyramidTop_Text_PlayerConqueredPyramid
 	waitmessage
@@ -83,7 +93,7 @@ BattleFrontier_BattlePyramidTop_EventScript_Attendant::
 	closemessage
 BattleFrontier_BattlePyramidTop_EventScript_WarpToLobbyWon::
 	frontier_set FRONTIER_DATA_CHALLENGE_STATUS, CHALLENGE_STATUS_WON
-	warp MAP_BATTLE_FRONTIER_BATTLE_PYRAMID_LOBBY, 7, 13
+	warp MAP_BATTLE_FRONTIER_BATTLE_PYRAMID_LOBBY, 255, 7, 13
 	waitstate
 	end
 
@@ -94,7 +104,7 @@ BattleFrontier_BattlePyramidTop_EventScript_StepForwardWhenReady::
 
 BattleFrontier_BattlePyramidTop_EventScript_BrandonHereMoveAside::
 	msgbox BattleFrontier_BattlePyramidTop_Text_ChiefBeatYouHere, MSGBOX_DEFAULT
-	applymovement LOCALID_PYRAMID_TOP_ATTENDANT, BattleFrontier_BattlePyramidTop_Movement_AttendantMoveAside
+	applymovement LOCALID_ATTENDANT, BattleFrontier_BattlePyramidTop_Movement_AttendantMoveAside
 	setvar VAR_TEMP_D, 1
 	closemessage
 	end
@@ -106,9 +116,10 @@ BattleFrontier_BattlePyramidTop_EventScript_BattleBrandon::
 	case FRONTIER_BRAIN_STREAK, BattleFrontier_BattlePyramidTop_EventScript_BrandonHeardSilverSpeech
 	case FRONTIER_BRAIN_STREAK_LONG, BattleFrontier_BattlePyramidTop_EventScript_BrandonHeardGoldSpeech
 	frontier_get FRONTIER_DATA_HEARD_BRAIN_SPEECH
-	goto_if_ne VAR_RESULT, FALSE, BattleFrontier_BattlePyramidTop_EventScript_BrandonHeardSilverSpeech
+	compare VAR_RESULT, FALSE
+	goto_if_ne BattleFrontier_BattlePyramidTop_EventScript_BrandonHeardSilverSpeech
 	special SpawnCameraObject
-	applymovement LOCALID_CAMERA, BattleFrontier_BattlePyramidTop_Movement_CameraPanUp
+	applymovement OBJ_EVENT_ID_CAMERA, BattleFrontier_BattlePyramidTop_Movement_CameraPanUp
 	waitmovement 0
 	msgbox BattleFrontier_BattlePyramidTop_Text_ExplorationsAreGrandestAdventure, MSGBOX_DEFAULT
 	closemessage
@@ -126,12 +137,14 @@ BattleFrontier_BattlePyramidTop_EventScript_BattleBrandonSilver::
 	msgbox BattleFrontier_BattlePyramidTop_Text_BringCourageToOurBattle, MSGBOX_DEFAULT
 	call BattleFrontier_BattlePyramidTop_EventScript_DoBrandonBattle
 	playbgm MUS_B_PYRAMID_TOP, FALSE
-	goto_if_eq VAR_RESULT, 1, BattleFrontier_BattlePyramidTop_EventScript_DefeatedBrandonSilver
+	compare VAR_RESULT, 1
+	goto_if_eq BattleFrontier_BattlePyramidTop_EventScript_DefeatedBrandonSilver
 	goto BattleFrontier_BattlePyramid_EventScript_WarpToLobbyLost
 
 BattleFrontier_BattlePyramidTop_EventScript_DefeatedBrandonSilver::
 	frontier_getsymbols
-	goto_if_ne VAR_RESULT, 0, BattleFrontier_BattlePyramidTop_EventScript_WarpToLobbyWon
+	compare VAR_RESULT, 0
+	goto_if_ne BattleFrontier_BattlePyramidTop_EventScript_WarpToLobbyWon
 	msgbox BattleFrontier_BattlePyramidTop_Text_BrandonFrontierPassPlease, MSGBOX_DEFAULT
 	playfanfare MUS_OBTAIN_SYMBOL
 	message BattleFrontier_BattlePyramidTop_Text_ReceivedBraveSymbol
@@ -143,9 +156,10 @@ BattleFrontier_BattlePyramidTop_EventScript_DefeatedBrandonSilver::
 
 BattleFrontier_BattlePyramidTop_EventScript_BrandonIntroGold::
 	frontier_get FRONTIER_DATA_HEARD_BRAIN_SPEECH
-	goto_if_ne VAR_RESULT, FALSE, BattleFrontier_BattlePyramidTop_EventScript_BrandonHeardGoldSpeech
+	compare VAR_RESULT, FALSE
+	goto_if_ne BattleFrontier_BattlePyramidTop_EventScript_BrandonHeardGoldSpeech
 	special SpawnCameraObject
-	applymovement LOCALID_CAMERA, BattleFrontier_BattlePyramidTop_Movement_CameraPanUp
+	applymovement OBJ_EVENT_ID_CAMERA, BattleFrontier_BattlePyramidTop_Movement_CameraPanUp
 	waitmovement 0
 	msgbox BattleFrontier_BattlePyramidTop_Text_BrandonYouveReturned, MSGBOX_DEFAULT
 	closemessage
@@ -163,12 +177,14 @@ BattleFrontier_BattlePyramidTop_EventScript_BattleBrandonGold::
 	msgbox BattleFrontier_BattlePyramidTop_Text_EverythingYouHave, MSGBOX_DEFAULT
 	call BattleFrontier_BattlePyramidTop_EventScript_DoBrandonBattle
 	playbgm MUS_B_PYRAMID_TOP, FALSE
-	goto_if_eq VAR_RESULT, 1, BattleFrontier_BattlePyramidTop_EventScript_DefeatedBrandonGold
+	compare VAR_RESULT, 1
+	goto_if_eq BattleFrontier_BattlePyramidTop_EventScript_DefeatedBrandonGold
 	goto BattleFrontier_BattlePyramid_EventScript_WarpToLobbyLost
 
 BattleFrontier_BattlePyramidTop_EventScript_DefeatedBrandonGold::
 	frontier_getsymbols
-	goto_if_eq VAR_RESULT, 2, BattleFrontier_BattlePyramidTop_EventScript_WarpToLobbyWon
+	compare VAR_RESULT, 2
+	goto_if_eq BattleFrontier_BattlePyramidTop_EventScript_WarpToLobbyWon
 	msgbox BattleFrontier_BattlePyramidTop_Text_BrandonRemarkableHaveThis, MSGBOX_DEFAULT
 	playfanfare MUS_OBTAIN_SYMBOL
 	message BattleFrontier_BattlePyramidTop_Text_BraveSymbolTookGoldenShine
@@ -180,18 +196,20 @@ BattleFrontier_BattlePyramidTop_EventScript_DefeatedBrandonGold::
 
 BattleFrontier_BattlePyramidTop_EventScript_DoBrandonBattle::
 	closemessage
-	dofacilitytrainerbattle FACILITY_BATTLE_PYRAMID
+	setvar VAR_0x8004, SPECIAL_BATTLE_PYRAMID
+	setvar VAR_0x8005, 0
+	special DoSpecialTrainerBattle
 	waitstate
 	return
 
 BattleFrontier_BattlePyramidTop_Movement_AttendantMoveAside:
 	walk_right
-	walk_in_place_faster_left
+	walk_in_place_fastest_left
 	step_end
 
 BattleFrontier_BattlePyramidTop_Movement_AttendantBlockPath:
 	walk_left
-	walk_in_place_faster_up
+	walk_in_place_fastest_up
 	step_end
 
 BattleFrontier_BattlePyramidTop_Movement_PlayerClimbToTop:
@@ -200,7 +218,7 @@ BattleFrontier_BattlePyramidTop_Movement_PlayerClimbToTop:
 	walk_up
 	walk_up
 	walk_up
-	walk_in_place_faster_down
+	walk_in_place_fastest_down
 	step_end
 
 BattleFrontier_BattlePyramidTop_Movement_BrandonApproachPlayer:
@@ -247,7 +265,7 @@ BattleFrontier_BattlePyramidTop_Text_ExplorationsAreGrandestAdventure:
 	.string "are the grandest of adventures?\p"
 	.string "Your own wits!\p"
 	.string "Your own strength!\p"
-	.string "Your own POKéMON!\p"
+	.string "Your own {POKEMON}!\p"
 	.string "And, above all, only your own courage\n"
 	.string "to lead you through unknown worlds…$"
 

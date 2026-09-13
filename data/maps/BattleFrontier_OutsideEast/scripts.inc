@@ -1,3 +1,5 @@
+.set LOCALID_SUDOWOODO, 14
+
 BattleFrontier_OutsideEast_MapScripts::
 	map_script MAP_SCRIPT_ON_RESUME, BattleFrontier_OutsideEast_OnResume
 	map_script MAP_SCRIPT_ON_TRANSITION, BattleFrontier_OutsideEast_OnTransition
@@ -9,7 +11,8 @@ BattleFrontier_OutsideEast_OnResume:
 
 BattleFrontier_OutsideEast_EventScript_TryRemoveSudowoodo::
 	specialvar VAR_RESULT, GetBattleOutcome
-	goto_if_ne VAR_RESULT, B_OUTCOME_CAUGHT, Common_EventScript_NopReturn
+	compare VAR_RESULT, B_OUTCOME_CAUGHT
+	goto_if_ne Common_EventScript_NopReturn
 	removeobject VAR_LAST_TALKED
 	return
 
@@ -69,7 +72,7 @@ BattleFrontier_OutsideEast_EventScript_Zigzagoon::
 	lock
 	faceplayer
 	waitse
-	playmoncry SPECIES_ZIGZAGOON, CRY_MODE_NORMAL
+	playmoncry SPECIES_ZIGZAGOON, 0
 	msgbox BattleFrontier_OutsideEast_Text_ZigzagoonLooksVacant, MSGBOX_DEFAULT
 	waitmoncry
 	release
@@ -106,7 +109,7 @@ BattleFrontier_OutsideEast_EventScript_Sudowoodo::
 	faceplayer
 	waitse
 	playse SE_SUDOWOODO_SHAKE
-	applymovement LOCALID_FRONTIER_SUDOWOODO, BattleFrontier_OutsideEast_Movement_SudowoodoShake
+	applymovement LOCALID_SUDOWOODO, BattleFrontier_OutsideEast_Movement_SudowoodoShake
 	waitmovement 0
 	release
 	end
@@ -115,25 +118,29 @@ BattleFrontier_OutsideEast_EventScript_WaterSudowoodo::
 	lock
 	faceplayer
 	special DoWateringBerryTreeAnim
+	waitstate
 	waitse
 	playse SE_SUDOWOODO_SHAKE
-	applymovement LOCALID_FRONTIER_SUDOWOODO, BattleFrontier_OutsideEast_Movement_SudowoodoShake
+	applymovement LOCALID_SUDOWOODO, BattleFrontier_OutsideEast_Movement_SudowoodoShake
 	waitmovement 0
 	msgbox gText_Sudowoodo_Attacked, MSGBOX_DEFAULT
 	closemessage
 	waitse
-	playmoncry SPECIES_SUDOWOODO, CRY_MODE_ENCOUNTER
+	playmoncry SPECIES_SUDOWOODO, 2
 	delay 40
 	waitmoncry
-	setvar VAR_LAST_TALKED, LOCALID_FRONTIER_SUDOWOODO
-	setwildbattle SPECIES_SUDOWOODO, 40
+	setvar VAR_LAST_TALKED, LOCALID_SUDOWOODO
+	setwildbattle SPECIES_SUDOWOODO, 40, ITEM_NONE
 	setflag FLAG_SYS_CTRL_OBJ_DELETE
 	dowildbattle
 	clearflag FLAG_SYS_CTRL_OBJ_DELETE
 	specialvar VAR_RESULT, GetBattleOutcome
-	goto_if_eq VAR_RESULT, B_OUTCOME_WON, BattleFrontier_OutsideEast_EventScript_DefeatedSudowoodo
-	goto_if_eq VAR_RESULT, B_OUTCOME_RAN, BattleFrontier_OutsideEast_EventScript_DefeatedSudowoodo
-	goto_if_eq VAR_RESULT, B_OUTCOME_PLAYER_TELEPORTED, BattleFrontier_OutsideEast_EventScript_DefeatedSudowoodo
+	compare VAR_RESULT, B_OUTCOME_WON
+	goto_if_eq BattleFrontier_OutsideEast_EventScript_DefeatedSudowoodo
+	compare VAR_RESULT, B_OUTCOME_RAN
+	goto_if_eq BattleFrontier_OutsideEast_EventScript_DefeatedSudowoodo
+	compare VAR_RESULT, B_OUTCOME_PLAYER_TELEPORTED
+	goto_if_eq BattleFrontier_OutsideEast_EventScript_DefeatedSudowoodo
 	setflag FLAG_DEFEATED_SUDOWOODO
 	release
 	end
@@ -237,7 +244,7 @@ BattleFrontier_OutsideEast_Text_BattleTowerSign:
 
 BattleFrontier_OutsideEast_Text_BattlePalaceSign:
 	.string "This is the BATTLE PALACE!\n"
-	.string "Keep your eyes on POKéMON battles!$"
+	.string "Keep your eyes on {POKEMON} battles!$"
 
 BattleFrontier_OutsideEast_Text_BattleArenaSign:
 	.string "This is the BATTLE ARENA!\n"
@@ -263,7 +270,7 @@ BattleFrontier_OutsideEast_Text_BattleTowerFeelsSpecial:
 
 BattleFrontier_OutsideEast_Text_ConquerLeagueAndFrontier:
 	.string "My grand ambition is to conquer both\n"
-	.string "the BATTLE FRONTIER and the POKéMON\l"
+	.string "the BATTLE FRONTIER and the {POKEMON}\l"
 	.string "LEAGUE.\p"
 	.string "And if my dream comes true…\p"
 	.string "I… I'm going to ask MIMI next door\n"
@@ -328,7 +335,7 @@ BattleFrontier_OutsideEast_Text_FastOnBikeAndBattles:
 
 BattleFrontier_OutsideEast_Text_BetterThanDaddyAtPokemon:
 	.string "I'm better than my daddy\n"
-	.string "at POKéMON.$"
+	.string "at {POKEMON}.$"
 
 BattleFrontier_OutsideEast_Text_GoRackUpSomeWinsForDaddy:
 	.string "Go on, my baby sweetie!\n"
@@ -348,7 +355,7 @@ BattleFrontier_OutsideEast_Text_HeardPrettyGirlAtBattleArena:
 BattleFrontier_OutsideEast_Text_SometimesImportantOldManInThere:
 	.string "I sometimes see this really important-\n"
 	.string "looking old man going in there.\p"
-	.string "He has these really awesome POKéMON.\n"
+	.string "He has these really awesome {POKEMON}.\n"
 	.string "He seems really nice, though.$"
 
 BattleFrontier_OutsideEast_Text_LegendOfBattlePyramid:
@@ -430,7 +437,7 @@ BattleFrontier_OutsideEast_Text_OnceAnOddTreePastHere:
 BattleFrontier_OutsideEast_Text_StickyMonWithLongTail:
 	.string "I…\n"
 	.string "I saw it!\p"
-	.string "There was a sticky sort of a POKéMON\n"
+	.string "There was a sticky sort of a {POKEMON}\n"
 	.string "with a long tail up ahead!\p"
 	.string "It was hiding under a boulder, and\n"
 	.string "it kept staring at me!$"

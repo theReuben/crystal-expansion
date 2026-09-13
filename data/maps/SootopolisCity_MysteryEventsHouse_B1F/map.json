@@ -3,8 +3,7 @@
   "name": "SootopolisCity_MysteryEventsHouse_B1F",
   "layout": "LAYOUT_SOOTOPOLIS_CITY_MYSTERY_EVENTS_HOUSE_B1F",
   "music": "MUS_SOOTOPOLIS",
-  "region": "REGION_HOENN",
-  "region_map_section": "MAPSEC_SOOTOPOLIS_CITY",
+  "region_map_section": "MAPSEC_TOHJO_FALLS",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
   "map_type": "MAP_TYPE_INDOOR",
@@ -23,7 +22,8 @@
       "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
       "movement_range_x": 1,
       "movement_range_y": 1,
-      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_type": "0",
+      "type": "original",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
       "flag": "0"
@@ -35,9 +35,10 @@
       "y": 1,
       "elevation": 0,
       "dest_map": "MAP_SOOTOPOLIS_CITY_MYSTERY_EVENTS_HOUSE_1F",
-      "dest_warp_id": "2"
+      "dest_warp_id": 2
     }
   ],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [],
+  "phone_service": true
 }
