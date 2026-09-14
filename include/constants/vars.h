@@ -276,6 +276,62 @@
 #define VAR_UNUSED_0x40FE                                0x40FE // Unused Var
 #define VAR_UNUSED_0x40FF                                0x40FF // Unused Var
 
+// ---- CrystalDust vars, freshly allocated in Phase 2 (see D10, D12) ----
+// 51 vars in 0x4100-0x4132. CrystalDust's own numbering is not reused; it was
+// assigned against vanilla pokeemerald and collides with expansion's vars.
+// 0x4133-0x413F (13 slots) are the remaining headroom -- see D12 before using.
+#define VAR_BUG_CONTEST_PRIZE                  0x4100
+#define VAR_MAGIKARP_SIZE_RECORD               0x4101
+#define VAR_NEW_BARK_TOWN_STATE                0x4102
+#define VAR_CHERRYGROVE_CITY_STATE             0x4103
+#define VAR_AZALEA_TOWN_STATE                  0x4104
+#define VAR_MOM_BOUGHT_ITEMS                   0x4105
+#define VAR_VIOLET_CITY_STATE                  0x4106
+#define VAR_GOLDENROD_CITY_STATE               0x4107
+#define VAR_ROUTE29_STATE                      0x4108
+#define VAR_ROUTE30_STATE                      0x4109
+#define VAR_ROUTE31_STATE                      0x410A
+#define VAR_ROUTE32_STATE                      0x410B
+#define VAR_ROOM_BED                           0x410C
+#define VAR_ROOM_CARPET                        0x410D
+#define VAR_ROOM_PLANT                         0x410E
+#define VAR_ROUTE36_STATE                      0x410F
+#define VAR_ROOM_CONSOLE                       0x4110
+#define VAR_ROOM_LEFT_ORNAMENT                 0x4111
+#define VAR_ROOM_RIGHT_ORNAMENT                0x4112
+#define VAR_ROOM_BIG_DOLL                      0x4113
+#define VAR_ROOM_TABLE                         0x4114
+#define VAR_ROOM_CUSHION                       0x4115
+#define VAR_ROOM_POSTER                        0x4116
+#define VAR_ROUTE45_STATE                      0x4117
+#define VAR_ROUTE46_STATE                      0x4118
+#define VAR_TRAINER_CARD_MON_ICON_TINT_IDX     0x4119
+#define VAR_TRAINER_CARD_MON_ICON_1            0x411A
+#define VAR_TRAINER_CARD_MON_ICON_2            0x411B
+#define VAR_TRAINER_CARD_MON_ICON_3            0x411C
+#define VAR_TRAINER_CARD_MON_ICON_4            0x411D
+#define VAR_TRAINER_CARD_MON_ICON_5            0x411E
+#define VAR_TRAINER_CARD_MON_ICON_6            0x411F
+#define VAR_PLAYER_HOUSE_STATE                 0x4120
+#define VAR_ELM_LAB_STATE                      0x4121
+#define VAR_MR_POKEMONS_HOUSE_STATE            0x4122
+#define VAR_SPROUT_TOWER_STATE                 0x4123
+#define VAR_RUINS_OF_ALPH_STATE                0x4124
+#define VAR_KURT_GIVEN_APRICORN                0x4125
+#define VAR_KURT_GIVEN_APRICORN_QTY            0x4126
+#define VAR_GOLDENROD_GYM_STATE                0x4127
+#define VAR_GOLDENROD_DEPT_STORE_B1F_LAYOUT    0x4128
+#define VAR_ILEX_FARFETCHD_STATE               0x4129
+#define VAR_UNION_CAVE_STATE                   0x412A
+#define VAR_BLUE_CARD_BALANCE                  0x412B
+#define VAR_BUG_CATCHING_CONTEST_STATE         0x412C
+#define VAR_SKY_PILLAR_RAQUAZA_CRY_DONE        0x412D
+#define VAR_EVENT_PICHU_SLOT                   0x412E
+#define VAR_BUENAS_PASSWORD                    0x412F
+#define VAR_BIKE_SHOP_OWNER_CALL_STEP_COUNTER  0x4130
+#define VAR_TEXT_COLOR                         0x4131
+#define VAR_TEXT_COLOR_BACKUP                  0x4132
+
 // Crystal Expansion: grown from 0x40FF (256 vars, of which only 4 were free)
 // to 0x413F (320) to fit CrystalDust's 52 additional vars plus 12 spare.
 // Address space is not the constraint -- the next allocated range is
@@ -283,7 +339,7 @@
 // SaveBlock1's 4-sector budget: these 64 extra vars cost 128 of the 304 free
 // bytes, and the flag pool takes 128 more. Do not grow either without
 // re-measuring. See decisions D10, D11 and D12.
-#define VARS_END                                         0x413F
+#define VARS_END                                         0x4137
 #define VARS_COUNT                                       (VARS_END - VARS_START + 1)
 
 #define SPECIAL_VARS_START            0x8000

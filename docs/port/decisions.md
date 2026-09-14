@@ -471,10 +471,16 @@ CrystalDust's actual need is 879 flags (110 bytes) and 52 vars (104 bytes) =
 - Total 256 of 304. **48 bytes, or 384 flags, of slack remain.**
 
 **Rejected:** extending `SECTOR_ID_SAVEBLOCK1_END` past 4 and shifting
-`SECTOR_ID_PKMN_STORAGE_START`. It would buy a whole 3968-byte sector, but it
-repartitions the save layout, moves the PC box storage sectors, and is a change
-best made once with a save-version bump rather than opportunistically. Kept in
-reserve -- this is the escape hatch if a later phase runs out.
+`SECTOR_ID_PKMN_STORAGE_START`.
+
+> **Correction (D13):** this paragraph originally called that option an
+> "escape hatch ... if a later phase runs out". That was wrong, and the error
+> mattered enough to fix in place rather than only note below. The 128 KB flash
+> has exactly 32 sectors and every one is spoken for: 2 slots x
+> `NUM_SECTORS_PER_SLOT` (14) = 28, plus `SECTOR_ID_HOF_1` (28), `HOF_2` (29),
+> `TRAINER_HILL` (30) and `RECORDED_BATTLE` (31). Within a slot, `PokemonStorage`
+> needs all 9 of its sectors. There is no free sector to take. Growing
+> `SaveBlock1` means cutting a feature, not repartitioning. See D13.
 
 **Nothing is dropped by this decision.** All 879 CrystalDust flags and all 52
 vars fit. Every Q3/Q4 scope answer from D11 stands unaffected: Sevii is still in,
@@ -484,3 +490,52 @@ and the Battle Frontier is still merely deferred, not cut for space.
 closed. Any future phase wanting more than ~384 additional flags, or any
 additional vars beyond the 12 spare, must either reclaim IDs or take the
 rejected sector option. Re-measure with the bisect before growing either.
+
+
+## D13 -- the save budget is now the project's binding constraint
+
+Merging CrystalDust's 371 trainers turned out to cost saved-flag space, not just
+constant IDs: `TRAINER_FLAGS_END` is `TRAINER_FLAGS_START + MAX_TRAINERS_COUNT - 1`
+and `SYSTEM_FLAGS` follows immediately, so every trainer added shifts the whole
+flag pool up by one bit. 371 trainers = 376 slots = 47 bytes, against the 48
+bytes D12 had left.
+
+**Everything still fits, and nothing has been dropped.** Achieved by removing my
+own over-allocation rather than any content:
+
+| | D12 | now | reason |
+|---|---|---|---|
+| `NUM_CRYSTAL_FLAGS` | 1024 | 880 | 867 actually used |
+| `VARS_END` | `0x413F` (320) | `0x4137` (312) | 51 actually used |
+| `MAX_TRAINERS_COUNT_EMERALD` | 864 | 1240 | +371 CrystalDust trainers |
+| `TRAINERS_COUNT_EMERALD` | 855 | 1226 | |
+
+Merged so far: 867 flags, 51 vars, 371 trainers, all with fresh IDs.
+
+**Measured after:** `sizeof(struct SaveBlock1)` = 15840 of 15872.
+**32 bytes free. That is 256 flags, or 16 vars, or 0 additional trainers.**
+
+### This is a constraint, not a resolved problem
+
+Phases 3-7 (New Bark Town, CrystalDust's TODO, Sevii per D11, expansion
+features) have 32 bytes between them. The next phase that needs saved state will
+hit this. There is no spare flash sector to take -- see the D12 correction.
+
+**The reserve, when it is needed, is Hoenn-only state that a Johto game does not
+use.** Measured from `struct SaveBlock1`:
+
+| member | bytes | note |
+|---|---|---|
+| `secretBases[SECRET_BASES_COUNT]` | 3200 | Hoenn-only mechanic; 25600 flags' worth |
+| `tvShows[TV_SHOWS_COUNT]` | 900 | CrystalDust replaces TV with the radio (`radio.c`) |
+| `contestWinners` + `pokeblocks` | 736 | contests |
+| `mail[MAIL_COUNT]` | 576 | |
+
+Cutting `secretBases` alone ends the problem permanently and is the obvious
+candidate, since it is Hoenn furniture with no Johto counterpart and
+CrystalDust never used it.
+
+**Not doing that here.** It is a feature cut, and the standing instruction is
+that no feature gets dropped without being surfaced first. Recorded as the
+recommendation for when the budget next binds, to be decided then rather than
+assumed now.
