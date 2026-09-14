@@ -550,6 +550,15 @@
 #define MUS_ROUTE118                0x7FFF  // Map is split into 2 music sections. controlled by GetCurrLocationDefaultMusic().
 
 
+// CrystalDust's three radio-station aliases. These are placeholders in
+// CrystalDust too: they have no track of their own and no gSongTable entry,
+// they just reuse an existing one. Kept as aliases so the stand-in stays
+// visible rather than being baked into a fresh song ID. Candidates for real
+// music in Phase 6 (CrystalDust's TODO).
+#define MUS_EVOLUTION_RADIO         MUS_WEATHER_GROUDON
+#define MUS_POKE_FLUTE_RADIO        MUS_RG_POKE_FLUTE
+#define MUS_PEWTER                  MUS_GSC_PEWTER
+
 // ---- CrystalDust songs, freshly allocated in Phase 2 (see D14) ----
 // 56 songs at gSongTable indices 610-665, matching the entries appended to
 // sound/song_table.inc. CrystalDust's own song numbers are NOT reused: 44 of

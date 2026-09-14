@@ -572,3 +572,57 @@ file that took one side wholesale and lost the other's additions without a
 diagnostic. Song tables were worse than flags only because the loss is silent at
 build time. The re-audit of `docs/port/phase1-asset-merge.txt` that D9 called for
 should treat every index-ordered table as high risk.
+
+## D15 -- OPEN: the map section enum is 10 over its u8 ceiling
+
+**Status: needs a decision. Nothing has been cut. The Johto map sections are
+not merged yet, so 22 build errors and Phase 3 (New Bark Town) are blocked on
+this.**
+
+Map section IDs share a `u8` with the met-location specials
+`METLOC_SPECIAL_EGG` (0xFD), `METLOC_IN_GAME_TRADE` (0xFE) and
+`METLOC_FATEFUL_ENCOUNTER` (0xFF), so `MAPSEC_COUNT` must be <= 253.
+
+| | count |
+|---|---|
+| expansion's existing map sections | 209 |
+| CrystalDust-only, after removing 4 unused stubs | 53 |
+| `MAPSEC_NONE` | 1 |
+| **total** | **263** |
+| **ceiling** | **253** |
+| **over by** | **10** |
+
+CrystalDust's `MAPSEC_SEVII_ISLE_6` through `_9` were dropped to get to 53.
+That is not a loss: they sit at (0,0) with no position, and expansion already
+ships a complete and far more detailed Sevii set (One through Seven Island,
+the isle paths, meadows and ports). Per D11 Sevii is in, via expansion's.
+
+Nothing else reclaimable was found. Battle Frontier, Trainer Hill and Secret
+Base account for only 3 map sections between them, so even cutting the content
+D11 defers does not close the gap.
+
+### Options
+
+**(a) Merge Johto sub-areas into their parents.** `MAPSEC_ALPH_CHAMBERS` into
+`MAPSEC_RUINS_OF_ALPH`, `MAPSEC_TIN_TOWER` and `MAPSEC_BURNED_TOWER` into
+`MAPSEC_ECRUTEAK_CITY`, and so on. About 11 candidates exist, so this closes
+the gap exactly. Cost: those locations stop showing their own name on the
+region map, the map-name popup and the summary screen's met location. No
+gameplay change. Reversible.
+
+**(b) Widen `mapsec_u8_t` to `u16`.** Removes the ceiling permanently.
+`include/gametypes.h` provides the typedef for exactly this purpose, but warns
+against it: met location sits inside every Pokemon, Pokemon substructs are
+exactly 12 bytes, and going wider needs the substructs rearranged to avoid
+overflowing. `PokemonStorage` already occupies all 9 of its sectors with no
+slack (see D13), and it changes the trade/link data format. Expensive and
+invasive, but it is the only option that actually scales.
+
+**(c) Cut ~10 Hoenn map sections.** Real content loss in a region we are
+shipping. Not recommended.
+
+**Recommendation: (a).** It costs only location labels on a handful of Johto
+interiors, fits exactly, is reversible, and leaves the save and trade formats
+alone -- which matters given D13 left 32 bytes. (b) is the right answer if
+later phases need many more map sections, but it should be a deliberate
+save-format change made once, not something done to win 10 slots.
