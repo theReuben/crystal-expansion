@@ -3,11 +3,18 @@
 
 #include "global.h"
 #include "constants/regions.h"
+#include "constants/region_map_sections.h"
 
 enum KantoSubRegion GetKantoSubregion(u32 mapSecId);
 
 static inline enum Region GetRegionForSectionId(u32 sectionId)
 {
+    // CrystalDust: Johto's sections sit after the Hoenn special areas (D30).
+    // Lavender's radio tower is filed inside that block but is Kanto.
+    if (sectionId == MAPSEC_LAVENDER_RADIO_TOWER)
+        return REGION_KANTO;
+    if (sectionId >= JOHTO_MAPSEC_START && sectionId <= JOHTO_MAPSEC_END)
+        return REGION_JOHTO;
     if (sectionId >= KANTO_MAPSEC_START && sectionId < MAPSEC_SPECIAL_AREA)
         return REGION_KANTO;
     return REGION_HOENN;

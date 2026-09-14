@@ -163,6 +163,7 @@ static void ClearSearchParameterBoxText(void);
 
 // const rom data
 #include "data/pokemon/pokedex_orders.h"
+#include "data/pokemon/pokedex_show_entry_table.h"
 
 static const struct OamData sOamData_ScrollBar =
 {
@@ -5936,4 +5937,13 @@ enum Species NationalPokedexNumToSpeciesForm(enum NationalDexOrder nationalNum)
 void LoadSpriteSilhouettePalette(u32 spriteId)
 {
     LoadPalette(sSizeScreenSilhouette_Pal, OBJ_PLTT_ID2(gSprites[spriteId].oam.paletteNum), PLTT_SIZE_4BPP);
+}
+
+// CrystalDust: the blurb the Pokédex radio show reads out (D30).
+const u8 *GetPokedexShowEntry(u16 nationalDexNum)
+{
+    if (nationalDexNum <= NATIONAL_DEX_COUNT && gPokedexShowEntries[nationalDexNum] != NULL)
+        return gPokedexShowEntries[nationalDexNum];
+
+    return GetSpeciesPokedexDescription(NationalPokedexNumToSpecies(nationalDexNum));
 }

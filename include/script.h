@@ -213,4 +213,6 @@ static inline void Script_CheckEffectInstrumentedCallNative(void (*func)(struct 
         Script_GotoBreak_Internal();
 }
 
+void CountBadges(void); // CrystalDust (D30)
+
 #endif // GUARD_SCRIPT_H

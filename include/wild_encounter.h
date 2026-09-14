@@ -71,6 +71,7 @@ void CreateWildMon(enum Species species, u8 level);
 bool8 TryGenerateWildMon(const struct WildPokemonInfo *wildMonInfo, enum WildPokemonArea area, u8 flags);
 bool8 AreLegendariesInSootopolisPreventingEncounters(void);
 void HeadbuttTreeWildEncounter(void); // CrystalDust (D26)
+u16 GetMapWildMonFromIndex(u8 mapGroup, u8 mapNum, u8 index); // CrystalDust (D30)
 u16 GetCurrentMapWildMonHeaderId(void);
 bool8 CheckFeebasAtCoords(s16 x, s16 y);
 u32 ChooseWildMonIndex_Land(void);

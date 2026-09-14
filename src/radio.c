@@ -32,6 +32,7 @@
 #include "constants/moves.h"
 #include "constants/radio.h"
 #include "constants/region_map_sections.h"
+#include "regions.h"
 #include "constants/songs.h"
 #include "constants/species.h"
 
@@ -195,7 +196,7 @@ void Task_PlayRadioShow(u8 taskId)
             if (*caughtMons && tPokedexSeenMonsCount > 0)
                 tMiscValue = (*caughtMons)[Random() % tPokedexSeenMonsCount];
 
-            StringCopy10(gStringVar4, gSpeciesNames[NationalPokedexNumToSpecies(tMiscValue)]);
+            StringCopy(gStringVar4, GetSpeciesName(NationalPokedexNumToSpecies(tMiscValue)));
             NextRadioLine(taskId, POKEDEX_SHOW_2, gStringVar4, TRUE);
         }
         break;
@@ -288,7 +289,7 @@ void Task_PlayRadioShow(u8 taskId)
             u8 monNum = Random() % 6; // choose from middle 6
             u16 species = GetMapWildMonFromIndex(oaksTalkRoutes[map].group, oaksTalkRoutes[map].num, monNum + 4);
             
-            StringCopy(gStringVar1, gSpeciesNames[species]);
+            StringCopy(gStringVar1, GetSpeciesName(species));
             StringCopy(gStringVar2, gRegionMapEntries[oaksTalkRoutes[map].mapSec].name);
             StringExpandPlaceholders(gStringVar4, gText_OaksPkmnTalk1);
 
@@ -368,7 +369,7 @@ void Task_PlayRadioShow(u8 taskId)
         NextRadioLine(taskId, tCurrentLine + 1, gStringVar4, TRUE);
         break;
     case POKEDEX_SHOW_3:
-        StringCopy(gStringVar4, gPokedexEntries[tMiscValue].pokedexShowEntry);
+        StringCopy(gStringVar4, GetPokedexShowEntry(tMiscValue));
         tMiscValue = 0;
     case POKEDEX_SHOW_4:
         {
@@ -577,7 +578,7 @@ void Task_PlayRadioShow(u8 taskId)
                 }
                 u32 rand = Random() % numTrainers;
                 StringCopy(gStringVar1, GetTrainerClassNameFromId(validTrainers[rand]));
-                StringCopy(gStringVar2, gTrainers[validTrainers[rand]].trainerName);
+                StringCopy(gStringVar2, GetTrainerNameFromId(validTrainers[rand]));
                 StringExpandPlaceholders(gStringVar4, gText_PlacesAndPeople4Person);
             }
             NextRadioLine(taskId, tCurrentLine + 1, gStringVar4, TRUE);
@@ -895,9 +896,9 @@ void Task_FieldRadio_1(u8 taskId)
 
         if (gTasks[taskId].tShowId != 0xFF)
         {
-            *(str++) = CHAR_DBL_QUOT_LEFT;
+            *(str++) = CHAR_DBL_QUOTE_LEFT;
             str = StringCopy(str, gRadioShowNames[gTasks[taskId].tShowId]);
-            *(str++) = CHAR_DBL_QUOT_RIGHT;
+            *(str++) = CHAR_DBL_QUOTE_RIGHT;
             *str = EOS;
         }
         AddTextPrinterParameterized(0, 2, gStringVar4, 0, 1, 0, NULL);

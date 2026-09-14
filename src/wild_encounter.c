@@ -1332,3 +1332,28 @@ bool32 MapHasNoEncounterData(void)
 {
     return (GetCurrentMapWildMonHeaderId() == HEADER_NONE);
 }
+
+// CrystalDust: the radio's Oak's Pokémon Talk names a species from another
+// map's land table without generating an encounter. See D30.
+u16 GetMapWildMonFromIndex(u8 mapGroup, u8 mapNum, u8 index)
+{
+    const struct WildPokemonInfo *landMonsInfo;
+    enum TimeOfDay timeOfDay;
+    u32 i;
+
+    for (i = 0; gWildMonHeaders[i].mapGroup != MAP_GROUP(MAP_UNDEFINED); i++)
+    {
+        if (gWildMonHeaders[i].mapGroup == mapGroup && gWildMonHeaders[i].mapNum == mapNum)
+            break;
+    }
+
+    if (gWildMonHeaders[i].mapGroup == MAP_GROUP(MAP_UNDEFINED))
+        return SPECIES_NONE;
+
+    timeOfDay = GetTimeOfDayForEncounters(i, WILD_AREA_LAND);
+    landMonsInfo = gWildMonHeaders[i].encounterTypes[timeOfDay].landMonsInfo;
+    if (landMonsInfo == NULL)
+        return SPECIES_NONE;
+
+    return landMonsInfo->wildPokemon[index].species;
+}

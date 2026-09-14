@@ -746,3 +746,21 @@ void SetWalkingIntoSignVars(void)
     // gWalkAwayFromSignInhibitTimer = 6;
     // sMsgBoxIsCancelable = TRUE;
 }
+
+// CrystalDust: counts all 16 badges, Johto and Kanto. NUM_BADGES only spans
+// the Johto eight. Used by the radio's Places and People show (D30).
+void CountBadges(void)
+{
+    u32 i;
+    u32 numBadges = 0;
+
+    for (i = 0; i < NUM_BADGES; i++)
+    {
+        if (FlagGet(FLAG_BADGE01_GET + i))
+            numBadges++;
+        if (FlagGet(FLAG_BADGE09_GET + i))
+            numBadges++;
+    }
+
+    gSpecialVar_Result = numBadges;
+}

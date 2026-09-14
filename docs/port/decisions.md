@@ -1129,3 +1129,40 @@ assembly), so the layout change has no hardcoded offsets to chase.
 Also fixed a pointer/integer comparison at `gbs.c:704` that agbcc accepted.
 
 Errors 79 -> 71.
+
+## D30 — The radio compiles
+
+`src/radio.c` (GSC's radio stations) needed six separate restorations:
+
+- **`gPokedexShowEntries`** — CrystalDust gives every Johto-dex species a
+  second, shorter blurb (`pokedexShowEntry`) that the Pokédex radio show reads
+  out. Phase 1 kept expansion's species data, which has no such field. Rather
+  than widen `gSpeciesInfo` by a pointer per species, the 251 texts are ported
+  as a standalone table in `src/data/pokemon/pokedex_show_entry_table.h`, and
+  `GetPokedexShowEntry()` falls back to the ordinary species description for
+  everything outside #1-251 — exactly what CrystalDust's own data did for the
+  136 Hoenn entries.
+- **`CountBadges`** in `src/script.c` — counts all **16** badges. Expansion's
+  `NUM_BADGES` is 8 (Johto only); the Kanto `FLAG_BADGE09_GET`..`16` flags do
+  exist, so nothing is lost, but `NUM_BADGES` cannot be used as the total.
+- **`GetMapWildMonFromIndex`** in `src/wild_encounter.c` — Oak's Pokémon Talk
+  names a species from another map's land table. Rewritten against expansion's
+  `encounterTypes[timeOfDay]` layout. **Returns `SPECIES_NONE` for every Johto
+  route until D27's encounter tables land.**
+- **`GetCurrentRegion`** — already existed in `include/regions.h`, but its
+  `GetRegionForSectionId` could only ever return `REGION_KANTO` or
+  `REGION_HOENN`, so `== REGION_JOHTO` was dead. Johto's map sections are one
+  contiguous block, so `JOHTO_MAPSEC_START`/`_END` were added to the mapsec
+  constants template and the lookup taught about them.
+  `MAPSEC_LAVENDER_RADIO_TOWER` sits inside that block but is Kanto, and is
+  special-cased.
+- Symbol renames: `gSpeciesNames[x]` → `GetSpeciesName(x)`, `StringCopy10` →
+  `StringCopy`, `gTrainers[x].trainerName` → `GetTrainerNameFromId(x)`,
+  `CHAR_DBL_QUOT_*` → `CHAR_DBL_QUOTE_*`.
+
+**D20a debt discharged for `radio.c`:** the two flagged sites are not
+three-period switches. `radio.c:288` picks a period at random and expansion's
+four-entry tables handle that correctly; `radio.c:815` is a single
+`== TIME_MORNING` test. No evening→night fallthrough is owed here.
+
+Errors 71 -> 62.

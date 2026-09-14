@@ -27,4 +27,7 @@ u8* ConvertMonHeightToString(u32 height);
 u8* ConvertMonWeightToString(u32 weight);
 bool32 ShouldSkipPokedexListEntry(enum NationalDexOrder dexNum);
 
+extern const u8 *const gPokedexShowEntries[]; // CrystalDust (D30)
+const u8 *GetPokedexShowEntry(u16 nationalDexNum); // CrystalDust (D30)
+
 #endif // GUARD_POKEDEX_H
