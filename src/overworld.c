@@ -1,5 +1,6 @@
 #include "global.h"
 #include "overworld.h"
+#include "day_night.h"
 #include "battle_pyramid.h"
 #include "battle_setup.h"
 #include "battle_util.h"
@@ -951,6 +952,11 @@ static void LoadMapFromWarp(bool32 a1)
     ResetDexNavSearch();
     // reset hours override on every warp
     sHoursOverride = 0;
+    // CrystalDust: a handful of maps are permanently dark. CrystalDust forced
+    // its own tint to night there; expansion owns the tinting now, so the same
+    // effect comes from pinning the apparent hour instead. See D31.
+    if (ShouldSetTintToNight())
+        sHoursOverride = NIGHT_HOUR_BEGIN + 2;
     ResetCyclingRoadChallengeData();
     RestartWildEncounterImmunitySteps();
 #if FREE_MATCH_CALL == FALSE
@@ -1506,6 +1512,12 @@ void UpdateAmbientCry(s16 *state, u16 *delayCounter)
         // No land/water Pokémon on this map
         break;
     }
+}
+
+// CrystalDust re-picks the ambient cry when the time of day rolls over (D31).
+void ForceChooseAmbientCrySpecies(void)
+{
+    ChooseAmbientCrySpecies();
 }
 
 static void ChooseAmbientCrySpecies(void)

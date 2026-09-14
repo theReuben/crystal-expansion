@@ -6,4 +6,6 @@ void ActivatePerStepCallback(u8 callbackId);
 void ResetFieldTasksArgs(void);
 void SetSootopolisGymCrackedIceMetatiles(void);
 
+void ForceTimeBasedEvents(void); // CrystalDust (D31)
+
 #endif // GUARD_FIELD_TASKS_H

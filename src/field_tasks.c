@@ -181,6 +181,18 @@ static void RunTimeBasedEvents(s16 *data)
     }
 }
 
+static void Task_RunTimeBasedEvents(u8 taskId);
+
+// CrystalDust: make the next tick run the time-based events immediately,
+// used when the time of day rolls over. See D31.
+void ForceTimeBasedEvents(void)
+{
+    u8 taskId = FindTaskIdByFunc(Task_RunTimeBasedEvents);
+
+    if (taskId != TASK_NONE)
+        gTasks[taskId].tState = 0;
+}
+
 static void Task_RunTimeBasedEvents(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;

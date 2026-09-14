@@ -1166,3 +1166,52 @@ four-entry tables handle that correctly; `radio.c:815` is a single
 `== TIME_MORNING` test. No evening→night fallthrough is owed here.
 
 Errors 71 -> 62.
+
+## D31 — Two day/night systems; expansion's tinting wins
+
+**This one changes how the game looks. Flagging it explicitly.**
+
+`src/day_night.c` is CrystalDust-only, but expansion 1.17 ships its own,
+independent day/night system — `gTimeBlend`, `UpdateTimeOfDay`,
+`UpdateAltBgPalettes`, `BeginTimeOfDayPaletteFade`, `MapHasNaturalLight` — and
+it is already wired through `palette.c`, `field_weather.c` and `overworld.c`.
+Running both would have two things fighting over `gPlttBufferUnfaded`.
+
+**Decision: expansion's tinting wins; `day_night.c` is reduced to the parts
+expansion has no equivalent for.** This follows D2 ("let Emerald win visually"),
+and expansion's system is also strictly more capable — it blends time-of-day
+tint with weather, which CrystalDust's hour-LERP does not.
+
+Removed: `sTimeOfDayTints` (the 24 hourly tints), `LerpColors`,
+`TintPaletteForDayNight`, `gPlttBufferPreDN` (an entire extra `PLTT_BUFFER_SIZE`
+of EWRAM), and the retint phase machinery.
+
+Removed as dead: `LoadPaletteDayNight`, `LoadCompressedPaletteDayNight`,
+`DoLoadSpritePaletteDayNight`. **Nothing in this tree called them** — expansion
+loads every palette through its own path. This also resolves the outstanding
+`day_night.c:254` "source potentially unaligned" static assert, which came from
+`LZDecompressWram` into the old decompression buffer.
+
+Kept, and still CrystalDust's: the palette-override table (`gPaletteOverrides`,
+per-slot palettes swapped in between given hours — Crystal's lit windows),
+`ShouldSetTintToNight`, the day-of-week strings, and the time-of-day rollover
+hook that re-picks the ambient cry and forces the time-based events.
+
+### Constraints accepted (not silent)
+
+1. **Forced-night maps are now done by pinning the apparent hour.** Ilex Forest,
+   Dragon's Den, the Safari Zone office and the unlit Lighthouse 6F set
+   `sHoursOverride` on warp instead of forcing a night tint. Same effect, and it
+   now also makes encounters and events there behave as night, which is
+   arguably more correct than CrystalDust's tint-only version.
+2. **`gPaletteOverrides` is currently never populated.** CrystalDust filled it
+   from tileset/map load code we do not have. The machinery is kept because it
+   is the hook Crystal's animated lit windows need, but it does nothing yet.
+   Another Phase 1 loss, logged for later.
+3. **The debug tint sliders (`gDNTintOverride`) are inert.** The time-cycle
+   override (`gDNPeriodOverride`) still works — it now drives expansion's
+   `SetTimeOfDay`. The RGB sliders have nothing to drive.
+4. `ForceTimeBasedEvents` was restored to `src/field_tasks.c`, and
+   `ChooseAmbientCrySpecies` exposed via `ForceChooseAmbientCrySpecies`.
+
+Errors 62 -> 50.
