@@ -184,7 +184,7 @@ bool8 PhoneScrCmd_initcall(struct ScriptContext *ctx)
 
 static bool8 IsPokegearPhoneMessageFinished(void)
 {
-    if (!IsTextPrinterActive(gPhoneCallWindowId))
+    if (!IsTextPrinterActiveOnWindow(gPhoneCallWindowId))
         return TRUE;
     else
         return FALSE;
@@ -395,7 +395,7 @@ bool8 PhoneScrCmd_gettime(struct ScriptContext *ctx)
     gSpecialVar_0x8000 = gLocalTime.hours;
     gSpecialVar_0x8001 = gLocalTime.minutes;
     gSpecialVar_0x8002 = GetTimeOfDay();
-    gSpecialVar_0x8003 = gLocalTime.dayOfWeek;
+    gSpecialVar_0x8003 = GetDayOfWeek();
     return FALSE;
 }
 

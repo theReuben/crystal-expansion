@@ -97,8 +97,8 @@ void CopyDayOfWeekStringToVar1(void)
 void CopyCurrentDayOfWeekStringToVar1(void)
 {
     RtcCalcLocalTime();
-    if (gLocalTime.dayOfWeek <= DAY_SATURDAY)
-        StringCopy(gStringVar1, gDayOfWeekTable[gLocalTime.dayOfWeek]);
+    if (GetDayOfWeek() <= DAY_SATURDAY)
+        StringCopy(gStringVar1, gDayOfWeekTable[GetDayOfWeek()]);
     else
         StringCopy(gStringVar1, gText_None);
 }
@@ -209,7 +209,7 @@ static void TintPaletteForDayNight(u16 offset, u16 size)
 
     if (ShouldTintOverworld())
     {
-        RtcCalcLocalTimeFast();
+        RtcCalcLocalTime();
 
         if (ShouldSetTintToNight())
         {
@@ -239,7 +239,7 @@ static void TintPaletteForDayNight(u16 offset, u16 size)
             LerpColors(sDNSystemControl.currRGBTint, sTimeOfDayTints[hour], sTimeOfDayTints[nextHour], hourPhase);
         }
 
-        TintPalette_CustomToneWithCopy(gPlttBufferPreDN + offset, gPlttBufferUnfaded + offset, size / 2, sDNSystemControl.currRGBTint[0], sDNSystemControl.currRGBTint[1], sDNSystemControl.currRGBTint[2], FALSE);
+        TintPalette_CustomTone(gPlttBufferPreDN + offset, gPlttBufferUnfaded + offset, size / 2, sDNSystemControl.currRGBTint[0], sDNSystemControl.currRGBTint[1], sDNSystemControl.currRGBTint[2], FALSE);
     }
     else
     {
@@ -266,7 +266,7 @@ void LoadPaletteDayNight(const void *src, u16 offset, u16 size)
 void CheckClockForImmediateTimeEvents(void)
 {
     if (!sDNSystemControl.retintPhase && ShouldTintOverworld())
-        RtcCalcLocalTimeFast();
+        RtcCalcLocalTime();
 }
 
 void ProcessImmediateTimeEvents(void)
@@ -332,14 +332,14 @@ void ProcessImmediateTimeEvents(void)
                     LerpColors(sDNSystemControl.currRGBTint, sTimeOfDayTints[hour], sTimeOfDayTints[nextHour], hourPhase);
                 }
 
-                TintPalette_CustomToneWithCopy(gPlttBufferPreDN, gPlttBufferUnfaded, BG_PLTT_SIZE / 2, sDNSystemControl.currRGBTint[0], sDNSystemControl.currRGBTint[1], sDNSystemControl.currRGBTint[2], TRUE);
+                TintPalette_CustomTone(gPlttBufferPreDN, gPlttBufferUnfaded, BG_PLTT_SIZE / 2, sDNSystemControl.currRGBTint[0], sDNSystemControl.currRGBTint[1], sDNSystemControl.currRGBTint[2], TRUE);
                 sDNSystemControl.retintPhase = 1;
             }
         }
         else
         {
             sDNSystemControl.retintPhase = 0;
-            TintPalette_CustomToneWithCopy(gPlttBufferPreDN + (BG_PLTT_SIZE / 2), gPlttBufferUnfaded + (BG_PLTT_SIZE / 2), OBJ_PLTT_SIZE / 2, sDNSystemControl.currRGBTint[0], sDNSystemControl.currRGBTint[1], sDNSystemControl.currRGBTint[2], TRUE);
+            TintPalette_CustomTone(gPlttBufferPreDN + (BG_PLTT_SIZE / 2), gPlttBufferUnfaded + (BG_PLTT_SIZE / 2), OBJ_PLTT_SIZE / 2, sDNSystemControl.currRGBTint[0], sDNSystemControl.currRGBTint[1], sDNSystemControl.currRGBTint[2], TRUE);
             LoadPaletteOverrides();
             
             if (gWeatherPtr->palProcessingState != WEATHER_PAL_STATE_SCREEN_FADING_IN &&

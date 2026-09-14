@@ -144,7 +144,7 @@ void PlayPokemonMusic(void)
 {
     u16 song = MUS_POKEMON_MARCH;  // Sunday, Tuesday, Thursday, Saturday
     RtcCalcLocalTime();
-    if (gLocalTime.dayOfWeek & 1)   // Monday, Wednesday, Friday
+    if (GetDayOfWeek() & 1)   // Monday, Wednesday, Friday
         song = MUS_POKEMON_LULLABY;
     PlayAndSaveMusic(song);
 }
@@ -397,14 +397,14 @@ void Task_PlayRadioShow(u8 taskId)
         NextRadioLine(taskId, tCurrentLine + 1, gText_PkmnMusicBen3, TRUE);
         break;
     case POKEMON_MUSIC_4:
-        StringCopy(gStringVar1, GetDayOfWeekString(gLocalTime.dayOfWeek));
+        StringCopy(gStringVar1, GetDayOfWeekString(GetDayOfWeek()));
         StringExpandPlaceholders(gStringVar4, gText_PkmnMusicBenFern1);
         NextRadioLine(taskId, tCurrentLine + 1, gStringVar4, TRUE);
         break;
     case POKEMON_MUSIC_5:
         {
             const u8 *string = gText_PkmnMusicBenFern2A;    // Sunday, Tuesday, Thursday, Saturday
-            if (gLocalTime.dayOfWeek & 1)   // Monday, Wednesday, Friday
+            if (GetDayOfWeek() & 1)   // Monday, Wednesday, Friday
             {
                 string = gText_PkmnMusicBenFern2B;
             }
@@ -414,7 +414,7 @@ void Task_PlayRadioShow(u8 taskId)
     case POKEMON_MUSIC_6:
         {
             const u8 *string = gText_PkmnMusicBenFern3A;    // Sunday, Tuesday, Thursday, Saturday
-            if (gLocalTime.dayOfWeek & 1)   // Monday, Wednesday, Friday
+            if (GetDayOfWeek() & 1)   // Monday, Wednesday, Friday
             {
                 string = gText_PkmnMusicBenFern3B;
             }

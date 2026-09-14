@@ -1048,7 +1048,7 @@ static void LoadClockCard(void)
 
     int i;
     u8 newTask, spriteId;
-    const u8 *dayOfWeek = GetDayOfWeekString(gLocalTime.dayOfWeek);
+    const u8 *dayOfWeek = GetDayOfWeekString(GetDayOfWeek());
     ShowHelpBar(gText_ClockCardHelp);
 
     DrawStdFrameWithCustomTileAndPalette(WIN_DIALOG, FALSE, MENU_FRAME_BASE_TILE_NUM, MENU_FRAME_PALETTE_NUM);
@@ -1060,7 +1060,7 @@ static void LoadClockCard(void)
     LoadSpriteSheet(&sSpriteSheet_DigitTiles);
 
     newTask = CreateTask(Task_ClockCard, 0);
-    gTasks[newTask].tDayOfWeek = gLocalTime.dayOfWeek;
+    gTasks[newTask].tDayOfWeek = GetDayOfWeek();
 
     for (i = 0; i < 6; i++)
     {
@@ -1098,10 +1098,10 @@ static void Task_ClockCard(u8 taskId)
     }
 
     // only change day of week when clock gets an update
-    if ((shouldForceUpdate || sPokegearStruct.fakeSeconds == 0) && gTasks[taskId].tDayOfWeek != gLocalTime.dayOfWeek)
+    if ((shouldForceUpdate || sPokegearStruct.fakeSeconds == 0) && gTasks[taskId].tDayOfWeek != GetDayOfWeek())
     {
-        const u8 *dayOfWeek = GetDayOfWeekString(gLocalTime.dayOfWeek);
-        gTasks[taskId].tDayOfWeek = gLocalTime.dayOfWeek;
+        const u8 *dayOfWeek = GetDayOfWeekString(GetDayOfWeek());
+        gTasks[taskId].tDayOfWeek = GetDayOfWeek();
         FillWindowPixelBuffer(WIN_TOP, 0);
         AddTextPrinterParameterized3(WIN_TOP, 2, GetStringCenterAlignXOffset(2, dayOfWeek, 0x70), 1, sTextColor, 0, dayOfWeek);
     }
@@ -1554,7 +1554,7 @@ void Task_InitPokegearPhoneCall(u8 taskId)
         }
         break;
     case 2:
-        if (IsTextPrinterActive(gPhoneCallWindowId))
+        if (IsTextPrinterActiveOnWindow(gPhoneCallWindowId))
         {
             gTextFlags.canABSpeedUpPrint = 0;
         }
@@ -1568,7 +1568,7 @@ void Task_InitPokegearPhoneCall(u8 taskId)
 
             if (phoneContact->mapNum == gSaveBlock1Ptr->location.mapNum && phoneContact->mapGroup == gSaveBlock1Ptr->location.mapGroup)
                 str = sPhoneCallText_JustGoTalkToThem;
-            else if (!DummiedOut_IsPhoneContactAvailable(phoneContact, gLocalTime.dayOfWeek, gLocalTime.hours))
+            else if (!DummiedOut_IsPhoneContactAvailable(phoneContact, GetDayOfWeek(), gLocalTime.hours))
                 str = sPhoneCallText_NobodyAnswered;
 
             if (str != NULL)
@@ -1586,7 +1586,7 @@ void Task_InitPokegearPhoneCall(u8 taskId)
         break;
     case 3:
         // Out of the service area
-        if (IsTextPrinterActive(gPhoneCallWindowId))
+        if (IsTextPrinterActiveOnWindow(gPhoneCallWindowId))
         {
             gTextFlags.canABSpeedUpPrint = 0;
         }
@@ -1600,7 +1600,7 @@ void Task_InitPokegearPhoneCall(u8 taskId)
         // Getting to this switch case means that the phone call was unsuccessful, due to being out of range, in the same map, or
         // the phone contact not being available to talk.
 
-		if (IsTextPrinterActive(gPhoneCallWindowId))
+		if (IsTextPrinterActiveOnWindow(gPhoneCallWindowId))
 		{
 			if (JOY_HELD(A_BUTTON))
 				gTextFlags.canABSpeedUpPrint = 1;

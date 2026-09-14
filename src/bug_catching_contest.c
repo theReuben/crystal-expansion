@@ -419,7 +419,7 @@ void GiveCaughtBugCatchingContestMon(void)
     if (gBugCatchingContestStatus == BUG_CATCHING_CONTEST_STATUS_CAUGHT)
     {
         gSpecialVar_0x8004 = GetContestantCaughtSpecies(NUM_BUG_CONTEST_NPCS);
-        gSpecialVar_Result = GiveMonToPlayer(&gCaughtBugCatchingContestMon);
+        gSpecialVar_Result = GiveCapturedMonToPlayer(&gCaughtBugCatchingContestMon);
     }
     else
     {

@@ -1589,7 +1589,7 @@ static void DisplayInitialPlayMessage(void)
 
 static void DisplayInitialPlayPrompt(void)
 {
-    if (!IsTextPrinterActive(WIN_TEXT))
+    if (!IsTextPrinterActiveOnWindow(WIN_TEXT))
     {
         CreateYesNoMenuParameterized(21, 7, 0x214, 0x180, 0xE, 0xF);
         sCardFlip->state = CARD_FLIP_STATE_PLAY_PROMPT_GET_INPUT;
@@ -1765,7 +1765,7 @@ static void DisplayBetOutcomeMessage(void)
 
 static void DisplayBetOutcomeMessage_WaitButtonPress(void)
 {
-    if (!IsTextPrinterActive(WIN_TEXT) && JOY_NEW(A_BUTTON | B_BUTTON))
+    if (!IsTextPrinterActiveOnWindow(WIN_TEXT) && JOY_NEW(A_BUTTON | B_BUTTON))
     {
         PlaySE(SE_SELECT);
         sCardFlip->state = CARD_FLIP_STATE_PLAY_AGAIN_MESSAGE;
@@ -1795,7 +1795,7 @@ static void PlayAgainMessage(void)
 
 static void PlayAgainPrompt(void)
 {
-    if (!IsTextPrinterActive(WIN_TEXT))
+    if (!IsTextPrinterActiveOnWindow(WIN_TEXT))
     {
         CreateYesNoMenuParameterized(21, 7, 0x214, 0x180, 0xE, 0xF);
         sCardFlip->state = CARD_FLIP_STATE_PLAY_AGAIN_PROMPT_INPUT;
@@ -1842,7 +1842,7 @@ static void ShuffleDeckMessage(void)
 
 static void ProcessShuffleDeckInput(void)
 {
-    if (!IsTextPrinterActive(WIN_TEXT) && JOY_NEW(A_BUTTON | B_BUTTON))
+    if (!IsTextPrinterActiveOnWindow(WIN_TEXT) && JOY_NEW(A_BUTTON | B_BUTTON))
     {
         ClearDialogWindowAndFrame(0, TRUE);
         sCardFlip->state = CARD_FLIP_STATE_PLAY_DEAL_CARDS;
@@ -1859,7 +1859,7 @@ static void DisplayNotEnoughCoinsMessage(void)
 
 static void ProcessNotEnoughCoinsInput(void)
 {
-    if (!IsTextPrinterActive(WIN_TEXT) && JOY_NEW(A_BUTTON | B_BUTTON))
+    if (!IsTextPrinterActiveOnWindow(WIN_TEXT) && JOY_NEW(A_BUTTON | B_BUTTON))
     {
         ClearDialogWindowAndFrame(0, TRUE);
         sCardFlip->state = CARD_FLIP_STATE_START_EXIT;
