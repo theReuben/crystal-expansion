@@ -422,3 +422,24 @@ Caveat on method: this counts *named* constants matching those subsystems. It
 does not account for unnamed gaps or contiguous unused ranges, so the true
 reclaim is somewhat higher — but not by the ~4x that would change the
 conclusion.
+
+## D11 — Scope answers: Q2, Q3, Q4
+
+**Q2 — visual style: Emerald wins.** Where CrystalDust's FR/LG-leaning presentation
+and expansion's Emerald conventions disagree, take Emerald. Rationale: nostalgia
+for Emerald's look is stronger, and it is consistent with D1 (the wide Emerald
+textbox). This applies to UI chrome, window frames, and menu styling — *not* to
+Johto's map art, tilesets, or overworld palettes, which are CrystalDust's own
+work and are the point of the project. When a case is ambiguous, it goes in this
+log rather than being decided silently.
+
+**Q3 — Battle Frontier: left in place for now.** Not cut, not committed to.
+D6 already restored expansion's Battle Frontier scripts so they assemble, so
+there is no build pressure to decide. Revisit before release.
+
+**Q4 — Sevii Islands: in scope, to be included.** Treat as content to keep and
+make work, not scaffolding to leave dangling.
+
+**Effect on D10.** All three answers are "keep", so nothing is reclaimed. The
+flag and var pools must be grown to cover CrystalDust's additions in full. This
+confirms the D10 addendum: growth was required regardless.
