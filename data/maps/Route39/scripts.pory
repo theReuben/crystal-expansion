@@ -33,7 +33,7 @@ script Route39_Eventscript_PsychicNorman {
 
 script Route39_Eventscript_PokefanDerek {
     // TODO: Check phone strings for textbox fit
-    trainerbattle_single(TRAINER_DEREK, "This is a good time to brag about my\nPIKACHU!", "I had no time to show off PIKACHU…")
+    trainerbattle_single(TRAINER_DEREK_GSC, "This is a good time to brag about my\nPIKACHU!", "I had no time to show off PIKACHU…")
         
     if(flag(FLAG_CALL_DEREK_GIFT))
     {

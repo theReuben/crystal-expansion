@@ -11,12 +11,12 @@ script SaffronCity_Gym_EventScript_MediumDoris { // top right
 }
 
 script SaffronCity_Gym_EventScript_PsychicFranklin { // bottom left
-	trainerbattle_single(TRAINER_FRANKLIN, "Psychic power is the power of\nyour soul.", "Your soul has more power than mine!")
+	trainerbattle_single(TRAINER_FRANKLIN_GSC, "Psychic power is the power of\nyour soul.", "Your soul has more power than mine!")
 	msgbox("You made your soul stronger,\nnot just your abilities.", MSGBOX_AUTOCLOSE)
 }
 
 script SaffronCity_Gym_EventScript_PsychicJared { // top right
-	trainerbattle_single(TRAINER_JARED, "The FIGHTING DOJO next door was\nonce this city's GYM.", "I was no match…")
+	trainerbattle_single(TRAINER_JARED_GSC, "The FIGHTING DOJO next door was\nonce this city's GYM.", "I was no match…")
 	msgbox("The KARATE KING, the master of the\nFIGHTING DOJO, was just destroyed\lby SABRINA.", MSGBOX_AUTOCLOSE)
 }
 

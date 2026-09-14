@@ -68,13 +68,13 @@ script Route19_EventScript_RouteSign{
 }
 
 script Route20_EventScript_SwimmerMJerome{ // topmost
-    trainerbattle_single(TRAINER_JEROME, "Swimming?\nI'm lousy at it.\pI'm just splashing around in these\nshallow waters.", "I thought I could win.")
+    trainerbattle_single(TRAINER_JEROME_GSC, "Swimming?\nI'm lousy at it.\pI'm just splashing around in these\nshallow waters.", "I thought I could win.")
 	msgbox("I might be bad at swimming,\nbut I love the sea.", MSGBOX_DEFAULT)
 	release
 }
 
 script Route20_EventScript_SwimmerMTucker{ // middle
-    trainerbattle_single(TRAINER_TUCKER, "Pant, pant… Just… a little…\nfarther… to… FUCHSIA…", "I'm drowning!")
+    trainerbattle_single(TRAINER_TUCKER_GSC, "Pant, pant… Just… a little…\nfarther… to… FUCHSIA…", "I'm drowning!")
 	msgbox("I… asked my girlfriend to swim to\nFUCHSIA… Gasp…", MSGBOX_DEFAULT)
 	release
 }

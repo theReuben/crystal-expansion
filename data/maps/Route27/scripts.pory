@@ -49,7 +49,7 @@ script Route27_Eventscript_CooltrainerMegan {
 }
 
 script Route27_Eventscript_CooltrainerBlake {
-    trainerbattle_single(TRAINER_BLAKE, "You look pretty strong.\nLet me battle you!", "Yow!")
+    trainerbattle_single(TRAINER_BLAKE_GSC, "You look pretty strong.\nLet me battle you!", "Yow!")
     msgbox("If you prevail on this harsh trek,\nthe truth will be revealed!\pHeh, sorry. I just wanted to say\nsomething cool.", MSGBOX_AUTOCLOSE)
     end
 }
@@ -113,7 +113,7 @@ script Route27_Eventscript_BirdKeeperJose {
 }
 
 script Route27_Eventscript_PsychicGilbert {
-    trainerbattle_single(TRAINER_GILBERT, "Don't say a thing!\nLet me guess what you're thinking.\pMmmmmmm…\pI got it! You're on the {POKEMON}\nLEAGUE challenge!", "You're too much!")
+    trainerbattle_single(TRAINER_GILBERT_GSC, "Don't say a thing!\nLet me guess what you're thinking.\pMmmmmmm…\pI got it! You're on the {POKEMON}\nLEAGUE challenge!", "You're too much!")
     msgbox("With your skills, you'll do well at\nthe LEAGUE.\pThat's what my premonition says.", MSGBOX_AUTOCLOSE)
     end
 }

@@ -2,7 +2,7 @@ mapscripts Route17_MapScripts {}
 
 //trainers from top to bottom
 script Route17_EventScript_BikerRiley {
-    trainerbattle_single(TRAINER_RILEY, "Hey, you!\nYou're from JOHTO, huh?", "Whoa, you kick!")
+    trainerbattle_single(TRAINER_RILEY_GSC, "Hey, you!\nYou're from JOHTO, huh?", "Whoa, you kick!")
     msgbox("Don't get cocky, you JOHTO punk!", MSGBOX_DEFAULT)
     release
 }

@@ -111,7 +111,7 @@ script Route25_EventScript_MistyTriggers{
 
 //trainers from left to right
 script Route25_EventScript_SchoolBoyDudley{
-    trainerbattle_single(TRAINER_DUDLEY, "Beat the six of us trainers to win\na fabulous prize!\pThink you've got what it takes?", "Whoo!\nGood stuff.")
+    trainerbattle_single(TRAINER_DUDLEY_GSC, "Beat the six of us trainers to win\na fabulous prize!\pThink you've got what it takes?", "Whoo!\nGood stuff.")
 	msgbox(Route25_Text_NoRegrets, MSGBOX_DEFAULT)
 	release
 }text(local) Route25_Text_NoRegrets{
@@ -131,7 +131,7 @@ script Route25_EventScript_SchoolBoyJoe{
 }
 
 script Route25_EventScript_LassLaura{
-    trainerbattle_single(TRAINER_LAURA, "I'm No. 4!\nGetting tired?", "I lost too…")
+    trainerbattle_single(TRAINER_LAURA_GSC, "I'm No. 4!\nGetting tired?", "I lost too…")
 	msgbox(Route25_Text_NoRegrets, MSGBOX_DEFAULT)
 	release
 }
@@ -143,19 +143,19 @@ script Route25_EventScript_CamperLloyd{
 }
 
 script Route25_EventScript_LassShannon{
-    trainerbattle_single(TRAINER_SHANNON, "I'm the last in line, but I tell\nyou, I'm tough!", "You're kidding.")
+    trainerbattle_single(TRAINER_SHANNON_GSC, "I'm the last in line, but I tell\nyou, I'm tough!", "You're kidding.")
 	msgbox(Route25_Text_NoRegrets, MSGBOX_DEFAULT)
 	release
 }
 
 script Route25_EventScript_SuperNerdPat{
-    trainerbattle_single(TRAINER_PAT, "Mufufufu…\pI have nothing to do with the\nsix-pack trainers.\pI waited here to beat you when you\nwere tired out by all the battles.", "Aren't you tired at all?")
+    trainerbattle_single(TRAINER_PAT_GSC, "Mufufufu…\pI have nothing to do with the\nsix-pack trainers.\pI waited here to beat you when you\nwere tired out by all the battles.", "Aren't you tired at all?")
 	msgbox("I'm sorry…\nI won't cheat anymore…", MSGBOX_DEFAULT)
 	release
 }
 
 script Route25_EventScript_CooltrainerMKevin {
-    if(defeated(TRAINER_KEVIN))
+    if(defeated(TRAINER_KEVIN_GSC))
     {
         msgbox("That was a great battle!\pYou and your {POKEMON} are truly\noutstanding!", MSGBOX_NPC)
         end
@@ -166,7 +166,7 @@ script Route25_EventScript_CooltrainerMKevin {
         faceplayer
         msgbox("But after seeing how you battle,\nI want to see how I'll fare.\pHow about it?\nLet me take you on.", MSGBOX_DEFAULT)
         closemessage
-        trainerbattle_no_intro(TRAINER_KEVIN, "I've never had a battle this good!")
+        trainerbattle_no_intro(TRAINER_KEVIN_GSC, "I've never had a battle this good!")
         goto(Route25_EventScript_CooltrainerMKevin)
     }
     lock

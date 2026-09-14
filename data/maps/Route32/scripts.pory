@@ -245,7 +245,7 @@ script Route32_EventScript_Frieda {
 }
 
 script Route32_EventScript_Albert {
-    trainerbattle_single(TRAINER_ALBERT, "I haven't seen you around before.\nSo you think you're pretty tough?", "You're stronger than you look!")
+    trainerbattle_single(TRAINER_ALBERT_GSC, "I haven't seen you around before.\nSo you think you're pretty tough?", "You're stronger than you look!")
     msgbox("I'm going to try to be the best\nwith my favorites.\pI'm not using the same tough\n{POKEMON} as everyone else.", MSGBOX_DEFAULT)
     release
 }
@@ -293,19 +293,19 @@ script Route32_EventScript_Liz {
 }
 
 script Route32_EventScript_Roland {
-    trainerbattle_single(TRAINER_ROLAND, "That glance…\nIt's intriguing.", "Hmmm.\nThis is disappointing.")
+    trainerbattle_single(TRAINER_ROLAND_GSC, "That glance…\nIt's intriguing.", "Hmmm.\nThis is disappointing.")
     msgbox("If you don't want to battle, just\navoid eye contact.", MSGBOX_DEFAULT)
     release
 }
 
 script Route32_EventScript_Henry {
-    trainerbattle_single(TRAINER_HENRY, "My {POKEMON}?\nThey're freshly caught!", "SPLASH?")
+    trainerbattle_single(TRAINER_HENRY_GSC, "My {POKEMON}?\nThey're freshly caught!", "SPLASH?")
     msgbox("Freshly caught {POKEMON} are no\nmatch for properly raised ones.", MSGBOX_DEFAULT)
     release
 }
 
 script Route32_EventScript_Justin {
-    trainerbattle_single(TRAINER_JUSTIN, "Whoa!\nYou made me lose that big fish!", "Sploosh!")
+    trainerbattle_single(TRAINER_JUSTIN_GSC, "Whoa!\nYou made me lose that big fish!", "Sploosh!")
     msgbox("Calm, collected…\nThe essence of fishing and {POKEMON}\lis the same.", MSGBOX_DEFAULT)
     release
 }

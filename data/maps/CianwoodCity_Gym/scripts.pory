@@ -95,7 +95,7 @@ script CianwoodCity_Gym_Eventscript_BlackBeltNob{ //under boulders
 }
 
 script CianwoodCity_Gym_Eventscript_BlackBeltLung{ //under boulders
-    trainerbattle_single(TRAINER_LUNG, "My raging fists will shatter your\n{POKEMON}!", "I got shattered!")
+    trainerbattle_single(TRAINER_LUNG_GSC, "My raging fists will shatter your\n{POKEMON}!", "I got shattered!")
     msgbox("My {POKEMON} lost…\nMy… my pride is shattered…", MSGBOX_AUTOCLOSE)
     end
 }

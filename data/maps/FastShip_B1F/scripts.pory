@@ -176,18 +176,18 @@ script FastShip_B1F_EventScript_BlockingSailor{
         msgbox("Thanks, kid! I chewed him out\ngood so he'll quit slacking off!{STR_VAR_1}", MSGBOX_NPC)
         end
     }
-    if(defeated(TRAINER_EDWARD)) // this flag is reused for telling about the lazy sailor to save a flag
+    if(defeated(TRAINER_EDWARD_GSC)) // this flag is reused for telling about the lazy sailor to save a flag
     {
         msgbox("Oh, gee…\nThe CAPTAIN will be furious…", MSGBOX_NPC)
         end
     }
     msgbox("Hey, kid. Could I get you to look\nfor my buddy?\pHe's goofing off somewhere,\nthat lazy bum!\pI want to go find him,\nbut I'm on duty right now.", MSGBOX_NPC)
-    settrainerflag(TRAINER_EDWARD)
+    settrainerflag(TRAINER_EDWARD_GSC)
     end
 }
 
 script FastShip_B1F_EventScript_PicnickerDebra{
-    trainerbattle_single(TRAINER_DEBRA, "I'm so bored.\nWant to battle?", "Yow!\nYou're too strong!")
+    trainerbattle_single(TRAINER_DEBRA_GSC, "I'm so bored.\nWant to battle?", "Yow!\nYou're too strong!")
     msgbox("SAFFRON, CELADON…\pI hear there are many big cities\nin KANTO.", MSGBOX_AUTOCLOSE)
     end
 }
@@ -199,14 +199,14 @@ script FastShip_B1F_EventScript_JugglerFritz{
 }
 
 script FastShip_B1F_EventScript_SailorJeff{
-    trainerbattle_single(TRAINER_JEFF, "Nothing beats a battle when I'm\non my break.", "Win or lose, my break's over!")
+    trainerbattle_single(TRAINER_JEFF_GSC, "Nothing beats a battle when I'm\non my break.", "Win or lose, my break's over!")
     msgbox("I guess I can't win if I don't\nget serious.", MSGBOX_AUTOCLOSE)
     end
 }
 
 // To Vermilion
 script FastShip_B1F_EventScript_FishermanJonah{
-    trainerbattle_single(TRAINER_JONAH, "Even though we're out on the sea,\nI can't fish!\pThis is boring!\nLet's battle!", "I…\nI'm not bored anymore…")
+    trainerbattle_single(TRAINER_JONAH_GSC, "Even though we're out on the sea,\nI can't fish!\pThis is boring!\nLet's battle!", "I…\nI'm not bored anymore…")
     msgbox("I plan to fish off of VERMILION's\npier.", MSGBOX_AUTOCLOSE)
     end
 }
@@ -231,7 +231,7 @@ script FastShip_B1F_EventScript_SailorKenneth{
 }
 
 script FastShip_B1F_EventScript_SchoolBoyNate{ // top schoolboy
-    trainerbattle_single(TRAINER_NATE, "Do you know the RUINS OF ALPH?", "Yaargh!")
+    trainerbattle_single(TRAINER_NATE_GSC, "Do you know the RUINS OF ALPH?", "Yaargh!")
     msgbox("Radios pick up strange signals\ninside the RUINS.", MSGBOX_AUTOCLOSE)
     end
 }
@@ -243,7 +243,7 @@ script FastShip_B1F_EventScript_SchoolBoyRicky{ // bottom schoolboy
 }
 
 script FastShip_B1F_EventScript_TeacherShirley{
-    trainerbattle_single(TRAINER_SHIRLEY, "Don't lay a finger on my students!", "Aaack!")
+    trainerbattle_single(TRAINER_SHIRLEY_GSC, "Don't lay a finger on my students!", "Aaack!")
     msgbox("We're on a field trip to the RUINS\noutside VIOLET.", MSGBOX_AUTOCLOSE)
     end
 }

@@ -21,7 +21,7 @@ mapscripts FastShip_Cabins_SE_SSE_Captains_MapScripts {
             {
                 setvar(VAR_TEMP_0, 1)
             }
-            if(defeated(TRAINER_CAROL)) // reused to do map script, saving a flag
+            if(defeated(TRAINER_CAROL_GSC)) // reused to do map script, saving a flag
             {
                 setobjectxyperm(6, 20, 7)
             }
@@ -80,7 +80,7 @@ mapscripts FastShip_Cabins_SE_SSE_Captains_MapScripts {
             msgbox("FAST SHIP S.S. AQUA has arrived\nin VERMILION CITY.", MSGBOX_DEFAULT)
             closemessage
             setflag(FLAG_FAST_SHIP_HAS_ARRIVED)
-            cleartrainerflag(TRAINER_CAROL) // reused to do map script, saving a flag
+            cleartrainerflag(TRAINER_CAROL_GSC) // reused to do map script, saving a flag
             setvar(VAR_TEMP_0, 1)
             release
             end
@@ -97,7 +97,7 @@ mapscripts FastShip_Cabins_SE_SSE_Captains_MapScripts {
 
 // Initial Trip
 script FastShip_Cabins_SE_SSE_Captains_EventScript_PokefanMColin{
-    trainerbattle_single(TRAINER_COLIN, "Hey, kid!\nWhat to battle with me?", "You're strong!")
+    trainerbattle_single(TRAINER_COLIN_GSC, "Hey, kid!\nWhat to battle with me?", "You're strong!")
     msgbox("You're traveling all alone?\nIsn't your mom worried?", MSGBOX_AUTOCLOSE)
     end
 }
@@ -155,7 +155,7 @@ script FastShip_Cabins_SE_SSE_Captains_EventScript_LostGirl{
         msgbox("Hi!\nWill you play with me?\p…Oh!\nGrandpa's worried about me?\pI have to go!\nI have to go find Grandpa!", MSGBOX_DEFAULT)
         closemessage
         setflag(FLAG_FAST_SHIP_FOUND_GIRL)
-        settrainerflag(TRAINER_CAROL) // reused to do map script, saving a flag
+        settrainerflag(TRAINER_CAROL_GSC) // reused to do map script, saving a flag
         warp(MAP_FAST_SHIP_CABINS_SE_SSE_CAPTAINS, 1, 0, 0)
         waitstate
     }
@@ -175,13 +175,13 @@ script FastShip_Cabins_SE_SSE_Captains_EventScript_Captain{
 
 // To Vermilion
 script FastShip_Cabins_SE_SSE_Captains_EventScript_PsychicRodney{
-    trainerbattle_single(TRAINER_RODNEY, "Ssh! My brain is picking up\nradio signals!", "…I hear something!")
+    trainerbattle_single(TRAINER_RODNEY_GSC, "Ssh! My brain is picking up\nradio signals!", "…I hear something!")
     msgbox("I get it. You can hear JOHTO's\nradio on the FAST SHIP.", MSGBOX_AUTOCLOSE)
     end
 }
 
 script FastShip_Cabins_SE_SSE_Captains_EventScript_SuperNerdShawn{
-    trainerbattle_single(TRAINER_SHAWN, "What kind of {POKE} BALLS do\nyou have with you?", "Wait! Stop!\nDon't! Please!")
+    trainerbattle_single(TRAINER_SHAWN_GSC, "What kind of {POKE} BALLS do\nyou have with you?", "Wait! Stop!\nDon't! Please!")
     msgbox("You should use the right BALLS\nto fit the situation.", MSGBOX_AUTOCLOSE)
     end
 }
@@ -194,7 +194,7 @@ script FastShip_Cabins_SE_SSE_Captains_EventScript_PokefanMJeremy{
 }
 
 script FastShip_Cabins_SE_SSE_Captains_EventScript_PokefanFGeorgia{
-    trainerbattle_single(TRAINER_GEORGIA, "I'm going to shop at the DEPT.\nSTORE and then…", "What was I going to do?")
+    trainerbattle_single(TRAINER_GEORGIA_GSC, "I'm going to shop at the DEPT.\nSTORE and then…", "What was I going to do?")
     msgbox("Oh yes! I have to get my {POKEMON}\nout of DAY CARE!", MSGBOX_AUTOCLOSE)
     end
 }

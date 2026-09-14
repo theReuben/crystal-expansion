@@ -6,7 +6,7 @@ script Route46_EventScript_Bailey {
 }
 
 script Route46_EventScript_Ted {
-    trainerbattle_single(TRAINER_TED, "I'm raising {POKEMON} too!\nWill you battle with me?", "Wha…?")
+    trainerbattle_single(TRAINER_TED_GSC, "I'm raising {POKEMON} too!\nWill you battle with me?", "Wha…?")
     msgbox("I did my best but came up short.\nNo excuses--I admit I lost.", MSGBOX_AUTOCLOSE)
 }
 

@@ -1,7 +1,7 @@
 mapscripts Route35_MapScripts {}
 
 script Route35_EventScript_Ivan {
-    trainerbattle_single(TRAINER_IVAN, "I've been getting {POKEMON} data off\nmy radio. I think I'm good.", "I give!")
+    trainerbattle_single(TRAINER_IVAN_GSC, "I've been getting {POKEMON} data off\nmy radio. I think I'm good.", "I give!")
     msgbox("Music on the radio changes the moods\nof wild {POKEMON}.", MSGBOX_AUTOCLOSE)
 }
 
@@ -21,7 +21,7 @@ script Route35_EventScript_Kim {
 }
 
 script Route35_EventScript_Bryan {
-    trainerbattle_single(TRAINER_BRYAN, "What kinds of {POKE} BALLS do\nyou use?", "Yikes!\nNot fast enough!")
+    trainerbattle_single(TRAINER_BRYAN_GSC, "What kinds of {POKE} BALLS do\nyou use?", "Yikes!\nNot fast enough!")
     msgbox("Some {POKEMON} are pretty speedy.\nTry catching them with KURT's\lFAST BALL.\pWhenever I find a WHT APRICORN, I\ntake it to KURT.\lHe turns it into a custom BALL.", MSGBOX_AUTOCLOSE)
 }
 

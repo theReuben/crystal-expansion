@@ -120,7 +120,7 @@ script AzaleaTown_Gym_EventScript_GymStatue {
 }
 
 script AzaleaTown_Gym_EventScript_Benny {
-	trainerbattle_single(TRAINER_BENNY, "BUG {POKEMON} evolve young, so they\nget stronger that much faster.", "Just evolving isn't enough!")
+	trainerbattle_single(TRAINER_BENNY_GSC, "BUG {POKEMON} evolve young, so they\nget stronger that much faster.", "Just evolving isn't enough!")
 	msgbox("{POKEMON} become stronger if they\nevolve. Really!", MSGBOX_AUTOCLOSE)
 }
 
@@ -130,7 +130,7 @@ script AzaleaTown_Gym_EventScript_Al {
 }
 
 script AzaleaTown_Gym_EventScript_Josh {
-	trainerbattle_single(TRAINER_JOSH, "You saved all the SLOWPOKE?\nWhew, you're mighty!\pBut my grown-up {POKEMON} are pretty\ntough too!", "Urrgggh!")
+	trainerbattle_single(TRAINER_JOSH_GSC, "You saved all the SLOWPOKE?\nWhew, you're mighty!\pBut my grown-up {POKEMON} are pretty\ntough too!", "Urrgggh!")
 	msgbox("I guess I should teach them\nbetter moves…", MSGBOX_AUTOCLOSE)
 }
 

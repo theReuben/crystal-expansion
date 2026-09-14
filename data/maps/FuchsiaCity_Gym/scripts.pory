@@ -12,7 +12,7 @@ mapscripts FuchsiaCity_Gym_MapScripts {
         {
             setvar(VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_JANINE)
         }
-        if(defeated(TRAINER_BARRY)) //camper
+        if(defeated(TRAINER_BARRY_GSC)) //camper
         {
             setvar(VAR_OBJ_GFX_ID_1, OBJ_EVENT_GFX_CAMPER)
         }
@@ -20,7 +20,7 @@ mapscripts FuchsiaCity_Gym_MapScripts {
         {
             setvar(VAR_OBJ_GFX_ID_1, OBJ_EVENT_GFX_JANINE)
         }
-        if(defeated(TRAINER_ALICE)) //top lass
+        if(defeated(TRAINER_ALICE_GSC)) //top lass
         {
             setvar(VAR_OBJ_GFX_ID_2, OBJ_EVENT_GFX_LASS)
         }
@@ -28,7 +28,7 @@ mapscripts FuchsiaCity_Gym_MapScripts {
         {
             setvar(VAR_OBJ_GFX_ID_2, OBJ_EVENT_GFX_JANINE)
         }
-        if(defeated(TRAINER_LINDA)) //bottom lass
+        if(defeated(TRAINER_LINDA_GSC)) //bottom lass
         {
             setvar(VAR_OBJ_GFX_ID_3, OBJ_EVENT_GFX_LASS)
         }
@@ -92,7 +92,7 @@ script FuchsiaCity_Gym_EventScript_PicnickerCindy{
 }
 
 script FuchsiaCity_Gym_EventScript_CamperBarry{
-    if(!defeated(TRAINER_BARRY))
+    if(!defeated(TRAINER_BARRY_GSC))
     {
         lock
         faceplayer
@@ -111,13 +111,13 @@ script FuchsiaCity_Gym_EventScript_CamperBarry{
     call(FuchsiaCity_Gym_EventScript_DumbFaceplayer)
     msgbox("Wahahaha!\pYou betcha!\nI'm JANINE!", MSGBOX_DEFAULT)
     closemessage
-    trainerbattle_no_intro(TRAINER_BARRY, "My disguise was right on!\nDang!")
+    trainerbattle_no_intro(TRAINER_BARRY_GSC, "My disguise was right on!\nDang!")
 	release
     end
 }
 
 script FuchsiaCity_Gym_EventScript_LassAlice{
-    if(!defeated(TRAINER_ALICE))
+    if(!defeated(TRAINER_ALICE_GSC))
     {
         lock
         faceplayer
@@ -136,13 +136,13 @@ script FuchsiaCity_Gym_EventScript_LassAlice{
     call(FuchsiaCity_Gym_EventScript_DumbFaceplayer)
     msgbox("Fufufu!\pI'm JANINE, the GYM LEADER!\nNo, I'm not! Gotcha, sucker!", MSGBOX_DEFAULT)
     closemessage
-    trainerbattle_no_intro(TRAINER_ALICE, "I had you fooled…")
+    trainerbattle_no_intro(TRAINER_ALICE_GSC, "I had you fooled…")
 	release
     end
 }
 
 script FuchsiaCity_Gym_EventScript_LassLinda{
-    if(!defeated(TRAINER_LINDA))
+    if(!defeated(TRAINER_LINDA_GSC))
     {
         lock
         faceplayer
@@ -161,7 +161,7 @@ script FuchsiaCity_Gym_EventScript_LassLinda{
     call(FuchsiaCity_Gym_EventScript_DumbFaceplayer)
     msgbox("Fooled you!\nHahaha!", MSGBOX_DEFAULT)
     closemessage
-    trainerbattle_no_intro(TRAINER_LINDA, "Ooh… I lost…\nYou're not weak…")
+    trainerbattle_no_intro(TRAINER_LINDA_GSC, "Ooh… I lost…\nYou're not weak…")
 	release
     end
 }
@@ -182,14 +182,14 @@ script FuchsiaCity_Gym_EventScript_Janine {
     clearflag(FLAG_TEMP_1)
     // Alice and Linda can be onscreen, so only reset
     // them if they're still disguised.
-    if(!defeated(TRAINER_LINDA))
+    if(!defeated(TRAINER_LINDA_GSC))
     {
         removeobject(2)
         addobject(2)
         setvar(VAR_RESULT, 2)
         callnative(TurnObjectInRandomDirection)
     }
-    if(!defeated(TRAINER_ALICE))
+    if(!defeated(TRAINER_ALICE_GSC))
     {
         removeobject(3)
         addobject(3)

@@ -55,7 +55,7 @@ script Route34_EventScript_Todd {
 }
 
 script Route34_EventScript_Samuel {
-    trainerbattle_single(TRAINER_SAMUEL, "This is where I do my training!", "Beaten by a passing stranger!")
+    trainerbattle_single(TRAINER_SAMUEL_GSC, "This is where I do my training!", "Beaten by a passing stranger!")
     msgbox("Have you been to GOLDENROD CITY?\pWeren't you amazed by how they've\nchanged the {POKEMON} CENTER?", MSGBOX_AUTOCLOSE)
 }
 
@@ -135,12 +135,12 @@ script Route34_EventScript_Keith {
 }
 
 script Route34_EventScript_Brandon {
-    trainerbattle_single(TRAINER_BRANDON, "I just got my {POKEMON} back from the\nDAY CARE.\pLet's see how much stronger it got!", "Why does it end this way?")
+    trainerbattle_single(TRAINER_BRANDON_GSC, "I just got my {POKEMON} back from the\nDAY CARE.\pLet's see how much stronger it got!", "Why does it end this way?")
     msgbox("My {POKEMON} knew moves I didn't\nknow it had.\pThat confounded me to no end!", MSGBOX_AUTOCLOSE)
 }
 
 script Route34_EventScript_Irene {
-    trainerbattle_single(TRAINER_IRENE, "IRENE: Kyaaah!\nSomeone found us!", "IRENE: Ohhh!\nToo strong!")
+    trainerbattle_single(TRAINER_IRENE_GSC, "IRENE: Kyaaah!\nSomeone found us!", "IRENE: Ohhh!\nToo strong!")
     if (!defeated(TRAINER_KATE)) {
         msgbox("IRENE: My sister KATE will get\nyou for this!")
     } else {

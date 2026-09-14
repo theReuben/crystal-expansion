@@ -857,8 +857,8 @@ static const struct WildPokemon *GetBugCatchingContestWildMons(void)
         if (wildHeader->mapGroup == 0xFF)
             break;
 
-        if (wildHeader->mapGroup == MAP_GROUP(BUG_CATCHING_CONTEST)
-         && wildHeader->mapNum == MAP_NUM(BUG_CATCHING_CONTEST))
+        if (wildHeader->mapGroup == MAP_GROUP(MAP_BUG_CATCHING_CONTEST)
+         && wildHeader->mapNum == MAP_NUM(MAP_BUG_CATCHING_CONTEST))
             return wildHeader->landMonsInfo->wildPokemon[timeOfDay];
     }
 

@@ -50,7 +50,7 @@ script VermilionCity_Gym_EventScript_GentlemanGregory {
 }
 
 script VermilionCity_Gym_EventScript_GuitaristVincent {
-	trainerbattle_single(TRAINER_VINCENT, "LT. SURGE recognized my potential\nwith electric {POKEMON}.\pThink you can beat me?", "Ooh, how shocking!")
+	trainerbattle_single(TRAINER_VINCENT_GSC, "LT. SURGE recognized my potential\nwith electric {POKEMON}.\pThink you can beat me?", "Ooh, how shocking!")
 	msgbox("If the GYM's traps were working, you\nwould have been toast…", MSGBOX_AUTOCLOSE)
 }
 

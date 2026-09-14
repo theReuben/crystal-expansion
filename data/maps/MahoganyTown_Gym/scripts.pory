@@ -60,7 +60,7 @@ script MahoganyTown_Gym_Eventscript_GymGuy{
 }
 // trainers from top to bottom
 script MahoganyTown_Gym_Eventscript_BoarderDouglas{
-    trainerbattle_single(TRAINER_DOUGLAS, "I know PRYCE's secret.", "Okay, I'll tell you PRYCE's secret.")
+    trainerbattle_single(TRAINER_DOUGLAS_GSC, "I know PRYCE's secret.", "Okay, I'll tell you PRYCE's secret.")
     msgbox("The secret behind PRYCE's power…\pHe meditates under a waterfall daily\nto strengthen his mind and body.", MSGBOX_AUTOCLOSE)
     end
 }
@@ -78,13 +78,13 @@ script MahoganyTown_Gym_Eventscript_BoarderBrad{
 }
 
 script MahoganyTown_Gym_Eventscript_BoarderRonald{ // bottom left corner
-    trainerbattle_single(TRAINER_RONALD, "I'll freeze your {POKEMON}, so you\ncan't do a thing!", "Darn.\nI couldn't do a thing.")
+    trainerbattle_single(TRAINER_RONALD_GSC, "I'll freeze your {POKEMON}, so you\ncan't do a thing!", "Darn.\nI couldn't do a thing.")
     msgbox("I think there's a move a {POKEMON}\ncan use while it's frozen.", MSGBOX_AUTOCLOSE)
     end
 }
 
 script MahoganyTown_Gym_Eventscript_SkierClarissa{ // bottom right corner
-    trainerbattle_single(TRAINER_CLARISSA, "Check out my parallel turn!", "No!\nYou made me wipe out!")
+    trainerbattle_single(TRAINER_CLARISSA_GSC, "Check out my parallel turn!", "No!\nYou made me wipe out!")
     msgbox("I shouldn't have been bragging\nabout my skiing…", MSGBOX_AUTOCLOSE)
     end
 }

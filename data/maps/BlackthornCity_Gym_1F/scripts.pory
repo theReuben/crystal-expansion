@@ -92,7 +92,7 @@ script BlackthornCity_Gym_1F_Eventscript_GymGuy{
 }
 
 script BlackthornCity_Gym_1F_Eventscript_CooltrainerPaul{ // nearest entrance
-    trainerbattle_single(TRAINER_PAUL, "Your first battle against dragons?\nI'll show you how tough they are!", "My dragon {POKEMON} lost?")
+    trainerbattle_single(TRAINER_PAUL_GSC, "Your first battle against dragons?\nI'll show you how tough they are!", "My dragon {POKEMON} lost?")
     msgbox("LANCE told you that he'd like to\nsee you again? Not a chance!", MSGBOX_AUTOCLOSE)
     end
 }

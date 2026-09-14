@@ -90,7 +90,7 @@ script NationalPark_EventScript_Jack {
 
 script NationalPark_EventScript_Beverly {
     // TODO: Check phone strings for textbox fit
-    trainerbattle_single(TRAINER_BEVERLY, "My {POKEMON} are simply darling.\pLet me tell you how proud my\ndarlings make me.", "I can beat you in pride, but…")
+    trainerbattle_single(TRAINER_BEVERLY_GSC, "My {POKEMON} are simply darling.\pLet me tell you how proud my\ndarlings make me.", "I can beat you in pride, but…")
 
     if(flag(FLAG_CALL_BEVERLY_GIFT))
     {
@@ -139,7 +139,7 @@ script NationalPark_EventScript_Beverly {
 
 // original after-battle text had "win" instead of "wins", but this trainer only has one Pokemon so "wins" makes more sense grammatically 
 script NationalPark_EventScript_William {
-    trainerbattle_single(TRAINER_WILLIAM, "We adore our {POKEMON}, even if they\ndislike us.\pThat's what being a {POKE}FAN is all\nabout.", "M-my {POKEMON}!")
+    trainerbattle_single(TRAINER_WILLIAM_GSC, "We adore our {POKEMON}, even if they\ndislike us.\pThat's what being a {POKE}FAN is all\nabout.", "M-my {POKEMON}!")
     msgbox("I lost the battle, but my {POKEMON}\nwins the prize for being most lovely.", MSGBOX_AUTOCLOSE)
 }
 

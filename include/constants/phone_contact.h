@@ -40,6 +40,7 @@
 #define PHONE_CONTACT_COOLTRAINER_BETH 32
 
 #define PHONE_CONTACT_COUNT 33
+#define PHONE_CONTACT_NONE  0xFF
 
 //#define PHONE_CONTACT_FISHER_CHRIS 33 // GS ONLY, Crystal replaced with Tully
 

@@ -317,7 +317,7 @@ script Route36_EventScript_TrainerTipsDigSign {
 }
 
 script Route36_EventScript_Mark {
-    trainerbattle_single(TRAINER_MARK, "I'm going to read your thoughts!", "I misread you!")
+    trainerbattle_single(TRAINER_MARK_GSC, "I'm going to read your thoughts!", "I misread you!")
     msgbox("I'd be strong if only I could tell\nwhat my opponent was thinking.", MSGBOX_AUTOCLOSE)
 }
 

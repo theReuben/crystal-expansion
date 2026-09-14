@@ -115,7 +115,7 @@ script Route38_Eventscript_SchoolboyChad {
 }
 
 script Route38_Eventscript_BeautyOlivia { //the one furthest to the west
-    trainerbattle_single(TRAINER_OLIVIA, "Don't you think my {POKEMON} and I are\nbeautiful?", "We drink MOOMOO MILK every day.")
+    trainerbattle_single(TRAINER_OLIVIA_GSC, "Don't you think my {POKEMON} and I are\nbeautiful?", "We drink MOOMOO MILK every day.")
     msgbox("MOOMOO MILK is good for beauty and\nhealth, but inconveniently, they\lonly sell a bottle at a time.", MSGBOX_AUTOCLOSE)
     end
 }

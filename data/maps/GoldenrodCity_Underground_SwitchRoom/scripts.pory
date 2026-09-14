@@ -131,13 +131,13 @@ script GoldenrodCity_Underground_SwitchRoom_EventScript_Grunt3{
 }
 
 script GoldenrodCity_Underground_SwitchRoom_EventScript_BurglarDuncan{
-    trainerbattle_single(TRAINER_DUNCAN, "Fork over your goodies!", "Mercy!")
+    trainerbattle_single(TRAINER_DUNCAN_GSC, "Fork over your goodies!", "Mercy!")
     msgbox("Steal and sell!\nThat's basic in crime, kid.")
     release
 }
 
 script GoldenrodCity_Underground_SwitchRoom_EventScript_BurglarEddie{
-    trainerbattle_single(TRAINER_EDDIE, "They ditched this project before\nthey finished.\lI'm searching for leftover loot.", "Over the top!")
+    trainerbattle_single(TRAINER_EDDIE_GSC, "They ditched this project before\nthey finished.\lI'm searching for leftover loot.", "Over the top!")
     msgbox("UNDERGROUND WAREHOSE?\pWhat do you want to go there for?\nThere's nothing down there.")
     release
 }

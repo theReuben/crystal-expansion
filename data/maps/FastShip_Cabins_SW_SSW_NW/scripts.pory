@@ -2,7 +2,7 @@ mapscripts FastShip_Cabins_SW_SSW_NW_MapScripts {
     MAP_SCRIPT_ON_TRANSITION{
         if(!flag(FLAG_VISITED_VERMILION_CITY))
         {
-            if(!defeated(TRAINER_EDWARD) || defeated(TRAINER_STANLY)) // Edward reused to hide lazy sailor to save flag
+            if(!defeated(TRAINER_EDWARD_GSC) || defeated(TRAINER_STANLY)) // Edward reused to hide lazy sailor to save flag
             {
                 setflag(FLAG_TEMP_3)
             }
@@ -17,7 +17,7 @@ mapscripts FastShip_Cabins_SW_SSW_NW_MapScripts {
 
 // Initial Trip
 script FastShip_Cabins_SW_SSW_NW_EventScript_FirebreatherLyle{
-    trainerbattle_single(TRAINER_LYLE, "I'm going to KANTO to put on\nfire breathing shows!", "Fizzle…\nThe flame's tiny…")
+    trainerbattle_single(TRAINER_LYLE_GSC, "I'm going to KANTO to put on\nfire breathing shows!", "Fizzle…\nThe flame's tiny…")
     msgbox("I guess fire is weak on the sea.\nIt doesn't matter? Really?", MSGBOX_AUTOCLOSE)
     end
 }
@@ -73,7 +73,7 @@ script FastShip_Cabins_SW_SSW_NW_EventScript_Scott{
 
 // To Vermilion
 script FastShip_Cabins_SW_SSW_NW_EventScript_GentlemanEdward{
-    trainerbattle_single(TRAINER_EDWARD, "Oh, no. I've lost something\nthat's very important.", "I…\nI can't find it…")
+    trainerbattle_single(TRAINER_EDWARD_GSC, "Oh, no. I've lost something\nthat's very important.", "I…\nI can't find it…")
     msgbox("I give up.\nYou don't have to look.\lJust forget about it!", MSGBOX_AUTOCLOSE)
     end
 }

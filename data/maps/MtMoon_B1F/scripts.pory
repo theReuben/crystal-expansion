@@ -12,7 +12,7 @@ script MtMoon_B1F_EventScript_CamperPetey{
 }
 
 script MtMoon_B1F_EventScript_FirebreatherNed{
-    trainerbattle_single(TRAINER_NED, "My soul is on fire.\nI'll show you how hot it burns!", "Still not hot enough…")
+    trainerbattle_single(TRAINER_NED_GSC, "My soul is on fire.\nI'll show you how hot it burns!", "Still not hot enough…")
 	msgbox("I like to train in ruined places.\pI used to hang out in the BURNED\nTOWER in JOHTO all the time.", MSGBOX_DEFAULT)
 	release
 }

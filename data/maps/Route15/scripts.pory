@@ -13,7 +13,7 @@ script Route15_EventScript_TeacherColette { //right teacher
 }
 
 script Route15_EventScript_SchoolBoyBilly { // second from right
-    trainerbattle_single(TRAINER_BILLY, "My favorite class is gym!", "Oh no!\nHow could I lose?")
+    trainerbattle_single(TRAINER_BILLY_GSC, "My favorite class is gym!", "Oh no!\nHow could I lose?")
 	msgbox("If {POKEMON} were a subject at\nschool, I'd be the best!", MSGBOX_DEFAULT)
 	release
 }
@@ -25,7 +25,7 @@ script Route15_EventScript_TeacherHillary { //left teacher
 }
 
 script Route15_EventScript_SchoolBoyTommy { // second from left
-    trainerbattle_single(TRAINER_TOMMY, "Let's battle.\nI won't lose!", "I forgot to do my homework!")
+    trainerbattle_single(TRAINER_TOMMY_GSC, "Let's battle.\nI won't lose!", "I forgot to do my homework!")
 	msgbox("Sayonara! I just learned that in\nmy Japanese class.", MSGBOX_DEFAULT)
 	release
 }

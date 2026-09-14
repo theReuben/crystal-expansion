@@ -9,7 +9,7 @@ mapscripts Route3_MapScripts {
 
 //trainers from left to right
 script Route3_EventScript_YoungsterWarren{
-    trainerbattle_single(TRAINER_WARREN, "Hmm…\nI don't know what to do…", "I knew I'd lose…")
+    trainerbattle_single(TRAINER_WARREN_GSC, "Hmm…\nI don't know what to do…", "I knew I'd lose…")
 	msgbox("You looked strong.\nI was afraid to take you on…", MSGBOX_DEFAULT)
 	release
 }

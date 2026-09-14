@@ -16,7 +16,7 @@ script Route37_Eventscript_RouteSign {
 }
 
 script Route37_Eventscript_PsychicGreg{
-    trainerbattle_single(TRAINER_GREG, "{POKEMON} can't do a thing if\nthey are asleep.\pI'll show you how scary that is!", "I lost.\nThat's pretty sad…")
+    trainerbattle_single(TRAINER_GREG_GSC, "{POKEMON} can't do a thing if\nthey are asleep.\pI'll show you how scary that is!", "I lost.\nThat's pretty sad…")
     msgbox("Putting {POKEMON} to sleep or\nparalyzing them are good battle\ltechniques.", MSGBOX_AUTOCLOSE)
     end
 }

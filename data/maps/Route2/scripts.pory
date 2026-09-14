@@ -7,13 +7,13 @@ script Route2_EventScript_BugCatcherRob { //lowest
 }
 
 script Route2_EventScript_BugCatcherDoug { //middle
-    trainerbattle_single(TRAINER_DOUG, "Why don't girls like bug {POKEMON}?", "No good!")
+    trainerbattle_single(TRAINER_DOUG_GSC, "Why don't girls like bug {POKEMON}?", "No good!")
 	msgbox("Bug {POKEMON} squish like plush toys\nwhen you squeeze their bellies.\lI love how they feel!", MSGBOX_DEFAULT)
 	release
 }
 
 script Route2_EventScript_BugCatcherEd { //highest
-    trainerbattle_single(TRAINER_ED, "If you walk in tall grass wearing\nshorts, do you get nicks and cuts?", "Ouch, ouch, ouch!")
+    trainerbattle_single(TRAINER_ED_GSC, "If you walk in tall grass wearing\nshorts, do you get nicks and cuts?", "Ouch, ouch, ouch!")
 	msgbox("They'll really sting when you\ntake a bath.", MSGBOX_DEFAULT)
 	release
 }

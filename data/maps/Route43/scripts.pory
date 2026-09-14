@@ -11,7 +11,7 @@ script Route43_Eventscript_TrainerTipsSign {
 }
 
 script Route43_Eventscript_CamperSpencer {
-    trainerbattle_single(TRAINER_SPENCER, "I can do so much with my {POKEMON}--\nit's super-fun!", "Losing isn't fun at all…")
+    trainerbattle_single(TRAINER_SPENCER_GSC, "I can do so much with my {POKEMON}--\nit's super-fun!", "Losing isn't fun at all…")
     msgbox("What is going on at the\nLAKE OF RAGE?\lWe were planning to camp there.", MSGBOX_AUTOCLOSE)
     end
 }
@@ -122,7 +122,7 @@ script Route43_Eventscript_PokemaniacRon {
 }
 
 script Route43_Eventscript_PokemaniacBen {
-    trainerbattle_single(TRAINER_BEN, "I love {POKEMON}!\pThat's why I started--and why I'll\nkeep on collecting {POKEMON}!", "How could you do this to me?")
+    trainerbattle_single(TRAINER_BEN_GSC, "I love {POKEMON}!\pThat's why I started--and why I'll\nkeep on collecting {POKEMON}!", "How could you do this to me?")
     msgbox("What else do I like besides {POKEMON}?\nMARY on the radio. I bet she's cute!", MSGBOX_AUTOCLOSE)
     end
 }

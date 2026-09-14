@@ -190,7 +190,7 @@ script LakeOfRage_Eventscript_WesleyOfWednesday {
 }
 
 script LakeOfRage_Eventscript_CooltrainerAaron { //on left side of lake
-    trainerbattle_single(TRAINER_AARON, "If a TRAINER spots another TRAINER,\nhe has to make a challenge.\pThat is our destiny.", "Whew…\nGood battle.")
+    trainerbattle_single(TRAINER_AARON_GSC, "If a TRAINER spots another TRAINER,\nhe has to make a challenge.\pThat is our destiny.", "Whew…\nGood battle.")
     msgbox("{POKEMON} and their TRAINER become\npowerful through constant battling.", MSGBOX_AUTOCLOSE)
     end
 }

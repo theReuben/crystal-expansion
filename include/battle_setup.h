@@ -17,6 +17,7 @@ struct RematchTrainer
     u16 trainerIds[REMATCHES_COUNT];
     u16 mapGroup;
     u16 mapNum;
+    u8 phoneContactId; // CrystalDust; PHONE_CONTACT_NONE for Hoenn entries.
 };
 
 /*

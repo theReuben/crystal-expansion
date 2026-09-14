@@ -11,7 +11,7 @@ script UnionCave_1F_EventScript_Daniel {
 }
 
 script UnionCave_1F_EventScript_Larry {
-    trainerbattle_single(TRAINER_LARRY, "I roam far and wide in search of\n{POKEMON}.\pAre you looking for {POKEMON} too?\nThen you're my collecting rival!", "Ugh.\nMy poor {POKEMON}…")
+    trainerbattle_single(TRAINER_LARRY_GSC, "I roam far and wide in search of\n{POKEMON}.\pAre you looking for {POKEMON} too?\nThen you're my collecting rival!", "Ugh.\nMy poor {POKEMON}…")
     msgbox("Every FRIDAY, you can hear {POKEMON}\nroars from deep inside the cave.")
     release
 }

@@ -33,7 +33,7 @@ script RadioTower_3F_EventScript_RocketM3 {
 }
 
 script RadioTower_3F_EventScript_ScientistMarc {
-    trainerbattle_single(TRAINER_MARC, "An unknown child wandering here?\nWho are you?", "Tch!\nI took you too lightly!")
+    trainerbattle_single(TRAINER_MARC_GSC, "An unknown child wandering here?\nWho are you?", "Tch!\nI took you too lightly!")
     msgbox("Bwahahaha…\pI can transmit as strong a signal as\nI need from here.")
     release
 }

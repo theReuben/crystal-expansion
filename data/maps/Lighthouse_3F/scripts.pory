@@ -1,7 +1,7 @@
 mapscripts Lighthouse_3F_MapScripts {}
 
 script Lighthouse_3F_EventScript_GentlemanPreston {
-    trainerbattle_single(TRAINER_PRESTON,  "I travel the world to train my\n{POKEMON}. I wish to battle with you.", "…sigh… I must train some more…")
+    trainerbattle_single(TRAINER_PRESTON_GSC,  "I travel the world to train my\n{POKEMON}. I wish to battle with you.", "…sigh… I must train some more…")
     msgbox("JASMINE used to use rock {POKEMON}\nlike ONIX.", MSGBOX_AUTOCLOSE)
     end
 }

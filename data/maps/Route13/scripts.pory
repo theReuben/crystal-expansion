@@ -1,7 +1,7 @@
 mapscripts Route13_MapScripts {}
 
 script Route13_EventScript_BirdKeeperPerry { //left
-    trainerbattle_single(TRAINER_PERRY, "Agility is the key attribute\nof bird {POKEMON}.", "You beat me with your speed…")
+    trainerbattle_single(TRAINER_PERRY_GSC, "Agility is the key attribute\nof bird {POKEMON}.", "You beat me with your speed…")
 	msgbox("Your {POKEMON} are remarkably\nwell-trained.", MSGBOX_DEFAULT)
 	release
 }
@@ -19,13 +19,13 @@ script Route13_EventScript_HikerKenny {
 }
 
 script Route13_EventScript_PokefanMJoshua { //right
-    trainerbattle_single(TRAINER_JOSHUA, "Nihihi! Would you like to battle\nmy PIKACHU gang?", "PI-PIKACHU!")
+    trainerbattle_single(TRAINER_JOSHUA_GSC, "Nihihi! Would you like to battle\nmy PIKACHU gang?", "PI-PIKACHU!")
 	msgbox("You look like you have many {POKEMON},\nbut PIKACHU is still the best.", MSGBOX_DEFAULT)
 	release
 }
 
 script Route13_EventScript_PokefanMAlex { //left
-    trainerbattle_single(TRAINER_ALEX, "Bow down before my regal {POKEMON}!", "How…\nHow dare you mock royalty!")
+    trainerbattle_single(TRAINER_ALEX_GSC, "Bow down before my regal {POKEMON}!", "How…\nHow dare you mock royalty!")
 	msgbox("Doesn't everyone wish to someday\nbe a king?", MSGBOX_DEFAULT)
 	release
 }

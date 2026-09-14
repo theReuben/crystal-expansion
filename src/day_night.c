@@ -114,7 +114,7 @@ bool32 ShouldSetTintToNight(void)
         case LAYOUT_FUCHSIA_CITY_SAFARI_ZONE_OFFICE:
             return TRUE;
     }
-    if(gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(LIGHTHOUSE_6F) && gSaveBlock1Ptr->location.mapNum == MAP_NUM(LIGHTHOUSE_6F) && !FlagGet(FLAG_CURED_AMPHY))
+    if(gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_LIGHTHOUSE_6F) && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_LIGHTHOUSE_6F) && !FlagGet(FLAG_CURED_AMPHY))
         return TRUE;
     return FALSE;
 }

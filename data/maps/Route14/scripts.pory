@@ -10,7 +10,7 @@ script Route14_EventScript_PokefanMTrevor { //left
 }
 
 script Route14_EventScript_PokefanMCarter { //right
-    trainerbattle_single(TRAINER_CARTER, "Let me tell you, I had a hard time\ncatching my prized {POKEMON}.", "Awaaah!")
+    trainerbattle_single(TRAINER_CARTER_GSC, "Let me tell you, I had a hard time\ncatching my prized {POKEMON}.", "Awaaah!")
 	msgbox("SQUIRTLE, CHARMANDER and BULBASAUR…\nI think that's a well-balanced mix.", MSGBOX_DEFAULT)
 	release
 }

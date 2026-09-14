@@ -1,7 +1,7 @@
 mapscripts Route21_MapScripts {}
 
 script Route21_EventScript_SwimmerFNikki {
-    trainerbattle_single(TRAINER_NIKKI, "If I win, you have to help me\nwith my suntan lotion!", "I'm worried about sunburn…")
+    trainerbattle_single(TRAINER_NIKKI_GSC, "If I win, you have to help me\nwith my suntan lotion!", "I'm worried about sunburn…")
 	msgbox("I have to watch out for blemishes\ncaused by the sun.", MSGBOX_DEFAULT)
 	release
 }

@@ -94,7 +94,7 @@ script EcruteakCity_Gym_Eventscript_SagePing{ // lower Sage
 }
 
 script EcruteakCity_Gym_Eventscript_MediumGrace{ // lower Medium
-    trainerbattle_single(TRAINER_GRACE, "Stumped by our invisible floor?\nDefeat me if you want a hint!", "Wha-what?")
+    trainerbattle_single(TRAINER_GRACE_GSC, "Stumped by our invisible floor?\nDefeat me if you want a hint!", "Wha-what?")
     msgbox("Fine. I shall tell you the secret of\nthe invisible floor.\pThe path is right before our eyes!", MSGBOX_AUTOCLOSE)
     end
 }
@@ -106,7 +106,7 @@ script EcruteakCity_Gym_Eventscript_SageJeffrey{ // upper Sage
 }
 
 script EcruteakCity_Gym_Eventscript_MediumMartha{ // upper Medium
-    trainerbattle_single(TRAINER_MARTHA, "I shall win!", "I, I, I lost!")
+    trainerbattle_single(TRAINER_MARTHA_GSC, "I shall win!", "I, I, I lost!")
     msgbox("The one who wants to win most--will!", MSGBOX_AUTOCLOSE)
     end
 }

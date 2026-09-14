@@ -201,13 +201,13 @@ script OlivineCity_Port_Eventscript_GetOnBoard{
     waitmovement(0)
     // Trainers on the ship can be rebattled
     // This clears the flags of the Olivine -> Vermilion trainers
-    cleartrainerflag(TRAINER_EDWARD)
+    cleartrainerflag(TRAINER_EDWARD_GSC)
     cleartrainerflag(TRAINER_SEAN)
-    cleartrainerflag(TRAINER_CAROL)
-    cleartrainerflag(TRAINER_SHAWN)
-    cleartrainerflag(TRAINER_RODNEY)
+    cleartrainerflag(TRAINER_CAROL_GSC)
+    cleartrainerflag(TRAINER_SHAWN_GSC)
+    cleartrainerflag(TRAINER_RODNEY_GSC)
     cleartrainerflag(TRAINER_CASSIE)
-    cleartrainerflag(TRAINER_JONAH)
+    cleartrainerflag(TRAINER_JONAH_GSC)
     cleartrainerflag(TRAINER_GARRETT)
     cleartrainerflag(TRAINER_WAI)
     setdynamicwarp(MAP_OLIVINE_CITY_PORT, 1, 0, 0)

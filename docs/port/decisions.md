@@ -761,3 +761,53 @@ The 10 files are deleted. Errors 807 -> 355, files 34 -> 24.
 CrystalDust does not use Pokenav: it replaces it with the Pokegear
 (`pokegear.c`, `phone_contact.c`), which is merged separately and does not go
 through these functions.
+
+## D19 — 125 CrystalDust trainers were silently aliased onto Emerald trainers
+
+**Found while merging the Pokegear phone system.** `include/constants/opponents.h`
+had 496 CrystalDust trainer names and 855 Emerald ones, but only 371 new IDs were
+allocated in the Phase 1 constants merge. The other **125 CrystalDust trainers
+shared a name with an unrelated Emerald trainer and were unified by name**, so
+every CrystalDust reference to them pointed at a Hoenn trainer. No build error;
+the symbol resolved.
+
+Example: CrystalDust's Fisher Wilton (Route 44, 2 rematches, ID 188) collapsed
+onto Emerald's Fisherman Wilton (Route 111, 4 rematches, ID 78).
+
+**Resolution:** the 125 collided names get their own IDs, suffixed `_GSC`
+(IDs 1226-1350). `TRAINERS_COUNT_EMERALD` 1226 -> 1351, `MAX_TRAINERS_COUNT_EMERALD`
+1240 -> 1365. 165 references retargeted across 61 Johto/Kanto `scripts.pory`
+files plus `phone_contact.c` and `radio.c`. Nothing dropped.
+
+Cost: +125 trainer flags = ~16 save bytes. Budget remains comfortable.
+
+### D19a — CrystalDust rematch table restored
+
+`include/constants/gym_leader_rematch.h` survived Phase 1 as CrystalDust's copy
+but **nothing included it** -- expansion replaced that header with the
+`REMATCH_*` enum in `rematches.h`, so CrystalDust's 24 phone-rematch trainers
+(Joey, Wade, Liz, Ralph, ...) existed nowhere in the build.
+
+- The 24 entries are inserted into `rematches.h` **before**
+  `REMATCH_SPECIAL_TRAINER_START`, so they count as normal trainers.
+  `REMATCH_TABLE_ENTRIES` 83 -> 107.
+- `REMATCH_WILTON` collided the same way as the trainer constant; CrystalDust's
+  is now `REMATCH_WILTON_GSC`. Both rows exist in `gRematchTable`.
+- `struct RematchTrainer` regains CrystalDust's `phoneContactId` field. Emerald
+  rows get `PHONE_CONTACT_NONE` via the existing `REMATCH()` macro; CrystalDust
+  rows use a new `REMATCH_PHONE()`. ROM-only, no save cost.
+- `MAX_REMATCH_ENTRIES` 100 -> 112 (must exceed 107). +12 save bytes.
+- `struct PhoneContact.trainerId` / `.rematchTrainerId` widened `u8` -> `u16`:
+  CrystalDust trainer IDs now start at 855 and truncated to garbage.
+- Orphan `include/constants/gym_leader_rematch.h` deleted.
+
+### D19b — map constant convention drift (no content impact)
+
+CrystalDust's `MAP_NUM(X)` / `MAP_GROUP(X)` took a bare map name; expansion's
+take the `MAP_`-prefixed constant. 100 call sites in `phone_contact.c`,
+`radio.c`, `day_night.c` and `bug_catching_contest.c` were rewritten to pass
+`MAP_<NAME>`. Every referenced map resolved; none missing.
+
+**Open:** CrystalDust's `match_call.c` rewrite (the `SelectMatchCallMessage_*`
+family and `IsMatchCallRematchTime`) was lost the same way -- our `match_call.c`
+is expansion's. That merge is the next step, and settles `FREE_MATCH_CALL`.

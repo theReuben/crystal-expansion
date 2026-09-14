@@ -12,7 +12,7 @@ script Route26_Eventscript_FishermanScott {
 }
 
 script Route26_Eventscript_PsychicRichard {
-    trainerbattle_single(TRAINER_RICHARD, "Wow, look at all those BADGES!\nI'm impressed.\pBut you're not satisfied by just\ncollecting them, right?", "Good battle!")
+    trainerbattle_single(TRAINER_RICHARD_GSC, "Wow, look at all those BADGES!\nI'm impressed.\pBut you're not satisfied by just\ncollecting them, right?", "Good battle!")
     msgbox("People and {POKEMON} grow from their\nexperiences.\pDon't get lazy and complacent.", MSGBOX_AUTOCLOSE)
     end
 }

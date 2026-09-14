@@ -102,7 +102,7 @@ script Route42_Eventscript_FishermanTully {
 }
 
 script Route42_Eventscript_PokemaniacShane {
-    trainerbattle_single(TRAINER_SHANE, "HEY! This is my secret place!\nGet lost, you outsider!", "I should have used my MOON STONE…")
+    trainerbattle_single(TRAINER_SHANE_GSC, "HEY! This is my secret place!\nGet lost, you outsider!", "I should have used my MOON STONE…")
     msgbox("You're working on a {POKEDEX}?\pWow, you must know some pretty rare\n{POKEMON}!\pMay I please see it?\nPlease?", MSGBOX_AUTOCLOSE)
     end
 }

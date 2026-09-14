@@ -34,13 +34,13 @@ script CeladonCity_Gym_Eventscript_Erika{
 }
 
 script CeladonCity_Gym_EventScript_LassMichelle {
-    trainerbattle_single(TRAINER_MICHELLE, "Do you think a girls-only GYM\nis rare?", "Oh, bleah!")
+    trainerbattle_single(TRAINER_MICHELLE_GSC, "Do you think a girls-only GYM\nis rare?", "Oh, bleah!")
     msgbox("I just got careless, that's all!", MSGBOX_DEFAULT)
     release
 }
 
 script CeladonCity_Gym_EventScript_PicnickerTanya {
-    trainerbattle_single(TRAINER_TANYA, "Oh, a battle? That's kind of\nscary, but OK!", "Oh, that's it?")
+    trainerbattle_single(TRAINER_TANYA_GSC, "Oh, a battle? That's kind of\nscary, but OK!", "Oh, that's it?")
     msgbox("Oh, look at all your BADGES.\nNo wonder I couldn't win!", MSGBOX_DEFAULT)
     release
 }

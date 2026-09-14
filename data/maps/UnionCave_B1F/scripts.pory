@@ -1,19 +1,19 @@
 mapscripts UnionCave_B1F_MapScripts { }
 
 script UnionCave_B1F_EventScript_Phillip {
-    trainerbattle_single(TRAINER_PHILLIP, "It's been a while since I last\nsaw another person.\pHey, don't be shy.\nLet's battle!", "Uurggh…")
+    trainerbattle_single(TRAINER_PHILLIP_GSC, "It's been a while since I last\nsaw another person.\pHey, don't be shy.\nLet's battle!", "Uurggh…")
 	msgbox("I've been lost down here for a\nlong time…\pI don't mind it here, but I am\nsoooo hungry!", MSGBOX_DEFAULT)
 	release
 }
 
 script UnionCave_B1F_EventScript_Leonard {
-    trainerbattle_single(TRAINER_LEONARD, "Hey, what do you know!\nIt's a visitor!", "Wahahah!\nYou're a feisty one!")
+    trainerbattle_single(TRAINER_LEONARD_GSC, "Hey, what do you know!\nIt's a visitor!", "Wahahah!\nYou're a feisty one!")
 	msgbox("I live down here.\nYou can, too, if you'd like.\pThere's plenty of room here,\nyou see.", MSGBOX_DEFAULT)
 	release
 }
 
 script UnionCave_B1F_EventScript_Andrew {
-    trainerbattle_single(TRAINER_ANDREW, "Who's there?\nLeave me and my {POKEMON} alone!", "Go…\nGo away!")
+    trainerbattle_single(TRAINER_ANDREW_GSC, "Who's there?\nLeave me and my {POKEMON} alone!", "Go…\nGo away!")
 	msgbox("It's just me and my {POKEMON}.\nI'm delirious with joy.", MSGBOX_DEFAULT)
 	release
 }

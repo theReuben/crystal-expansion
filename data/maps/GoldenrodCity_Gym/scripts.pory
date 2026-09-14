@@ -168,16 +168,16 @@ script GoldenrodCity_Gym_EventScript_Carrie {
 }
 
 script GoldenrodCity_Gym_EventScript_Bridget {
-    trainerbattle_single(TRAINER_BRIDGET, "I like cute {POKEMON} better than\nstrong {POKEMON}.\pBut I have strong and cute {POKEMON}!", "Oh, no, no, no!")
+    trainerbattle_single(TRAINER_BRIDGET_GSC, "I like cute {POKEMON} better than\nstrong {POKEMON}.\pBut I have strong and cute {POKEMON}!", "Oh, no, no, no!")
     msgbox("I'm trying to beat WHITNEY, but…\nIt's depressing.\pI'm okay! If I lose, I'll just try\nharder next time!", MSGBOX_AUTOCLOSE)
 }
 
 script GoldenrodCity_Gym_EventScript_Victoria {
-    trainerbattle_single(TRAINER_VICTORIA, "Oh, you are a cute little TRAINER!\nI like you, but I won't hold back!", "Let's see…\nOops, it's over?")
+    trainerbattle_single(TRAINER_VICTORIA_GSC, "Oh, you are a cute little TRAINER!\nI like you, but I won't hold back!", "Let's see…\nOops, it's over?")
     msgbox("Wow, you must be good to beat me!\nKeep it up!", MSGBOX_AUTOCLOSE)
 }
 
 script GoldenrodCity_Gym_EventScript_Samantha {
-    trainerbattle_single(TRAINER_SAMANTHA, "Give it your best shot, or I'll take\nyou down!", "No!\nOh, MEOWTH, I'm so sorry!")
+    trainerbattle_single(TRAINER_SAMANTHA_GSC, "Give it your best shot, or I'll take\nyou down!", "No!\nOh, MEOWTH, I'm so sorry!")
     msgbox("I taught MEOWTH moves for taking on\nany type…", MSGBOX_AUTOCLOSE)
 }

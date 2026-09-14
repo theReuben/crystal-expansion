@@ -140,7 +140,7 @@ script CeruleanCity_Gym_EventScript_SwimmerFBriana {
 }
 
 script CeruleanCity_Gym_EventScript_SwimmerMParker {
-    trainerbattle_single(TRAINER_PARKER, "Glub…\pI'm first!\nCome and get me!", "This can't be…")
+    trainerbattle_single(TRAINER_PARKER_GSC, "Glub…\pI'm first!\nCome and get me!", "This can't be…")
     msgbox("MISTY has gotten much better in the\npast few years.\pDon't let your guard down,\nor you'll be crushed!", MSGBOX_DEFAULT)
     release
 }

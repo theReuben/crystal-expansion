@@ -11,12 +11,12 @@ script Route9_EventScript_PicnickerEdna{ //bottom left
 }
 
 script Route9_EventScript_CamperDean{ //east of Sid
-    trainerbattle_single(TRAINER_DEAN, "I came to explore ROCK TUNNEL.", "Whoa!\nDanger, man.")
+    trainerbattle_single(TRAINER_DEAN_GSC, "I came to explore ROCK TUNNEL.", "Whoa!\nDanger, man.")
 	msgbox("My {POKEMON} were hurt before even\nentering ROCK TUNNEL.\pI'd better take them to a\n{POKEMON} CENTER right away.", MSGBOX_AUTOCLOSE)
 }
 
 script Route9_EventScript_PicnickerHeidi{ //rightmost
-    trainerbattle_single(TRAINER_HEIDI, "Have you ever been to a picnic?\nThey're so much fun!", "Ohhhh!")
+    trainerbattle_single(TRAINER_HEIDI_GSC, "Have you ever been to a picnic?\nThey're so much fun!", "Ohhhh!")
 	msgbox("We bake lots of goodies and share\nthem all around. They're delicious!", MSGBOX_AUTOCLOSE)
 }
 
@@ -26,7 +26,7 @@ script Route9_EventScript_HikerTim{ //top
 }
 
 script Route9_EventScript_HikerSidney{ //bottom
-    trainerbattle_single(TRAINER_SIDNEY, "I'll tell you a secret.\nBut first, we battle!", "Oh, dang!\nI lost that…")
+    trainerbattle_single(TRAINER_SIDNEY_GSC, "I'll tell you a secret.\nBut first, we battle!", "Oh, dang!\nI lost that…")
 	msgbox("The POWER PLANT is across a\nsmall river.", MSGBOX_AUTOCLOSE)
 }
 

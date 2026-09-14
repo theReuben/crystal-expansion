@@ -6,7 +6,7 @@ script MtMortar_B1F_EventScript_Kiyo{
         msgbox("TYROGUE is a FIGHTING-type.\nIt evolves into a tougher {POKEMON}.\pKeep up the hard work.\nI'll keep training too.\pFarewell!", MSGBOX_NPC)
         end
     }
-    if(defeated(TRAINER_KIYO))
+    if(defeated(TRAINER_KIYO_GSC))
     {
         lock
         faceplayer
@@ -40,6 +40,6 @@ script MtMortar_B1F_EventScript_Kiyo{
     faceplayer
     msgbox("Hey!\nI am the KARATE KING!\pI train alone here in the dark!\nYou! Battle with me!\pHwaaarggh!", MSGBOX_DEFAULT)
     closemessage
-    trainerbattle_no_intro(TRAINER_KIYO, "Waaaarggh!\nI'm beaten!")
+    trainerbattle_no_intro(TRAINER_KIYO_GSC, "Waaaarggh!\nI'm beaten!")
     goto(MtMortar_B1F_EventScript_Kiyo)
 }

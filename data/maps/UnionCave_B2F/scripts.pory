@@ -30,7 +30,7 @@ script UnionCave_B2F_EventScript_Nick {
 }
 
 script UnionCave_B2F_EventScript_Gwen {
-    trainerbattle_single(TRAINER_GWEN, "I'm in training.\nCare for a round?", "Aww, no!\nYou're too good for me.")
+    trainerbattle_single(TRAINER_GWEN_GSC, "I'm in training.\nCare for a round?", "Aww, no!\nYou're too good for me.")
 	msgbox("I'm going to train by myself\nuntil I improve.", MSGBOX_NPC)
     end
 }

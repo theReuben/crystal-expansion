@@ -461,7 +461,7 @@ script IlexForest_EventScript_Master {
 }
 
 script IlexForest_EventScript_Wayne {
-    trainerbattle_single(TRAINER_WAYNE, "Don't sneak up on me like that!\nYou frightened a {POKEMON} away!", "I hadn't seen that {POKEMON} before…")
+    trainerbattle_single(TRAINER_WAYNE_GSC, "Don't sneak up on me like that!\nYou frightened a {POKEMON} away!", "I hadn't seen that {POKEMON} before…")
     msgbox("A {POKEMON} I've never seen before\nfell out of the tree when I used\lHEADBUTT.\pI ought to use HEADBUTT in other\nplaces too.")
     release
 }

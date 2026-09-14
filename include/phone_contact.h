@@ -20,8 +20,8 @@ struct PhoneContact
     u8 mapNum;
     u8 mapGroup;
     u16 registeredFlag;
-    u8 rematchTrainerId;
-    u8 trainerId;
+    u16 rematchTrainerId;
+    u16 trainerId;
     u8 availability;
     u8 isPermanent;
 };

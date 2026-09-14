@@ -14,7 +14,7 @@ script  OlivineCity_Gym_Eventscript_Jasmine{
     {
         msgbox("…Thank you for your help at\nthe LIGHTHOUSE…\pBut this is different. Please\nallow me to introduce myself.\pI am JASMINE, a GYM LEADER.\nI use the STEEL type.\p…Do you know about the STEEL\ntype?\pIt's a type that was only recently\ndiscovered.\p…Um…\nMay I begin?", MSGBOX_DEFAULT)
         release
-        trainerbattle_no_intro(TRAINER_JASMINE, "…You are a better trainer than me,\nin both skill and kindness.\pIn accordance with LEAGUE rules, I\nconfer upon you this BADGE.")
+        trainerbattle_no_intro(TRAINER_JASMINE_GSC, "…You are a better trainer than me,\nin both skill and kindness.\pIn accordance with LEAGUE rules, I\nconfer upon you this BADGE.")
         textcolor(MSG_COLOR_SYS)
         message("{PLAYER} received\nthe MINERALBADGE.")
         call(Common_EventScript_PlayGymBadgeFanfare)

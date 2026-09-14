@@ -13,13 +13,13 @@ script Route11_EventScript_YoungsterJason { //middle left
 }
 
 script Route11_EventScript_YoungsterOwen { //middle right
-    trainerbattle_single(TRAINER_OWEN, "There's no cheating in {POKEMON}.\nLet's keep it fair and square!", "Huh?\nHow did this happen?")
+    trainerbattle_single(TRAINER_OWEN_GSC, "There's no cheating in {POKEMON}.\nLet's keep it fair and square!", "Huh?\nHow did this happen?")
 	msgbox("I fought fair and square with honor.\nI don't regret this at all.", MSGBOX_DEFAULT)
 	release
 }
 
 script Route11_EventScript_PsychicHerman { //rightmost
-    trainerbattle_single(TRAINER_HERMAN, "…", "…")
+    trainerbattle_single(TRAINER_HERMAN_GSC, "…", "…")
 	msgbox("…\pI lost while I had my eyes closed…", MSGBOX_DEFAULT)
 	release
 }
