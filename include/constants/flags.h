@@ -1639,7 +1639,26 @@
 #define DAILY_FLAGS_END                             (FLAG_UNUSED_0x95F + (7 - FLAG_UNUSED_0x95F % 8))
 #define NUM_DAILY_FLAGS                             (DAILY_FLAGS_END - DAILY_FLAGS_START + 1)
 
-#define FLAGS_COUNT (DAILY_FLAGS_END + 1)
+// Crystal Expansion: CrystalDust contributes 879 flags that expansion has no
+// equivalent for (Johto events, gym badges, radio, Pokegear, apricorns). Only
+// 517 slots were free, so the saved-flag pool is grown here rather than
+// reclaiming Hoenn flags -- measured, cutting the Battle Frontier, contests,
+// secret bases and Sevii would free only ~80. See decisions D10 and D11.
+//
+// These IDs are freshly allocated in THIS tree. CrystalDust's own flag numbers
+// are not reused: they were assigned against vanilla pokeemerald and collide
+// with flags expansion has since allocated.
+//
+// Growth is bounded by SPECIAL_FLAGS_START (0x4000), which lives in EWRAM, not
+// the SaveBlock, and -- the real ceiling -- by the SaveBlock1FreeSpace assertion
+// in src/save.c. SaveBlock1 measured 15568 bytes before this change against a
+// 4-sector budget of 15872, leaving only 304 bytes for both pools combined.
+// 1024 flags cost 128 of those; see vars.h for the other 128. See decision D12.
+#define CRYSTAL_FLAGS_START                         (DAILY_FLAGS_END + 1)
+#define NUM_CRYSTAL_FLAGS                           1024
+#define CRYSTAL_FLAGS_END                           (CRYSTAL_FLAGS_START + NUM_CRYSTAL_FLAGS - 1)
+
+#define FLAGS_COUNT (CRYSTAL_FLAGS_END + 1)
 
 // Special Flags (Stored in EWRAM (sSpecialFlags), not in the SaveBlock)
 #define SPECIAL_FLAGS_START                     0x4000

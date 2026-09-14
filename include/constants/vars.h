@@ -276,7 +276,14 @@
 #define VAR_UNUSED_0x40FE                                0x40FE // Unused Var
 #define VAR_UNUSED_0x40FF                                0x40FF // Unused Var
 
-#define VARS_END                                         0x40FF
+// Crystal Expansion: grown from 0x40FF (256 vars, of which only 4 were free)
+// to 0x413F (320) to fit CrystalDust's 52 additional vars plus 12 spare.
+// Address space is not the constraint -- the next allocated range is
+// SPECIAL_VARS_START at 0x8000, so 0x4100-0x7FFF is all free. The constraint is
+// SaveBlock1's 4-sector budget: these 64 extra vars cost 128 of the 304 free
+// bytes, and the flag pool takes 128 more. Do not grow either without
+// re-measuring. See decisions D10, D11 and D12.
+#define VARS_END                                         0x413F
 #define VARS_COUNT                                       (VARS_END - VARS_START + 1)
 
 #define SPECIAL_VARS_START            0x8000

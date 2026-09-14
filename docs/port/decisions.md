@@ -443,3 +443,44 @@ make work, not scaffolding to leave dangling.
 **Effect on D10.** All three answers are "keep", so nothing is reclaimed. The
 flag and var pools must be grown to cover CrystalDust's additions in full. This
 confirms the D10 addendum: growth was required regardless.
+
+## D12 -- SaveBlock1 sector budget caps the flag/var pools
+
+**Status:** resolved, but leaves only 48 bytes of slack.
+
+D10 grew the pools to 1024 flags + 512 vars. That built until `src/save.c`
+failed with `size of array 'SaveBlock1FreeSpace' is negative` -- the
+`STATIC_ASSERT` doing exactly its job.
+
+**Measured**, by bisecting the assert's bound with the pools reverted to
+baseline:
+
+| | bytes |
+|---|---|
+| `sizeof(struct SaveBlock1)` before any growth | 15568 |
+| Budget: `SECTOR_DATA_SIZE` (3968) x 4 sectors (`SECTOR_ID_SAVEBLOCK1_START` 1 .. `..._END` 4) | 15872 |
+| **Free for both pools combined** | **304** |
+
+CrystalDust's actual need is 879 flags (110 bytes) and 52 vars (104 bytes) =
+214 bytes, so the content fits. The D10 sizing did not: it asked for 640.
+
+**Chosen:** size the pools to the need plus modest headroom.
+
+- `NUM_CRYSTAL_FLAGS` 1024 -> 128 bytes (879 used, 145 spare)
+- `VARS_END` `0x413F`, i.e. 320 vars -> 128 bytes (52 used, 12 spare)
+- Total 256 of 304. **48 bytes, or 384 flags, of slack remain.**
+
+**Rejected:** extending `SECTOR_ID_SAVEBLOCK1_END` past 4 and shifting
+`SECTOR_ID_PKMN_STORAGE_START`. It would buy a whole 3968-byte sector, but it
+repartitions the save layout, moves the PC box storage sectors, and is a change
+best made once with a save-version bump rather than opportunistically. Kept in
+reserve -- this is the escape hatch if a later phase runs out.
+
+**Nothing is dropped by this decision.** All 879 CrystalDust flags and all 52
+vars fit. Every Q3/Q4 scope answer from D11 stands unaffected: Sevii is still in,
+and the Battle Frontier is still merely deferred, not cut for space.
+
+**Constraint to carry forward:** the flag and var pools are now effectively
+closed. Any future phase wanting more than ~384 additional flags, or any
+additional vars beyond the 12 spare, must either reclaim IDs or take the
+rejected sector option. Re-measure with the bisect before growing either.
