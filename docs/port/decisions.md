@@ -336,3 +336,57 @@ in `docs/port/phase1-asset-merge.txt` and should be re-audited file by file.
 `num_tiles=342`, over the 256 maximum, and fails. This comes from the duplicate
 graphics rules noted in D7 (CrystalDust's rule winning over expansion's).
 Tracked for the graphics pass.
+
+## D10 — Flag and var space overflows; SaveBlock must grow (DECISION NEEDED)
+
+**Status: open, and blocking radio.c, phone_contact.c, pokegear.c and every
+Johto map script. Flagging before acting because it changes the save layout.**
+
+**How this surfaced.** After restoring the dropped strings (D9), `radio.c`'s
+remaining errors are all missing *constants*: 46 `TRAINER_*`, 19 `MAPSEC_*`,
+10 `MUS_*`, 6 `FLAG_*`, plus Johto `ROUTE*`. Checking the headers showed the
+same conflict-kept pattern D9 found in `strings.c` — every one of these is
+byte-identical to expansion's, so all of CrystalDust's additions were dropped:
+
+| Header | expansion | CrystalDust-only | shared |
+|---|---|---|---|
+| `flags.h` | 1883 | **879** | 374 |
+| `opponents.h` (`TRAINER_*`) | 856 | **371** | 125 |
+| `region_map_sections.h` | (enum) | **214** | 0 |
+| `songs.h` | 481 | **59** | 436 |
+| `vars.h` | 252 | **52** | 194 |
+
+**The constraint.** Unlike strings, these carry numeric values, and both pools
+are near capacity:
+
+    FLAGS   2400 slots, 1883 used, 517 free, 879 needed  -> short by 362
+    VARS     256 slots,  252 used,   4 free,  52 needed  -> short by 48
+
+Vars are the harder wall: the range is `VARS_START 0x4000` to `VARS_END 0x40FF`,
+exactly 256, and only 4 are free.
+
+**Why this is not simply "copy CrystalDust's values".** CrystalDust's numbering
+was assigned against vanilla pokeemerald's much emptier pools. Reusing its
+values would collide with flags and vars expansion has since allocated. Every
+CrystalDust-only flag and var needs a *fresh* ID in this tree, and its
+references rewritten — which is fine, but it is a translation, not a copy.
+
+**Options.**
+1. **Grow both pools.** `NUM_FLAG_BYTES` and the var array both live in
+   `SaveBlock1`; this is a decomp, so the layout is ours to change. Costs save
+   size and must be settled *before* any playtesting, since it invalidates
+   saves. Vars additionally need `VARS_END` pushed past `0x40FF`, and script
+   macros that range-check var arguments (`setvar`/`copyvar` guards in
+   `event.inc`) must move with it.
+2. **Reclaim rather than grow.** Expansion allocates flags and vars for Hoenn
+   content Crystal will never use (Battle Frontier, contests, secret bases). If
+   Q3/Q4 come back "out of scope", several hundred slots free up and the
+   shortfall may vanish. This makes D10 dependent on Q3/Q4.
+3. Some mix: reclaim what the scope decision frees, grow to cover the rest.
+
+**Recommendation.** Answer Q3/Q4 first, then size the growth to what remains.
+Growing the save layout twice is worse than growing it once.
+
+**Do not** resolve this by dropping CrystalDust flags to fit. That silently
+removes Johto events, and the failure mode is a script that never fires rather
+than a build error.
