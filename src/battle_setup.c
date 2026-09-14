@@ -1980,7 +1980,7 @@ void UpdateRematchIfDefeated(s32 rematchTableId)
         SetRematchIdForTrainer(gRematchTable, rematchTableId);
 }
 
-static bool8 IsFirstTrainerIdReadyForRematch(const struct RematchTrainer *table, u16 firstBattleTrainerId)
+bool8 IsFirstTrainerIdReadyForRematch(const struct RematchTrainer *table, u16 firstBattleTrainerId)
 {
     s32 tableId = FirstBattleTrainerIdToRematchTableId(table, firstBattleTrainerId);
 

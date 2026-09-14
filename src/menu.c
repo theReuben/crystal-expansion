@@ -12,6 +12,7 @@
 #include "malloc.h"
 #include "map_name_popup.h"
 #include "match_call.h"
+#include "pokegear.h"
 #include "menu.h"
 #include "menu_helpers.h"
 #include "palette.h"
@@ -912,12 +913,30 @@ u16 AddWindowParameterized(u8 bg, u8 left, u8 top, u8 width, u8 height, u8 palet
 }
 
 // As opposed to CreateYesNoMenu, which has a hard-coded position.
-void CreateYesNoMenuAtPos(const struct WindowTemplate *window, u8 fontId, u8 left, u8 top, u16 baseTileNum, u8 paletteNum, u8 initialCursorPos)
+static void CreateYesNoMenuWithFrame(const struct WindowTemplate *window, u8 fontId, u8 left, u8 top, u16 baseTileNum, u8 paletteNum, u8 initialCursorPos, u8 type)
 {
     struct TextPrinterTemplate printer;
 
     sYesNoWindowId = AddWindow(window);
-    DrawStdFrameWithCustomTileAndPalette(sYesNoWindowId, TRUE, baseTileNum, paletteNum);
+    switch (type)
+    {
+    case YESNO_PHONE_OVERWORLD:
+        DrawMatchCallTextBoxBorder(sYesNoWindowId, baseTileNum, paletteNum);
+        FillWindowPixelBuffer(sYesNoWindowId, PIXEL_FILL(1));
+        PutWindowTilemap(sYesNoWindowId);
+        CopyWindowToVram(sYesNoWindowId, COPYWIN_FULL);
+        break;
+    case YESNO_PHONE_POKEGEAR:
+        DrawPhoneCallTextBoxBorder(sYesNoWindowId, baseTileNum, paletteNum);
+        FillWindowPixelBuffer(sYesNoWindowId, PIXEL_FILL(1));
+        PutWindowTilemap(sYesNoWindowId);
+        CopyWindowToVram(sYesNoWindowId, COPYWIN_FULL);
+        break;
+    case YESNO_STANDARD:
+    default:
+        DrawStdFrameWithCustomTileAndPalette(sYesNoWindowId, TRUE, baseTileNum, paletteNum);
+        break;
+    }
 
     printer.currentChar = gText_YesNo;
     printer.type = WINDOW_TEXT_PRINTER;
@@ -937,6 +956,18 @@ void CreateYesNoMenuAtPos(const struct WindowTemplate *window, u8 fontId, u8 lef
     AddTextPrinter(&printer, TEXT_SKIP_DRAW, NULL);
 
     InitMenuNormal(sYesNoWindowId, fontId, left, top, GetFontAttribute(fontId, FONTATTR_MAX_LETTER_HEIGHT), 2, initialCursorPos);
+}
+
+void CreateYesNoMenuAtPos(const struct WindowTemplate *window, u8 fontId, u8 left, u8 top, u16 baseTileNum, u8 paletteNum, u8 initialCursorPos)
+{
+    CreateYesNoMenuWithFrame(window, fontId, left, top, baseTileNum, paletteNum, initialCursorPos, YESNO_STANDARD);
+}
+
+// CrystalDust (D28).
+void CreatePhoneYesNoMenu(const struct WindowTemplate *window, u8 fontId, u8 left, u8 top, u16 baseTileNum, u8 paletteNum, u8 initialCursorPos, bool8 fromOverworld)
+{
+    CreateYesNoMenuWithFrame(window, fontId, left, top, baseTileNum, paletteNum, initialCursorPos,
+                             fromOverworld ? YESNO_PHONE_OVERWORLD : YESNO_PHONE_POKEGEAR);
 }
 
 static void UNUSED CreateYesNoMenuInTopLeft(const struct WindowTemplate *window, u8 fontId, u16 baseTileNum, u8 paletteNum)

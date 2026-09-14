@@ -40,13 +40,13 @@ extern ScrCmdFunc gPhoneScriptCmdTableEnd[];
 
 static const u8 sScriptConditionTable[6][3] =
 {
-//  <  =  >
-    1, 0, 0, // <
-    0, 1, 0, // =
-    0, 0, 1, // >
-    1, 1, 0, // <=
-    0, 1, 1, // >=
-    1, 0, 1, // !=
+//   <  =  >
+    {1, 0, 0}, // <
+    {0, 1, 0}, // =
+    {0, 0, 1}, // >
+    {1, 1, 0}, // <=
+    {0, 1, 1}, // >=
+    {1, 0, 1}, // !=
 };
 
 static const u8 sHangUpText[] = _("{PLAY_SE SE_PHONE_CLICK}Click!\n{PAUSE 25}{PLAY_SE SE_PHONE_BEEP}… {PAUSE 40}{PLAY_SE SE_PHONE_BEEP}… {PAUSE 40}{PLAY_SE SE_PHONE_BEEP}…{PAUSE 40}");
@@ -721,7 +721,7 @@ bool8 PhoneScrCmd_buffermapsecname(struct ScriptContext *ctx)
     const u8 stringVarIndex = ScriptReadByte(ctx);
     const u16 mapSec = VarGet(ScriptReadHalfword(ctx));
 
-    GetMapName(gScriptStringVars[stringVarIndex], mapSec, 0);
+    GetMapName(GetStringVar(stringVarIndex), mapSec, 0);
 
     return FALSE;
 }
@@ -740,7 +740,7 @@ bool8 PhoneScrCmd_bufferbankedmoney(struct ScriptContext *ctx)
     u32 num = GetMoney(&gSaveBlock1Ptr->bankedMoney);
     u8 numDigits = CountDigits(num);
 
-    ConvertIntToDecimalStringN(gScriptStringVars[stringVarIndex], num, STR_CONV_MODE_LEFT_ALIGN, numDigits);
+    ConvertIntToDecimalStringN(GetStringVar(stringVarIndex), num, STR_CONV_MODE_LEFT_ALIGN, numDigits);
     return FALSE;
 }
 
@@ -750,7 +750,7 @@ bool8 PhoneScrCmd_buffernumberstring(struct ScriptContext *ctx)
     u16 num = VarGet(ScriptReadHalfword(ctx));
     u8 numDigits = CountDigits(num);
 
-    ConvertIntToDecimalStringN(gScriptStringVars[stringVarIndex], num, STR_CONV_MODE_LEFT_ALIGN, numDigits);
+    ConvertIntToDecimalStringN(GetStringVar(stringVarIndex), num, STR_CONV_MODE_LEFT_ALIGN, numDigits);
     return FALSE;
 }
 
@@ -759,7 +759,7 @@ bool8 PhoneScrCmd_bufferboxname(struct ScriptContext *ctx)
     u8 stringVarIndex = ScriptReadByte(ctx);
     u16 boxId = VarGet(ScriptReadHalfword(ctx));
 
-    StringCopy(gScriptStringVars[stringVarIndex], GetBoxNamePtr(boxId));
+    StringCopy(GetStringVar(stringVarIndex), GetBoxNamePtr(boxId));
     return FALSE;
 }
 

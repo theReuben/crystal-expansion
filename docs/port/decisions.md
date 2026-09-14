@@ -1086,3 +1086,23 @@ all**, headbutt or otherwise. 22 of CrystalDust's maps carry `headbutt_mons`.
 Not fixed in D26 because it is a data merge of its own size, and it interacts
 with the open question of removing Hoenn's 504 maps (deferred to after Phase 3).
 Tracked as the next data task.
+
+## D28 — Phone script context compiles
+
+`src/phone_script.c` (CrystalDust's second script VM, for phone calls) needed:
+
+- `sScriptConditionTable` re-braced — GCC 15's `-Werror=missing-braces`.
+- `gScriptStringVars[i]` → `GetStringVar(i)`, expansion's accessor (4 sites).
+- `IsFirstTrainerIdReadyForRematch` un-`static`'d in `src/battle_setup.c` and
+  declared in the header. It already existed and is already `FREE_MATCH_CALL`
+  aware, so nothing was duplicated.
+- `CreatePhoneYesNoMenu` ported into `src/menu.c`. Rather than copying the
+  function, `CreateYesNoMenuAtPos`'s body was lifted into a new static
+  `CreateYesNoMenuWithFrame(..., u8 type)` and both entry points now call it —
+  CrystalDust's own structure. `YESNO_STANDARD` keeps the existing behaviour
+  byte for byte, so no existing Yes/No box changes.
+
+This is the first piece that makes D20's `FREE_MATCH_CALL == FALSE` decision
+pay off: the phone VM now builds against the retained match-call save data.
+
+Errors 86 -> 79.

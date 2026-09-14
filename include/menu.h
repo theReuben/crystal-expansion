@@ -81,6 +81,15 @@ bool8 FreeTempTileDataBuffersIfPossible(void);
 struct WindowTemplate CreateWindowTemplate(u8 bg, u8 left, u8 top, u8 width, u8 height, u8 paletteNum, u16 baseBlock);
 void CreateYesNoMenu(const struct WindowTemplate *window, u16 baseTileNum, u8 paletteNum, u8 initialCursorPos);
 void CreateYesNoMenuAtPos(const struct WindowTemplate *window, u8 fontId, u8 left, u8 top, u16 baseTileNum, u8 paletteNum, u8 initialCursorPos);
+
+// CrystalDust: the phone draws its Yes/No box with the call frame rather than
+// the standard one, in two flavours depending on where the call came from (D28).
+enum {
+    YESNO_STANDARD,
+    YESNO_PHONE_OVERWORLD,
+    YESNO_PHONE_POKEGEAR,
+};
+void CreatePhoneYesNoMenu(const struct WindowTemplate *window, u8 fontId, u8 left, u8 top, u16 baseTileNum, u8 paletteNum, u8 initialCursorPos, bool8 fromOverworld);
 void DecompressAndLoadBgGfxUsingHeap(u8 bgId, const void *src, u32 size, u16 offset, u8 mode);
 s8 Menu_ProcessInputNoWrapClearOnChoose(void);
 s8 ProcessMenuInput_other(void);

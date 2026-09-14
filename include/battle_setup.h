@@ -133,6 +133,7 @@ u16 GetLastBeatenRematchTrainerId(u16 trainerId);
 bool8 ShouldTryRematchBattle(void);
 bool8 ShouldTryRematchBattleForTrainerId(u16 trainerId);
 bool8 IsTrainerReadyForRematch(void);
+bool8 IsFirstTrainerIdReadyForRematch(const struct RematchTrainer *table, u16 firstBattleTrainerId); // CrystalDust (D28)
 void ShouldTryGetTrainerScript(void);
 u16 CountMaxPossibleRematch(u16 trainerId);
 u16 CountBattledRematchTeams(u16 trainerId);
