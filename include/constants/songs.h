@@ -549,6 +549,69 @@
 
 #define MUS_ROUTE118                0x7FFF  // Map is split into 2 music sections. controlled by GetCurrLocationDefaultMusic().
 
+
+// ---- CrystalDust songs, freshly allocated in Phase 2 (see D14) ----
+// 56 songs at gSongTable indices 610-665, matching the entries appended to
+// sound/song_table.inc. CrystalDust's own song numbers are NOT reused: 44 of
+// these 56 collided with songs expansion added above the vanilla range.
+// The 487 songs both projects share already agree exactly and are untouched.
+#define SE_PHONE_CALL              0x262
+#define SE_PHONE_CLICK             0x263
+#define SE_INTRO_DITTOBOUNCE1      0x264
+#define SE_INTRO_DITTOBOUNCE2      0x265
+#define SE_INTRO_DITTOTRANSFORM    0x266
+#define SE_INTRO_LOGO_DING         0x267
+#define SE_INTRO_UNOWN1            0x268
+#define SE_INTRO_UNOWN2            0x269
+#define SE_INTRO_UNOWN3            0x26A
+#define SE_INTRO_PICHU_WOOPER      0x26B
+#define SE_INTRO_SUICUNE1          0x26C
+#define SE_INTRO_SUICUNE2          0x26D
+#define SE_INTRO_SUICUNE3          0x26E
+#define SE_PHONE_BEEP              0x26F
+#define MUS_POKECOM_CENTER         0x270
+#define MUS_ROUTE29                0x271
+#define MUS_ROUTE34                0x272
+#define MUS_VIOLET                 0x273
+#define MUS_CHERRYGROVE            0x274
+#define MUS_ILEX_FOREST            0x275
+#define MUS_RUINS_OF_ALPH          0x276
+#define MUS_ROUTE30                0x277
+#define MUS_BUENAS_THEME           0x278
+#define MUS_ENCOUNTER_LASS         0x279
+#define MUS_DARK_CAVE              0x27A
+#define MUS_ELMS_LAB               0x27B
+#define MUS_OBTAIN_EGG             0x27C
+#define MUS_PKMNCHANNEL_INTERLUDE  0x27D
+#define MUS_POKEMON_MARCH          0x27E
+#define MUS_GOLDENROD              0x27F
+#define MUS_POKEMON_LULLABY        0x280
+#define MUS_NEW_BARK               0x281
+#define MUS_ROUTE111               0x282
+#define MUS_MOMS_THEME             0x283
+#define MUS_ENCOUNTER_RIVAL        0x284
+#define MUS_ENCOUNTER_SAGE         0x285
+#define MUS_ENCOUNTER_OFFICER      0x286
+#define MUS_MAIN_MENU              0x287
+#define MUS_ENCOUNTER_ROCKET       0x288
+#define MUS_RIVAL_EXIT             0x289
+#define MUS_AZALEA                 0x28A
+#define MUS_BUG_CATCHING_CONTEST   0x28B
+#define MUS_SPROUT_TOWER           0x28C
+#define MUS_NATIONAL_PARK          0x28D
+#define MUS_OAKS_THEME             0x28E
+#define MUS_OAKS_LAB               0x28F
+#define MUS_ROCKET_TAKEOVER        0x290
+#define MUS_UNOWN_RADIO            0x291
+#define MUS_BUG_CONTEST_PREP       0x292
+#define MUS_ENCOUNTER_FISHERMAN    0x293
+#define MUS_ENCOUNTER_KIMONO       0x294
+#define MUS_REGISTER_PHONE         0x295
+#define MUS_VS_JOHTO_WILD          0x296
+#define MUS_VS_ROCKET              0x297
+#define MUS_VS_JOHTO_TRAINER       0x298
+#define MUS_VS_JOHTO_LEADER        0x299
+
 #define MUS_NONE                    0xFFFF
 
 #define FIRST_PHONEME_SONG          PH_TRAP_BLEND

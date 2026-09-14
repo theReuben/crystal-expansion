@@ -4,6 +4,17 @@
 	.2byte \unknown
 	.endm
 
+	@ Crystal Expansion: CrystalDust's Game Boy Sound (GBS) engine, which plays
+	@ the authentic GB-format Crystal tracks. Entries are 12 bytes, not 8: they
+	@ carry an explicit song_id because they live in gGBSSongTable, a separate
+	@ table from gSongTable. Purely additive -- expansion's `song` is untouched.
+	.macro song_gbs song_id:req, label:req, music_player:req, unknown:req
+	.4byte \song_id
+	.4byte \label
+	.2byte \music_player
+	.2byte \unknown
+	.endm
+
 	.macro music_player info_struct:req, track_struct:req, num_tracks:req, unknown:req
 	.4byte \info_struct
 	.4byte \track_struct

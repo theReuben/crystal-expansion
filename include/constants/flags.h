@@ -2535,6 +2535,20 @@
 #define FLAG_CALLED_FORCED_REMATCH_3                                                  (CRYSTAL_FLAGS_START + 865)
 #define FLAG_CALLED_FORCED_REMATCH_4                                                  (CRYSTAL_FLAGS_START + 866)
 
+// CrystalDust's Pokegear card flags. Allocated from the Crystal block rather
+// than extending SYSTEM_FLAGS, which would shift TRAINER_FLAGS and cost save
+// bytes there are no longer any of -- see D13.
+#define FLAG_SYS_POKEGEAR_GET           (CRYSTAL_FLAGS_START + 867)
+#define FLAG_SYS_CANT_RUN_FROM_BATTLE   (CRYSTAL_FLAGS_START + 868)
+#define FLAG_SYS_TIME_CAPSULE_UNLOCKED  (CRYSTAL_FLAGS_START + 869)
+#define FLAG_SYS_HIPSTER_MEET           (CRYSTAL_FLAGS_START + 870)
+#define FLAG_SYS_HAS_MAP_CARD           (CRYSTAL_FLAGS_START + 871)
+#define FLAG_SYS_HAS_RADIO_CARD         (CRYSTAL_FLAGS_START + 872)
+#define FLAG_SYS_MOM_BANKING_ENABLED    (CRYSTAL_FLAGS_START + 873)
+#define FLAG_SYS_HAS_EXPN_CARD          (CRYSTAL_FLAGS_START + 874)
+#define FLAG_SYS_GBS_ENABLED            (CRYSTAL_FLAGS_START + 875)
+#define FLAG_SYS_ON_RESUME              (CRYSTAL_FLAGS_START + 876)
+
 #define FLAGS_COUNT (CRYSTAL_FLAGS_END + 1)
 
 // Special Flags (Stored in EWRAM (sSpecialFlags), not in the SaveBlock)

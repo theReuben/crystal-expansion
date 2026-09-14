@@ -539,3 +539,36 @@ CrystalDust never used it.
 that no feature gets dropped without being surfaced first. Recorded as the
 recommendation for when the budget next binds, to be decided then rather than
 assumed now.
+
+## D14 -- the merged song table silently pointed 43 songs at the wrong music
+
+Found while merging the sound constants, and worth recording because nothing
+about it would have shown up as a build error.
+
+Song IDs are indices into `gSongTable`. Phase 1 took CrystalDust's
+`sound/song_table.inc` wholesale but kept expansion's `include/constants/songs.h`.
+Both tables have 610 entries, so nothing failed to assemble -- but:
+
+- The 487 songs the two projects share **agree exactly**. Both inherit vanilla
+  pokeemerald's ordering, so the whole vanilla range was correct.
+- Above that range they diverge. **43 expansion-only songs were missing from the
+  table entirely**, and 44 of CrystalDust's 56 new songs sat at indices
+  expansion's constants had already assigned to something else.
+
+The symptom would have been wrong music on 43 cues, with a clean build.
+
+**Resolved:** `gSongTable` is expansion's 610 entries again, with CrystalDust's
+56 songs appended at indices 610-665 (`0x262-0x299`) and fresh constants in
+`songs.h` allocated to match. CrystalDust's own song numbers are not reused, for
+the same reason as flags and trainers.
+
+`gGBSSongTable` is kept as CrystalDust wrote it. It is a separate table keyed by
+an explicit song_id rather than by position, so it is unaffected. Its `song_gbs`
+macro (12-byte entries, versus `song`'s 8) was missing and has been added to
+`asm/macros/m4a.inc`; it is purely additive and does not touch expansion's `song`.
+
+**This generalises.** Same failure mode as D9 and D10: a Phase 1 "conflict-kept"
+file that took one side wholesale and lost the other's additions without a
+diagnostic. Song tables were worse than flags only because the loss is silent at
+build time. The re-audit of `docs/port/phase1-asset-merge.txt` that D9 called for
+should treat every index-ordered table as high risk.
