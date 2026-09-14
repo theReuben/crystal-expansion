@@ -84,7 +84,7 @@ static void CB2_EndFirstBattle(void);
 static void SaveChangesToPlayerParty(void);
 static void HandleBattleVariantEndParty(void);
 static void CB2_EndTrainerBattle(void);
-static bool32 IsPlayerDefeated(u32 battleOutcome);
+bool32 IsPlayerDefeated(u32 battleOutcome);
 #if FREE_MATCH_CALL == FALSE
 static u16 GetRematchTrainerId(u16 trainerId);
 #endif //FREE_MATCH_CALL
@@ -1093,7 +1093,7 @@ static u16 GetTrainerBFlag(void)
     return TRAINER_FLAGS_START + TRAINER_BATTLE_PARAM.opponentB;
 }
 
-static bool32 IsPlayerDefeated(u32 battleOutcome)
+bool32 IsPlayerDefeated(u32 battleOutcome)
 {
     switch (battleOutcome)
     {

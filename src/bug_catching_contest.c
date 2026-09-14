@@ -704,6 +704,22 @@ static void GenerateBugCatchingContestNPCMons(void)
         GenerateBugCatchingContestNPCMon(&gBugCatchingContestNPCs[i]);
 }
 
+// CrystalDust called ChooseWildMonLevelWithAbility(wildMon, FALSE) here. Expansion's
+// ChooseWildMonLevel always applies the Hustle/Vital Spirit/Pressure level boost and has
+// no way to opt out, so the plain roll is reproduced locally to keep NPC contest catches
+// independent of the player's lead ability.
+static u8 ChooseContestWildMonLevel(const struct WildPokemon *wildPokemon)
+{
+    u8 min, max;
+
+    if (wildPokemon->maxLevel >= wildPokemon->minLevel)
+        min = wildPokemon->minLevel, max = wildPokemon->maxLevel;
+    else
+        min = wildPokemon->maxLevel, max = wildPokemon->minLevel;
+
+    return min + (Random() % (max - min + 1));
+}
+
 static void GenerateBugCatchingContestNPCMon(struct BugCatchingContestNPC *npc)
 {
     int i, j;
@@ -748,7 +764,7 @@ static void GenerateBugCatchingContestNPCMon(struct BugCatchingContestNPC *npc)
     }
 
     npc->caughtSpecies = wildMon->species;
-    npc->caughtLevel = ChooseWildMonLevelWithAbility(wildMon, FALSE);
+    npc->caughtLevel = ChooseContestWildMonLevel(wildMon);
     if (npc->trait == BUG_CONTEST_NPC_TRAIT_SHINY)
         shinyOdds = 4; // 4/8192 odds
     else
@@ -757,7 +773,7 @@ static void GenerateBugCatchingContestNPCMon(struct BugCatchingContestNPC *npc)
     npc->caughtShiny = (Random() % 8192) < shinyOdds;
 
     // Generate the mon to  calculate the score.
-    CreateMon(&mon, npc->caughtSpecies, npc->caughtLevel, 0, 1, 0, 0, 0);
+    CreateMon(&mon, npc->caughtSpecies, npc->caughtLevel, 0, (struct OriginalTrainerId){0});
 
     // Generate IVs
     if (npc->trait == BUG_CONTEST_NPC_TRAIT_STRONG)
@@ -859,7 +875,7 @@ static const struct WildPokemon *GetBugCatchingContestWildMons(void)
 
         if (wildHeader->mapGroup == MAP_GROUP(MAP_BUG_CATCHING_CONTEST)
          && wildHeader->mapNum == MAP_NUM(MAP_BUG_CATCHING_CONTEST))
-            return wildHeader->landMonsInfo->wildPokemon[timeOfDay];
+            return wildHeader->encounterTypes[timeOfDay].landMonsInfo->wildPokemon;
     }
 
     return NULL;
@@ -1035,7 +1051,7 @@ static void BuildBugContestPlacementString_FirstPlace(void)
     StringCopy(gStringVar2, GetContestantName(contestantId));
     str = StringExpandPlaceholders(gStringVar4, sFirstPlaceString_Part1);
     ConvertIntToDecimalStringN(gStringVar1, GetContestantCaughtLevel(contestantId), 0, 3);
-    GetSpeciesName(gStringVar2, GetContestantCaughtSpecies(contestantId));
+    StringCopy(gStringVar2, GetSpeciesName(GetContestantCaughtSpecies(contestantId)));
     str = StringExpandPlaceholders(str, sFirstPlaceString_Part2);
     if (GetContestantCaughtShiny(contestantId))
     {
@@ -1054,7 +1070,7 @@ static void BuildBugContestPlacementString_SecondPlace(void)
     StringCopy(gStringVar2, GetContestantName(contestantId));
     str = StringExpandPlaceholders(gStringVar4, sSecondPlaceString_Part1);
     ConvertIntToDecimalStringN(gStringVar1, GetContestantCaughtLevel(contestantId), 0, 3);
-    GetSpeciesName(gStringVar2, GetContestantCaughtSpecies(contestantId));
+    StringCopy(gStringVar2, GetSpeciesName(GetContestantCaughtSpecies(contestantId)));
     str = StringExpandPlaceholders(str, sSecondPlaceString_Part2);
 }
 
@@ -1069,7 +1085,7 @@ static void BuildBugContestPlacementString_ThirdPlace(void)
     StringCopy(gStringVar2, GetContestantName(contestantId));
     str = StringExpandPlaceholders(gStringVar4, sThirdPlaceString_Part1);
     ConvertIntToDecimalStringN(gStringVar1, GetContestantCaughtLevel(contestantId), 0, 3);
-    GetSpeciesName(gStringVar2, GetContestantCaughtSpecies(contestantId));
+    StringCopy(gStringVar2, GetSpeciesName(GetContestantCaughtSpecies(contestantId)));
     str = StringExpandPlaceholders(str, sThirdPlaceString_Part2);
 }
 
@@ -1097,6 +1113,7 @@ u8 GetPlayerBugContestPlace(void)
         if (gBugCatchingContestStandings[i] == playerId)
             return i + 1;
     }
+    return 0;
 }
 
 void GetWinningBugContestSpecies(void)
@@ -1127,7 +1144,7 @@ void DoSwapBugContestMonScreen(struct Pokemon *newMon, MainCallback returnCallba
 static void Task_SwapScreen_ScrollBackground(u8 taskId)
 {
     s32 i;
-    u16 *data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
 
     sVBlank_DMA = FALSE;
 
@@ -1233,13 +1250,13 @@ static void InitSwapScreenSprites(void)
 
     species = GetMonData(&gCaughtBugCatchingContestMon, MON_DATA_SPECIES);
     personality = GetMonData(&gCaughtBugCatchingContestMon, MON_DATA_PERSONALITY);
-    spriteId = CreateMonIcon(species, SpriteCB_MonIcon, 88, 52, 0, personality, 0);
+    spriteId = CreateMonIcon(species, SpriteCB_MonIcon, 88, 52, 0, personality);
     sSwapScreen->monIconSprites[0] = &gSprites[spriteId];
     sSwapScreen->monIconSprites[0]->oam.priority = 0;
 
     species = GetMonData(sSwapScreen->newMon, MON_DATA_SPECIES);
     personality = GetMonData(sSwapScreen->newMon, MON_DATA_PERSONALITY);
-    spriteId = CreateMonIcon(species, SpriteCB_MonIcon, 216, 52, 0, personality, 0);
+    spriteId = CreateMonIcon(species, SpriteCB_MonIcon, 216, 52, 0, personality);
     sSwapScreen->monIconSprites[1] = &gSprites[spriteId];
     sSwapScreen->monIconSprites[1]->oam.priority = 0;
 }
@@ -1252,7 +1269,7 @@ static void InitSwapScreenWindows(void)
     DrawStdWindowFrame(WIN_STOCK_MON, TRUE);
     DrawStdWindowFrame(WIN_NEW_MON, TRUE);
 
-    GetSpeciesName(gStringVar1, GetMonData(&gCaughtBugCatchingContestMon, MON_DATA_SPECIES));
+    StringCopy(gStringVar1, GetSpeciesName(GetMonData(&gCaughtBugCatchingContestMon, MON_DATA_SPECIES)));
     ConvertIntToDecimalStringN(gStringVar2, GetMonData(&gCaughtBugCatchingContestMon, MON_DATA_LEVEL), STR_CONV_MODE_LEFT_ALIGN, 3);
     hpStr = ConvertIntToDecimalStringN(gStringVar3, GetMonData(&gCaughtBugCatchingContestMon, MON_DATA_HP), STR_CONV_MODE_LEFT_ALIGN, 3);
     *(hpStr++) = CHAR_SLASH;
@@ -1261,7 +1278,7 @@ static void InitSwapScreenWindows(void)
     StringExpandPlaceholders(gStringVar4, sMonInfoText);
     AddTextPrinterParameterized5(WIN_STOCK_MON, 2, gStringVar4, 0, 17, 0, NULL, 1, 2);
 
-    GetSpeciesName(gStringVar1, GetMonData(sSwapScreen->newMon, MON_DATA_SPECIES));
+    StringCopy(gStringVar1, GetSpeciesName(GetMonData(sSwapScreen->newMon, MON_DATA_SPECIES)));
     ConvertIntToDecimalStringN(gStringVar2, GetMonData(sSwapScreen->newMon, MON_DATA_LEVEL), STR_CONV_MODE_LEFT_ALIGN, 3);
     hpStr = ConvertIntToDecimalStringN(gStringVar3, GetMonData(sSwapScreen->newMon, MON_DATA_HP), STR_CONV_MODE_LEFT_ALIGN, 3);
     *(hpStr++) = CHAR_SLASH;
@@ -1275,11 +1292,11 @@ static void Task_SwapScreen_WaitFadeInAskToSwap(u8 taskId)
 {
     if (!gPaletteFade.active)
     {
-        GetSpeciesName(gStringVar1, GetMonData(&gCaughtBugCatchingContestMon, MON_DATA_SPECIES));
+        StringCopy(gStringVar1, GetSpeciesName(GetMonData(&gCaughtBugCatchingContestMon, MON_DATA_SPECIES)));
         StringExpandPlaceholders(gStringVar4, sTextAlreadyCaught);
         DrawStdWindowFrame(WIN_QUESTION, FALSE);
-        AddTextPrinterParameterized5(WIN_QUESTION, 2, gStringVar4, 0, 1, TEXT_SPEED_FF, NULL, 1, 2);
-        CreateYesNoMenu(&sYesNoWindowTemplate, 2, 0, 2, STD_WINDOW_BASE_TILE_NUM, 14, 0);
+        AddTextPrinterParameterized5(WIN_QUESTION, 2, gStringVar4, 0, 1, TEXT_SKIP_DRAW, NULL, 1, 2);
+        CreateYesNoMenuAtPos(&sYesNoWindowTemplate, 2, 0, 2, STD_WINDOW_BASE_TILE_NUM, 14, 0);
         CopyWindowToVram(WIN_QUESTION, 2);
         gTasks[taskId].func = Task_SwapScreen_HandleYesNoInput;
     }
@@ -1351,22 +1368,22 @@ static void Task_SwapScreen_ShowChoiceText(u8 taskId)
 {
     if (gTasks[taskId].data[0] == 0)
     {
-        GetSpeciesName(gStringVar1, GetMonData(sSwapScreen->newMon, MON_DATA_SPECIES));
-        GetSpeciesName(gStringVar2, GetMonData(&gCaughtBugCatchingContestMon, MON_DATA_SPECIES));
+        StringCopy(gStringVar1, GetSpeciesName(GetMonData(sSwapScreen->newMon, MON_DATA_SPECIES)));
+        StringCopy(gStringVar2, GetSpeciesName(GetMonData(&gCaughtBugCatchingContestMon, MON_DATA_SPECIES)));
         StringExpandPlaceholders(gStringVar4, sTextKeptNewlyCaughtMon);
         DrawStdWindowFrame(WIN_CHOICE_MADE, FALSE);
-        AddTextPrinterParameterized5(WIN_CHOICE_MADE, 2, gStringVar4, 0, 1, TEXT_SPEED_FF, NULL, 1, 2);
+        AddTextPrinterParameterized5(WIN_CHOICE_MADE, 2, gStringVar4, 0, 1, TEXT_SKIP_DRAW, NULL, 1, 2);
         CopyWindowToVram(WIN_CHOICE_MADE, 3);
         gCaughtBugCatchingContestMon = *sSwapScreen->newMon;
         gTasks[taskId].func = Task_SwapScreen_QuitAfterFinalText;
     }
     else if (gTasks[taskId].data[0] == 1)
     {
-        GetSpeciesName(gStringVar1, GetMonData(&gCaughtBugCatchingContestMon, MON_DATA_SPECIES));
-        GetSpeciesName(gStringVar2, GetMonData(sSwapScreen->newMon, MON_DATA_SPECIES));
+        StringCopy(gStringVar1, GetSpeciesName(GetMonData(&gCaughtBugCatchingContestMon, MON_DATA_SPECIES)));
+        StringCopy(gStringVar2, GetSpeciesName(GetMonData(sSwapScreen->newMon, MON_DATA_SPECIES)));
         StringExpandPlaceholders(gStringVar4, sTextKeptPreviousCaughtMon);
         DrawStdWindowFrame(WIN_CHOICE_MADE, FALSE);
-        AddTextPrinterParameterized5(WIN_CHOICE_MADE, 2, gStringVar4, 0, 1, TEXT_SPEED_FF, NULL, 1, 2);
+        AddTextPrinterParameterized5(WIN_CHOICE_MADE, 2, gStringVar4, 0, 1, TEXT_SKIP_DRAW, NULL, 1, 2);
         CopyWindowToVram(WIN_CHOICE_MADE, 3);
         gTasks[taskId].func = Task_SwapScreen_QuitAfterFinalText;
     }

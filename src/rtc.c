@@ -492,3 +492,9 @@ u32 GetTotalMinutes(struct Time *time)
 {
     return time->days * 1440 + time->hours * 60 + time->minutes;
 }
+
+// CrystalDust: absolute second count, used by the Bug-Catching Contest timer.
+u32 GetTotalSeconds(struct Time *time)
+{
+    return GetTotalMinutes(time) * 60 + time->seconds;
+}

@@ -880,3 +880,20 @@ CrystalDust's three mass-outbreak fields (`outbreakSpecialLevel1`,
 `outbreakWildState`, `outbreakSpecialLevel2`) cost **nothing** -- they reuse
 Emerald's existing padding at 0x2B95/0x2B96/0x2BA0, which is what CrystalDust
 did originally. `SaveBlock1FreeSpace` still passes.
+
+### D21 — Bug-Catching Contest: NPC level rolls ignore the player's lead ability
+
+CrystalDust's `ChooseWildMonLevelWithAbility(wildMon, useAbility)` has no counterpart
+in expansion; expansion's `ChooseWildMonLevel` *always* applies the Hustle / Vital
+Spirit / Pressure max-level boost and exposes no opt-out. CrystalDust deliberately
+passed `useAbility = FALSE` when generating the contest NPCs' catches.
+
+Rather than change the shared encounter function (which would alter every wild
+encounter in the game), a static `ChooseContestWildMonLevel` reproducing the plain
+min/max roll now lives in `src/bug_catching_contest.c`. Behaviour is identical to
+CrystalDust. No feature dropped.
+
+Also this gate: `B_OUTCOME_NO_PARK_BALLS` (11) added to `include/constants/battle.h`;
+`GetTotalSeconds` added alongside D20's `GetTotalMinutes` in `src/rtc.c`;
+`IsPlayerDefeated` un-`static`'d in `src/battle_setup.c` and declared in the header,
+since CrystalDust's version was identical to expansion's.

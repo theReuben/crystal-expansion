@@ -38,6 +38,7 @@ enum Month GetMonth(void);
 u8 GetDay(void);
 enum Weekday GetDayOfWeek(void);
 u32 GetTotalMinutes(struct Time *time);
+u32 GetTotalSeconds(struct Time *time);
 enum TimeOfDay GenConfigTimeOfDay(enum TimeOfDay timeOfDay);
 enum TimeOfDay TryIncrementTimeOfDay(enum TimeOfDay timeOfDay);
 enum TimeOfDay TryDecrementTimeOfDay(enum TimeOfDay timeOfDay);

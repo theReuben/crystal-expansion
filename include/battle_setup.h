@@ -54,6 +54,7 @@ typedef union PACKED TrainerBattleParameter
 } TrainerBattleParameter;
 
 extern const struct RematchTrainer gRematchTable[REMATCH_TABLE_ENTRIES];
+bool32 IsPlayerDefeated(u32 battleOutcome);
 bool8 CheckRematchTrainerFlag(u16 tableId);
 void SetRematchTrainerFlag(u16 tableId);
 
