@@ -390,3 +390,35 @@ Growing the save layout twice is worse than growing it once.
 **Do not** resolve this by dropping CrystalDust flags to fit. That silently
 removes Johto events, and the failure mode is a script that never fires rather
 than a build error.
+
+### D10 addendum — measured: Q3/Q4 do NOT solve the shortfall
+
+The recommendation above ("answer Q3/Q4 first, then size the growth") was wrong,
+and is withdrawn. It assumed reclaiming Hoenn content would free enough slots to
+matter. Measured against `flags.h` and `vars.h` by name pattern:
+
+| Reclaimable by cutting | Flags | |
+|---|---|---|
+| Battle Frontier / Tents / Tower / Trainer Hill | 26 | |
+| Contests | 12 | |
+| Secret bases | 17 | |
+| Sevii and event islands | 25 | |
+| **Total unique** | **80** | against a **362** shortfall |
+| **Vars, total unique** | **30** | against a **48** shortfall |
+
+Cutting *all* of it closes roughly a fifth of the flag gap and leaves vars still
+18 short. **Growing the pools is required regardless of how Q3 and Q4 are
+answered.**
+
+Consequences:
+- **D10 no longer blocks on Q3/Q4.** Grow `NUM_FLAG_BYTES` and push `VARS_END`
+  past `0x40FF`, sized for CrystalDust's full 879 flags and 52 vars with
+  headroom, and do it once.
+- **Q3 and Q4 become pure design questions** — whether the Battle Frontier and
+  Sevii belong in a Crystal game — decided on their merits, not forced by
+  capacity. Whatever they free is a bonus, not the fix.
+
+Caveat on method: this counts *named* constants matching those subsystems. It
+does not account for unnamed gaps or contiguous unused ranges, so the true
+reclaim is somewhat higher — but not by the ~4x that would change the
+conclusion.
