@@ -737,3 +737,27 @@ again.
 section. Altering Cave now reports Route 103's, which would have false-positived
 on the real Route 103, so the check now tests the map id directly. This is
 strictly more correct than the original.
+
+## D18 -- Pokenav: CrystalDust's 10 files were stale duplicates, not content
+
+Phase 1 left the Pokenav subsystem as 23 source files: expansion's 13, plus 10
+of CrystalDust's under pret's **older** naming (`pokenav_conditions_1/2/3.c`,
+`pokenav_match_call_1/2/ui.c`, `pokenav_menu_handler_1/2.c`,
+`pokenav_ribbons_1/2.c`). pret later split and renamed these; vanilla
+pokeemerald and expansion both use the 13-file layout.
+
+So the tree held two incompatible revisions of one subsystem compiled together.
+The CrystalDust-named files accounted for roughly 350 of the remaining errors,
+all from calling an older API against expansion's `include/pokenav.h`.
+
+**Verified duplicates before removing:** 289 function definitions appear in both
+sets under identical names. Of the 118 that appear only in the older files, 117
+are absent from current vanilla pokeemerald too -- consistent with having been
+renamed by pret rather than added by CrystalDust. Decisively, **nothing outside
+those 10 files calls any of them**, so no caller was orphaned.
+
+The 10 files are deleted. Errors 807 -> 355, files 34 -> 24.
+
+CrystalDust does not use Pokenav: it replaces it with the Pokegear
+(`pokegear.c`, `phone_contact.c`), which is merged separately and does not go
+through these functions.
