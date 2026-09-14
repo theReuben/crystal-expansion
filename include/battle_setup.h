@@ -86,6 +86,7 @@ extern u16 gPartnerTrainerId;
         battleParameter->params.cannotBattleText)
 
 void BattleSetup_StartWildBattle(void);
+void BattleSetup_StartWildBattleFromTree(void); // CrystalDust (D26)
 void BattleSetup_StartDoubleWildBattle(void);
 void BattleSetup_StartBattlePikeWildBattle(void);
 void BattleSetup_StartRoamerBattle(void);

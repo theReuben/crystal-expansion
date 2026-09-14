@@ -57,4 +57,16 @@ bool8 FldEff_Defog(void);
 
 void Task_EnterCaveTransition2(u8 taskId);
 
+// CrystalDust: Headbutt (D26). The tree's "score" gates how good its encounter
+// table slot is; it is derived from the tree's coordinates and the player's ID.
+enum {
+    TREEMON_SCORE_BAD,
+    TREEMON_SCORE_GOOD,
+    TREEMON_SCORE_RARE
+};
+
+bool8 SetUpFieldMove_Headbutt(void);
+bool8 FldEff_UseHeadbutt(void);
+u32 HeadbuttTreeScoreCalc(void);
+
 #endif // GUARD_FLDEFF_H

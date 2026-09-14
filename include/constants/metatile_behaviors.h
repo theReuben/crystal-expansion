@@ -6,7 +6,7 @@ enum {
     MB_SECRET_BASE_WALL,
     MB_TALL_GRASS,
     MB_LONG_GRASS,
-    MB_UNUSED_04,
+    MB_HEADBUTT_TREE, // CrystalDust reclaims 0x04, unused in Emerald. See D26.
     MB_UNUSED_05,
     MB_DEEP_SAND,
     MB_SHORT_GRASS,

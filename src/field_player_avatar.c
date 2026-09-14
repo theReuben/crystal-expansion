@@ -1613,6 +1613,21 @@ enum Gender GetPlayerAvatarGenderByGraphicsId(u16 gfxId)
     }
 }
 
+// CrystalDust: Headbutt (D26).
+bool8 PartyHasMonWithHeadbutt(void)
+{
+    u8 i;
+
+    for (i = 0; i < PARTY_SIZE; i++)
+    {
+        if (GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES) == SPECIES_NONE)
+            break;
+        if (MonKnowsMove(&gParties[B_TRAINER_PLAYER][i], MOVE_HEADBUTT))
+            return TRUE;
+    }
+    return FALSE;
+}
+
 bool8 PartyHasMonWithSurf(void)
 {
     u8 i;

@@ -1027,3 +1027,62 @@ files use it.
 **This warrants a wider audit.** `metatile_labels.h` and `layouts.json` (D24) are both
 files where the merge picked a side that contradicts the binary assets sitting next to
 them. Any other header that indexes into an asset the other side supplied is suspect.
+
+## D26 — Headbutt restored end to end
+
+`src/fldeff_headbutt.c` shipped from CrystalDust but nothing it depended on
+survived Phase 1. Restored, in dependency order:
+
+- `MB_HEADBUTT_TREE` — CrystalDust's value is `0x04`, which in Emerald is
+  `MB_UNUSED_04`, referenced by nothing. **No collision**; the behaviour byte in
+  our tilesets already means "headbutt tree", so taking 0x04 is required, not
+  merely convenient.
+- `MetatileBehavior_IsHeadbuttTree` in `src/metatile_behavior.c`.
+- `TREEMON_SCORE_BAD/GOOD/RARE` and the three headbutt prototypes in
+  `include/fldeff.h`; `GetPlayerTrainerIdOnesDigit` declared in
+  `include/field_specials.h` (it was defined but undeclared).
+- `FLDEFF_USE_HEADBUTT` allocated as **82** (CrystalDust used 67; expansion's
+  table already runs to 81) with a matching `gFieldEffectScript_UseHeadbutt`
+  and pointer-table entry.
+- `EventScript_HeadbuttTree` / `EventScript_UseHeadbutt` and their text in
+  `data/scripts/field_move_scripts.inc`, externs in `include/event_scripts.h`,
+  `def_special HeadbuttTreeWildEncounter` in `data/specials.inc`.
+- `PartyHasMonWithHeadbutt` in `src/field_player_avatar.c`, and the A-press hook
+  at the top of `GetInteractedWaterScript` (CrystalDust's own location).
+- `BATTLE_TYPE_TREE` given bit 30, previously the unused `BATTLE_TYPE_30`, and
+  `BattleSetup_StartWildBattleFromTree()` to set it — expansion's
+  `BattleSetup_StartWildBattle` takes no flags argument.
+- Encounter side: `headbuttMonsInfo` added to `struct WildEncounterTypes`,
+  `WILD_AREA_HEADBUTT` to `enum WildPokemonArea`, a `headbutt_mons` field to
+  `src/data/wild_encounters.json` (expansion's generator is schema-driven, so
+  this is all the plumbing needed), plus `ChooseWildMonIndex_Tree`,
+  `GenerateHeadbuttWildMon` and `HeadbuttTreeWildEncounter` in
+  `src/wild_encounter.c`, including GSC's asleep-species lists.
+
+### Constraints accepted (not silent)
+
+1. **The 12-slot chance table is hardcoded** in `wild_encounter.c` rather than
+   generated. CrystalDust's jsonproc template emitted
+   `ENCOUNTER_CHANCE_HEADBUTT_MONS_*`; expansion's Python generator does not
+   emit per-field chance tables at all. Values are unchanged (50/15/15/10/5/5).
+2. **Two cosmetic BATTLE_TYPE_TREE behaviours are not yet ported**: the mon
+   sprite dropping out of the tree (`battle_main.c`) and the "fell out of the
+   tree!" intro string (`battle_message.c`). The flag is set, so both are a
+   later patch in the battle files, not a redesign.
+3. **No map has headbutt encounter data yet** — see D27. Headbutt works, trees
+   respond, but every tree is empty until the Johto encounter tables land.
+
+## D27 — OPEN: `wild_encounters.json` is expansion's, Johto's is missing
+
+Discovered while wiring D26. `src/data/wild_encounters.json` holds **240 maps,
+all Hoenn/Kanto** — expansion's file taken wholesale in Phase 1. CrystalDust's
+**124 Johto maps** are gone; only 39 names overlap, and those overlaps are
+almost certainly Kanto maps carrying Hoenn-era data.
+
+This is the eighth confirmed instance of the Phase 1 one-side merge, and the
+largest by gameplay impact: **there are currently no Johto wild encounters at
+all**, headbutt or otherwise. 22 of CrystalDust's maps carry `headbutt_mons`.
+
+Not fixed in D26 because it is a data merge of its own size, and it interacts
+with the open question of removing Hoenn's 504 maps (deferred to after Phase 3).
+Tracked as the next data task.

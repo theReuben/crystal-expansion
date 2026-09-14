@@ -12,7 +12,8 @@ enum WildPokemonArea {
     WILD_AREA_WATER,
     WILD_AREA_ROCKS,
     WILD_AREA_FISHING,
-    WILD_AREA_HIDDEN
+    WILD_AREA_HIDDEN,
+    WILD_AREA_HEADBUTT // CrystalDust (D26)
 };
 
 struct WildPokemon
@@ -35,6 +36,7 @@ struct WildEncounterTypes
     const struct WildPokemonInfo *rockSmashMonsInfo;
     const struct WildPokemonInfo *fishingMonsInfo;
     const struct WildPokemonInfo *hiddenMonsInfo;
+    const struct WildPokemonInfo *headbuttMonsInfo; // CrystalDust (D26)
 };
 
 struct WildPokemonHeader
@@ -68,6 +70,7 @@ u32 CalculateChainFishingShinyRolls(void);
 void CreateWildMon(enum Species species, u8 level);
 bool8 TryGenerateWildMon(const struct WildPokemonInfo *wildMonInfo, enum WildPokemonArea area, u8 flags);
 bool8 AreLegendariesInSootopolisPreventingEncounters(void);
+void HeadbuttTreeWildEncounter(void); // CrystalDust (D26)
 u16 GetCurrentMapWildMonHeaderId(void);
 bool8 CheckFeebasAtCoords(s16 x, s16 y);
 u32 ChooseWildMonIndex_Land(void);

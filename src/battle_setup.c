@@ -374,6 +374,14 @@ void BattleSetup_StartWildBattle(void)
         DoStandardWildBattle(FALSE);
 }
 
+// CrystalDust: a Headbutt encounter. The mon drops out of the tree, so the battle
+// needs BATTLE_TYPE_TREE set on top of a normal wild battle. See D26.
+void BattleSetup_StartWildBattleFromTree(void)
+{
+    DoStandardWildBattle(FALSE);
+    gBattleTypeFlags |= BATTLE_TYPE_TREE;
+}
+
 void BattleSetup_StartDoubleWildBattle(void)
 {
     DoStandardWildBattle(TRUE);

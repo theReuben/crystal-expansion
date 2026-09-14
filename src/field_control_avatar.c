@@ -639,6 +639,9 @@ static const u8 *GetInteractedMetatileScript(struct MapPosition *position, u8 me
 
 static const u8 *GetInteractedWaterScript(struct MapPosition *unused1, u8 metatileBehavior, enum Direction direction)
 {
+    // CrystalDust: Headbutt trees are handled here, as in CrystalDust (D26).
+    if (PartyHasMonWithHeadbutt() && MetatileBehavior_IsHeadbuttTree(metatileBehavior) == TRUE)
+        return EventScript_HeadbuttTree;
     if (MetatileBehavior_IsFastWater(metatileBehavior) == TRUE && !TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
         return EventScript_CurrentTooFast;
     if (IsFieldMoveUnlocked(FIELD_MOVE_SURF) && PartyHasMonWithSurf() == TRUE && IsPlayerFacingSurfableFishableWater() == TRUE

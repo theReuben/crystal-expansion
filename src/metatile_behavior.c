@@ -1762,3 +1762,12 @@ bool8 MetatileBehavior_IsTrainerTowerMonitor(u8 metatileBehavior)
         return FALSE;
 }
 
+
+// CrystalDust: Headbutt trees (D26).
+bool8 MetatileBehavior_IsHeadbuttTree(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_HEADBUTT_TREE)
+        return TRUE;
+    else
+        return FALSE;
+}

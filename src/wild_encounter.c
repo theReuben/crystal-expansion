@@ -5,6 +5,7 @@
 #include "event_data.h"
 #include "fieldmap.h"
 #include "fishing.h"
+#include "fldeff.h"
 #include "follower_npc.h"
 #include "item.h"
 #include "random.h"
@@ -477,6 +478,9 @@ enum TimeOfDay GetTimeOfDayForEncounters(u32 headerId, enum WildPokemonArea area
     case WILD_AREA_HIDDEN:
         wildMonInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].hiddenMonsInfo;
         break;
+    case WILD_AREA_HEADBUTT:
+        wildMonInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].headbuttMonsInfo;
+        break;
     }
 
     if (wildMonInfo == NULL && !OW_TIME_OF_DAY_DISABLE_FALLBACK)
@@ -806,6 +810,107 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
     }
 
     return FALSE;
+}
+
+// ============================================================
+// CrystalDust: Headbutt tree encounters (D26).
+// ============================================================
+// Twelve slots per tree: 0-5 are the common table, 6-11 the rare one. The
+// distribution below is CrystalDust's, which the generated
+// ENCOUNTER_CHANCE_HEADBUTT_* constants encoded; expansion's json generator
+// does not emit per-field chance tables, so it lives here instead.
+static const u8 sHeadbuttEncounterChance[] = { 50, 65, 80, 90, 95, 100 };
+
+static u8 ChooseWildMonIndex_Tree(bool32 isRare)
+{
+    u8 rand = Random() % 100;
+    u8 wildMonIndex;
+
+    for (wildMonIndex = 0; wildMonIndex < ARRAY_COUNT(sHeadbuttEncounterChance) - 1; wildMonIndex++)
+    {
+        if (rand < sHeadbuttEncounterChance[wildMonIndex])
+            break;
+    }
+
+    if (isRare)
+        wildMonIndex += ARRAY_COUNT(sHeadbuttEncounterChance);
+
+    return wildMonIndex;
+}
+
+static void GenerateHeadbuttWildMon(const struct WildPokemonInfo *wildMonInfo, enum TimeOfDay timeOfDay, bool32 isRare)
+{
+    // GSC put these species to sleep when they fell out of a tree.
+    static const u16 asleepSpeciesDay[] = {
+        SPECIES_VENONAT, SPECIES_HOOTHOOT, SPECIES_NOCTOWL, SPECIES_SPINARAK,
+        SPECIES_HERACROSS, SPECIES_NONE
+    };
+    static const u16 asleepSpeciesNight[] = {
+        SPECIES_CATERPIE, SPECIES_METAPOD, SPECIES_BUTTERFREE, SPECIES_WEEDLE,
+        SPECIES_KAKUNA, SPECIES_BEEDRILL, SPECIES_SPEAROW, SPECIES_EKANS,
+        SPECIES_EXEGGCUTE, SPECIES_LEDYBA, SPECIES_AIPOM, SPECIES_NONE
+    };
+
+    u8 wildMonIndex = ChooseWildMonIndex_Tree(isRare);
+    const struct WildPokemon *mon = &wildMonInfo->wildPokemon[wildMonIndex];
+    const u16 *asleepSpeciesList;
+
+    CreateWildMon(mon->species, ChooseWildMonLevel(mon, wildMonIndex, WILD_AREA_HEADBUTT));
+
+    if (timeOfDay == TIME_NIGHT)
+        asleepSpeciesList = asleepSpeciesNight;
+    else
+        asleepSpeciesList = asleepSpeciesDay;
+
+    for (; *asleepSpeciesList != SPECIES_NONE; asleepSpeciesList++)
+    {
+        if (*asleepSpeciesList == mon->species)
+        {
+            u32 status = STATUS1_SLEEP;
+            SetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_STATUS, &status);
+            break;
+        }
+    }
+}
+
+void HeadbuttTreeWildEncounter(void)
+{
+    u32 headerId = GetCurrentMapWildMonHeaderId();
+    u32 treeScore = HeadbuttTreeScoreCalc();
+    const struct WildPokemonInfo *wildPokemonInfo;
+    enum TimeOfDay timeOfDay;
+    u32 encounterRate;
+
+    gSpecialVar_Result = FALSE;
+    if (headerId == HEADER_NONE)
+        return;
+
+    timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_HEADBUTT);
+    wildPokemonInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].headbuttMonsInfo;
+    if (wildPokemonInfo == NULL)
+        return;
+
+    // A tree's score decides both how likely it is to hold anything and whether
+    // the rare half of its table is used.
+    switch (treeScore)
+    {
+    case TREEMON_SCORE_RARE:
+        encounterRate = wildPokemonInfo->encounterRate * 80 / 100;
+        break;
+    case TREEMON_SCORE_GOOD:
+        encounterRate = wildPokemonInfo->encounterRate * 50 / 100;
+        break;
+    default:
+        encounterRate = wildPokemonInfo->encounterRate * 10 / 100;
+        break;
+    }
+
+    if (WildEncounterCheck(encounterRate, TRUE) == TRUE)
+    {
+        GenerateHeadbuttWildMon(wildPokemonInfo, timeOfDay, treeScore == TREEMON_SCORE_RARE);
+        BattleSetup_StartWildBattleFromTree();
+        gSpecialVar_Result = TRUE;
+    }
 }
 
 void RockSmashWildEncounter(void)
