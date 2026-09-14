@@ -626,3 +626,44 @@ interiors, fits exactly, is reversible, and leaves the save and trade formats
 alone -- which matters given D13 left 32 bytes. (b) is the right answer if
 later phases need many more map sections, but it should be a deliberate
 save-format change made once, not something done to win 10 slots.
+
+## D16 -- reclaim save space via expansion's FREE_* toggles, not by cutting content
+
+Supersedes D13's warning that the save budget was nearly exhausted, and
+supersedes its recommendation to cut `secretBases`.
+
+`include/config/save.h` already provides 13 `FREE_*` toggles for exactly this
+purpose, all shipped `FALSE`. They `#if` the fields out of `struct SaveBlock1`
+and are supported, tested paths -- not a hand-rolled cut. Ten are now `TRUE`:
+
+| toggle | what it drops |
+|---|---|
+| `FREE_MYSTERY_EVENT_BUFFERS` | ramScript, e-Reader / Mystery Event |
+| `FREE_RECORD_MIXING_HALL_RECORDS` | record mixing |
+| `FREE_MYSTERY_GIFT` | Mystery Gift |
+| `FREE_UNION_ROOM_CHAT` | Union Room chat |
+| `FREE_BATTLE_TOWER_E_READER` | Battle Tower e-Reader |
+| `FREE_LINK_BATTLE_RECORDS` | link battle records |
+| `FREE_EXTRA_SEEN_FLAGS_SAVEBLOCK1` | unused Pokedex seen flags |
+| `FREE_ENIGMA_BERRY` | e-Reader Enigma Berry |
+| `FREE_TRAINER_HILL` | Trainer Hill |
+| `FREE_POKEMON_JUMP` | Pokemon Jump |
+
+**Measured: `sizeof(struct SaveBlock1)` 15840 -> 13528. Free space 32 -> 2344
+bytes.** No new build failures.
+
+**What this costs.** These are link-cable, e-Reader and Mystery Gift features.
+They are genuinely dropped, not merely hidden, so this is recorded as a cut --
+but none is single-player Johto content and every one is a one-line revert.
+
+**`FREE_MATCH_CALL` (104 bytes) was deliberately NOT set**, even though it looks
+like an obvious candidate. CrystalDust's Pokegear phone is still being merged
+(`phone_contact.c`, `pokegear.c`) and may build on match call's rematch data.
+Revisit once the phone system compiles.
+
+**`secretBases` (3200) and `tvShows` (900) are NOT cut.** D13 recommended them
+as the reserve; they are no longer needed, so they stay. If a later phase needs
+another kilobyte, they remain the next candidates.
+
+**This does not affect D15.** The map section ceiling is a `u8` value-space
+limit, not a save-size limit. Freeing save bytes cannot raise it.
