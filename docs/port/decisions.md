@@ -987,3 +987,43 @@ parameter). Six decisions worth stating:
   currently inconsistent. The immediate consequence was `tv.c` referencing
   `LAYOUT_SS_TIDAL_*`; those three case labels are commented out, not deleted, so the
   full-Hoenn-removal review after Phase 3 can settle it either way in three lines.
+
+### D25 — metatile_labels.h pointed at the wrong tilesets (62 wrong values, 86 missing)
+
+Fixing `fruit_tree.c` turned up the worst silent loss so far, and it is the D14
+song-table failure mode exactly: **`include/constants/metatile_labels.h` took
+expansion's side wholesale (925 labels, byte-identical to expansion's) while 86 of the
+tileset binaries under `data/tilesets/` are CrystalDust's.** Labels and tiles had
+drifted apart with nothing to catch it — every one of these compiles, links and runs,
+it just addresses the wrong metatile.
+
+Scope, measured rather than estimated:
+
+- **62 labels had values that disagreed with the tileset we actually ship, and all 62 are
+  referenced by live code.** Door animations (`General_Door`, `General_Door_Gym`,
+  `Door_PokeCenter`, and the Battle Arena / Dome / Palace / Frontier doors), tree
+  overlays (`General_Grass_Tree*`, `General_TallGrass_Tree*`), the Pokemon Center
+  escalator's 22 animation frames, the Sealed Chamber braille entrance, Shoal Cave's
+  dirt and blue stones, and the PC on/off tiles. `General_Door` alone was off by 0x1C.
+- **86 CrystalDust labels were missing entirely, 14 of them referenced by live code** —
+  the Ruins of Alph puzzle holes, the Radio Tower floors, the Goldenrod Underground
+  doors, and the fruit-tree tops that started this.
+
+Every conflicting label was traced to its tileset directory and every one of those
+tilesets is CrystalDust's, so **CrystalDust's value wins for all 62**, and the 86
+CrystalDust-only labels are appended. Expansion-only labels (the FRLG tilesets, which we
+do ship for Sevii per Q4) are untouched. The three ambiguous Kanto city door labels
+(`PewterCity`, `SaffronCity`, `ViridianCity`) exist in both a CrystalDust and an FRLG
+tileset; `data/tilesets/headers.inc` was followed through to `metatiles.inc` to confirm
+`gTileset_ViridianCity` and friends resolve to CrystalDust's `viridiancity` directory,
+not expansion's `viridian_city_frlg`, so those take CrystalDust's values too.
+
+The fruit/apricorn tree background event was also restored end to end, since it existed
+in none of the four places it needs to: `BG_EVENT_FRUIT_TREE` in `constants/event_bg.h`,
+`berryTreeId` in `struct BgEvent`'s union, the `bg_fruit_tree_event` macro in
+`asm/macros/map.inc`, and a `fruit_tree` case in `tools/mapjson/mapjson.cpp`. 23 map.json
+files use it.
+
+**This warrants a wider audit.** `metatile_labels.h` and `layouts.json` (D24) are both
+files where the merge picked a side that contradicts the binary assets sitting next to
+them. Any other header that indexes into an asset the other side supplied is suspect.

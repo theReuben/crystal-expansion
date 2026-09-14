@@ -122,6 +122,11 @@
 	bg_event \x, \y, \elevation, BG_EVENT_SECRET_BASE, \secret_base_id
 	.endm
 
+	@ Defines a background fruit/apricorn tree event for map data (CrystalDust)
+	.macro bg_fruit_tree_event x:req, y:req, elevation:req, fruit_tree_id:req
+	bg_event \x, \y, \elevation, BG_EVENT_FRUIT_TREE, \fruit_tree_id
+	.endm
+
 	@ Defines the table of event data for a map. Mirrors the struct layout of MapEvents in include/global.fieldmap.h
 	.macro map_events npcs:req, warps:req, traps:req, signs:req
 	.byte _num_npcs, _num_warps, _num_traps, _num_signs

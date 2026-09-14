@@ -194,6 +194,7 @@ struct BgEvent
             u32 underfoot:1;
         } hiddenItem;
         u32 secretBaseId;
+        u16 berryTreeId; // CrystalDust: fruit/apricorn tree (D25)
     } bgUnion;
 };
 

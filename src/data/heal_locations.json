@@ -220,7 +220,7 @@
       "x": 22,
       "y": 20,
       "respawn_map": "MAP_CERULEAN_CITY_POKEMON_CENTER_1F",
-      "respawn_npc": "LOCALID_CERULEAN_NURSE"
+      "respawn_npc": "0"
     },
     {
       "id": "HEAL_LOCATION_LAVENDER_TOWN",
