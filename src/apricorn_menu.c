@@ -43,7 +43,7 @@ static EWRAM_DATA struct {
 static void InitApricornMenu(u8 taskId);
 static u8 AddWindowIfNotPresent(u8 whichWindow);
 static void ApricornMenu_Main_ProcessInput(u8 taskId);
-static void ApricornMenu_ItemPrint(u32 windowId, u16 index, s32 id, u8 yOffset);
+static void ApricornMenu_ItemPrint(u8 windowId, u32 id, u8 yOffset);
 static void ApricornMenu_RefreshListMenu(void);
 static void ApricornMenu_AddMainScrollIndicator(void);
 static void ApricornMenu_Exit(u8 taskId);
@@ -276,13 +276,13 @@ static void ApricornMenu_Main_ProcessInput(u8 taskId)
     }
 }
 
-static void ApricornMenu_ItemPrint(u32 windowId, u16 index, s32 id, u8 yOffset)
+static void ApricornMenu_ItemPrint(u8 windowId, u32 id, u8 yOffset)
 {
     if (id != LIST_CANCEL)
     {
         ConvertIntToDecimalStringN(gStringVar1, sApricornMenu->apricorns[id].quantity, STR_CONV_MODE_RIGHT_ALIGN, 3);
         StringExpandPlaceholders(gStringVar4, gText_xVar1);
-        AddTextPrinterParameterized(windowId, 0, gStringVar4, GetStringRightAlignXOffset(0, gStringVar4, 112), yOffset, TEXT_SPEED_FF, NULL);
+        AddTextPrinterParameterized(windowId, 0, gStringVar4, GetStringRightAlignXOffset(0, gStringVar4, 112), yOffset, TEXT_SKIP_DRAW, NULL);
     }
 }
 
@@ -352,7 +352,7 @@ static void ApricornMenu_PrintQuantity(int windowId, int numToGive)
     FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
     ConvertIntToDecimalStringN(gStringVar1, numToGive, STR_CONV_MODE_LEADING_ZEROS, 3);
     StringExpandPlaceholders(gStringVar4, gText_xVar1);
-    AddTextPrinterParameterized4(windowId, 0, 4, 10, 1, 0, colors, TEXT_SPEED_FF, gStringVar4);
+    AddTextPrinterParameterized4(windowId, 0, 4, 10, 1, 0, colors, TEXT_SKIP_DRAW, gStringVar4);
     CopyWindowToVram(windowId, 2);
 }
 

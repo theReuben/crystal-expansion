@@ -1,4 +1,6 @@
 #include "global.h"
+#include "rtc.h"
+#include "util.h"
 #include "main.h"
 #include "event_data.h"
 #include "event_object_movement.h"
@@ -107,7 +109,7 @@ static const union AnimCmd *const sSpriteAnimTable_Arrow[] =
 
 static const struct SpriteTemplate sSpriteTemplate_85104F0 =
 {
-    .tileTag = SPRITE_INVALID_TAG,
+    .tileTag = TAG_NONE,
     .paletteTag = 0x1000,
     .oam = &sOamData_Arrow,
     .anims = sSpriteAnimTable_Arrow,
@@ -157,7 +159,7 @@ static void InitMomBankMenu(u8 taskId)
 
     tMainWindowId = AddWindow(&sMomBankWindows[0]);
     tValueWindowId = AddWindow(&sMomBankWindows[1]);
-    LoadThinWindowBorderGfx(tMainWindowId, 0x21D, 0xD0);
+    LoadStdWindowGfx(tMainWindowId, 0x21D, 0xD0);
     DrawStdFrameWithCustomTileAndPalette(tMainWindowId, FALSE, 0x21D, 13);
     DrawStdFrameWithCustomTileAndPalette(tValueWindowId, FALSE, STD_WINDOW_BASE_TILE_NUM, STD_WINDOW_PALETTE_NUM);
     ScheduleBgCopyTilemapToVram(0);

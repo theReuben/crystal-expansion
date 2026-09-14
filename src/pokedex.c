@@ -4540,7 +4540,31 @@ u32 GetRegionalPokedexCount(u8 caseID)
 {
     if (IS_FRLG)
         return GetKantoPokedexCount(caseID);
-    return GetHoennPokedexCount(caseID);
+    return GetJohtoPokedexCount(caseID);
+}
+
+// The Johto Dex is simply National #1-251 in national order, so no reordering
+// table is needed. See D24.
+u16 GetJohtoPokedexCount(u8 caseID)
+{
+    u16 count = 0;
+    u16 i;
+
+    for (i = 1; i <= JOHTO_DEX_COUNT; i++)
+    {
+        switch (caseID)
+        {
+        case FLAG_GET_SEEN:
+            if (GetSetPokedexFlag(i, FLAG_GET_SEEN))
+                count++;
+            break;
+        case FLAG_GET_CAUGHT:
+            if (GetSetPokedexFlag(i, FLAG_GET_CAUGHT))
+                count++;
+            break;
+        }
+    }
+    return count;
 }
 
 u16 GetHoennPokedexCount(u8 caseID)

@@ -104,7 +104,7 @@ void BuenasPasswordMultichoice(void)
     u16 password = VarGet(VAR_BUENAS_PASSWORD);
     u8 category = password >> 8;
     u8 taskId;
-    s32 pixelWidth, i;
+    s32 pixelWidth = 0, i;
 
     sPasswordListMenuItems = AllocZeroed(sizeof(struct ListMenuItem) * ARRAY_COUNT(sBuenasPasswords[0].values));
     
@@ -190,7 +190,7 @@ void ShowPointsWindow(u32 pointAmount, u8 x, u8 y)
     sPointsWindowId = AddWindow(&template);
     FillWindowPixelBuffer(sPointsWindowId, 0);
     PutWindowTilemap(sPointsWindowId);
-    LoadThinWindowBorderGfx(sPointsWindowId, 0x21D, 0xD0);
+    LoadStdWindowGfx(sPointsWindowId, 0x21D, 0xD0);
     DrawStdFrameWithCustomTileAndPalette(sPointsWindowId, FALSE, 0x21D, 0xD);
     AddTextPrinterParameterized(sPointsWindowId, 2, gText_Points, 0, 0, 0xFF, 0);
     PrintPointsString(pointAmount);
@@ -233,22 +233,25 @@ const u8 *GetBuenasPassword(u8 category, u8 index)
     switch (sBuenasPasswords[category].type)
     {
         case PASS_SPECIES:
-            string = gSpeciesNames[value];
+            string = GetSpeciesName(value);
             break;
         case PASS_ITEM:
-            string = ItemId_GetName(value);
+            string = GetItemName(value);
             break;
         case PASS_MAPSEC:
             string = gRegionMapEntries[value].name;
             break;
         case PASS_TYPE:
-            string = gTypeNames[value];
+            string = gTypesInfo[value].name;
             break;
         case PASS_MOVE:
-            string = gMoveNames[value];
+            string = GetMoveName(value);
             break;
         case PASS_STATION:
             string = gRadioShowNames[value];
+            break;
+        default:
+            string = gText_EmptyString2;
             break;
     }
 

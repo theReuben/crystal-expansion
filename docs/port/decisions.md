@@ -951,3 +951,39 @@ Restored:
   dereferenced because `triggeredFromScript` short-circuits the contact lookup.
 - **`SelectMatchCallMessage`** keeps CrystalDust's 4-argument signature; the Pokenav list
   screen passes `FALSE, NULL`.
+
+### D24 — small-subsystem sweep: Johto Dex, Mom's Bank, Buena, apricorns, card flip, TV
+
+Cleared nine small CrystalDust files. Mostly the API renames already established
+(`LoadThinWindowBorderGfx` → `LoadStdWindowGfx`, `gSpeciesNames[x]` → `GetSpeciesName(x)`,
+`gMoveNames[x]` → `GetMoveName(x)`, `gTypeNames[x]` → `gTypesInfo[x].name`,
+`SPRITE_INVALID_TAG` → `TAG_NONE`, `TEXT_SPEED_FF` → `TEXT_SKIP_DRAW`, `CreateMonIcon`
+losing its trailing argument, and the list-menu `itemPrintFunc` losing its `index`
+parameter). Six decisions worth stating:
+
+- **`GetJohtoPokedexCount` written fresh rather than ported.** CrystalDust's
+  `gJohtoToNationalOrder` table in `pokemon.c` is mislabelled — its contents are the
+  *Hoenn* dex order, starting at Treecko, left over from an incomplete rename. The real
+  Johto Dex is National #1-251 in national order, so no reordering table is needed and
+  the new function indexes the national dex directly. This is more correct than what
+  CrystalDust shipped. `GetRegionalPokedexCount` now returns the Johto count on the
+  non-FRLG path, since this is a Johto game.
+- **`ChangeBcdDigit` restored to `src/util.c`** (Mom's savings-account digit spinner);
+  it was lost with the rest of CrystalDust's `util.c` additions. `ConvertBcdToBinary`
+  already existed in `rtc.c`; `mom_bank.c` only needed the include.
+- **`APRICORN_COUNT 7` restored** to `constants/apricorn_tree.h`. It lived in
+  CrystalDust's `constants/items.h`, so it went down with D10.
+- **`charmap.txt` lost 47 of expansion's entries** (another "kept one side" case, now
+  confirmed for charmap too). Three battle placeholders are actually referenced and were
+  restored: `B_SCR_NAME_WITH_PREFIX`, `B_SCR_ABILITY`, `B_ATK_TRAINER_NAME`. The other 44
+  are Hoenn `MUS_*`/`SE_*` song aliases that CrystalDust renamed; nothing in our text
+  references them, so they are left out pending the D14 song-table follow-up.
+- **`src/reset_save_heap.c` deleted.** Its only function, `sub_81700F8`, had no callers —
+  CrystalDust's `intro.c` called it, but ours is expansion's. It also depended on
+  `sub_815355C`, another symbol the merge never brought across.
+- **`data/layouts/layouts.json` took CrystalDust's side wholesale** — 419 layouts versus
+  expansion's 785, so all 580 Hoenn layouts are absent while `data/maps/SSTidal*` and
+  friends still exist. This matches where the Hoenn decision is heading, but the tree is
+  currently inconsistent. The immediate consequence was `tv.c` referencing
+  `LAYOUT_SS_TIDAL_*`; those three case labels are commented out, not deleted, so the
+  full-Hoenn-removal review after Phase 3 can settle it either way in three lines.

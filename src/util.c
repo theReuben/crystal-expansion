@@ -239,3 +239,17 @@ s32 SubtractClamped(s32 lowestVal, s32 highestVal, s32 currentVal, s32 delta)
 
     return newValue;
 }
+
+// CrystalDust: used by Mom's savings account to nudge one BCD digit of the amount.
+u32 ChangeBcdDigit(u32 val, u8 which, s8 delta)
+{
+    u32 posInBits = which * 4;
+    int digit = ((val & (0xF << posInBits)) >> posInBits) + delta;
+
+    if (digit > 9)
+        digit = 0;
+    else if (digit < 0)
+        digit = 9;
+
+    return (val & ~(0xF << posInBits)) | (digit << posInBits);
+}

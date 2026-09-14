@@ -11,6 +11,7 @@ u16 GetNationalPokedexCount(u8 caseID);
 u32 GetRegionalPokedexCount(u8 caseID);
 u16 GetHoennPokedexCount(u8 caseID);
 u16 GetKantoPokedexCount(u8 caseID);
+u16 GetJohtoPokedexCount(u8 caseID);
 u8 DisplayCaughtMonDexPage(enum Species species, bool32 isShiny, u32 personality);
 s8 GetSetPokedexFlag(enum NationalDexOrder nationalDexNo, u8 caseID);
 void DrawFootprint(u8 windowId, enum Species species);

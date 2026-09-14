@@ -1886,10 +1886,10 @@ static void InitCoinDigitSprites(void)
 
 static void InitMonIcons(void)
 {
-    sCardFlip->suitSpriteIds[2] = CreateMonIcon(SPECIES_PIKACHU, SpriteCallbackDummy, 136, 40, 3, 0, 0);
-    sCardFlip->suitSpriteIds[1] = CreateMonIcon(SPECIES_JIGGLYPUFF, SpriteCallbackDummy, 166, 40, 3, 0, 0);
-    sCardFlip->suitSpriteIds[2] = CreateMonIcon(SPECIES_POLIWAG, SpriteCallbackDummy, 196, 40, 3, 0, 0);
-    sCardFlip->suitSpriteIds[3] = CreateMonIcon(SPECIES_ODDISH, SpriteCallbackDummy, 226, 40, 3, 0, 0);
+    sCardFlip->suitSpriteIds[2] = CreateMonIcon(SPECIES_PIKACHU, SpriteCallbackDummy, 136, 40, 3, 0);
+    sCardFlip->suitSpriteIds[1] = CreateMonIcon(SPECIES_JIGGLYPUFF, SpriteCallbackDummy, 166, 40, 3, 0);
+    sCardFlip->suitSpriteIds[2] = CreateMonIcon(SPECIES_POLIWAG, SpriteCallbackDummy, 196, 40, 3, 0);
+    sCardFlip->suitSpriteIds[3] = CreateMonIcon(SPECIES_ODDISH, SpriteCallbackDummy, 226, 40, 3, 0);
 }
 
 static void InitCardNumberSprites(void)

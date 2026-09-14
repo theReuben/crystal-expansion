@@ -82,6 +82,8 @@ enum ApricornType
     APRICORN_BERRY_MARANGA = ITEM_MARANGA_BERRY,
 };
 
+#define APRICORN_COUNT 7 // CrystalDust; was in its constants/items.h (D10 loss).
+
 // Trees
 #define APRICORN_TREE_NONE 0
 
