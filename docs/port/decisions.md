@@ -921,3 +921,33 @@ bar → expansion's item-menu swap line, and so on). Four calls needed judgement
 
 `CB2_PartyMenuFromItemPC` was ported into `party_menu.c`; `PARTY_ACTION_GIVE_PC_ITEM`
 already existed there (expansion marks it "Unused" — CrystalDust uses it).
+
+### D23 — stale pret-era duplicates removed; D20 match_call collateral repaired
+
+Three more Phase-1 "kept one side" leftovers, all pure duplicates rather than feature
+losses — each was superseded by an expansion file that already does the same job:
+
+- **`src/unk_text_util_2.c` deleted.** CrystalDust's standalone braille font (`Font6Func`,
+  `GetGlyphWidthFont6`). Expansion implements `FONT_BRAILLE` inside `text.c`; nothing in
+  the tree referenced CrystalDust's copy.
+- **`src/mevent_{client,news,scripts,server,server_helpers}.c` and their headers deleted.**
+  pret renamed `mevent_*` to `mystery_gift_*` after CrystalDust forked; expansion carries
+  the renamed versions (plus `wonder_news.c`), which we already have. The `mevent_*` files
+  were self-referential and included a `mevent.h` that the merge never brought across.
+- **Four `gMon*_CircledQuestionMark` definitions removed from `src/graphics.c`.** These
+  were my own D20 error: expansion already defines them in `src/data/graphics/pokemon.h`,
+  as `u16`, from `.png` rather than `.lz`.
+
+D20's `match_call.c` rebuild also dropped three functions expansion's Pokenav still calls.
+Restored:
+
+- **`IsMatchCallTaskActive`** — expansion asks this to choose the Pokenav-styled dialogue
+  frame and name box. Expansion tested `FuncIsActiveTask(ExecuteMatchCall)`; CrystalDust
+  has no such task, so it now returns `PhoneScriptContext_IsEnabled()`, the native
+  equivalent. CrystalDust's static `LoadMatchCallWindowGfx(u8 taskId)` was renamed
+  `MatchCallTask_LoadWindowGfx` to free the name for expansion's 3-argument version.
+- **`StartMatchCallFromScript`** keeps CrystalDust's `(script, callerId)` signature;
+  expansion's one-argument `pokenavcall` path passes `PHONE_CONTACT_NONE`, which is never
+  dereferenced because `triggeredFromScript` short-circuits the contact lookup.
+- **`SelectMatchCallMessage`** keeps CrystalDust's 4-argument signature; the Pokenav list
+  screen passes `FALSE, NULL`.

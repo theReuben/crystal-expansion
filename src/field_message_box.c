@@ -5,6 +5,7 @@
 #include "text.h"
 #include "match_call.h"
 #include "field_message_box.h"
+#include "constants/phone_contact.h"
 #include "text_window.h"
 #include "script.h"
 #include "field_name_box.h"
@@ -95,7 +96,7 @@ bool8 ShowPokenavFieldMessage(const u8 *str)
         return FALSE;
     StringExpandPlaceholders(gStringVar4, str);
     CreateTask(Task_HidePokenavMessageWhenDone, 0);
-    StartMatchCallFromScript(str);
+    StartMatchCallFromScript(str, PHONE_CONTACT_NONE);
     sFieldMessageBoxMode = FIELD_MESSAGE_BOX_NORMAL;
     return TRUE;
 }

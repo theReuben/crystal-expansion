@@ -134,7 +134,7 @@ static void BuildMatchCallString(int, const struct MatchCallText *, u8 *);
 static u16 GetFrontierStreakInfo(u16, u32 *);
 static void PopulateMatchCallStringVars(int, const s8 *);
 static void PopulateMatchCallStringVar(int, int, u8 *);
-static bool32 LoadMatchCallWindowGfx(u8);
+static bool32 MatchCallTask_LoadWindowGfx(u8);
 static bool32 MatchCall_DrawWindow(u8);
 static bool32 MatchCall_ReadyIntro(u8);
 static bool32 SlideMatchCallWindowsOntoScreen(u8);
@@ -1558,7 +1558,7 @@ static const struct WindowTemplate sPhoneCardNameTextWindow =
 
 static bool32 (*const sMatchCallTaskFuncs[])(u8) =
 {
-    LoadMatchCallWindowGfx,
+    MatchCallTask_LoadWindowGfx,
     MatchCall_DrawWindow,
     MatchCall_ReadyIntro,
     SlideMatchCallWindowsOntoScreen,
@@ -1580,7 +1580,7 @@ void Task_InitOverworldPhoneCall(u8 taskId)
     }
 }
 
-static bool32 LoadMatchCallWindowGfx(u8 taskId)
+static bool32 MatchCallTask_LoadWindowGfx(u8 taskId)
 {
     int i;
     s16 *taskData = gTasks[taskId].data;
@@ -1803,6 +1803,23 @@ void DrawMatchCallTextBoxBorder_Internal(u32 windowId, u32 tileOffset, u32 palet
 
 // CrystalDust owns the phone-call window (D20); expansion's task-based
 // lookup does not apply here.
+// Expansion's Pokenav asks "is a call on screen?" to pick the Pokenav-styled dialogue
+// frame and name box. CrystalDust runs calls through the phone script context rather
+// than a task, so that is what we report.
+bool32 IsMatchCallTaskActive(void)
+{
+    return PhoneScriptContext_IsEnabled();
+}
+
+// The Pokenav match call screen's own window gfx, distinct from CrystalDust's
+// Pokegear call frame (LoadMatchCallWindowGfx2).
+void LoadMatchCallWindowGfx(u32 windowId, u32 destOffset, u32 paletteId)
+{
+    u8 bg = GetWindowAttribute(windowId, WINDOW_BG);
+    LoadBgTiles(bg, sMatchCallWindow_Gfx, 0x100, destOffset);
+    LoadPalette(sMatchCallWindow_Pal, BG_PLTT_ID(paletteId), sizeof(sMatchCallWindow_Pal));
+}
+
 static u8 GetMatchCallWindowId(void)
 {
     return gPhoneCallWindowId;
