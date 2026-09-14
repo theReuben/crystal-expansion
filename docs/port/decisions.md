@@ -1307,3 +1307,61 @@ identical `InitMenuNormal`.
 **This clears the last C compile error in Phase 2.** What remains are asset-level
 failures: tileset tile counts over the 256 maximum, and `events.inc` generation
 for the Johto maps.
+
+## D34 — Poryscript wired into the build
+
+CrystalDust writes its map scripts in Poryscript. All 401 `scripts.pory` files
+were carried over in Phase 1, but nothing compiled them: Poryscript had no build
+rule, so 400 of the 401 maps — every map in Johto — had no `scripts.inc` at all.
+This was the Phase 3 blocker.
+
+**Wiring.** `tools/poryscript/poryscript` is a prebuilt release binary, not
+something this repo compiles, so it stays out of `make_tools.mk`'s inclusive
+`TOOL_NAMES` list. Instead `Makefile` gains `PORYSCRIPT` / `PORY_FONTCFG`, a
+pattern rule, and a guard rule that errors with a fetch URL if the binary is
+missing.
+
+**Two traps worth recording:**
+
+1. **The pattern rule must be scoped.** CrystalDust's is `data/%.inc:
+   data/%.pory` paired with a `%.pory: ;` catch-all. That catch-all tells Make
+   it can *create* any `.pory` out of nothing, so Make happily decided to build
+   `data/script_cmd_table.inc` from a `data/script_cmd_table.pory` that has never
+   existed. The rule here is scoped to `data/maps/%/scripts.inc` and there is no
+   `%.pory: ;`.
+2. **scaninc cannot see an `.include` whose target does not exist yet.** With the
+   pattern rule in place Poryscript still never ran, because the only thing that
+   would ask for `scripts.inc` is the dependency file scaninc generates for
+   `event_scripts.s`, and scaninc silently skips includes it cannot open. Fixed
+   with an explicit `$(DATA_ASM_BUILDDIR)/event_scripts.o: $(MAP_SCRIPTS)` in
+   `map_data_rules.mk`.
+
+**Tenth one-side merge loss, found on the way.** `data/event_scripts.s` kept
+expansion's list of map script includes wholesale. 408 of CrystalDust's were
+gone, Johto entirely among them — so even once Poryscript generated the files,
+nothing assembled them. Restored in CrystalDust's own order.
+
+**Result: all 400 Johto maps compile with zero Poryscript errors.** The generated
+`scripts.inc` are gitignored under `data/maps/*/`; the Hoenn maps' hand-written
+ones predate this and stay tracked, which git's ignore rules leave alone.
+
+## D35 — The Sevii Islands are cut
+
+**Reverses Q4.** The Sevii Islands are FireRed/LeafGreen content, introduced in
+Gen 3 and built around the Network Machine and the roaming beasts. Gold, Silver
+and Crystal have exactly two regions, Johto and Kanto. Nothing in the Gen 2 story
+reaches the Sevii Islands, and CrystalDust does not ship them.
+
+Consequences, all of them simplifications:
+
+- D33's missing `MAPSEC_SEVII_ISLE_6` … `_9` stop mattering.
+- The Sevii `MAPSEC_*` entries become the obvious reclaim candidates for the
+  252/252 `region_map_sections.json` ceiling we have been pressed against since
+  D30, ahead of Marine/Terra/Underwater Marine Cave.
+- Expansion's `RegionMapType` FRLG/Sevii layouts in `region_map.c` are dead
+  weight, though harmless; D33's reasoning for keeping that file stands on its
+  other 25 consumers regardless.
+- The `*_Frlg` map directories can go. Their missing `LAYOUT_*` entries are a
+  large share of the current mapjson failures, so this removal is folded into the
+  map-data pass rather than done as a standalone deletion, and it should ride
+  along with the deferred 504-map Hoenn removal.

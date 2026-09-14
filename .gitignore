@@ -34,6 +34,11 @@ build/
 *.ddump
 .idea/
 porymap.*.cfg
+
+# Generated from the sibling scripts.pory by Poryscript (D34). The Hoenn maps'
+# hand-written scripts.inc predate this and stay tracked; git ignores only
+# untracked files, so they are unaffected.
+data/maps/*/scripts.inc
 prefabs.json
 .vscode/
 *.a

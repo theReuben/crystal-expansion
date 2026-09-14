@@ -221,6 +221,10 @@ PREPROC      := $(TOOLS_DIR)/preproc/preproc$(EXE)
 RAMSCRGEN    := $(TOOLS_DIR)/ramscrgen/ramscrgen$(EXE)
 FIX          := $(TOOLS_DIR)/gbafix/gbafix$(EXE)
 MAPJSON      := $(TOOLS_DIR)/mapjson/mapjson$(EXE)
+# Poryscript is a prebuilt release binary, not a tool we compile, so it is not in
+# make_tools.mk's TOOL_NAMES. See D34.
+PORYSCRIPT   := $(TOOLS_DIR)/poryscript/poryscript$(EXE)
+PORY_FONTCFG := $(TOOLS_DIR)/poryscript/font_config.json
 JSONPROC     := $(TOOLS_DIR)/jsonproc/jsonproc$(EXE)
 TRAINERPROC  := $(TOOLS_DIR)/trainerproc/trainerproc$(EXE)
 PATCHELF     := $(TOOLS_DIR)/patchelf/patchelf$(EXE)
@@ -384,6 +388,7 @@ clean-assets:
 	find sound -iname '*.bin' -exec rm {} +
 	find . \( -iname '*.1bpp' -o -iname '*.4bpp' -o -iname '*.8bpp' -o -iname '*.gbapal' -o -iname '*.lz' -o -iname '*.smol' -o -iname '*.fastSmol' -o -iname '*.smolTM' -o -iname '*.rl' -o -iname '*.latfont' -o -iname '*.hwjpnfont' -o -iname '*.fwjpnfont' \) -exec rm {} +
 	find $(DATA_ASM_SUBDIR)/maps \( -iname 'connections.inc' -o -iname 'events.inc' -o -iname 'header.inc' \) -exec rm {} +
+	rm -f $(patsubst %.pory,%.inc,$(shell find $(DATA_ASM_SUBDIR) -type f -name '*.pory'))
 
 tidy: tidymodern tidycheck tidydebug tidyrelease
 
@@ -424,6 +429,14 @@ generated: $(AUTO_GEN_TARGETS)
 %.png: ;
 %.pal: ;
 %.wav: ;
+
+# CrystalDust's map scripts are Poryscript. Scoped to data/maps/ so it cannot
+# claim the hand-written .inc files elsewhere under data/. See D34.
+$(DATA_ASM_SUBDIR)/maps/%/scripts.inc: $(DATA_ASM_SUBDIR)/maps/%/scripts.pory $(PORYSCRIPT)
+	$(PORYSCRIPT) -i $< -o $@ -fc $(PORY_FONTCFG)
+
+$(PORYSCRIPT):
+	$(error $(PORYSCRIPT) is missing. It is a prebuilt release binary; fetch it from https://github.com/huderlem/poryscript/releases and place it at $(PORYSCRIPT).)
 
 %.1bpp:     %.png  ; $(GFX) $< $@
 %.4bpp:     %.png  ; $(GFX) $< $@
