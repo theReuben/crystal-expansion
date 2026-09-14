@@ -2311,3 +2311,23 @@ void CreateTrainerPartyForPlayer(void)
     gPartnerTrainerId = gSpecialVar_0x8004;
     CreateNPCTrainerPartyFromTrainer(gParties[B_TRAINER_PLAYER], GetTrainerStructFromId(gSpecialVar_0x8004));
 }
+
+// CrystalDust's Pokegear tracks "this trainer wants a rematch" as a flag.
+// Emerald stores a rematch *stage* per entry in the same save field, which is
+// strictly more information, so the flag is expressed on top of it (D20).
+bool8 CheckRematchTrainerFlag(u16 tableId)
+{
+#if FREE_MATCH_CALL == FALSE
+    return gSaveBlock1Ptr->trainerRematches[tableId] != 0;
+#else
+    return FALSE;
+#endif
+}
+
+void SetRematchTrainerFlag(u16 tableId)
+{
+#if FREE_MATCH_CALL == FALSE
+    if (gSaveBlock1Ptr->trainerRematches[tableId] == 0)
+        gSaveBlock1Ptr->trainerRematches[tableId] = 1;
+#endif
+}

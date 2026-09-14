@@ -193,7 +193,11 @@ string generate_map_header_text(Json map_data, Json layouts_data) {
             text << "write_specialvar_iseffect=" << json_to_string(map_data, "write_specialvar_iseffect") << ", ";
         else
             text  << "write_specialvar_iseffect=FALSE" << ", ";
-        text << "requires_flash=" << json_to_string(map_data, "requires_flash") << "\n";
+        text << "requires_flash=" << json_to_string(map_data, "requires_flash");
+        // CrystalDust: Pokegear phone service (D20). Optional; defaults FALSE.
+        if (map_data.object_items().find("phone_service") != map_data.object_items().end())
+            text << ", phone_service=" << json_to_string(map_data, "phone_service");
+        text << "\n";
     }
 
      text << "\t.byte " << json_to_string(map_data, "battle_scene") << "\n\n";

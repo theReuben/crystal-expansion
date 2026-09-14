@@ -243,7 +243,8 @@ struct MapHeader
                bool8 showMapName:1;
                bool8 writeSpecialVarIsEffect:1;
                bool8 cave:1;
-               bool8 unused:2;
+               bool8 phoneService:1; // CrystalDust: map accepts Pokegear calls (D20).
+               bool8 unused:1;
     /* 0x1B */ u8 battleType;
 };
 

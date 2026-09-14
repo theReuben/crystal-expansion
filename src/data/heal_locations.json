@@ -186,7 +186,7 @@
       "x": 3,
       "y": 52,
       "respawn_map": "MAP_BATTLE_FRONTIER_POKEMON_CENTER_1F",
-      "respawn_npc": "LOCALID_FRONTIER_NURSE"
+      "respawn_npc": "0"
     },
     {
       "id": "HEAL_LOCATION_PALLET_TOWN",
@@ -212,7 +212,7 @@
       "x": 17,
       "y": 26,
       "respawn_map": "MAP_PEWTER_CITY_POKEMON_CENTER_1F",
-      "respawn_npc": "LOCALID_PEWTER_NURSE"
+      "respawn_npc": "0"
     },
     {
       "id": "HEAL_LOCATION_CERULEAN_CITY",

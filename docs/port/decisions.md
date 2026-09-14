@@ -811,3 +811,72 @@ take the `MAP_`-prefixed constant. 100 call sites in `phone_contact.c`,
 **Open:** CrystalDust's `match_call.c` rewrite (the `SelectMatchCallMessage_*`
 family and `IsMatchCallRematchTime`) was lost the same way -- our `match_call.c`
 is expansion's. That merge is the next step, and settles `FREE_MATCH_CALL`.
+
+## D20 — CrystalDust's Pokegear phone system (match_call) restored
+
+Phase 1 kept expansion's `src/match_call.c` **byte for byte**, discarding
+CrystalDust's 2738-line rewrite: 39 functions, the entire Pokegear call flow,
+mass-outbreak calls, Mom's shopping, and the 26-entry `gMatchCallTrainers`
+dialogue table. Re-merged three-way against pokeemerald as the common ancestor
+(16 conflicts).
+
+**Conflict policy applied:**
+- *Call-window pipeline* -> **CrystalDust**. My first pass took expansion's
+  hunks here on D2 ("let Emerald win visually") and produced incoherent code:
+  the two sides use different windows, tasks and task data. D2 governs the
+  overworld/textbox style, not this screen, which has no Emerald counterpart
+  in use. Expansion's `RedrawMatchCallTextBoxBorder` is retained (`src/menu.c`
+  calls it) and repointed at CrystalDust's window.
+- *Trainer party access, Pokedex rating, `FREE_MATCH_CALL` accessors* ->
+  **expansion** (modern APIs; CrystalDust's used structures that no longer exist).
+- *Everything else* -> both sides kept.
+
+**Collateral losses found and fixed in the same sweep** (all the same Phase 1
+pattern):
+- `data/text/match_call.inc` was expansion's 2954 lines; CrystalDust's is 5938.
+  Expansion never modified this file, so the merge was clean.
+- `include/strings.h` was missing **779** CrystalDust externs. 69 further
+  candidates were *excluded* because expansion defines those symbols `static`
+  in its own sources -- adding them breaks the build, and silently shadowing
+  them would be the D19 name-unification trap again.
+- `src/graphics.c` / `include/graphics.h` were missing **154** CrystalDust
+  graphics declarations. Two are skipped because the assets are absent:
+  `graphics/interface/hp_numbers.4bpp.lz` and
+  `graphics/pokemon/question_mark/footprint.1bpp`. **Not yet investigated.**
+- `struct MapHeader` lost CrystalDust's `phoneService` flag, and `mapjson`
+  lost its emitter, though every `map.json` still carries `phone_service`.
+  Restored end to end: struct bit, `map_header_flags` macro argument
+  (optional, defaults FALSE), and the `mapjson` emitter.
+
+**API drift resolved:** `ScriptContext2_Enable/Disable` ->
+`LockPlayerFieldControls`/`UnlockPlayerFieldControls`; `EnableBothScriptContexts`
+-> `ScriptContext_Enable`; `sub_808BCF4` -> `StopPlayerAvatar`;
+`gBirchDexRatingText_*` -> `gPokedexRatingText_*`; `gSpeciesNames[]` ->
+`GetSpeciesName()`; wild-encounter fields now go through
+`encounterTypes[timeOfDay]`. `GetTotalMinutes()` ported into `src/rtc.c`.
+
+### D20a — CrystalDust's three time periods vs GEN_LATEST's four
+
+CrystalDust authored phone dialogue for morning/day/night. D8 set
+`OW_TIMES_OF_DAY GEN_LATEST`, which adds **evening**. Rather than drop
+evening or leave the switches non-exhaustive, **evening falls through to
+night**, matching GSC, where dialogue changed at dusk. Applied to both
+time-of-day switches in `match_call.c`; the same rule is owed to `radio.c`
+(`radio.c:287`, `radio.c:814`) and any other CrystalDust three-period switch.
+
+### D20b — rematch flag vs rematch stage (same save field)
+
+CrystalDust repurposed `SaveBlock1.trainerRematches[]` as a **bitfield**
+(one bit per trainer, "wants a rematch"). Emerald stores a **rematch stage
+0-4 per entry** in the same field. Emerald's is strictly more information, so
+it is kept, and CrystalDust's `CheckRematchTrainerFlag` / `SetRematchTrainerFlag`
+are implemented on top of it. No behaviour lost on either side, no extra save cost.
+
+### D20c — new SaveBlock1 fields
+
+`bankedMoney` (Mom's savings), `gameBuild`, `saveBlockMagic`, and
+`roomDecorInventory` (`struct RoomDecor`, 0x18) added: **36 bytes**.
+CrystalDust's three mass-outbreak fields (`outbreakSpecialLevel1`,
+`outbreakWildState`, `outbreakSpecialLevel2`) cost **nothing** -- they reuse
+Emerald's existing padding at 0x2B95/0x2B96/0x2BA0, which is what CrystalDust
+did originally. `SaveBlock1FreeSpace` still passes.

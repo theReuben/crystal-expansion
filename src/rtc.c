@@ -486,3 +486,9 @@ enum TimeOfDay TryDecrementTimeOfDay(enum TimeOfDay timeOfDay)
     timeOfDay = timeOfDay == TIME_FIRST ? TIME_LAST : timeOfDay - 1;
     return GenConfigTimeOfDay(timeOfDay);
 }
+
+// CrystalDust (D20): absolute minute count, used by the Pokegear call scheduler.
+u32 GetTotalMinutes(struct Time *time)
+{
+    return time->days * 1440 + time->hours * 60 + time->minutes;
+}
