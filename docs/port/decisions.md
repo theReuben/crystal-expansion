@@ -1241,3 +1241,69 @@ pointing at the wrong music. GBS lookups will be correct; the m4a fallbacks
 will not, until D14 is fixed.
 
 Errors 50 -> 32. Every remaining error is in `src/pokegear.c`.
+
+## D33 — The Pokegear map card gets its own module; expansion's region map stays
+
+**Problem.** `src/pokegear.c` needed fifteen region-map symbols that expansion's
+`src/region_map.c` does not have. CrystalDust's region map is a different engine:
+it scrolls, it carries multiple region images (Johto / Kanto / three Sevii sheets),
+it has a two-layer mapsec system (primary + secondary), per-mode permissions, and
+a landmark-info mode. Its `struct RegionMap` shares almost nothing with
+expansion's beyond the name.
+
+**Rejected: swap in CrystalDust's `region_map.c` wholesale.** Twenty-six files in
+this tree include `region_map.h` — the Pokédex area screen, the Fly map, the
+summary screen, DexNav, map preview, Pokénav, TV, Buena's password. Expansion's
+version also carries `RegionMapType` and the FRLG/Sevii layouts that Q4 depends
+on, plus the D17 retargets. Replacing it would break all of that to fix one screen.
+
+**Decision.** CrystalDust's region map is ported as a *separate* module,
+`src/pokegear_map.c` / `include/pokegear_map.h`, backing the Pokegear map card
+only. Every function it defines is prefixed `CDMap_`, and its struct is
+`struct CDRegionMap`, so the two engines coexist with no namespace collision.
+Expansion's `region_map.c` is untouched and keeps serving its other consumers.
+
+Crystal's map card is therefore not dropped, and nothing that works today regresses.
+
+**What this cost, explicitly:**
+
+1. **CrystalDust's Fly map is not ported.** `CB2_OpenFlyMap` and its icon/入力
+   code were removed from the new module; expansion's Fly map in `region_map.c`
+   stays in use. CrystalDust's version indexed a `sMapHealLocations` table keyed
+   by `HEAL_LOCATION_*` constants for Johto, none of which exist in this tree yet
+   — Johto heal locations are Phase 3 work. Revisit once they land: the Fly map
+   is the one remaining consumer that would genuinely benefit from CD's
+   multi-region map.
+2. **`REGION_*` was a live trap.** CrystalDust's region map used its own
+   `enum { REGION_JOHTO, REGION_KANTO, REGION_SEVII1..3 }` starting at 0, which
+   collides by name with expansion's `enum Region` (`REGION_KANTO` = 1,
+   `REGION_JOHTO` = 2). Every `currentRegion` comparison would have silently
+   picked the wrong map image. Renamed to `CDMAP_REGION_*` throughout, including
+   in `src/data/region_map/mapsec_to_region.h`.
+3. **`MAPSEC_SEVII_ISLE_6` … `_9` do not exist here**, so their rows were dropped
+   from `mapsec_flags.h` and `mapsec_to_region.h`. `region_map_sections.json` is
+   at 252/252, its hard ceiling, so they cannot simply be added. The four are
+   uninhabited islets; this matters only if Q4's Sevii support later wants them.
+4. **`MAPSEC_ROUTE_10_FLYDUP` / `MAPSEC_ROUTE_3_FLYDUP` likewise do not exist.**
+   CrystalDust used them for a two-pixel cursor nudge on those Kanto routes; the
+   nudge is now unconditional. Purely cosmetic, and only on the Kanto map.
+5. **`src/data/region_map/region_map_names_emerald.h` was dropped from the
+   include set.** Its `MAPSECEM_*` constants and `EMERALD_MAPSEC_START` were lost
+   in the Phase 1 merge, so the table has never been buildable here. Nothing in
+   the module referenced it. This is another one-side merge loss, logged for the
+   `phase1-asset-merge.txt` re-audit rather than fixed now.
+6. **CrystalDust's `GetMapName` family was discarded** in favour of expansion's,
+   which is already the one the other twenty-six consumers use.
+
+**Also settled here:** `SaveBlock2` gains `twentyFourHourClock:1`, taken from the
+four spare padding bits after `regionMapZoom`. SaveBlock2 does not grow, so the
+`SaveBlock1FreeSpace` assert is unaffected, and CrystalDust's 12/24-hour clock
+toggle survives rather than being cut.
+
+`MultichoiceList_PrintItems` was added to `menu.c`;
+`InitMenuInUpperLeftCornerPlaySoundWhenAPressed` is a macro alias for expansion's
+identical `InitMenuNormal`.
+
+**This clears the last C compile error in Phase 2.** What remains are asset-level
+failures: tileset tile counts over the 256 maximum, and `events.inc` generation
+for the Johto maps.

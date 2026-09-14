@@ -659,6 +659,18 @@ static u8 InitMenu(u8 windowId, u8 fontId, u8 left, u8 top, u8 cursorHeight, u8 
 }
 
 // There is no muted version of this, so the version that plays sound when A is pressed is the "Normal" one.
+// CrystalDust: prints a MenuAction list with explicit spacing, for the Pokegear's
+// call menus. See D33.
+void MultichoiceList_PrintItems(u8 windowId, u8 fontId, u8 left, u8 top, u8 lineHeight, u8 itemCount, const struct MenuAction *strs, u8 letterSpacing, u8 lineSpacing)
+{
+    u32 i;
+
+    for (i = 0; i < itemCount; i++)
+        AddTextPrinterParameterized5(windowId, fontId, strs[i].text, left, (lineHeight * i) + top, TEXT_SKIP_DRAW, NULL, letterSpacing, lineSpacing);
+
+    CopyWindowToVram(windowId, COPYWIN_GFX);
+}
+
 u8 InitMenuNormal(u8 windowId, u8 fontId, u8 left, u8 top, u8 cursorHeight, u8 numChoices, u8 initialCursorPos)
 {
     return InitMenu(windowId, fontId, left, top, cursorHeight, numChoices, initialCursorPos, FALSE);

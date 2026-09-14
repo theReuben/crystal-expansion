@@ -22,6 +22,8 @@
 #include "radio.h"
 #include "random.h"
 #include "region_map.h"
+#include "regions.h"
+#include "pokegear_map.h"
 #include "rtc.h"
 #include "scanline_effect.h"
 #include "script.h"
@@ -70,7 +72,7 @@ enum CardType {
 
 static EWRAM_DATA struct {
     MainCallback callback;
-    struct RegionMap *map;
+    struct CDRegionMap *map;
     struct ListMenuItem *phoneContactItems;
     u8 *phoneContactNames;
     u8 *phoneContactIds;
@@ -679,6 +681,8 @@ static void LoadCard(enum CardType cardId)
         case RadioCard:
             LoadRadioCard();
             break;
+        case CardCount:
+            break;
     }
 }
 
@@ -697,6 +701,8 @@ static void UnloadCard(enum CardType cardId)
             break;
         case RadioCard:
             UnloadRadioCard();
+            break;
+        case CardCount:
             break;
     }
 }
@@ -934,12 +940,14 @@ static void LoadCardBgs(enum CardType newCard)
         case MapCard:
             ShowBg(2);
             LZ77UnCompVram(gMapCardTilemap, (void *)(VRAM + 0xE000));
-            sPokegearStruct.map = AllocZeroed(sizeof(struct RegionMap));
-            InitRegionMapData(sPokegearStruct.map, &sBgTemplates[2], MAPMODE_POKEGEAR, REGION_MAP_XOFF, 0);  // TODO: Make check for button
-            while(LoadRegionMapGfx(FALSE));
+            sPokegearStruct.map = AllocZeroed(sizeof(struct CDRegionMap));
+            CDMap_InitRegionMapData(sPokegearStruct.map, &sBgTemplates[2], MAPMODE_POKEGEAR, REGION_MAP_XOFF, 0);  // TODO: Make check for button
+            while(CDMap_LoadRegionMapGfx(FALSE));
             break;
         case PhoneCard:
             LZ77UnCompVram(gPhoneCardTilemap, (void *)(VRAM + 0xE000));
+            break;
+        case CardCount:
             break;
         case RadioCard:
             LZ77UnCompVram(gRadioCardTilemap, (void *)(VRAM + 0xE000));
@@ -1228,14 +1236,14 @@ static void Task_MapCard(u8 taskId)
     switch (tState)
     {
         case 0:
-            if (!LoadRegionMapGfx_Pt2())
+            if (!CDMap_LoadRegionMapGfx_Pt2())
             {
-                CreateRegionMapCursor(0, 0, FALSE);
-                CreateRegionMapPlayerIcon(1, 1);
-                CreateSecondaryLayerDots(2, 2);
-                CreateRegionMapName(3, 4);
-                ShowRegionMapCursorSprite();
-                switch (GetSelectedMapsecLandmarkState())
+                CDMap_CreateRegionMapCursor(0, 0, FALSE);
+                CDMap_CreateRegionMapPlayerIcon(1, 1);
+                CDMap_CreateSecondaryLayerDots(2, 2);
+                CDMap_CreateRegionMapName(3, 4);
+                CDMap_ShowRegionMapCursorSprite();
+                switch (CDMap_GetSelectedMapsecLandmarkState())
                 {
                     case LANDMARK_STATE_INFO:
                         ShowHelpBar(gText_MapCardHelp2);
@@ -1251,11 +1259,11 @@ static void Task_MapCard(u8 taskId)
             }
             break;
         case 1:
-            switch (DoRegionMapInputCallback())
+            switch (CDMap_DoRegionMapInputCallback())
             {
                 case MAP_INPUT_MOVE_END:
-                    PlaySEForSelectedMapsec();
-                    switch (GetSelectedMapsecLandmarkState())
+                    CDMap_PlaySEForSelectedMapsec();
+                    switch (CDMap_GetSelectedMapsecLandmarkState())
                     {
                         case LANDMARK_STATE_INFO:
                             ShowHelpBar(gText_MapCardHelp2);
@@ -1277,7 +1285,7 @@ static void UnloadMapCard(void)
 {
     u8 taskId = FindTaskIdByFunc(Task_MapCard);
 
-    FreeRegionMapResources();
+    CDMap_FreeRegionMapResources();
 
     DestroyTask(taskId);
 }
@@ -1387,14 +1395,14 @@ static void Task_PhoneCard(u8 taskId)
 }
 
 static const struct MenuAction sCallOptions[] = {
-    {gText_Call, PhoneCard_PlaceCall},
-    {gText_Cancel6, PhoneCard_ReturnToMain}
+    {gText_Call, {PhoneCard_PlaceCall}},
+    {gText_Cancel6, {PhoneCard_ReturnToMain}}
 };
 
 static const struct MenuAction sCallOptionsDeletable[] = {
-    {gText_Call, PhoneCard_PlaceCall},
-    {gText_Delete, PhoneCard_DeleteEntry},
-    {gText_Cancel6, PhoneCard_ReturnToMain}
+    {gText_Call, {PhoneCard_PlaceCall}},
+    {gText_Delete, {PhoneCard_DeleteEntry}},
+    {gText_Cancel6, {PhoneCard_ReturnToMain}}
 };
 
 static void PhoneCard_ConfirmCall(u8 taskId)
@@ -1485,7 +1493,7 @@ static void PhoneCard_DeleteEntry(u8 taskId)
     ShowHelpBar(gText_ANext);
     FillWindowPixelBuffer(WIN_DIALOG, 0x11);
     AddTextPrinterParameterized5(WIN_DIALOG, 2, gText_PokegearDeleteThisStoredPhoneNumber, 0, 1, 0, NULL, 1, 1);
-    CreateYesNoMenu(&sYesNoWindowTemplate, 2, 0, 2, MENU_FRAME_BASE_TILE_NUM, MENU_FRAME_PALETTE_NUM, 0);
+    CreatePhoneYesNoMenu(&sYesNoWindowTemplate, 2, 0, 2, MENU_FRAME_BASE_TILE_NUM, MENU_FRAME_PALETTE_NUM, 0, FALSE);
     ScheduleBgCopyTilemapToVram(0);
     gTasks[taskId].func = PhoneCard_ConfirmDeleteProcessInput;
 }

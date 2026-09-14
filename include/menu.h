@@ -114,6 +114,9 @@ u8 Menu_MoveCursorNoWrapAround(s8 cursorDelta);
 void DrawStdWindowFrame(u8 windowId, bool8 copyToVram);
 u8 AddStartMenuWindow(u8 numActions);
 u8 InitMenuNormal(u8 windowId, u8 fontId, u8 left, u8 top, u8 cursorHeight, u8 numChoices, u8 initialCursorPos);
+void MultichoiceList_PrintItems(u8 windowId, u8 fontId, u8 left, u8 top, u8 lineHeight, u8 itemCount, const struct MenuAction *strs, u8 letterSpacing, u8 lineSpacing);
+// CrystalDust's name for expansion's InitMenuNormal; both leave the A-press sound on (D33).
+#define InitMenuInUpperLeftCornerPlaySoundWhenAPressed InitMenuNormal
 void LoadMessageBoxAndFrameGfx(u8 windowId, bool8 copyToVram);
 void RemoveStartMenuWindow(void);
 void DisplayYesNoMenuWithDefault(u8 initialCursorPos);
