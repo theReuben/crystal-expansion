@@ -3493,7 +3493,7 @@ extern const u32 gBuyMenuFrame_Tilemap[];
 extern const u32 gBuyMenuFrame_TmHmTilemap[];
 extern const u32 gBuyMenuFrame_Palette[];
 extern const u32 gItemPcTiles[];
-extern const u32 gItemPcBgPals[];
+extern const u16 gItemPcBgPals[];
 extern const u32 gItemPcTilemap[];
 extern const u8 gNamingScreenRWindow_Gfx[];
 extern const u8 gNamingScreenPageButton_Gfx[];

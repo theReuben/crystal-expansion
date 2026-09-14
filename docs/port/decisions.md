@@ -897,3 +897,27 @@ Also this gate: `B_OUTCOME_NO_PARK_BALLS` (11) added to `include/constants/battl
 `GetTotalSeconds` added alongside D20's `GetTotalMinutes` in `src/rtc.c`;
 `IsPlayerDefeated` un-`static`'d in `src/battle_setup.c` and declared in the header,
 since CrystalDust's version was identical to expansion's.
+
+### D22 — PC item storage screen (`item_pc.c`)
+
+CrystalDust's FRLG-style PC item screen is a file expansion has no counterpart for, so
+it was kept whole and its ~25 pret-era API calls retargeted onto expansion's names
+(`ItemId_GetName` → `GetItemName`, `MenuHelpers_LinkSomething` → `MenuHelpers_IsLinkActive`,
+`ListMenuSetUnkIndicatorsStructField` → `ListMenuSetTemplateField`, the insert-indicator
+bar → expansion's item-menu swap line, and so on). Four calls needed judgement:
+
+- **`ResetItemMenuIconState()` dropped.** It memset CrystalDust's
+  `sItemMenuIconSpriteIds` table; expansion's `item_menu_icons.c` no longer keeps that
+  state, so there is nothing to reset. No behaviour change.
+- **`unused_ItemPc_AddTextPrinterParameterized` deleted.** It was already dead code in
+  CrystalDust and was the sole user of `FONTATTR_STYLE`, which expansion removed along
+  with the printer's `style` field.
+- **`gItemPcBgPals` switched from `bg.gbapal.lz` to the uncompressed `bg.gbapal`.**
+  Expansion dropped `LoadCompressedPalette` entirely; every palette is now loaded
+  uncompressed. Costs 16 bytes of ROM. Same pixels.
+- **`gPCText_Give` is `static` inside expansion's `pokemon_storage_system.c`** — the D19
+  name-unification trap again. A local `sItemPcText_Give` with identical text is used
+  rather than promoting the storage-system string to a global.
+
+`CB2_PartyMenuFromItemPC` was ported into `party_menu.c`; `PARTY_ACTION_GIVE_PC_ITEM`
+already existed there (expansion marks it "Unused" — CrystalDust uses it).
