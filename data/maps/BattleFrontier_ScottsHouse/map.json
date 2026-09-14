@@ -3,6 +3,7 @@
   "name": "BattleFrontier_ScottsHouse",
   "layout": "LAYOUT_BATTLE_FRONTIER_SCOTTS_HOUSE",
   "music": "MUS_B_TOWER_RS",
+  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_BATTLE_FRONTIER",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -11,22 +12,19 @@
   "allow_escaping": false,
   "allow_running": false,
   "show_map_name": false,
-  "floor_number": 0,
-  "phone_service": true,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
-  "connections": 0,
+  "connections": null,
   "object_events": [
     {
-      "type": "original",
-      "graphics_id": "OBJ_EVENT_GFX_ZSCOTT",
-      "in_connection": false,
+      "local_id": "LOCALID_SCOTTS_HOUSE_SCOTT",
+      "graphics_id": "OBJ_EVENT_GFX_SCOTT",
       "x": 2,
       "y": 3,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
       "movement_range_x": 1,
       "movement_range_y": 1,
-      "trainer_type": "0",
+      "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "BattleFrontier_ScottsHouse_EventScript_Scott",
       "flag": "0"
@@ -38,20 +36,16 @@
       "y": 7,
       "elevation": 3,
       "dest_map": "MAP_BATTLE_FRONTIER_OUTSIDE_WEST",
-      "dest_warp_id": 5
+      "dest_warp_id": "5"
     },
     {
       "x": 3,
       "y": 7,
       "elevation": 3,
       "dest_map": "MAP_BATTLE_FRONTIER_OUTSIDE_WEST",
-      "dest_warp_id": 5
+      "dest_warp_id": "5"
     }
   ],
-  "coord_events": [
-
-  ],
-  "bg_events": [
-
-  ]
+  "coord_events": [],
+  "bg_events": []
 }

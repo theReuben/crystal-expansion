@@ -103,8 +103,6 @@ static const u16 sMapSecFlags[] = {
     [MAPSEC_CINNABAR_ISLAND]           = FLAG_VISITED_CINNABAR_ISLAND,
     [MAPSEC_INDIGO_PLATEAU]            = FLAG_LANDMARK_POKEMON_LEAGUE,
     [MAPSEC_SAFFRON_CITY]              = FLAG_VISITED_SAFFRON_CITY,
-    [MAPSEC_ROUTE_3_FLYDUP]            = FLAG_LANDMARK_ROUTE_3_POKEMON_CENTER,
-    [MAPSEC_ROUTE_10_FLYDUP]           = FLAG_LANDMARK_ROUTE_10_POKEMON_CENTER,
     [MAPSEC_ROUTE_1]                   = 0,
     [MAPSEC_ROUTE_2]                   = 0,
     [MAPSEC_ROUTE_3]                   = 0,
@@ -201,22 +199,12 @@ static const u16 sMapSecFlags[] = {
     [MAPSEC_VIAPOIS_CHAMBER]           = 0,
     [MAPSEC_EMBER_SPA]                 = 0,
     [MAPSEC_SPECIAL_AREA]              = 0,
-    [MAPSEC_AQUA_HIDEOUT]              = 0,
-    [MAPSEC_MAGMA_HIDEOUT]             = 0,
-    [MAPSEC_MIRAGE_TOWER]              = 0,
     [MAPSEC_BIRTH_ISLAND]              = 0,
     [MAPSEC_FARAWAY_ISLAND]            = 0,
-    [MAPSEC_ARTISAN_CAVE]              = 0,
     [MAPSEC_MARINE_CAVE]               = 0,
     [MAPSEC_UNDERWATER_MARINE_CAVE]    = 0,
     [MAPSEC_TERRA_CAVE]                = 0,
-    [MAPSEC_UNDERWATER_105]            = 0,
-    [MAPSEC_UNDERWATER_125]            = 0,
-    [MAPSEC_UNDERWATER_129]            = 0,
-    [MAPSEC_DESERT_UNDERPASS]          = 0,
-    [MAPSEC_ALTERING_CAVE]             = 0,
     [MAPSEC_NAVEL_ROCK]                = 0,
-    [MAPSEC_TRAINER_HILL]              = 0
 };
 
 #endif //GUARD_DATA_MAPSEC_FLAGS_H

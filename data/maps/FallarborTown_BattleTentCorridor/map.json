@@ -26,7 +26,8 @@
       "type": "original",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_FALLARBOR_TENT_CORRIDOR_ATTENDANT"
     }
   ],
   "warp_events": [],

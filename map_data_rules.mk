@@ -48,37 +48,17 @@ $(INCLUDECONSTS_OUTDIR)/map_event_ids.h: $(MAP_JSONS) $(MAPJSON)
 FORCE:
 .PHONY : FORCE
 
+
 # ============================================================
-# CrystalDust rules, appended in Phase 1.
+# CrystalDust's map rules were REMOVED in Phase 2.
+#
+# They were vanilla-pokeemerald-era rules that overrode expansion's above and
+# invoked mapjson with the old signature -- `mapjson groups emerald <json>`,
+# with no output directories -- which expansion's mapjson rejects with a USAGE
+# error. The collision was latent: the generated files were already up to date,
+# so nothing re-ran until the region_map_sections.json and map.json edits for
+# the Johto map section merge forced regeneration.
+#
+# Same failure mode as CrystalDust's duplicate wild_encounters.h rule (D7).
+# See decision D17.
 # ============================================================
-# Map JSON data
-
-MAPS_DIR = $(DATA_ASM_SUBDIR)/maps
-LAYOUTS_DIR = $(DATA_ASM_SUBDIR)/layouts
-
-MAP_DIRS := $(dir $(wildcard $(MAPS_DIR)/*/map.json))
-MAP_CONNECTIONS := $(patsubst $(MAPS_DIR)/%/,$(MAPS_DIR)/%/connections.inc,$(MAP_DIRS))
-MAP_EVENTS := $(patsubst $(MAPS_DIR)/%/,$(MAPS_DIR)/%/events.inc,$(MAP_DIRS))
-MAP_HEADERS := $(patsubst $(MAPS_DIR)/%/,$(MAPS_DIR)/%/header.inc,$(MAP_DIRS))
-
-$(DATA_ASM_BUILDDIR)/maps.o: $(DATA_ASM_SUBDIR)/maps.s $(LAYOUTS_DIR)/layouts.inc $(LAYOUTS_DIR)/layouts_table.inc $(MAPS_DIR)/headers.inc $(MAPS_DIR)/groups.inc $(MAPS_DIR)/connections.inc $(MAP_CONNECTIONS) $(MAP_HEADERS)
-	$(PREPROC) $< charmap.txt | $(CPP) -I include - | $(AS) $(ASFLAGS) -o $@
-$(DATA_ASM_BUILDDIR)/map_events.o: $(DATA_ASM_SUBDIR)/map_events.s $(MAPS_DIR)/events.inc $(MAP_EVENTS)
-	$(PREPROC) $< charmap.txt | $(CPP) -I include - | $(AS) $(ASFLAGS) -o $@
-
-$(MAPS_DIR)/%/header.inc: $(MAPS_DIR)/%/map.json
-	$(MAPJSON) map emerald $< $(LAYOUTS_DIR)/layouts.json
-$(MAPS_DIR)/%/events.inc: $(MAPS_DIR)/%/header.inc ;
-$(MAPS_DIR)/%/connections.inc: $(MAPS_DIR)/%/events.inc ;
-
-$(MAPS_DIR)/groups.inc: $(MAPS_DIR)/map_groups.json
-	$(MAPJSON) groups emerald $<
-$(MAPS_DIR)/connections.inc: $(MAPS_DIR)/groups.inc ;
-$(MAPS_DIR)/events.inc: $(MAPS_DIR)/connections.inc ;
-$(MAPS_DIR)/headers.inc: $(MAPS_DIR)/events.inc ;
-include/constants/map_groups.h: $(MAPS_DIR)/headers.inc ;
-
-$(LAYOUTS_DIR)/layouts.inc: $(LAYOUTS_DIR)/layouts.json
-	$(MAPJSON) layouts emerald $<
-$(LAYOUTS_DIR)/layouts_table.inc: $(LAYOUTS_DIR)/layouts.inc ;
-include/constants/layouts.h: $(LAYOUTS_DIR)/layouts_table.inc ;

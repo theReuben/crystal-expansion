@@ -26,7 +26,8 @@
       "type": "original",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "SootopolisCity_MysteryEventsHouse_1F_EventScript_OldMan",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_MYSTERY_EVENTS_OLD_MAN"
     }
   ],
   "warp_events": [

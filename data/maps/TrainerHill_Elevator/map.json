@@ -3,7 +3,7 @@
   "name": "TrainerHill_Elevator",
   "layout": "LAYOUT_BATTLE_ELEVATOR",
   "music": "MUS_B_TOWER_RS",
-  "region_map_section": "MAPSEC_TRAINER_HILL",
+  "region_map_section": "MAPSEC_ROUTE_111",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
   "map_type": "MAP_TYPE_INDOOR",
@@ -26,7 +26,8 @@
       "type": "original",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "TrainerHill_Elevator_EventScript_Attendant",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_TRAINER_HILL_ELEVATOR_ATTENDANT"
     }
   ],
   "warp_events": [

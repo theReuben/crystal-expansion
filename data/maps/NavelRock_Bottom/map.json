@@ -26,7 +26,8 @@
       "type": "original",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NavelRock_Bottom_EventScript_Lugia",
-      "flag": "FLAG_HIDE_LUGIA"
+      "flag": "FLAG_HIDE_LUGIA",
+      "local_id": "LOCALID_NAVEL_ROCK_LUGIA"
     }
   ],
   "warp_events": [

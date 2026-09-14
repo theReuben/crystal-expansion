@@ -29,7 +29,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "BattleFrontier_BattleTowerMultiPartnerRoom_EventScript_Attendant",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_TOWER_PARTNER_ROOM_ATTENDANT"
     },
     {
       "type": "original",
@@ -152,13 +153,7 @@
       "flag": "FLAG_HIDE_BATTLE_TOWER_MULTI_BATTLE_PARTNER_ALT_2"
     }
   ],
-  "warp_events": [
-
-  ],
-  "coord_events": [
-
-  ],
-  "bg_events": [
-
-  ]
+  "warp_events": [],
+  "coord_events": [],
+  "bg_events": []
 }

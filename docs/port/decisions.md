@@ -573,11 +573,10 @@ diagnostic. Song tables were worse than flags only because the loss is silent at
 build time. The re-audit of `docs/port/phase1-asset-merge.txt` that D9 called for
 should treat every index-ordered table as high risk.
 
-## D15 -- OPEN: the map section enum is 10 over its u8 ceiling
+## D15 -- RESOLVED (see D17): the map section enum is 10 over its u8 ceiling
 
-**Status: needs a decision. Nothing has been cut. The Johto map sections are
-not merged yet, so 22 build errors and Phase 3 (New Bark Town) are blocked on
-this.**
+**Status: resolved by D17, by a route not listed among the options below --
+reclaiming Hoenn side-area map sections without deleting their maps.**
 
 Map section IDs share a `u8` with the met-location specials
 `METLOC_SPECIAL_EGG` (0xFD), `METLOC_IN_GAME_TRADE` (0xFE) and
@@ -667,3 +666,74 @@ another kilobyte, they remain the next candidates.
 
 **This does not affect D15.** The map section ceiling is a `u8` value-space
 limit, not a save-size limit. Freeing save bytes cannot raise it.
+
+## D17 -- Johto map sections merged; Hoenn side-areas folded into their parents
+
+Resolves D15. User's call: "take the small slice now, revisit after phase 3",
+on the reasoning that Hoenn is expansion's content and we want Crystal's.
+
+**Implemented by retargeting, not deleting.** The goal was 10 map section IDs,
+not the removal of maps. Ten Hoenn side-areas were repointed to their parent
+map section, which frees the ID while leaving every map fully playable and no
+warp dangling:
+
+| dropped map section | maps now report | maps |
+|---|---|---|
+| `MAPSEC_AQUA_HIDEOUT` | `MAPSEC_LILYCOVE_CITY` | 6 |
+| `MAPSEC_MAGMA_HIDEOUT` | `MAPSEC_ROUTE_112` | 8 |
+| `MAPSEC_MIRAGE_TOWER` | `MAPSEC_ROUTE_111` | 4 |
+| `MAPSEC_TRAINER_HILL` | `MAPSEC_ROUTE_111` | 7 |
+| `MAPSEC_ARTISAN_CAVE` | `MAPSEC_BATTLE_FRONTIER` | 2 |
+| `MAPSEC_DESERT_UNDERPASS` | `MAPSEC_ROUTE_114` | 1 |
+| `MAPSEC_ALTERING_CAVE` | `MAPSEC_ROUTE_103` | 1 |
+| `MAPSEC_UNDERWATER_105/125/129` | their routes | 3 |
+
+**The only cost is cosmetic:** those areas no longer show their own name on the
+region map, the map-name popup, or a caught Pokemon's met location. No map, warp,
+script, encounter or item was removed. Every one is reversible.
+
+`MAPSEC_MARINE_CAVE`, `MAPSEC_TERRA_CAVE` and `MAPSEC_UNDERWATER_MARINE_CAVE`
+were deliberately left alone -- they drive the roaming Groudon/Kyogre weather
+system, and that is not worth disturbing for IDs we did not need.
+
+Also dropped, at no cost: CrystalDust's `MAPSEC_SEVII_ISLE_6..9` (unpositioned
+stubs at 0,0; expansion ships a complete Sevii set, per D11) and its
+`MAPSEC_ROUTE_3_FLYDUP` / `ROUTE_10_FLYDUP` (Kanto duplicates of map sections
+expansion already has). CrystalDust's Johto `ROUTE_32_FLYDUP` is kept.
+
+**Result: 55 Johto map sections merged. `MAPSEC_COUNT` is 252 against a ceiling
+of 252 -- exactly full, zero headroom.** The next map section needs another
+reclaim; Marine/Terra Cave are the obvious next three.
+
+### Two latent Phase 1 failures this uncovered
+
+Both were invisible until the map JSON edits forced a regeneration.
+
+**1. CrystalDust's map rules in `map_data_rules.mk` overrode expansion's** and
+called `mapjson` with the vanilla-era signature (no output directories), which
+expansion's mapjson rejects outright. Removed. Identical to the duplicate
+`wild_encounters.h` rule from D7.
+
+**2. 181 `local_id` declarations were lost from 58 map.json files.** Phase 1
+took CrystalDust's map.json for shared maps, and CrystalDust predates
+expansion's named object-event locals -- so `LOCALID_FARAWAY_ISLAND_MEW`,
+`LOCALID_CONTESTANT_1`, `LOCALID_FRONTIER_NURSE` and others simply vanished.
+This did not fail the build until now only because the generated
+`map_event_ids.h` was stale.
+
+Repaired in two passes: 100 declarations injected field-by-field where the
+event was provably the same one (matching graphics id and coordinates), and the
+remaining 32 maps -- all Battle Frontier, Battle Tent, Contest Hall and event
+island harbours -- restored from expansion wholesale under D6, then retargeted
+again.
+
+**Third instance of the same Phase 1 pattern**, after D9 (strings), D10
+(constants) and D14 (song table). The re-audit of
+`docs/port/phase1-asset-merge.txt` is now clearly not optional.
+
+### Also fixed here
+
+`MapHasSpecies` in `pokedex_area_screen.c` identified Altering Cave by map
+section. Altering Cave now reports Route 103's, which would have false-positived
+on the real Route 103, so the check now tests the map id directly. This is
+strictly more correct than the original.

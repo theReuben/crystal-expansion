@@ -29,7 +29,8 @@
       "trainer_type": "0",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_ARENA_BATTLE_BLACK_BELT_1"
     },
     {
       "type": "original",
@@ -44,7 +45,8 @@
       "trainer_type": "0",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_ARENA_BATTLE_BLACK_BELT_2"
     },
     {
       "type": "original",
@@ -59,7 +61,8 @@
       "trainer_type": "0",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_ARENA_BATTLE_BLACK_BELT_3"
     },
     {
       "type": "original",
@@ -74,7 +77,8 @@
       "trainer_type": "0",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_ARENA_BATTLE_BLACK_BELT_4"
     },
     {
       "type": "original",
@@ -89,7 +93,8 @@
       "trainer_type": "0",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_ARENA_BATTLE_ATTENDANT"
     },
     {
       "type": "original",
@@ -119,7 +124,8 @@
       "trainer_type": "0",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_ARENA_BATTLE_OPPONENT"
     },
     {
       "type": "original",
@@ -134,7 +140,8 @@
       "trainer_type": "0",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_ARENA_BATTLE_PLAYER"
     },
     {
       "type": "original",
@@ -149,16 +156,11 @@
       "trainer_type": "0",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_ARENA_BATTLE_ANNOUNCER"
     }
   ],
-  "warp_events": [
-
-  ],
-  "coord_events": [
-
-  ],
-  "bg_events": [
-
-  ]
+  "warp_events": [],
+  "coord_events": [],
+  "bg_events": []
 }

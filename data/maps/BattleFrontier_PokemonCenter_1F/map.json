@@ -29,7 +29,8 @@
       "trainer_type": "0",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "BattleFrontier_PokemonCenter_1F_EventScript_Nurse",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_FRONTIER_NURSE"
     },
     {
       "type": "original",
@@ -108,10 +109,6 @@
       "dest_warp_id": 0
     }
   ],
-  "coord_events": [
-
-  ],
-  "bg_events": [
-
-  ]
+  "coord_events": [],
+  "bg_events": []
 }

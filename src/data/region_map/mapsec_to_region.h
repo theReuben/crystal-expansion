@@ -103,8 +103,6 @@ static const u8 sMapSecToRegion[] = {
     [MAPSEC_CINNABAR_ISLAND]           = REGION_KANTO,
     [MAPSEC_INDIGO_PLATEAU]            = REGION_KANTO,
     [MAPSEC_SAFFRON_CITY]              = REGION_KANTO,
-    [MAPSEC_ROUTE_3_FLYDUP]            = REGION_KANTO,
-    [MAPSEC_ROUTE_10_FLYDUP]           = REGION_KANTO,
     [MAPSEC_ROUTE_1]                   = REGION_KANTO,
     [MAPSEC_ROUTE_2]                   = REGION_KANTO,
     [MAPSEC_ROUTE_3]                   = REGION_KANTO,
@@ -201,22 +199,12 @@ static const u8 sMapSecToRegion[] = {
     [MAPSEC_VIAPOIS_CHAMBER]           = REGION_JOHTO,
     [MAPSEC_EMBER_SPA]                 = REGION_JOHTO,
     [MAPSEC_SPECIAL_AREA]              = REGION_JOHTO,
-    [MAPSEC_AQUA_HIDEOUT]              = REGION_JOHTO,
-    [MAPSEC_MAGMA_HIDEOUT]             = REGION_JOHTO,
-    [MAPSEC_MIRAGE_TOWER]              = REGION_JOHTO,
     [MAPSEC_BIRTH_ISLAND]              = REGION_JOHTO,
     [MAPSEC_FARAWAY_ISLAND]            = REGION_JOHTO,
-    [MAPSEC_ARTISAN_CAVE]              = REGION_JOHTO,
     [MAPSEC_MARINE_CAVE]               = REGION_JOHTO,
     [MAPSEC_UNDERWATER_MARINE_CAVE]    = REGION_JOHTO,
     [MAPSEC_TERRA_CAVE]                = REGION_JOHTO,
-    [MAPSEC_UNDERWATER_105]            = REGION_JOHTO,
-    [MAPSEC_UNDERWATER_125]            = REGION_JOHTO,
-    [MAPSEC_UNDERWATER_129]            = REGION_JOHTO,
-    [MAPSEC_DESERT_UNDERPASS]          = REGION_JOHTO,
-    [MAPSEC_ALTERING_CAVE]             = REGION_JOHTO,
     [MAPSEC_NAVEL_ROCK]                = REGION_JOHTO,
-    [MAPSEC_TRAINER_HILL]              = REGION_JOHTO
 };
 
 #endif //GUARD_DATA_MAPSEC_TO_REGION_H
