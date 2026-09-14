@@ -9,6 +9,9 @@ void m4aSoundVSyncOn(void);
 void m4aSoundInit(void);
 void m4aSoundMain(void);
 void m4aSongNumStart(u16 n);
+void m4aSongNumStartGbs(u16 n, bool32 gbsEnabled); // CrystalDust (D32)
+void m4aSongNumStopGbs(u16 n, bool32 gbsEnabled); // CrystalDust (D32)
+const struct Song *GetSong(u16 songID); // CrystalDust (D32)
 void m4aSongNumStartOrChange(u16 n);
 void m4aSongNumStop(u16 n);
 void m4aMPlayAllStop(void);

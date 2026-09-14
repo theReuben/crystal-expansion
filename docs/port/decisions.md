@@ -1215,3 +1215,29 @@ hook that re-picks the ambient cry and forces the time-based events.
    `ChooseAmbientCrySpecies` exposed via `ForceChooseAmbientCrySpecies`.
 
 Errors 62 -> 50.
+
+## D32 — GBS song selection wired into the m4a API
+
+CrystalDust's whole `m4a` entry-point API carries a `gbsEnabled` argument —
+`m4aSongNumStart(n, gbsEnabled)` and friends — because a song may have a Game
+Boy Sound counterpart in `gGBSSongTable`, a *sparse* table keyed by song id and
+terminated with `0xFFFFFFFF`. Phase 1 kept expansion's one-argument API, so
+`gGBSSongTable` (which survived in `sound/song_table.inc`) was unreachable.
+
+**Decision: keep expansion's one-argument public API and consult
+`FLAG_SYS_GBS_ENABLED` inside a new `GetSong()`**, rather than threading a
+second argument through 72 call sites in 18 files. Every CrystalDust call site
+passed `FlagGet(FLAG_SYS_GBS_ENABLED)` anyway, so behaviour is identical and the
+diff is five lines in `m4a.c` instead of seventy-two across the tree.
+
+For the two places that genuinely need to override the player's setting — the
+sound test auditioning both formats — `m4aSongNumStartGbs` / `m4aSongNumStopGbs`
+save, set, call and restore the flag.
+
+`src/debug/sound_check_menu.c` also needed `TEXT_SPEED_FF` → `TEXT_SKIP_DRAW`.
+
+**Note:** this does *not* resolve D14. The main `gSongTable` still has 43 songs
+pointing at the wrong music. GBS lookups will be correct; the m4a fallbacks
+will not, until D14 is fixed.
+
+Errors 50 -> 32. Every remaining error is in `src/pokegear.c`.

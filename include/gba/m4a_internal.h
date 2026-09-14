@@ -367,7 +367,18 @@ struct Song
 };
 
 extern const struct MusicPlayer gMPlayTable[];
+// CrystalDust: GBS songs are keyed by song id rather than indexed, because the
+// table is sparse - only some songs have a Game Boy Sound version. See D32.
+#define GBS_SONG_TABLE_END 0xFFFFFFFF
+
+struct GBSSongItem
+{
+    u32 songID;
+    struct Song song;
+};
+
 extern const struct Song gSongTable[];
+extern const struct GBSSongItem gGBSSongTable[];
 
 
 
