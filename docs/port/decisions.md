@@ -1106,3 +1106,26 @@ This is the first piece that makes D20's `FREE_MATCH_CALL == FALSE` decision
 pay off: the phone VM now builds against the retained match-call save data.
 
 Errors 86 -> 79.
+
+## D29 — GBS playback: engine-level fields restored
+
+`src/gbs.c` is CrystalDust's GBS player, which plays GSC's original Game Boy
+sound data directly rather than re-arranged m4a tracks. It needs three things
+from the sound engine that Phase 1 dropped, all restored to match CrystalDust:
+
+- `struct MusicPlayerInfo.gbsTempo` (u16, after `fadeOV`), reset to `0x100` in
+  `MPlayStart`.
+- `struct MusicPlayerTrack.gbsIdentifier` — CrystalDust splits the existing
+  `u8 patternLevel` into two 4-bit fields. **Constraint accepted:**
+  `patternLevel` is now capped at 15. It is a pattern-nesting depth that the
+  engine never drives above 3, so this is safe, but it is a real narrowing.
+- `gUsedCGBChannels` (u8, in `src/m4a.c`) — a bitmask of the CGB channels m4a
+  currently owns, cleared at the top of `CgbSound` and set per active channel,
+  so the GBS player knows which hardware channels it may take over.
+
+Both structs are pure C in expansion and CrystalDust alike (neither ships m4a
+assembly), so the layout change has no hardcoded offsets to chase.
+
+Also fixed a pointer/integer comparison at `gbs.c:704` that agbcc accepted.
+
+Errors 79 -> 71.

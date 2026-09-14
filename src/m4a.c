@@ -19,6 +19,10 @@ COMMON_DATA struct PokemonCrySong gPokemonCrySong = {0};
 COMMON_DATA u8 gMPlayMemAccArea[0x10] = {0};
 COMMON_DATA struct MusicPlayerInfo gMPlayInfo_SE3 = {0};
 
+// CrystalDust: which CGB channels the m4a engine is currently driving, so the
+// GBS player knows which it may take over. See D29.
+COMMON_DATA u8 gUsedCGBChannels = 0;
+
 u32 MidiKeyToFreq(struct WaveData *wav, u8 key, u8 fineAdjust)
 {
     u32 val1;
@@ -582,6 +586,7 @@ void MPlayStart(struct MusicPlayerInfo *mplayInfo, struct SongHeader *songHeader
         mplayInfo->tempoI = 150;
         mplayInfo->tempoU = 0x100;
         mplayInfo->tempoC = 0;
+        mplayInfo->gbsTempo = 0x100; // CrystalDust (D29)
         mplayInfo->fadeOI = 0;
 
         i = 0;
@@ -885,6 +890,8 @@ void CgbSound(void)
     // Most comparision operations that cast to s8 perform 'and' by 0xFF.
     int mask = 0xff;
 
+    gUsedCGBChannels = 0; // CrystalDust (D29)
+
     if (soundInfo->c15)
         soundInfo->c15--;
     else
@@ -894,6 +901,8 @@ void CgbSound(void)
     {
         if (!(channels->statusFlags & SOUND_CHANNEL_SF_ON))
             continue;
+
+        gUsedCGBChannels |= 1 << (ch - 1); // CrystalDust (D29)
 
         /* 1. determine hardware channel registers */
         switch (ch)

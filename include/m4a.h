@@ -24,4 +24,6 @@ extern struct MusicPlayerInfo gMPlayInfo_SE2;
 extern struct MusicPlayerInfo gMPlayInfo_SE3;
 extern struct SoundInfo gSoundInfo;
 
+extern u8 gUsedCGBChannels; // CrystalDust (D29)
+
 #endif //GUARD_M4A_H

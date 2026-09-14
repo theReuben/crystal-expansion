@@ -273,7 +273,8 @@ struct MusicPlayerTrack
 {
     u8 flags;
     u8 wait;
-    u8 patternLevel;
+    u8 patternLevel:4;
+    u8 gbsIdentifier:4; // CrystalDust: GBS playback (D29)
     u8 repN;
     u8 gateTime;
     u8 key;
@@ -342,6 +343,7 @@ struct MusicPlayerInfo
     u16 fadeOI;
     u16 fadeOC;
     u16 fadeOV;
+    u16 gbsTempo; // CrystalDust: GBS playback (D29)
     struct MusicPlayerTrack *tracks;
     struct ToneData *tone;
     u32 ident;
