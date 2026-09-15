@@ -38,11 +38,13 @@
 //   determined by the data for the corresponding MAPSEC in gRegionMapEntries.
 
 // Only maps in the following map groups have their encounters considered for the area screen
-#define MAP_GROUP_TOWNS_AND_ROUTES MAP_GROUP(MAP_PETALBURG_CITY)
-#define MAP_GROUP_TOWNS_AND_ROUTES_FRLG MAP_GROUP(MAP_PALLET_TOWN)
-#define MAP_GROUP_DUNGEONS MAP_GROUP(MAP_METEOR_FALLS_1F_1R)
+// CrystalDust's Johto map groups. Expansion anchored these on Hoenn maps, which
+// are cut, so nothing on the area screen ever matched (D63).
+#define MAP_GROUP_TOWNS_AND_ROUTES MAP_GROUP(MAP_VIOLET_CITY)
+// MAP_GROUP_TOWNS_AND_ROUTES_FRLG removed: same group as Johto in CrystalDust (D63)
+#define MAP_GROUP_DUNGEONS MAP_GROUP(MAP_UNION_CAVE_1F) // CrystalDust (D63)
 #define MAP_GROUP_DUNGEONS_FRLG MAP_GROUP(MAP_VIRIDIAN_FOREST)
-#define MAP_GROUP_SPECIAL_AREA MAP_GROUP(MAP_SAFARI_ZONE_NORTHWEST)
+#define MAP_GROUP_SPECIAL_AREA MAP_GROUP(MAP_BATTLE_FRONTIER_OUTSIDE_EAST) // CrystalDust (D63)
 #define MAP_GROUP_SPECIAL_AREA_FRLG MAP_GROUP(MAP_NAVEL_ROCK_EXTERIOR_FRLG)
 
 #define AREA_SCREEN_WIDTH 32
@@ -157,7 +159,8 @@ static const mapsec_u16_t sMovingRegionMapSections[3] =
 
 static const u16 sFeebasData[][3] =
 {
-    {SPECIES_FEEBAS, MAP_GROUP(MAP_ROUTE119), MAP_NUM(MAP_ROUTE119)},
+    // Feebas has no special Route 119 tile in CrystalDust (D63).
+    {SPECIES_FEEBAS, MAP_GROUP(MAP_UNDEFINED), MAP_NUM(MAP_UNDEFINED)},
     {NUM_SPECIES}
 };
 
@@ -313,8 +316,8 @@ static void FindMapsWithMon(enum Species species)
         {
             switch (sFeebasData[i][1])
             {
+            // Kanto and Johto towns share one map group in CrystalDust (D63).
             case MAP_GROUP_TOWNS_AND_ROUTES:
-            case MAP_GROUP_TOWNS_AND_ROUTES_FRLG:
                 SetAreaHasMon(sFeebasData[i][1], sFeebasData[i][2]);
                 break;
             case MAP_GROUP_DUNGEONS:
@@ -341,8 +344,8 @@ static void FindMapsWithMon(enum Species species)
         {
             switch (gWildMonHeaders[i].mapGroup)
             {
+            // Kanto and Johto towns share one map group in CrystalDust (D63).
             case MAP_GROUP_TOWNS_AND_ROUTES:
-            case MAP_GROUP_TOWNS_AND_ROUTES_FRLG:
                 SetAreaHasMon(gWildMonHeaders[i].mapGroup, gWildMonHeaders[i].mapNum);
                 break;
             case MAP_GROUP_DUNGEONS:

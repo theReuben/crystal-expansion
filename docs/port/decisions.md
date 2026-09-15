@@ -2215,3 +2215,19 @@ of `PCTurnOnEffect_SetMetatile`'s branches and in `PCTurnOffEffect`.
 **Fix.** Slot 1 is renamed `PC_LOCATION_PLAYERS_HOUSE` and given CrystalDust's
 0x3/0xD, matching the literal the script already passes. `PC_LOCATION_MAYS_HOUSE`
 stays at 2; no script in the tree references it now that Hoenn is cut.
+
+### D63 Pokédex area screen matched no maps at all
+
+**Loss.** `pokedex_area_screen.c` decides which maps to glow or mark by comparing
+each wild-encounter header's **map group** against three anchors. The merge kept
+expansion's, which anchor on `MAP_PETALBURG_CITY`, `MAP_METEOR_FALLS_1F_1R` and
+`MAP_SAFARI_ZONE_NORTHWEST`. With Hoenn cut (D37) those constants are stubs
+resolving to group 112, so every comparison failed: the area screen showed
+nothing for any species, in a game whose dex is the point.
+
+**Fix.** Repointed to CrystalDust's anchors — `MAP_VIOLET_CITY` (group 0),
+`MAP_UNION_CAVE_1F` (26) and `MAP_BATTLE_FRONTIER_OUTSIDE_EAST` (58); our map
+group numbering already matches CrystalDust's exactly. `MAP_GROUP_TOWNS_AND_ROUTES_FRLG`
+is dropped: Kanto and Johto towns share group 0 here, so it duplicated the Johto
+case label and the compiler caught it. The Feebas special-case row, which pointed
+at Hoenn's Route 119, is now `MAP_UNDEFINED` as in CrystalDust.
