@@ -600,6 +600,8 @@ const u16 gTrainerPalette_GscFirebreather[] = INCGFX_U16("graphics/trainers/fron
 
 const u32 gTrainerFrontPic_GscGold[] = INCGFX_U32("graphics/trainers/front_pics/gold_front_pic.png", ".4bpp.smol");
 const u16 gTrainerPalette_GscGold[] = INCGFX_U16("graphics/trainers/front_pics/gold_front_pic.png", ".gbapal");
+const u32 gTrainerFrontPic_GscKris[] = INCGFX_U32("graphics/trainers/front_pics/kris_front_pic.png", ".4bpp.smol"); // CrystalDust (D59)
+const u16 gTrainerPalette_GscKris[] = INCGFX_U16("graphics/trainers/front_pics/kris_front_pic.png", ".gbapal"); // CrystalDust (D59)
 
 const u32 gTrainerFrontPic_GscJuggler[] = INCGFX_U32("graphics/trainers/front_pics/juggler_front_pic.png", ".4bpp.smol");
 const u16 gTrainerPalette_GscJuggler[] = INCGFX_U16("graphics/trainers/front_pics/juggler_front_pic.png", ".gbapal");
@@ -1416,6 +1418,10 @@ const struct TrainerPicInfo gTrainerPicInfo[TRAINER_PIC_COUNT] =
     [TRAINER_PIC_GOLD] =
     {
         .frontPic = TRAINER_FRONT_PIC(gTrainerFrontPic_GscGold, gTrainerPalette_GscGold),
+    },
+    [TRAINER_PIC_KRIS] =
+    {
+        .frontPic = TRAINER_FRONT_PIC(gTrainerFrontPic_GscKris, gTrainerPalette_GscKris),
     },
     [TRAINER_PIC_JUGGLER] =
     {

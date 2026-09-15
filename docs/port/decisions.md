@@ -2129,3 +2129,30 @@ struct, so it stays as-is — cosmetic only.
 
 Verified against the linked ROM: `sJohtoToNationalOrder[0..2]` = 152/153/154,
 `[225]` = 1, `[249..250]` = 150/151, `[250]` = 251.
+
+### D59 Player is Gold/Kris; trainer card shows Johto badges
+
+**Loss.** The merge kept expansion's trainer-card and trainer-class data, so the
+player was Brendan/May throughout: `PlayerGenderToFrontTrainerPicId`, the debug
+sprite helper, the trainer card's `sTrainerPicFacilityClass`, and the two
+PokéNav Match Call entries all pointed at Hoenn's protagonists. Worse, the card
+drew `graphics/trainer_card/badges.png` — the **Hoenn** badges — in a Johto game.
+`kris_front_pic.png` was on disk with no `TRAINER_PIC_KRIS` constant, no entry in
+`gTrainerFrontPicTable` and no facility class: the table-lost-but-assets-kept
+variant again.
+
+**Fix.** `TRAINER_PIC_KRIS` added to the pic enum with its `gTrainerFrontPic_GscKris`
+/ `gTrainerPalette_GscKris` pair; `FACILITY_CLASS_GOLD` and `FACILITY_CLASS_KRIS`
+appended to the facility-class enum (appended, not inserted — the values index
+link/Battle-Tower save data) and mapped in `trainer_class_lookups.h`. All five
+Brendan/May player sites now resolve to Gold/Kris. The Hoenn card's badge
+graphics and palette are repointed to `badges_johto.png`, same 128x16 4bpp
+dimensions, so the layout is untouched.
+
+**Deferred, not dropped.** CrystalDust also ships a whole third card type,
+`CARD_TYPE_CRYSTALDUST`, with its own tilemaps, palettes and stat layout — the
+`*_cd` assets, all of which are present in our tree and currently referenced by
+nothing. Adding a third type means touching every one of expansion's binary
+`cardType != CARD_TYPE_FRLG` branches, which is a Phase 7 visual job rather than
+a Phase 4 correctness one. Until then the card keeps expansion's Emerald layout
+(consistent with Q2) but with Johto content. Tracked as a Phase 7 item.
