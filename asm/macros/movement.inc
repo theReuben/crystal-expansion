@@ -61,6 +61,11 @@
 	create_movement_action walk_faster_up, MOVEMENT_ACTION_WALK_FASTER_UP
 	create_movement_action walk_faster_left, MOVEMENT_ACTION_WALK_FASTER_LEFT
 	create_movement_action walk_faster_right, MOVEMENT_ACTION_WALK_FASTER_RIGHT
+	@ CrystalDust's fastest walk (D61)
+	create_movement_action walk_fastest_down, MOVEMENT_ACTION_WALK_FASTEST_DOWN
+	create_movement_action walk_fastest_up, MOVEMENT_ACTION_WALK_FASTEST_UP
+	create_movement_action walk_fastest_left, MOVEMENT_ACTION_WALK_FASTEST_LEFT
+	create_movement_action walk_fastest_right, MOVEMENT_ACTION_WALK_FASTEST_RIGHT
 	create_movement_action slide_down, MOVEMENT_ACTION_SLIDE_DOWN
 	create_movement_action slide_up, MOVEMENT_ACTION_SLIDE_UP
 	create_movement_action slide_left, MOVEMENT_ACTION_SLIDE_LEFT

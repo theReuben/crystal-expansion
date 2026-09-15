@@ -80,7 +80,7 @@ script Route40_FrontierGate_EventScript_MrBriney{
 }movement Frontier_Movement_BoatExits{
     walk_left * 2
     walk_fast_left * 2
-    walk_faster_left * 5
+    walk_fastest_left * 5
 }text Frontier_Test_MrBrineyAccepted{
     "Anchors aweigh!\pPEEKO, we're setting sail, my darling!"
 }

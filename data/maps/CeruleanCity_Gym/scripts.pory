@@ -66,7 +66,7 @@ mapscripts CeruleanCity_Gym_MapScripts {
 }movement(local) CeruleanCity_Gym_Movement_PlayerShoved{
     face_right
     lock_facing_direction
-    walk_faster_left
+    walk_fastest_left
     unlock_facing_direction
 }movement(local) CeruleanCity_Gym_Movement_RocketExits{
     walk_fast_down

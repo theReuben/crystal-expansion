@@ -114,6 +114,14 @@ u8 MovementAction_WalkFasterUp_Step1(struct ObjectEvent *, struct Sprite *);
 u8 MovementAction_WalkFasterLeft_Step0(struct ObjectEvent *, struct Sprite *);
 u8 MovementAction_WalkFasterLeft_Step1(struct ObjectEvent *, struct Sprite *);
 u8 MovementAction_WalkFasterRight_Step0(struct ObjectEvent *, struct Sprite *);
+u8 MovementAction_WalkFastestDown_Step0(struct ObjectEvent *, struct Sprite *); // CrystalDust (D61)
+u8 MovementAction_WalkFastestDown_Step1(struct ObjectEvent *, struct Sprite *); // CrystalDust (D61)
+u8 MovementAction_WalkFastestUp_Step0(struct ObjectEvent *, struct Sprite *); // CrystalDust (D61)
+u8 MovementAction_WalkFastestUp_Step1(struct ObjectEvent *, struct Sprite *); // CrystalDust (D61)
+u8 MovementAction_WalkFastestLeft_Step0(struct ObjectEvent *, struct Sprite *); // CrystalDust (D61)
+u8 MovementAction_WalkFastestLeft_Step1(struct ObjectEvent *, struct Sprite *); // CrystalDust (D61)
+u8 MovementAction_WalkFastestRight_Step0(struct ObjectEvent *, struct Sprite *); // CrystalDust (D61)
+u8 MovementAction_WalkFastestRight_Step1(struct ObjectEvent *, struct Sprite *); // CrystalDust (D61)
 u8 MovementAction_WalkFasterRight_Step1(struct ObjectEvent *, struct Sprite *);
 u8 MovementAction_SlideDown_Step0(struct ObjectEvent *, struct Sprite *);
 u8 MovementAction_SlideDown_Step1(struct ObjectEvent *, struct Sprite *);
@@ -379,6 +387,10 @@ u8 (*const gMovementActionFuncs_WalkFasterDown[])(struct ObjectEvent *, struct S
 u8 (*const gMovementActionFuncs_WalkFasterUp[])(struct ObjectEvent *, struct Sprite *);
 u8 (*const gMovementActionFuncs_WalkFasterLeft[])(struct ObjectEvent *, struct Sprite *);
 u8 (*const gMovementActionFuncs_WalkFasterRight[])(struct ObjectEvent *, struct Sprite *);
+u8 (*const gMovementActionFuncs_WalkFastestDown[])(struct ObjectEvent *, struct Sprite *); // CrystalDust (D61)
+u8 (*const gMovementActionFuncs_WalkFastestUp[])(struct ObjectEvent *, struct Sprite *); // CrystalDust (D61)
+u8 (*const gMovementActionFuncs_WalkFastestLeft[])(struct ObjectEvent *, struct Sprite *); // CrystalDust (D61)
+u8 (*const gMovementActionFuncs_WalkFastestRight[])(struct ObjectEvent *, struct Sprite *); // CrystalDust (D61)
 u8 (*const gMovementActionFuncs_SlideDown[])(struct ObjectEvent *, struct Sprite *);
 u8 (*const gMovementActionFuncs_SlideUp[])(struct ObjectEvent *, struct Sprite *);
 u8 (*const gMovementActionFuncs_SlideLeft[])(struct ObjectEvent *, struct Sprite *);
@@ -563,6 +575,10 @@ u8 (*const *const gMovementActionFuncs[])(struct ObjectEvent *, struct Sprite *)
     [MOVEMENT_ACTION_WALK_FASTER_UP] = gMovementActionFuncs_WalkFasterUp,
     [MOVEMENT_ACTION_WALK_FASTER_LEFT] = gMovementActionFuncs_WalkFasterLeft,
     [MOVEMENT_ACTION_WALK_FASTER_RIGHT] = gMovementActionFuncs_WalkFasterRight,
+    [MOVEMENT_ACTION_WALK_FASTEST_DOWN] = gMovementActionFuncs_WalkFastestDown, // CrystalDust (D61)
+    [MOVEMENT_ACTION_WALK_FASTEST_UP] = gMovementActionFuncs_WalkFastestUp, // CrystalDust (D61)
+    [MOVEMENT_ACTION_WALK_FASTEST_LEFT] = gMovementActionFuncs_WalkFastestLeft, // CrystalDust (D61)
+    [MOVEMENT_ACTION_WALK_FASTEST_RIGHT] = gMovementActionFuncs_WalkFastestRight, // CrystalDust (D61)
     [MOVEMENT_ACTION_SLIDE_DOWN] = gMovementActionFuncs_SlideDown,
     [MOVEMENT_ACTION_SLIDE_UP] = gMovementActionFuncs_SlideUp,
     [MOVEMENT_ACTION_SLIDE_LEFT] = gMovementActionFuncs_SlideLeft,
@@ -1123,6 +1139,32 @@ u8 (*const gMovementActionFuncs_WalkFasterRight[])(struct ObjectEvent *, struct 
     MovementAction_WalkFasterRight_Step1,
     MovementAction_PauseSpriteAnim,
 };
+
+// CrystalDust's fastest walk (D61).
+u8 (*const gMovementActionFuncs_WalkFastestDown[])(struct ObjectEvent *, struct Sprite *) = {
+    MovementAction_WalkFastestDown_Step0,
+    MovementAction_WalkFastestDown_Step1,
+    MovementAction_PauseSpriteAnim,
+};
+
+u8 (*const gMovementActionFuncs_WalkFastestUp[])(struct ObjectEvent *, struct Sprite *) = {
+    MovementAction_WalkFastestUp_Step0,
+    MovementAction_WalkFastestUp_Step1,
+    MovementAction_PauseSpriteAnim,
+};
+
+u8 (*const gMovementActionFuncs_WalkFastestLeft[])(struct ObjectEvent *, struct Sprite *) = {
+    MovementAction_WalkFastestLeft_Step0,
+    MovementAction_WalkFastestLeft_Step1,
+    MovementAction_PauseSpriteAnim,
+};
+
+u8 (*const gMovementActionFuncs_WalkFastestRight[])(struct ObjectEvent *, struct Sprite *) = {
+    MovementAction_WalkFastestRight_Step0,
+    MovementAction_WalkFastestRight_Step1,
+    MovementAction_PauseSpriteAnim,
+};
+
 
 u8 (*const gMovementActionFuncs_SlideDown[])(struct ObjectEvent *, struct Sprite *) = {
     MovementAction_SlideDown_Step0,

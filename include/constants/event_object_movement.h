@@ -288,6 +288,13 @@
 #define MOVEMENT_ACTION_JUMP_2_LEFT_SLOW             0xBC
 #define MOVEMENT_ACTION_JUMP_2_RIGHT_SLOW            0xBD
 
+// CrystalDust's fastest walk, distinct from WALK_FASTER: the normal walking
+// animation played at MOVE_SPEED_FASTEST (D61).
+#define MOVEMENT_ACTION_WALK_FASTEST_DOWN             0xBE
+#define MOVEMENT_ACTION_WALK_FASTEST_UP               0xBF
+#define MOVEMENT_ACTION_WALK_FASTEST_LEFT             0xC0
+#define MOVEMENT_ACTION_WALK_FASTEST_RIGHT            0xC1
+
 #define MOVEMENT_ACTION_STEP_END 0xFE
 #define MOVEMENT_ACTION_NONE     0xFF
 

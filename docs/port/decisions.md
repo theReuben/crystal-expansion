@@ -2185,3 +2185,19 @@ accordingly (15 entries). Expansion's own unreferenced `MB_WINDOW` at 0xAB becam
 This is the first case where the two sides' behaviour numbering actually
 conflicted rather than one simply being absent, so it is worth re-checking the
 remaining `MB_UNUSED_*` slots if more CrystalDust tiles surface.
+
+### D61 `walk_fastest` movement actions restored
+
+**Loss.** CrystalDust adds four movement actions — the normal walking animation
+played at `MOVE_SPEED_FASTEST`, distinct from expansion's `WALK_FASTER`. The
+merge kept expansion's `event_object_movement` constants, implementation and
+dispatch table, and an earlier phase had quietly downgraded the six script uses
+to `walk_faster_*` so the scripts would still assemble. That substitution was
+never recorded, which is exactly the silent drop the project rules forbid.
+
+**Fix.** `MOVEMENT_ACTION_WALK_FASTEST_{DOWN,UP,LEFT,RIGHT}` appended at
+0xBE–0xC1 (appended, not inserted at CrystalDust's 0x2D–0x30, which expansion
+already uses), the four `MovementAction_WalkFastest*` pairs added, the func
+tables and `asm/macros/movement.inc` extended, and the six downgraded script
+lines restored across Cerulean Gym, Fast Ship B1F, Lance's Room and the Route 40
+frontier gate.

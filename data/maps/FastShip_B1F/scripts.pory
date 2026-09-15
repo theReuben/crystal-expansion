@@ -144,7 +144,7 @@ script FastShip_B1F_EventScript_SailorTriggers {
     unlock_facing_direction
 }movement(local) FastShip_B1F_Movement_Sailor3Left{
     lock_facing_direction
-    walk_faster_left * 3
+    walk_fastest_left * 3
     unlock_facing_direction
 }movement(local) FastShip_B1F_Movement_Sailor1Right{
     lock_facing_direction
@@ -156,7 +156,7 @@ script FastShip_B1F_EventScript_SailorTriggers {
     unlock_facing_direction
 }movement(local) FastShip_B1F_Movement_Sailor3Right{
     lock_facing_direction
-    walk_faster_right * 3
+    walk_fastest_right * 3
     unlock_facing_direction
 }
 
