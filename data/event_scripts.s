@@ -136,6 +136,7 @@ gStdScripts::
 	.4byte Std_MsgboxPokenav           @ MSGBOX_POKENAV
 	.4byte Std_PutItemAway             @ STD_PUT_ITEM_AWAY
 	.4byte Std_ReceivedItem            @ STD_RECEIVED_ITEM
+	.4byte Std_MsgboxContinue          @ MSGBOX_CONTINUE (CrystalDust, D48)
 gStdScripts_End::
 
 
@@ -1328,6 +1329,15 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	end
 
 
+	.include "data/scripts/hoenn_stubs.inc"
+
+@ CrystalDust's department store elevators (D48).
+EventScript_ElevatorButton::
+	delay 15
+	playse SE_DING_DONG
+	waitse
+	end
+
 	.include "data/scripts/pc_transfer.inc"
 	.include "data/scripts/questionnaire.inc"
 	.include "data/scripts/abnormal_weather.inc"
@@ -1347,8 +1357,9 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	.include "data/scripts/item_ball_scripts.inc"
 	.include "data/scripts/profile_man.inc"
 	.include "data/scripts/day_care.inc"
+	.include "data/scripts/bug_catching_contest.inc"
 	.include "data/scripts/flash.inc"
-	.include "data/scripts/players_house.inc"
+	.include "data/scripts/wall_clock.inc"
 	.include "data/scripts/berry_blender.inc"
 	.include "data/text/mauville_man.inc"
 	.include "data/text/trainers.inc"

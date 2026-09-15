@@ -1,3 +1,19 @@
+@ CrystalDust's furniture texts, restored in Phase 2 (D48).
+Text_ItsATV:
+	.string "It's a TV.$"
+
+Text_MyReflection:
+	.string "My reflection!\n"
+	.string "Lookin' good!$"
+
+Text_AncientPokemonReplica:
+	.string "It's a replica of an ancient\n"
+	.string "{POKEMON}.$"
+
+Text_DistinguishedStatue:
+	.string "A {POKEMON} statue…\n"
+	.string "It looks very distinguished.$"
+
 Text_PictureBookShelf:
 	.string "There's a set of POKéMON picture books.$"
 

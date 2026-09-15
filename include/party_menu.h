@@ -115,6 +115,7 @@ void CB2_ChooseMonToGiveItem(void);
 void CB2_PartyMenuFromItemPC(void);
 void ChooseMonToGiveMailFromMailbox(void);
 void InitChooseHalfPartyForBattle(u8 unused);
+void InitChooseMonForBugCatchingContest(void);
 void ClearSelectedPartyOrder(void);
 void ChooseMonForTradingBoard(enum PartyMenuType menuType, MainCallback callback);
 void ChooseMonForMoveTutor(void);

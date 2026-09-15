@@ -1,3 +1,21 @@
+@ CrystalDust's time-of-day nurse greeting, restored in Phase 2 (D48).
+gText_NurseIntro_Morning::
+	.string "Good morning!\n"
+	.string "Welcome to our {POKEMON} CENTER.\p$"
+
+gText_NurseIntro_Day::
+	.string "Hello!\n"
+	.string "Welcome to our {POKEMON} CENTER.\p$"
+
+gText_NurseIntro_Night::
+	.string "Good evening! You're out late.\n"
+	.string "Welcome to our {POKEMON} CENTER.\p$"
+
+gText_NurseIntro_Common::
+	.string "We can heal your {POKEMON} to\n"
+	.string "perfect health.\p"
+	.string "Shall we heal your {POKEMON}?$"
+
 gText_WouldYouLikeToRestYourPkmn::
 	.string "Hello, and welcome to\n"
 	.string "the POKéMON CENTER.\p"

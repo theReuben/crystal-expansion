@@ -3471,7 +3471,6 @@ extern const u8 gOtherText_Powder[];
 extern const u8 gOtherText_WhereShouldTheStrVar1BePlaced[];
 extern const u8 gPCText_Bag[];
 extern const u8 gPCText_Beach[];
-extern const u8 gPCText_Cancel[];
 extern const u8 gPCText_Cave[];
 extern const u8 gPCText_City[];
 extern const u8 gPCText_Crag[];

@@ -603,7 +603,7 @@ void SetObjEventTemplateMovementType(u8 localId, u8 movementType)
         objectEventTemplate->movementType = movementType;
 }
 
-static void InitMapView(void)
+void InitMapView(void)
 {
     ResetFieldCamera();
     CopyMapTilesetsToVram(gMapHeader.mapLayout);
@@ -4046,4 +4046,11 @@ static void Task_OvwldCredits_WaitFade(u8 taskId)
         SetMainCallback2(CB2_LoadMap);
         DestroyTask(taskId);
     }
+}
+
+// InitMapView above is CrystalDust's too; expansion already had it static (D48).
+
+void IsPokeFluteChannelPlaying(void)
+{
+    gSpecialVar_Result = (gSaveBlock1Ptr->savedMusic == MUS_POKE_FLUTE_RADIO);
 }

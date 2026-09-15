@@ -49,6 +49,8 @@
 #define FACILITY_BATTLE_PIKE_DOUBLE     6
 #define FACILITY_BATTLE_PYRAMID         7
 #define FACILITY_BATTLE_TRAINER_HILL    8
+// CrystalDust reuses the party-entry menu for the Bug-Catching Contest (D48).
+#define FACILITY_BUG_CATCHING_CONTEST   10
 
 #define MAX_BATTLE_FRONTIER_POINTS 9999
 #define MAX_STREAK 9999

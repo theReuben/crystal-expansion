@@ -12339,3 +12339,9 @@ void ResetObjectPriority(u8 localId, u8 mapNum, u8 mapGroup)
         objectEvent->triggerGroundEffectsOnMove = TRUE;
     }
 }
+
+// CrystalDust (D48).
+void TurnObjectInRandomDirection(void)
+{
+    ObjectEventTurnByLocalIdAndMap(gSpecialVar_Result, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, (Random() % 3) + 1);
+}

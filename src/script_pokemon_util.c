@@ -193,6 +193,14 @@ void ChooseHalfPartyForBattle(void)
     InitChooseHalfPartyForBattle(0);
 }
 
+// CrystalDust (D48).
+void SelectBugCatchingContestMon(void)
+{
+    gMain.savedCallback = CB2_ReturnFromChooseHalfParty;
+    VarSet(VAR_FRONTIER_FACILITY, FACILITY_BUG_CATCHING_CONTEST);
+    InitChooseMonForBugCatchingContest();
+}
+
 static void CB2_ReturnFromChooseHalfParty(void)
 {
     switch (gSelectedOrderFromParty[0])

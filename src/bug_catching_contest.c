@@ -67,7 +67,6 @@ extern const u8 EventScript_RanOutOfParkBalls[];
 extern const u8 EventScript_BugCatchingContestTimeExpired[];
 extern const u8 EventScript_CaughtButRanOutOfParkBalls[];
 extern const u8 BugCatchingContest_StartMenuPrompt[];
-extern const u8 gTrainerClassNames[][13];
 
 #define WIN_QUESTION    0
 #define WIN_CHOICE_MADE 1
@@ -983,7 +982,7 @@ static const u8 *GetContestantNamePrefix(int contestantId)
     if (contestantId == NUM_BUG_CONTEST_NPCS)
         return sNewBarkTownsText;
     else
-        return gTrainerClassNames[sBugContestNPCTemplates[gBugCatchingContestNPCs[contestantId].templateId].trainerClass];
+        return gTrainerClasses[sBugContestNPCTemplates[gBugCatchingContestNPCs[contestantId].templateId].trainerClass].name;
 }
 
 static const u8 *GetContestantName(int contestantId)

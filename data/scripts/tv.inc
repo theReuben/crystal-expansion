@@ -1,4 +1,7 @@
-EventScript_TV::
+@ Expansion's Hoenn TV-show menu. CrystalDust puts the shows on the radio and
+@ leaves TVs as flavour text, so EventScript_TV now comes from
+@ check_furniture.inc and this entry point is unreachable (D48).
+EventScript_HoennTVShow::
 	lockall
 	incrementgamestat GAME_STAT_WATCHED_TV
 	special ResetTVShowState

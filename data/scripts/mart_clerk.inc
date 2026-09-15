@@ -1,3 +1,7 @@
+gText_HowMayIHelpYou::
+	.string "Welcome!\n"
+	.string "How may I help you?$"
+
 gText_HowMayIServeYou::
 	.string "Welcome!\p"
 	.string "How may I serve you?$"

@@ -72,3 +72,9 @@ EventScript_UnusedReturn:
 Common_EventScript_SaveGame::
 	special SaveGame
 	return
+
+@ CrystalDust: prints the message and moves on without waiting (D48).
+Std_MsgboxContinue::
+	message 0x0
+	waitmessage
+	return

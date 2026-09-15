@@ -6536,3 +6536,41 @@ bool8 GetPriceReduction(u8 newsKind)
     }
     return FALSE;
 }
+
+// CrystalDust's radio reads the Gabby and Ty show out of these (D48).
+u8 GabbyAndTyGetBattleNum(void)
+{
+    if (gSaveBlock1Ptr->gabbyAndTyData.battleNum > 5)
+        return (gSaveBlock1Ptr->gabbyAndTyData.battleNum % 3) + 6;
+
+    return gSaveBlock1Ptr->gabbyAndTyData.battleNum;
+}
+
+bool8 IsGabbyAndTyShowOnTheAir(void)
+{
+    return gSaveBlock1Ptr->gabbyAndTyData.onAir;
+}
+
+bool8 GabbyAndTyGetLastQuote(void)
+{
+    if (gSaveBlock1Ptr->gabbyAndTyData.quote[0] == EC_EMPTY_WORD)
+        return FALSE;
+
+    CopyEasyChatWord(gStringVar1, gSaveBlock1Ptr->gabbyAndTyData.quote[0]);
+    gSaveBlock1Ptr->gabbyAndTyData.quote[0] = -1;
+    return TRUE;
+}
+
+u8 GabbyAndTyGetLastBattleTrivia(void)
+{
+    if (!gSaveBlock1Ptr->gabbyAndTyData.battleTookMoreThanOneTurn2)
+        return 1;
+    if (gSaveBlock1Ptr->gabbyAndTyData.playerThrewABall2)
+        return 2;
+    if (gSaveBlock1Ptr->gabbyAndTyData.playerUsedHealingItem2)
+        return 3;
+    if (gSaveBlock1Ptr->gabbyAndTyData.playerLostAMon2)
+        return 4;
+
+    return 0;
+}

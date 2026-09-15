@@ -57,7 +57,7 @@ static void ClearVramOamPltt_LoadHofPal(void);
 static void LoadHofGfx(void);
 static void InitHofBgs(void);
 static bool8 CreateHofConfettiSprite(void);
-static void StartCredits(void);
+void StartCredits(void);
 static bool8 LoadHofBgs(void);
 static void Task_Hof_InitMonData(u8 taskId);
 static void Task_Hof_InitTeamSaveData(u8 taskId);
@@ -773,7 +773,7 @@ static void Task_Hof_HandleExit(u8 taskId)
     }
 }
 
-static void StartCredits(void)
+void StartCredits(void)
 {
     SetMainCallback2(CB2_StartCreditsSequence);
 }
@@ -1515,3 +1515,5 @@ static void Task_DoDomeConfetti(u8 taskId)
         break;
     }
 }
+
+// StartCredits (above) is no longer static: CrystalDust calls it from a script (D48).

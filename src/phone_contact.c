@@ -15,7 +15,6 @@
 #include "constants/flags.h"
 #include "constants/maps.h"
 
-extern const u8 gTrainerClassNames[][13];
 
 static const u8 sPhoneContactName_Mom[] = _("MOM");
 static const u8 sPhoneContactName_ProfessorElm[] = _("PROF. ELM");
@@ -498,12 +497,12 @@ const u8 *BuildPhoneContactDisplayName(const struct PhoneContact *phoneContact, 
         dest[i++] = EXT_CTRL_CODE_FONT;
         dest[i++] = 0;
 
-        classXOffset = GetStringRightAlignXOffset(0, gTrainerClassNames[gTrainers[trainerId]->trainerClass], 128);
+        classXOffset = GetStringRightAlignXOffset(0, gTrainerClasses[gTrainers[trainerId]->trainerClass].name, 128);
         dest[i++] = EXT_CTRL_CODE_BEGIN;
         dest[i++] = EXT_CTRL_CODE_CLEAR_TO;
         dest[i++] = classXOffset;
 
-        src = gTrainerClassNames[gTrainers[trainerId]->trainerClass];
+        src = gTrainerClasses[gTrainers[trainerId]->trainerClass].name;
         for (j = 0; src[j] != EOS; j++)
             dest[i++] = src[j];
 
@@ -540,12 +539,12 @@ const u8 *BuildPhoneContactDisplayNameForCall(const struct PhoneContact *phoneCo
         dest[i++] = EXT_CTRL_CODE_FONT;
         dest[i++] = 0;
 
-        classXOffset = GetStringRightAlignXOffset(0, gTrainerClassNames[gTrainers[trainerId]->trainerClass], 76);
+        classXOffset = GetStringRightAlignXOffset(0, gTrainerClasses[gTrainers[trainerId]->trainerClass].name, 76);
         dest[i++] = EXT_CTRL_CODE_BEGIN;
         dest[i++] = EXT_CTRL_CODE_CLEAR_TO;
         dest[i++] = classXOffset;
 
-        src = gTrainerClassNames[gTrainers[trainerId]->trainerClass];
+        src = gTrainerClasses[gTrainers[trainerId]->trainerClass].name;
         for (j = 0; src[j] != EOS; j++)
             dest[i++] = src[j];
 

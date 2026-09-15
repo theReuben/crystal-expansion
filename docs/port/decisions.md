@@ -1716,3 +1716,104 @@ knowing about generally:
    which already carries CrystalDust's rematch names from D19).
 
 Link errors: 194 undefined -> 133 undefined, 0 errors.
+
+## D48: restore CrystalDust's field specials and get the ROM to link
+
+This is the decision that finally produced a ROM. It closed out the last 194
+link-time undefined symbols by restoring the CrystalDust code Phase 1 had
+dropped, and by reconciling the handful of places where expansion and
+CrystalDust disagree about an API.
+
+### What was restored
+
+- **`src/script.c`**: CrystalDust's ~60 field specials (the legendary-beast
+  awakening and palette patching, the Kimono Girls, the fossil and bike checks,
+  the whole `SetUpRoomDecor*` family, the msgbox-walkaway lock, the
+  trapped-player checks). `CountBadges` was dropped as a duplicate of
+  expansion's.
+- **27 room-decoration object-event graphics.** Another *table-lost-but-assets-
+  kept* case: the PNGs and palettes had survived Phase 1, but the constants,
+  pic tables, graphics infos and pointer-table rows were all gone. Regenerated
+  from CrystalDust.
+- **Three roamers.** `ROAMER_COUNT` 1 -> 3 so Raikou, Entei and Suicune roam at
+  once, with `src/roamer.c` gaining CrystalDust's regenerate/active specials.
+- **Gabby and Ty radio hooks** (`src/tv.c`), `TurnObjectInRandomDirection`,
+  `GetFreePokemonStorageSpace`, `IsPokeFluteChannelPlaying`, and CrystalDust's
+  post-Red save (`RedClear` / `SaveGameRed` in `src/start_menu.c`).
+- **The Bug-Catching Contest's party selection**, as a new facility
+  (`FACILITY_BUG_CATCHING_CONTEST`) threaded through `src/party_menu.c`.
+- **Poryscript for `data/scripts/`**: a new Makefile rule builds `.inc` from
+  `.pory` there too, so CrystalDust's `move_tutors`, `day_care` and
+  `bug_catching_contest` scripts are used as-is.
+- **The radio, the nurse, the furniture and the gym-trainer setters.** CD's
+  `check_furniture.inc`, `pkmn_center_nurse.inc` and `set_gym_trainers.inc` were
+  strict supersets of expansion's, so those three files are CrystalDust's now,
+  plus the matching texts (`Text_ItsATV`, the time-of-day nurse greetings).
+- **`EventScript_ElevatorButton`** and `Std_MsgboxContinue` (as a new
+  `gStdScripts` slot 13, `MSGBOX_CONTINUE`), and `CableClub_OnResumeFunc`.
+
+### Constraint decisions
+
+Nothing below was dropped silently; each is a place where CrystalDust and
+expansion could not both be honoured.
+
+1. **CrystalDust's `disableReflectionPaletteLoad` flag is gone.** Field 10 of
+   `ObjectEventGraphicsInfo` is `compressed` in expansion and
+   `disableReflectionPaletteLoad` in CrystalDust - same offset, different
+   meaning. All 27 restored decoration graphics set `.compressed = FALSE`; none
+   of them has a reflection, so the loss is cosmetic, but if a decoration ever
+   does reflect oddly, this is why.
+2. **`LoadPaletteDayNight` -> plain `LoadPalette`.** D31 removed the day/night
+   palette variant, so the beast/Kimono Girl palette patches use
+   `LoadPalette(pal, OBJ_PLTT_ID(n), PLTT_SIZE_4BPP)`. Those palettes no longer
+   shift with the clock.
+3. **`ROAMER_COUNT` 1 -> 3 changes the SaveBlock1 layout.** Saves from earlier
+   builds of this project are not compatible.
+4. **Expansion's Hoenn `move_tutors.inc` and `day_care.inc` were deleted** in
+   favour of CrystalDust's Poryscript versions. Expansion's
+   `MoveTutor_AfterChooseBoxMon` was carried over into the new `.pory` so boxed
+   Pokemon can still be taught.
+5. **`CanMonLearnTMHM` -> `CanLearnTeachableMove`.** The HM checks in the
+   trapped-player specials now ask by species and move id.
+6. **Tutor scripts now pass a `MOVE_` id, not a `TUTOR_MOVE_` index.**
+   CrystalDust had its own 37-entry `TUTOR_MOVE_*` enum in `VAR_0x8005`;
+   expansion's `ChooseMonForMoveTutor` reads a move id from the same variable.
+   The `.pory` was rewritten rather than reintroducing the parallel enum.
+7. **`FLDEFF_CAMERA_FLASH` -> `FLDEFF_PHOTO_FLASH`.** Expansion already had the
+   same effect under its own name; the Cianwood Photo Studio uses it.
+   CrystalDust's `FLDEFF_USE_WHIRLPOOL` is still unported - nothing references
+   it yet, but Whirlpool as a field move is an open item.
+8. **TVs are flavour text now, radios carry the shows.** `EventScript_TV` is
+   CrystalDust's one-line sign. Expansion's Hoenn TV-show menu survives, renamed
+   `EventScript_HoennTVShow`, but nothing reaches it; the Gabby and Ty and
+   PokeNews content is on the radio instead.
+9. **`gTrainerClassNames[][13]` -> `gTrainerClasses[].name`** and
+   **`gPCText_Cancel` -> `gText_Cancel`**, both pure name-unification.
+10. **`data/scripts/hoenn_stubs.inc` is new and deliberately inert.** D37 cut the
+    Hoenn maps, but expansion's C code still names eleven scripts, five local
+    IDs and five texts that lived there (closed Sootopolis doors, the Trick
+    House, the Regi braille puzzle, the Wally/Scott/Roxanne/Rayquaza match
+    calls, the S.S. Tidal step counter). Every guard in front of them is a Hoenn
+    metatile behaviour or a Hoenn story flag that a Johto game never sets, so
+    they are stubs. Deleting the file and restoring the maps is the way back.
+11. **The player's bedroom PC is New Bark Town's.** `src/player_pc.c` and
+    `src/field_control_avatar.c` no longer branch on player gender for the
+    Littleroot bedrooms; they use `EventScript_PlayerPC` and
+    `NewBarkTown_PlayersHouse_2F_EventScript_TurnOffPlayerPC`.
+12. **Three scrollable-multichoice specials were not added.** CrystalDust
+    exports `Close`/`Redraw`/`ResumeScrollableMultichoice` as specials for its
+    department-store and Blue Card menus; no script in the tree calls them yet,
+    and expansion's equivalent is `static`. To be revisited when the Goldenrod
+    and Celadon dept store scripts land.
+
+### Result
+
+**The ROM links.** `pokeemerald.gba` builds clean, 28,992,608 bytes of content
+(27.65 MiB, 86.4% of the 32MB cartridge) before padding.
+
+**Size warning:** this is already past the ~28MB watch line agreed at the start
+of Phase 2, and the remaining work (D27's 124 wild-encounter maps, the missing
+trainer parties, Phase 7's expansion features) only adds. Compression of the
+Johto tilesets or trimming unused Hoenn graphics will be needed before Phase 7.
+
+Link errors: 194 undefined -> 0. Compile errors: 0. **Phase 2 gate: passed.**

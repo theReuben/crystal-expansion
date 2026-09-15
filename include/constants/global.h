@@ -107,7 +107,11 @@ enum Language
 #define UNION_ROOM_KB_ROW_COUNT 10
 #define SAVED_TRENDS_COUNT 5
 #define PYRAMID_BAG_ITEMS_COUNT 10
-#define ROAMER_COUNT 1 // Number of maximum concurrent active roamers
+// CrystalDust roams all three legendary beasts at once (D48).
+#define ROAMER_COUNT 3 // Number of maximum concurrent active roamers
+#define ROAMER_RAIKOU  0
+#define ROAMER_ENTEI   1
+#define ROAMER_SUICUNE 2
 
 // Bag constants
 #define BAG_ITEMS_COUNT 30

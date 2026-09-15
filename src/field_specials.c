@@ -6328,3 +6328,9 @@ bool8 HasLearnedAllMovesFromPokeSeerTutor(void)
         count++;
     return (count == 3);
 }
+
+// CrystalDust (D48).
+void Special_GetFreePokemonStorageSpace(void)
+{
+    gSpecialVar_Result = GetFreePokemonStorageSpace();
+}

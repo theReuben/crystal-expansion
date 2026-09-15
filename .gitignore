@@ -75,3 +75,8 @@ __pycache__
 # Crystal Expansion: upstream reference clones and headless emulator build
 sources/
 tools/romshot/romshot
+
+# Generated from the sibling .pory by Poryscript (D48).
+data/scripts/move_tutors.inc
+data/scripts/day_care.inc
+data/scripts/bug_catching_contest.inc

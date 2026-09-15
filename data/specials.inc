@@ -684,3 +684,13 @@ gSpecials::
 	def_special HasLearnedAllMovesFromPokeSeerTutor
 	def_special NameRaterWasNicknameChanged
 	def_special PokeSeerGetMoveToTeachLeadPokemon
+	@ CrystalDust specials restored in Phase 2 (D48)
+	def_special CopyCurrentDayOfWeekStringToVar1
+	def_special EnterBugCatchingContest
+	def_special SelectBugCatchingContestMon
+	def_special IsPlayerPartyAndPokemonStorageFull
+	def_special FieldRadio
+	def_special DetermineBugCatchingContestPrize
+	def_special PlaceBugCatchingContestObjectEvents
+	def_special GetFruitTreeItem
+	def_special SetFruitTreeMetatileTakenFromId

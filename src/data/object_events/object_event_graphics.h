@@ -708,3 +708,46 @@ const u16 gObjectEventPal_Murkrow[] = INCGFX_U16("graphics/object_events/palette
 const u16 gObjectEventPal_Eusine[] = INCGFX_U16("graphics/object_events/palettes/eusine.pal", ".gbapal");
 const u16 gObjectEventPal_Dragonite[] = INCGFX_U16("graphics/object_events/palettes/dragonite.pal", ".gbapal");
 const u16 gObjectEventPal_SSAqua[] = INCGFX_U16("graphics/object_events/pics/misc/ss_aqua.png", ".gbapal");
+
+// CrystalDust's room-decor object graphics (D48).
+const u32 gObjectEventPic_BigOnixDoll[] = INCGFX_U32("graphics/object_events/pics/dolls/big_onix_doll.png", ".4bpp");
+const u32 gObjectEventPic_BulbasaurDoll[] = INCGFX_U32("graphics/object_events/pics/dolls/bulbasaur_doll.png", ".4bpp");
+const u32 gObjectEventPic_CharmanderDoll[] = INCGFX_U32("graphics/object_events/pics/dolls/charmander_doll.png", ".4bpp");
+const u32 gObjectEventPic_DiglettDoll[] = INCGFX_U32("graphics/object_events/pics/dolls/diglett_doll.png", ".4bpp");
+const u32 gObjectEventPic_GengarDoll[] = INCGFX_U32("graphics/object_events/pics/dolls/gengar_doll.png", ".4bpp");
+const u32 gObjectEventPic_GeodudeDoll[] = INCGFX_U32("graphics/object_events/pics/dolls/geodude_doll.png", ".4bpp");
+const u32 gObjectEventPic_GoldShield[] = INCGFX_U32("graphics/object_events/pics/dolls/gold_shield.png", ".4bpp");
+const u32 gObjectEventPic_GoldTrophy[] = INCGFX_U32("graphics/object_events/pics/dolls/gold_trophy.png", ".4bpp");
+const u32 gObjectEventPic_GrimerDoll[] = INCGFX_U32("graphics/object_events/pics/dolls/grimer_doll.png", ".4bpp");
+const u32 gObjectEventPic_MachopDoll[] = INCGFX_U32("graphics/object_events/pics/dolls/machop_doll.png", ".4bpp");
+const u32 gObjectEventPic_MagikarpDoll[] = INCGFX_U32("graphics/object_events/pics/dolls/magikarp_doll.png", ".4bpp");
+const u32 gObjectEventPic_MagnemiteDoll[] = INCGFX_U32("graphics/object_events/pics/dolls/magnemite_doll.png", ".4bpp");
+const u32 gObjectEventPic_NatuDoll[] = INCGFX_U32("graphics/object_events/pics/dolls/natu_doll.png", ".4bpp");
+const u32 gObjectEventPic_OddishDoll[] = INCGFX_U32("graphics/object_events/pics/dolls/oddish_doll.png", ".4bpp");
+const u32 gObjectEventPic_PoliwagDoll[] = INCGFX_U32("graphics/object_events/pics/dolls/poliwag_doll.png", ".4bpp");
+const u32 gObjectEventPic_Porygon2Doll[] = INCGFX_U32("graphics/object_events/pics/dolls/porygon2_doll.png", ".4bpp");
+const u32 gObjectEventPic_ShellderDoll[] = INCGFX_U32("graphics/object_events/pics/dolls/shellder_doll.png", ".4bpp");
+const u32 gObjectEventPic_SilverShield[] = INCGFX_U32("graphics/object_events/pics/dolls/silver_shield.png", ".4bpp");
+const u32 gObjectEventPic_SilverTrophy[] = INCGFX_U32("graphics/object_events/pics/dolls/silver_trophy.png", ".4bpp");
+const u32 gObjectEventPic_SquirtleDoll[] = INCGFX_U32("graphics/object_events/pics/dolls/squirtle_doll.png", ".4bpp");
+const u32 gObjectEventPic_StaryuDoll[] = INCGFX_U32("graphics/object_events/pics/dolls/staryu_doll.png", ".4bpp");
+const u32 gObjectEventPic_SurfingPikachuDoll[] = INCGFX_U32("graphics/object_events/pics/dolls/surfing_pikachu_doll.png", ".4bpp");
+const u32 gObjectEventPic_TentacoolDoll[] = INCGFX_U32("graphics/object_events/pics/dolls/tentacool_doll.png", ".4bpp");
+const u32 gObjectEventPic_UnownDoll[] = INCGFX_U32("graphics/object_events/pics/dolls/unown_doll.png", ".4bpp");
+const u32 gObjectEventPic_VoltorbDoll[] = INCGFX_U32("graphics/object_events/pics/dolls/voltorb_doll.png", ".4bpp");
+const u32 gObjectEventPic_WeedleDoll[] = INCGFX_U32("graphics/object_events/pics/dolls/weedle_doll.png", ".4bpp");
+const u32 gObjectEventPic_WooperDoll[] = INCGFX_U32("graphics/object_events/pics/dolls/wooper_doll.png", ".4bpp");
+
+// CrystalDust room-decor shield palette, restored in Phase 2 (D48).
+const u16 gObjectEventPal_ShieldDecorations[] = INCGFX_U16("graphics/object_events/palettes/shield_decorations.pal", ".gbapal");
+
+// CrystalDust's Kimono Girl and sleeping-beast palettes, restored in Phase 2 (D48).
+
+// CrystalDust's Kimono Girl and sleeping-beast palettes, restored in Phase 2 (D48).
+const u16 gObjectEventPal_EspeonKimonoGirl[] = INCGFX_U16("graphics/object_events/palettes/espeon_kimono_girl.pal", ".gbapal");
+const u16 gObjectEventPal_UmbreonKimonoGirl[] = INCGFX_U16("graphics/object_events/palettes/umbreon_kimono_girl.pal", ".gbapal");
+const u16 gObjectEventPal_VaporeonKimonoGirl[] = INCGFX_U16("graphics/object_events/palettes/vaporeon_kimono_girl.pal", ".gbapal");
+const u16 gObjectEventPal_JolteonKimonoGirl[] = INCGFX_U16("graphics/object_events/palettes/jolteon_kimono_girl.pal", ".gbapal");
+const u16 gObjectEventPal_EnteiAsleep[] = INCGFX_U16("graphics/object_events/palettes/entei_asleep.pal", ".gbapal");
+const u16 gObjectEventPal_RaikouAsleep[] = INCGFX_U16("graphics/object_events/palettes/raikou_asleep.pal", ".gbapal");
+const u16 gObjectEventPal_SuicuneAsleep[] = INCGFX_U16("graphics/object_events/palettes/suicune_asleep.pal", ".gbapal");

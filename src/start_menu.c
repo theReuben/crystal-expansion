@@ -50,6 +50,7 @@
 #include "constants/battle_frontier.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
+#include "constants/heal_locations.h"
 
 // Menu actions
 enum
@@ -1510,4 +1511,20 @@ void Script_ForceSaveGame(struct ScriptContext *ctx)
     ShowSaveInfoWindow();
     gMenuCallback = SaveCallback;
     sSaveDialogCallback = SaveSavingMessageCallback;
+}
+
+// CrystalDust's post-Red save: no confirmation prompt, and the player resumes
+// outside Mt. Silver rather than at the summit (D48).
+void RedClear(void)
+{
+    SetContinueGameWarpStatus();
+    SetContinueGameWarpToHealLocation(HEAL_LOCATION_SILVER_CAVE_OUTSIDE);
+}
+
+void SaveGameRed(void)
+{
+    SaveMapView();
+    sSaveDialogCallback = SaveSavingMessageCallback;
+    sSavingComplete = FALSE;
+    CreateTask(SaveGameTask, 0x50);
 }

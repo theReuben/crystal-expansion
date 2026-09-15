@@ -455,6 +455,35 @@ extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_UnusedMauvi
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_UnusedMauvilleOldMan2;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_ApricornTree;
 
+// CrystalDust's room-decor object graphics, restored in Phase 2 (D48).
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_BigOnixDoll;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_BulbasaurDoll;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_CharmanderDoll;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_DiglettDoll;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_GengarDoll;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_GeodudeDoll;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_GoldShield;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_GoldTrophy;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_GrimerDoll;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_MachopDoll;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_MagikarpDoll;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_MagnemiteDoll;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_NatuDoll;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_OddishDoll;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PoliwagDoll;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Porygon2Doll;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_ShellderDoll;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_SilverShield;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_SilverTrophy;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_SquirtleDoll;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_StaryuDoll;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_SurfingPikachuDoll;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_TentacoolDoll;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_UnownDoll;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_VoltorbDoll;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_WeedleDoll;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_WooperDoll;
+
 const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM_OBJ_EVENT_GFX] = {
     [OBJ_EVENT_GFX_BRENDAN_NORMAL] =           &gObjectEventGraphicsInfo_BrendanNormal,
     [OBJ_EVENT_GFX_BRENDAN_MACH_BIKE] =        &gObjectEventGraphicsInfo_BrendanMachBike,
@@ -911,4 +940,33 @@ const struct ObjectEventGraphicsInfo *const gMauvilleOldManGraphicsInfoPointers[
     [MAUVILLE_MAN_GIDDY]       = &gObjectEventGraphicsInfo_Giddy,
     [MAUVILLE_MAN_UNUSED1]     = &gObjectEventGraphicsInfo_UnusedMauvilleOldMan1,
     [MAUVILLE_MAN_UNUSED2]     = &gObjectEventGraphicsInfo_UnusedMauvilleOldMan2,
+
+    // CrystalDust's room-decor object graphics (D48).
+    [OBJ_EVENT_GFX_ZBIG_ONIX_DOLL] = &gObjectEventGraphicsInfo_BigOnixDoll,
+    [OBJ_EVENT_GFX_ZBULBASAUR_DOLL] = &gObjectEventGraphicsInfo_BulbasaurDoll,
+    [OBJ_EVENT_GFX_ZCHARMANDER_DOLL] = &gObjectEventGraphicsInfo_CharmanderDoll,
+    [OBJ_EVENT_GFX_ZDIGLETT_DOLL] = &gObjectEventGraphicsInfo_DiglettDoll,
+    [OBJ_EVENT_GFX_ZGENGAR_DOLL] = &gObjectEventGraphicsInfo_GengarDoll,
+    [OBJ_EVENT_GFX_ZGEODUDE_DOLL] = &gObjectEventGraphicsInfo_GeodudeDoll,
+    [OBJ_EVENT_GFX_ZGOLD_SHIELD] = &gObjectEventGraphicsInfo_GoldShield,
+    [OBJ_EVENT_GFX_ZGOLD_TROPHY] = &gObjectEventGraphicsInfo_GoldTrophy,
+    [OBJ_EVENT_GFX_ZGRIMER_DOLL] = &gObjectEventGraphicsInfo_GrimerDoll,
+    [OBJ_EVENT_GFX_ZMACHOP_DOLL] = &gObjectEventGraphicsInfo_MachopDoll,
+    [OBJ_EVENT_GFX_ZMAGIKARP_DOLL] = &gObjectEventGraphicsInfo_MagikarpDoll,
+    [OBJ_EVENT_GFX_ZMAGNEMITE_DOLL] = &gObjectEventGraphicsInfo_MagnemiteDoll,
+    [OBJ_EVENT_GFX_ZNATU_DOLL] = &gObjectEventGraphicsInfo_NatuDoll,
+    [OBJ_EVENT_GFX_ZODDISH_DOLL] = &gObjectEventGraphicsInfo_OddishDoll,
+    [OBJ_EVENT_GFX_ZPOLIWAG_DOLL] = &gObjectEventGraphicsInfo_PoliwagDoll,
+    [OBJ_EVENT_GFX_ZPORYGON2_DOLL] = &gObjectEventGraphicsInfo_Porygon2Doll,
+    [OBJ_EVENT_GFX_ZSHELLDER_DOLL] = &gObjectEventGraphicsInfo_ShellderDoll,
+    [OBJ_EVENT_GFX_ZSILVER_SHIELD] = &gObjectEventGraphicsInfo_SilverShield,
+    [OBJ_EVENT_GFX_ZSILVER_TROPHY] = &gObjectEventGraphicsInfo_SilverTrophy,
+    [OBJ_EVENT_GFX_ZSQUIRTLE_DOLL] = &gObjectEventGraphicsInfo_SquirtleDoll,
+    [OBJ_EVENT_GFX_ZSTARYU_DOLL] = &gObjectEventGraphicsInfo_StaryuDoll,
+    [OBJ_EVENT_GFX_ZSURFING_PIKACHU_DOLL] = &gObjectEventGraphicsInfo_SurfingPikachuDoll,
+    [OBJ_EVENT_GFX_ZTENTACOOL_DOLL] = &gObjectEventGraphicsInfo_TentacoolDoll,
+    [OBJ_EVENT_GFX_ZUNOWN_DOLL] = &gObjectEventGraphicsInfo_UnownDoll,
+    [OBJ_EVENT_GFX_ZVOLTORB_DOLL] = &gObjectEventGraphicsInfo_VoltorbDoll,
+    [OBJ_EVENT_GFX_ZWEEDLE_DOLL] = &gObjectEventGraphicsInfo_WeedleDoll,
+    [OBJ_EVENT_GFX_ZWOOPER_DOLL] = &gObjectEventGraphicsInfo_WooperDoll,
 };

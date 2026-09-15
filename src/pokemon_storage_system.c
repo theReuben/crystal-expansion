@@ -9655,6 +9655,24 @@ s16 AdvanceStorageMonIndex(struct BoxPokemon *boxMons, u8 currIndex, u8 maxIndex
     return -1;
 }
 
+// CrystalDust's PC counts the exact number of free slots (D48).
+u32 GetFreePokemonStorageSpace(void)
+{
+    s32 i, j;
+    u32 count = 0;
+
+    for (i = 0; i < TOTAL_BOXES_COUNT; i++)
+    {
+        for (j = 0; j < IN_BOX_COUNT; j++)
+        {
+            if (!GetBoxMonData(&gPokemonStoragePtr->boxes[i][j], MON_DATA_SANITY_HAS_SPECIES))
+                count++;
+        }
+    }
+
+    return count;
+}
+
 bool8 CheckFreePokemonStorageSpace(void)
 {
     s32 i, j;

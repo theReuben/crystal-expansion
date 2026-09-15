@@ -297,3 +297,40 @@ void GetRoamerLocation(u32 roamerIndex, u8 *mapGroup, u8 *mapNum)
     *mapGroup = sRoamerLocation[roamerIndex][MAP_GRP];
     *mapNum = sRoamerLocation[roamerIndex][MAP_NUM];
 }
+
+// CrystalDust's beast specials, restored in Phase 2 (D48). The beasts can be
+// scared off and re-roam, so they are regenerated at their fixed level 40 from
+// the IVs and personality already stored in the save.
+static void RegenerateRoamer(u32 index, u16 species)
+{
+    struct Pokemon mon;
+    struct Roamer *roamer = ROAMER(index);
+
+    CreateMonWithIVsPersonality(&mon, species, 40, roamer->ivs, roamer->personality);
+    roamer->species = species;
+    roamer->level = 40;
+    roamer->hp = GetMonData(&mon, MON_DATA_MAX_HP);
+    roamer->statusA = 0;
+    roamer->statusB = 0;
+    roamer->active = TRUE;
+}
+
+void RegenerateRaikou(void)
+{
+    RegenerateRoamer(ROAMER_RAIKOU, SPECIES_RAIKOU);
+}
+
+void RegenerateEntei(void)
+{
+    RegenerateRoamer(ROAMER_ENTEI, SPECIES_ENTEI);
+}
+
+void IsRaikouActive(void)
+{
+    gSpecialVar_Result = ROAMER(ROAMER_RAIKOU)->active;
+}
+
+void IsEnteiActive(void)
+{
+    gSpecialVar_Result = ROAMER(ROAMER_ENTEI)->active;
+}

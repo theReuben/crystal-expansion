@@ -13,7 +13,7 @@ script CianwoodCity_PhotoStudio_EventScript_Photographer{
     }
     msgbox("OK! Big smile now!", MSGBOX_AUTOCLOSE)
     playse(MUS_RG_PHOTO)
-	dofieldeffect(FLDEFF_CAMERA_FLASH) // this is the camera flash animation from FRLG
+	dofieldeffect(FLDEFF_PHOTO_FLASH) // this is the camera flash animation from FRLG
 	delay(60)
     showmoneybox(0, 0, 0)
     msgbox("I can put a print of your {POKEMON}\non the back of your TRAINER CARD.\pI'll do it for only ¥50!\nWant to try it?", MSGBOX_YESNO)

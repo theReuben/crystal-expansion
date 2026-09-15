@@ -445,6 +445,10 @@ generated: $(AUTO_GEN_TARGETS)
 $(DATA_ASM_SUBDIR)/maps/%/scripts.inc: $(DATA_ASM_SUBDIR)/maps/%/scripts.pory $(PORYSCRIPT)
 	$(PORYSCRIPT) -i $< -o $@ -fc $(PORY_FONTCFG)
 
+# CrystalDust also writes some of the shared scripts in Poryscript (D48).
+$(DATA_ASM_SUBDIR)/scripts/%.inc: $(DATA_ASM_SUBDIR)/scripts/%.pory $(PORYSCRIPT)
+	$(PORYSCRIPT) -i $< -o $@ -fc $(PORY_FONTCFG)
+
 $(PORYSCRIPT):
 	$(error $(PORYSCRIPT) is missing. It is a prebuilt release binary; fetch it from https://github.com/huderlem/poryscript/releases and place it at $(PORYSCRIPT).)
 

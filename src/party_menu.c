@@ -3907,6 +3907,18 @@ static void CursorCb_Enter(u8 taskId)
 
     PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[0]);
     PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[1]);
+
+    // The Bug-Catching Contest takes exactly one mon, confirmed on the spot (D48).
+    if (VarGet(VAR_FRONTIER_FACILITY) == FACILITY_BUG_CATCHING_CONTEST)
+    {
+        PlaySE(SE_SELECT);
+        if (gSelectedOrderFromParty[0] != 0)
+            DisplayPartyPokemonDescriptionText(PARTYBOX_DESC_ABLE, &sPartyMenuBoxes[gSelectedOrderFromParty[0] - 1], 1);
+        gSelectedOrderFromParty[0] = gPartyMenu.slotId + 1;
+        Task_ClosePartyMenu(taskId);
+        return;
+    }
+
     maxBattlers = GetMaxBattleEntries();
     for (i = 0; i < maxBattlers; i++)
     {
@@ -7293,6 +7305,14 @@ void InitChooseHalfPartyForBattle(u8 unused)
     gPartyMenu.task = Task_ValidateChosenHalfParty;
 }
 
+// CrystalDust: the Bug-Catching Contest's one-mon selection (D48).
+void InitChooseMonForBugCatchingContest(void)
+{
+    ClearSelectedPartyOrder();
+    InitPartyMenu(PARTY_MENU_TYPE_CHOOSE_HALF, PARTY_LAYOUT_SINGLE, PARTY_ACTION_CHOOSE_MON, FALSE, PARTY_MSG_CHOOSE_MON, Task_HandleChooseMonInput, gMain.savedCallback);
+    gPartyMenu.task = Task_ValidateChosenHalfParty;
+}
+
 void ClearSelectedPartyOrder(void)
 {
     memset(gSelectedOrderFromParty, 0, sizeof(gSelectedOrderFromParty));
@@ -7322,6 +7342,7 @@ static bool8 GetBattleEntryEligibility(struct Pokemon *mon)
 
     switch (VarGet(VAR_FRONTIER_FACILITY))
     {
+    case FACILITY_BUG_CATCHING_CONTEST:
     case FACILITY_MULTI_OR_EREADER:
         if (GetMonData(mon, MON_DATA_HP) != 0)
             return TRUE;
@@ -7354,7 +7375,7 @@ static u8 CheckBattleEntriesAndGetMessage(void)
     }
 
     facility = VarGet(VAR_FRONTIER_FACILITY);
-    if (facility == FACILITY_UNION_ROOM || facility == FACILITY_MULTI_OR_EREADER)
+    if (facility == FACILITY_UNION_ROOM || facility == FACILITY_MULTI_OR_EREADER || facility == FACILITY_BUG_CATCHING_CONTEST)
         return 0xFF;
 
     maxBattlers = GetMaxBattleEntries();
@@ -7417,6 +7438,8 @@ static u8 GetMaxBattleEntries(void)
 {
     switch (VarGet(VAR_FRONTIER_FACILITY))
     {
+    case FACILITY_BUG_CATCHING_CONTEST:
+        return 1;
     case FACILITY_MULTI_OR_EREADER:
         return MULTI_PARTY_SIZE;
     case FACILITY_UNION_ROOM:
@@ -7430,6 +7453,7 @@ static u8 GetMinBattleEntries(void)
 {
     switch (VarGet(VAR_FRONTIER_FACILITY))
     {
+    case FACILITY_BUG_CATCHING_CONTEST:
     case FACILITY_MULTI_OR_EREADER:
         return 1;
     case FACILITY_UNION_ROOM:
@@ -7458,6 +7482,8 @@ static const u8 *GetFacilityCancelString(void)
 {
     u8 facilityNum = VarGet(VAR_FRONTIER_FACILITY);
 
+    if (facilityNum == FACILITY_BUG_CATCHING_CONTEST)
+        return gText_AbandonBugCatchingContest;
     if (!(facilityNum != FACILITY_UNION_ROOM && facilityNum != FACILITY_MULTI_OR_EREADER))
         return gText_CancelBattle;
     else if (facilityNum == FRONTIER_FACILITY_DOME && gSpecialVar_0x8005 == 2)

@@ -4512,3 +4512,18 @@ static void CopyAndTranslatePlayerName(u8 *dest, struct RfuPlayer *player)
     StringCopy_PlayerName(dest, player->rfu.name);
     ConvertInternationalString(dest, player->rfu.data.compatibility.language);
 }
+
+// CrystalDust's Pokemon Center nurse offers the Union Room on the first visit
+// with a wireless adapter connected (D48).
+void CableClub_OnResumeFunc(void)
+{
+    if (FlagGet(FLAG_SYS_ON_RESUME))
+        return;
+    FlagSet(FLAG_SYS_ON_RESUME);
+    if (!IsWirelessAdapterConnected())
+    {
+        FlagSet(FLAG_NURSE_UNION_ROOM_REMINDER);
+        return;
+    }
+    InitUnionRoom();
+}
