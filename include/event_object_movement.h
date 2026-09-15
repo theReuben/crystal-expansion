@@ -563,4 +563,9 @@ u8 MovementType_OverworldWildEncounter_Despawn_Step8(struct ObjectEvent *objectE
 u8 MovementType_OverworldWildEncounter_Despawn_Step10(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 u8 MovementType_OverworldWildEncounter_Despawn_Step11(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 
+
+// Restored in Phase 2 (D46).
+void SetObjectPriority(u8 localId, u8 mapNum, u8 mapGroup, u8 subpriority);
+void ResetObjectPriority(u8 localId, u8 mapNum, u8 mapGroup);
+
 #endif //GUARD_EVENT_OBJECT_MOVEMENT_H

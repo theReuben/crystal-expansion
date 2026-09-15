@@ -559,6 +559,18 @@ void DoWhiteFadeWarp(void)
     CreateTask(Task_WarpAndLoadMap, 10);
 }
 
+// CrystalDust's Sootopolis legend warp, restored in Phase 2 (D46).
+void DoSootopolisLegendWarp(void)
+{
+    LockPlayerFieldControls();
+    TryFadeOutOldMapMusic();
+    FadeScreen(FADE_TO_WHITE, 8);
+    PlayRainStoppingSoundEffect();
+    PlayRainStoppingSoundEffect();
+    gFieldCallback = FieldCB_WarpExitFadeFromWhite;
+    CreateTask(Task_WarpAndLoadMap, 10);
+}
+
 void DoDoorWarp(void)
 {
     LockPlayerFieldControls();

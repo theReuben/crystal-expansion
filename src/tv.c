@@ -6503,3 +6503,36 @@ bool8 NameRaterWasNicknameChanged(void)
     PutNameRaterShowOnTheAir();
     return TRUE;
 }
+
+// CrystalDust's Poke News price reductions, restored in Phase 2 (D46).
+static bool8 IsPriceDiscounted(u8 newsKind)
+{
+    switch (newsKind)
+    {
+    case POKENEWS_SLATEPORT:
+        return (gSpecialVar_LastTalked == 25);
+    case POKENEWS_LILYCOVE:
+        return TRUE;
+    }
+    return TRUE;
+}
+
+bool8 GetPriceReduction(u8 newsKind)
+{
+    u32 i;
+
+    if (newsKind == POKENEWS_NONE)
+        return FALSE;
+
+    for (i = 0; i < POKE_NEWS_COUNT; i++)
+    {
+        if (gSaveBlock1Ptr->pokeNews[i].kind == newsKind)
+        {
+            if (gSaveBlock1Ptr->pokeNews[i].state == 2 && IsPriceDiscounted(newsKind))
+                return TRUE;
+
+            return FALSE;
+        }
+    }
+    return FALSE;
+}

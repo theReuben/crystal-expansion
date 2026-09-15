@@ -62,4 +62,8 @@ u8 CheckForPlayersHouseNews(void);
 bool8 IsGabbyAndTyShowOnTheAir(void);
 void TryPutTrainerFanClubOnAir(void);
 
+
+// Restored in Phase 2 (D46).
+bool8 GetPriceReduction(u8 newsKind);
+
 #endif //GUARD_TV_H

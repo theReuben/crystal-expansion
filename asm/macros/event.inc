@@ -3032,60 +3032,55 @@
 @ ============================================================
 
 @ CrystalDust (was 0xe1)
-	.macro buffercontesttypestring out:req, word:req
-	.byte 0xe7
-	.byte \out
-	.2byte \word
-	.endm
 
 @ CrystalDust (was 0xce)
 	.macro checkmoneventlegal slot:req
-	.byte 0xe8
+	.byte 0xe7
 	.2byte \slot
 	.endm
 
 @ CrystalDust (was 0x7c)
 	.macro checkpartymove index:req
-	.byte 0xe9
+	.byte 0xe8
 	.2byte \index
 	.endm
 
 @ CrystalDust (was 0xda)
 	.macro closeunownmessage
-	.byte 0xea
+	.byte 0xe9
 	.endm
 
 @ CrystalDust (was 0x20)
 	.macro compare_addr_to_addr a:req, b:req
-	.byte 0xeb
+	.byte 0xea
 	.4byte \a
 	.4byte \b
 	.endm
 
 @ CrystalDust (was 0x1e)
 	.macro compare_addr_to_local a:req, b:req
-	.byte 0xec
+	.byte 0xeb
 	.4byte \a
 	.byte \b
 	.endm
 
 @ CrystalDust (was 0x1f)
 	.macro compare_addr_to_value a:req, b:req
-	.byte 0xed
+	.byte 0xec
 	.4byte \a
 	.byte \b
 	.endm
 
 @ CrystalDust (was 0x1d)
 	.macro compare_local_to_addr a:req, b:req
-	.byte 0xee
+	.byte 0xed
 	.byte \a
 	.4byte \b
 	.endm
 
 @ CrystalDust (was 0x96)
 	.macro getpricereduction index:req
-	.byte 0xef
+	.byte 0xee
 	.2byte \index
 	.endm
 
@@ -3096,24 +3091,24 @@
 
 @ CrystalDust (was 0xcf)
 	.macro gotoram
-	.byte 0xf0
+	.byte 0xef
 	.endm
 
 @ CrystalDust (was 0x0d)
 	.macro killscript
-	.byte 0xf1
+	.byte 0xf0
 	.endm
 
 @ CrystalDust (was 0x12)
 	.macro loadbytefromaddr destination:req, source:req
-	.byte 0xf2
+	.byte 0xf1
 	.byte \destination
 	.4byte \source
 	.endm
 
 @ CrystalDust (was 0xdf)
 	.macro pokegearcall pointer:req, callerid:req
-	.byte 0xf3
+	.byte 0xf2
 	.4byte \pointer
 	.byte \callerid
 	.endm
@@ -3128,14 +3123,14 @@
 
 @ CrystalDust (was 0xa9)
 	.macro resetobjectpriority index:req, map:req
-	.byte 0xf4
+	.byte 0xf3
 	.2byte \index
 	map \map
 	.endm
 
 @ CrystalDust (was 0x99)
 	.macro setflashradius word:req
-	.byte 0xf5
+	.byte 0xf4
 	.2byte \word
 	.endm
 
@@ -3147,24 +3142,19 @@
 
 @ CrystalDust (was 0xcd)
 	.macro setmoneventlegal slot:req
-	.byte 0xf6
+	.byte 0xf5
 	.2byte \slot
 	.endm
 
 @ CrystalDust (was 0xa8)
 	.macro setobjectpriority index:req, map:req, priority:req
-	.byte 0xf7
+	.byte 0xf6
 	.2byte \index
 	map \map
 	.byte \priority
 	.endm
 
 @ CrystalDust (was 0x26)
-	.macro specialvar_ output:req, functionId:req
-	.byte 0xf8
-	.2byte \output
-	.2byte \functionId
-	.endm
 
 @ CrystalDust (wrapper, no opcode)
 	@ CrystalDust's no-intro win/lose battle. Its TRAINER_BATTLE_CONTINUE_SCRIPT_WINTEXT
@@ -3176,25 +3166,18 @@
 	.endm
 
 @ CrystalDust (was 0x5d)
-	.macro trainerbattlebegin
-	.byte 0xf9
-	.endm
 
 @ CrystalDust (was 0x78)
 	.macro unownmessage text:req
-	.byte 0xfa
+	.byte 0xf7
 	.4byte \text
 	.endm
 
 @ CrystalDust (was 0xbe)
-	.macro vloadptr pointer:req
-	.byte 0xfb
-	.4byte \pointer
-	.endm
 
 @ CrystalDust (was 0xe0)
 	.macro warpsootopolislegend map:req, byte:req, word1:req, word2:req
-	.byte 0xfc
+	.byte 0xf8
 	map \map
 	.byte \byte
 	.2byte \word1
@@ -3202,17 +3185,10 @@
 	.endm
 
 @ CrystalDust (was 0xd1)
-	.macro warpteleport2 map:req, warp:req, x:req, y:req
-	.byte 0xfd
-	map \map
-	.byte \warp
-	.2byte \x
-	.2byte \y
-	.endm
 
 @ CrystalDust (was 0x11)
 	.macro writebytetoaddr value:req, offset:req
-	.byte 0xfe
+	.byte 0xf9
 	.byte \value
 	.4byte \offset
 	.endm

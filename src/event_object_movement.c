@@ -12310,3 +12310,32 @@ bool8 MovementType_OverworldWildEncounter_Despawn_Step11(struct ObjectEvent *obj
 }
 
 #undef sDespawnTimer
+
+// CrystalDust's scripted object subpriority overrides, restored in Phase 2 (D46).
+void SetObjectPriority(u8 localId, u8 mapNum, u8 mapGroup, u8 subpriority)
+{
+    u8 objectEventId;
+    struct ObjectEvent *objectEvent;
+    struct Sprite *sprite;
+
+    if (!TryGetObjectEventIdByLocalIdAndMap(localId, mapNum, mapGroup, &objectEventId))
+    {
+        objectEvent = &gObjectEvents[objectEventId];
+        sprite = &gSprites[objectEvent->spriteId];
+        objectEvent->fixedPriority = TRUE;
+        sprite->subpriority = subpriority;
+    }
+}
+
+void ResetObjectPriority(u8 localId, u8 mapNum, u8 mapGroup)
+{
+    u8 objectEventId;
+    struct ObjectEvent *objectEvent;
+
+    if (!TryGetObjectEventIdByLocalIdAndMap(localId, mapNum, mapGroup, &objectEventId))
+    {
+        objectEvent = &gObjectEvents[objectEventId];
+        objectEvent->fixedPriority = FALSE;
+        objectEvent->triggerGroundEffectsOnMove = TRUE;
+    }
+}

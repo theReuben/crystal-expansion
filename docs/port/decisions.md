@@ -1653,3 +1653,38 @@ Constraint decisions:
    kept whole. Revisit if Gen 2 cries sound wrong.
 
 Link errors: 675 undefined -> 218 undefined, 0 multiple definitions, 0 errors.
+
+## D46 — CrystalDust's script commands
+
+`data/script_cmd_table.inc` carried 24 CrystalDust opcodes past expansion's
+0xe6, but none of their handlers survived the merge. Five of the 24 were not
+commands at all: `specialvar_`, `trainerbattlebegin`, `vloadptr`,
+`warpteleport2` and `buffercontesttypestring` are macros CrystalDust wrote for
+opcodes that already exist (0x26, 0x5d, 0xbe, 0xd1, 0xe1), and in expansion
+those opcodes mean something else entirely. Nothing in our scripts uses them, so
+the five table entries and the five macros are removed and the table renumbered
+(250 commands, last opcode 0xf9); the `.macro` opcodes were renumbered to match.
+
+The other 19 are ported from CrystalDust's `src/scrcmd.c`, along with four
+helpers the merge had also dropped: `GetPriceReduction` and `IsPriceDiscounted`
+(`src/tv.c`), `SetObjectPriority`/`ResetObjectPriority`
+(`src/event_object_movement.c`) and `DoSootopolisLegendWarp`
+(`src/field_screen_effect.c`).
+
+Constraint decisions:
+
+1. **`unownmessage` is expansion's `braillemessage` without the 6-byte header.**
+   CrystalDust's version used the pre-1.0 window API (`gBrailleWindowId`, raw
+   font 6, `CopyWindowToVram(..., 3)`). It is re-expressed against expansion's
+   current API, so it now honours `FONT_BRAILLE` and the standard window border.
+2. **`MON_DATA_EVENT_LEGAL` is `MON_DATA_MODERN_FATEFUL_ENCOUNTER`.** Same field,
+   renamed upstream; `checkmoneventlegal`/`setmoneventlegal` use the new name.
+3. **`IsPriceDiscounted` is partly inert.** CrystalDust had already gutted its
+   Hoenn map checks (they read `MAP_GROUP(NONE)`); the Slateport case keeps the
+   `gSpecialVar_LastTalked == 25` test and the rest returns TRUE. It wants a real
+   Goldenrod/Radio Tower rule once the Poke News content is ported.
+4. Every ported command declares `Script_RequestEffects(SCREFF_V1)`, expansion's
+   script-effect contract, which CrystalDust predates. Commands that touch the
+   screen may need a wider mask once they are exercised in game.
+
+Link errors: 218 undefined -> 194 undefined, 0 errors.

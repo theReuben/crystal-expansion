@@ -45,6 +45,7 @@
 #include "pokemon_storage_system.h"
 #include "random.h"
 #include "overworld.h"
+#include "match_call.h"
 #include "rotating_tile_puzzle.h"
 #include "rtc.h"
 #include "script.h"
@@ -3399,5 +3400,274 @@ bool8 ScrCmd_normalmsg(struct ScriptContext *ctx)
     Script_RequestEffects(SCREFF_V1);
 
     gMsgIsSignPost = FALSE;
+    return FALSE;
+}
+
+// CrystalDust's own script commands, restored in Phase 2 (D46).
+
+bool8 ScrCmd_checkmoneventlegal(struct ScriptContext *ctx)
+{
+    Script_RequestEffects(SCREFF_V1);
+
+    u16 partyIndex = VarGet(ScriptReadHalfword(ctx));
+
+    gSpecialVar_Result = GetMonData(&gPlayerParty[partyIndex], MON_DATA_MODERN_FATEFUL_ENCOUNTER, NULL);
+    return FALSE;
+}
+
+bool8 ScrCmd_checkpartymove(struct ScriptContext *ctx)
+{
+    Script_RequestEffects(SCREFF_V1);
+
+    u32 i;
+    u16 moveId = ScriptReadHalfword(ctx);
+
+    gSpecialVar_Result = PARTY_SIZE;
+    for (i = 0; i < PARTY_SIZE; i++)
+    {
+        u16 species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES, NULL);
+        if (!species)
+            break;
+        if (!GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG) && MonKnowsMove(&gPlayerParty[i], moveId) == TRUE)
+        {
+            gSpecialVar_Result = i;
+            gSpecialVar_0x8004 = species;
+            break;
+        }
+    }
+    return FALSE;
+}
+
+bool8 ScrCmd_closeunownmessage(struct ScriptContext *ctx)
+{
+    Script_RequestEffects(SCREFF_V1);
+
+    CloseBrailleWindow();
+    return FALSE;
+}
+
+bool8 ScrCmd_compare_addr_to_addr(struct ScriptContext *ctx)
+{
+    Script_RequestEffects(SCREFF_V1);
+
+    const u8 value1 = *(const u8 *)ScriptReadWord(ctx);
+    const u8 value2 = *(const u8 *)ScriptReadWord(ctx);
+
+    ctx->comparisonResult = Compare(value1, value2);
+    return FALSE;
+}
+
+bool8 ScrCmd_compare_addr_to_local(struct ScriptContext *ctx)
+{
+    Script_RequestEffects(SCREFF_V1);
+
+    const u8 value1 = *(const u8 *)ScriptReadWord(ctx);
+    const u8 value2 = ctx->data[ScriptReadByte(ctx)];
+
+    ctx->comparisonResult = Compare(value1, value2);
+    return FALSE;
+}
+
+bool8 ScrCmd_compare_addr_to_value(struct ScriptContext *ctx)
+{
+    Script_RequestEffects(SCREFF_V1);
+
+    const u8 value1 = *(const u8 *)ScriptReadWord(ctx);
+    const u8 value2 = ScriptReadByte(ctx);
+
+    ctx->comparisonResult = Compare(value1, value2);
+    return FALSE;
+}
+
+bool8 ScrCmd_compare_local_to_addr(struct ScriptContext *ctx)
+{
+    Script_RequestEffects(SCREFF_V1);
+
+    const u8 value1 = ctx->data[ScriptReadByte(ctx)];
+    const u8 value2 = *(const u8 *)ScriptReadWord(ctx);
+
+    ctx->comparisonResult = Compare(value1, value2);
+    return FALSE;
+}
+
+bool8 ScrCmd_getpricereduction(struct ScriptContext *ctx)
+{
+    Script_RequestEffects(SCREFF_V1);
+
+    u16 newsKind = VarGet(ScriptReadHalfword(ctx));
+
+    gSpecialVar_Result = GetPriceReduction(newsKind);
+    return FALSE;
+}
+
+bool8 ScrCmd_gotoram(struct ScriptContext *ctx)
+{
+    Script_RequestEffects(SCREFF_V1);
+
+    const u8* script = GetSavedRamScriptIfValid();
+
+    if (script)
+    {
+        gRamScriptRetAddr = ctx->scriptPtr;
+        ScriptJump(ctx, script);
+    }
+    return FALSE;
+}
+
+bool8 ScrCmd_killscript(struct ScriptContext *ctx)
+{
+    Script_RequestEffects(SCREFF_V1);
+
+    ClearRamScript();
+    StopScript(ctx);
+    return TRUE;
+}
+
+bool8 ScrCmd_loadbytefromaddr(struct ScriptContext *ctx)
+{
+    Script_RequestEffects(SCREFF_V1);
+
+    u8 index = ScriptReadByte(ctx);
+
+    ctx->data[index] = *(const u8 *)ScriptReadWord(ctx);
+    return FALSE;
+}
+
+bool8 ScrCmd_pokegearcall(struct ScriptContext *ctx)
+{
+    Script_RequestEffects(SCREFF_V1);
+
+    const u8 *script = (const u8 *)ScriptReadWord(ctx);
+    u8 callerId = ScriptReadByte(ctx);
+    StartMatchCallFromScript(script, callerId);
+    return FALSE;
+}
+
+bool8 ScrCmd_resetobjectpriority(struct ScriptContext *ctx)
+{
+    Script_RequestEffects(SCREFF_V1);
+
+    u16 localId = VarGet(ScriptReadHalfword(ctx));
+    u8 mapGroup = ScriptReadByte(ctx);
+    u8 mapNum = ScriptReadByte(ctx);
+
+    ResetObjectPriority(localId, mapNum, mapGroup);
+    return FALSE;
+}
+
+bool8 ScrCmd_setflashradius(struct ScriptContext *ctx)
+{
+    Script_RequestEffects(SCREFF_V1);
+
+    u16 flashLevel = VarGet(ScriptReadHalfword(ctx));
+
+    SetFlashLevel(flashLevel);
+    return FALSE;
+}
+
+bool8 ScrCmd_setmoneventlegal(struct ScriptContext *ctx)
+{
+    Script_RequestEffects(SCREFF_V1);
+
+    bool8 isEventLegal = TRUE;
+    u16 partyIndex = VarGet(ScriptReadHalfword(ctx));
+
+    SetMonData(&gPlayerParty[partyIndex], MON_DATA_MODERN_FATEFUL_ENCOUNTER, &isEventLegal);
+    return FALSE;
+}
+
+bool8 ScrCmd_setobjectpriority(struct ScriptContext *ctx)
+{
+    Script_RequestEffects(SCREFF_V1);
+
+    u16 localId = VarGet(ScriptReadHalfword(ctx));
+    u8 mapGroup = ScriptReadByte(ctx);
+    u8 mapNum = ScriptReadByte(ctx);
+    u8 priority = ScriptReadByte(ctx);
+
+    SetObjectPriority(localId, mapNum, mapGroup, priority + 83);
+    return FALSE;
+}
+
+bool8 ScrCmd_unownmessage(struct ScriptContext *ctx)
+{
+    u8 *ptr = (u8 *)ScriptReadWord(ctx);
+
+    Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
+
+    struct WindowTemplate winTemplate;
+    s32 i;
+    u8 width, height;
+    u8 xWindow, yWindow, xText, yText;
+    u8 temp;
+
+    // + 6 for the 6 bytes at the start of a braille message (brailleformat macro)
+    // In RS these bytes are used to position the text and window, but
+    // in Emerald they are unused and position is calculated below instead
+    StringExpandPlaceholders(gStringVar4, ptr);
+
+    width = GetStringWidth(FONT_BRAILLE, gStringVar4, -1) / 8u;
+
+    if (width > 28)
+        width = 28;
+
+    for (i = 0, height = 4; gStringVar4[i] != EOS;)
+    {
+        if (gStringVar4[i++] == CHAR_NEWLINE)
+            height += 3;
+    }
+
+    if (height > 18)
+        height = 18;
+
+    temp = width + 2;
+    xWindow = (30 - temp) / 2;
+
+    temp = height + 2;
+    yText = (20 - temp) / 2;
+
+    xText = xWindow;
+    xWindow += 1;
+
+    yWindow = yText;
+    yText += 2;
+
+    xText = (xWindow - xText - 1) * 8 + 3;
+    yText = (yText - yWindow - 1) * 8;
+
+    winTemplate = CreateWindowTemplate(0, xWindow, yWindow + 1, width, height, 0xF, 0x1);
+    sBrailleWindowId = AddWindow(&winTemplate);
+    LoadUserWindowBorderGfx(sBrailleWindowId, 0x214, BG_PLTT_ID(14));
+    DrawStdWindowFrame(sBrailleWindowId, FALSE);
+    PutWindowTilemap(sBrailleWindowId);
+    FillWindowPixelBuffer(sBrailleWindowId, PIXEL_FILL(1));
+    AddTextPrinterParameterized(sBrailleWindowId, FONT_BRAILLE, gStringVar4, xText, yText, TEXT_SKIP_DRAW, NULL);
+    CopyWindowToVram(sBrailleWindowId, COPYWIN_FULL);
+    return FALSE;
+}
+
+bool8 ScrCmd_warpsootopolislegend(struct ScriptContext *ctx)
+{
+    Script_RequestEffects(SCREFF_V1);
+
+    u8 mapGroup = ScriptReadByte(ctx);
+    u8 mapNum = ScriptReadByte(ctx);
+    u8 warpId = ScriptReadByte(ctx);
+    u16 x = VarGet(ScriptReadHalfword(ctx));
+    u16 y = VarGet(ScriptReadHalfword(ctx));
+
+    SetWarpDestination(mapGroup, mapNum, warpId, x, y);
+    DoSootopolisLegendWarp();
+    ResetInitialPlayerAvatarState();
+    return TRUE;
+}
+
+bool8 ScrCmd_writebytetoaddr(struct ScriptContext *ctx)
+{
+    Script_RequestEffects(SCREFF_V1);
+
+    u8 value = ScriptReadByte(ctx);
+
+    *(u8 *)ScriptReadWord(ctx) = value;
     return FALSE;
 }

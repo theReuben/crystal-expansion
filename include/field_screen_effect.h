@@ -48,4 +48,8 @@ void SetPlayerVisibility(bool8 visible);
 void Task_WarpAndLoadMap(u8 taskId);
 void Task_DoDoorWarp(u8 taskId);
 
+
+// Restored in Phase 2 (D46).
+void DoSootopolisLegendWarp(void);
+
 #endif // GUARD_FIELD_SCREEN_EFFECT_H
