@@ -1851,3 +1851,60 @@ and CrystalDust's tables were converted.
 5. The `headbutt_mons` field now carries CrystalDust's `common`/`rare` groups.
 
 ROM: 29,017,952 bytes of content (27.67 MiB, 86.48%), up 25,344 bytes.
+
+## D50 — CrystalDust's trainer parties
+
+After the Phase 1 merge, 496 trainer constants existed with no party data. They
+are now restored from CrystalDust's C tables (`src/data/trainer_parties.h` +
+`src/data/trainers.h`) into `src/data/trainers_crystaldust.party`, which
+trainerproc compiles into `src/data/trainers_crystaldust.h` and `src/data.c`
+includes alongside expansion's own `data/trainers.h`.
+
+495 of 496 converted. Constraint decisions:
+
+1. **`TRAINER_NONE_GSC` is left without a party.** It is CrystalDust's empty
+   placeholder; trainerproc only permits a zero-mon trainer whose id ends in
+   `_NONE`, and nothing references the constant. No content lost.
+2. **`TRAINER_FLAGS_START` and `TRAINER_PARTNER` are not trainers** — a sentinel
+   and expansion's ally slot. Neither needs a party.
+3. **IVs are rescaled, not preserved exactly.** CrystalDust uses the old
+   single-byte 0–255 `.iv` field; expansion's `.party` format takes 0–31 per
+   stat. The conversion is `iv * 31 // 255`, applied uniformly to all six stats,
+   which is what the old engine did at runtime. Rounding loses at most 1 point.
+4. **CrystalDust's four `AI_SCRIPT_*` flags map onto expansion's `AI_FLAG_*`.**
+   `SETUP_FIRST_TURN` becomes `AI_FLAG_FORCE_SETUP_FIRST_TURN`. Expansion's
+   richer AI flags are *not* added — the trainers fight as CrystalDust wrote
+   them. Revisit in Phase 7 if the battles feel too easy.
+5. **Natures, EVs, abilities, balls, held-item variety and Gen 3+ mechanics are
+   not set**, because CrystalDust's tables do not carry them. Every mon takes
+   the engine defaults.
+
+### Trainer constants restored alongside the parties
+
+The parties referenced 70 constants that the merge had dropped:
+
+- **19 trainer classes** (`BIKER BOARDER BURGLAR FIREBREATHER JUGGLER
+  KIMONO_GIRL MEDIUM MYSTICALMAN OFFICER PKMN_TRAINER_3 RIVAL1 RIVAL2 SAGE
+  SCIENTIST SKIER SUPER_NERD TEACHER TEAM_ROCKET TEAM_ROCKET_EXECUTIVE`), with
+  CrystalDust's names and prize-money multipliers added to `gTrainerClasses[]`.
+- **45 front pics** — the Johto gym leaders and Elite Four, Gold, the rival,
+  Eusine, the five Kimono Girls, both Rocket Executives and Grunts, the Kanto
+  leaders, and the class sprites. **Every one of the 45 PNGs was already in
+  `graphics/trainers/front_pics/`**; only the constants, the `INCGFX`
+  declarations and the `gTrainerPicInfo[]` rows were missing. No sprite was
+  substituted and none had to be copied from CrystalDust.
+- **6 encounter themes** (`LASS SAGE OFFICER ROCKET FISHERMAN KIMONO`), all six
+  songs already present in the sound bank from D45.
+
+6. **`struct Trainer.encounterMusic` was widened from 4 bits to 6.** The six new
+   themes push the count past the 4-bit ceiling of 15. The two bits came from
+   the adjacent `u16 padding:2` field, so `struct Trainer` does not grow.
+7. **CrystalDust's front pics keep expansion's default mugshot coordinates and
+   rotation.** CrystalDust's `front_pic_tables.h` carried per-sprite `.size` and
+   `.y_offset` values; expansion's `TRAINER_FRONT_PIC` macro has no equivalent
+   for front pics (it uses them only for mugshots and back pics). If a Johto
+   leader's sprite sits wrong in a battle intro, this is why.
+
+**Result:** the build is clean (exit 0) and ROM content is 29,092,768 B
+(27.75 MiB, 86.7%). Only 3 trainer constants remain without a party, all of them
+non-trainers.

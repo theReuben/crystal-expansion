@@ -1823,6 +1823,25 @@ void PlayTrainerEncounterMusic(void)
     case TRAINER_ENCOUNTER_MUSIC_RICH:
         music = MUS_ENCOUNTER_RICH;
         break;
+    // CrystalDust's encounter themes (D50).
+    case TRAINER_ENCOUNTER_MUSIC_LASS:
+        music = MUS_ENCOUNTER_LASS;
+        break;
+    case TRAINER_ENCOUNTER_MUSIC_SAGE:
+        music = MUS_ENCOUNTER_SAGE;
+        break;
+    case TRAINER_ENCOUNTER_MUSIC_OFFICER:
+        music = MUS_ENCOUNTER_OFFICER;
+        break;
+    case TRAINER_ENCOUNTER_MUSIC_ROCKET:
+        music = MUS_ENCOUNTER_ROCKET;
+        break;
+    case TRAINER_ENCOUNTER_MUSIC_FISHERMAN:
+        music = MUS_ENCOUNTER_FISHERMAN;
+        break;
+    case TRAINER_ENCOUNTER_MUSIC_KIMONO:
+        music = MUS_ENCOUNTER_KIMONO;
+        break;
     default:
         music = MUS_ENCOUNTER_SUSPICIOUS;
     }

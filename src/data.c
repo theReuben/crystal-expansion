@@ -233,6 +233,8 @@ const struct Trainer gTrainers[DIFFICULTY_COUNT][TRAINERS_COUNT] =
 #include "data/trainers_frlg.h"
 #else
 #include "data/trainers.h"
+// CrystalDust's trainers, converted from its C tables (D50).
+#include "data/trainers_crystaldust.h"
 #endif
 };
 #endif

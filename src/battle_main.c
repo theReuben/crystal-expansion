@@ -414,6 +414,26 @@ const struct TrainerClass gTrainerClasses[TRAINER_CLASS_COUNT] =
     [TRAINER_CLASS_RUIN_MANIAC_FRLG] =     { _("RUIN MANIAC"), 12 },
     [TRAINER_CLASS_LADY_FRLG] =            { _("LADY"), 50 },
     [TRAINER_CLASS_PAINTER_FRLG] =         { _("PAINTER"), 4 },
+    // CrystalDust's trainer classes (D50).
+    [TRAINER_CLASS_BIKER] = { _("BIKER"), 8 },
+    [TRAINER_CLASS_BOARDER] = { _("BOARDER"), 18 },
+    [TRAINER_CLASS_BURGLAR] = { _("BURGLAR"), 22 },
+    [TRAINER_CLASS_FIREBREATHER] = { _("FIREBREATHER"), 12 },
+    [TRAINER_CLASS_JUGGLER] = { _("JUGGLER"), 10 },
+    [TRAINER_CLASS_KIMONO_GIRL] = { _("KIMONO GIRL"), 18 },
+    [TRAINER_CLASS_MEDIUM] = { _("MEDIUM"), 10 },
+    [TRAINER_CLASS_MYSTICALMAN] = { _("MYSTICALMAN"), 25 },
+    [TRAINER_CLASS_OFFICER] = { _("OFFICER"), 10 },
+    [TRAINER_CLASS_PKMN_TRAINER_3] = { _("{PKMN} TRAINER"), 25 },
+    [TRAINER_CLASS_RIVAL1] = { _("RIVAL"), 15 },
+    [TRAINER_CLASS_RIVAL2] = { _("RIVAL"), 25 },
+    [TRAINER_CLASS_SAGE] = { _("SAGE"), 8 },
+    [TRAINER_CLASS_SCIENTIST] = { _("SCIENTIST"), 25 },
+    [TRAINER_CLASS_SKIER] = { _("SKIER"), 18 },
+    [TRAINER_CLASS_SUPER_NERD] = { _("SUPER NERD"), 8 },
+    [TRAINER_CLASS_TEACHER] = { _("TEACHER"), 18 },
+    [TRAINER_CLASS_TEAM_ROCKET] = { _("TEAM ROCKET"), 10 },
+    [TRAINER_CLASS_TEAM_ROCKET_EXECUTIVE] = { _("TEAM ROCKET"), 18 },
 };
 
 static void (*const sTurnActionsFuncsTable[])(void) =

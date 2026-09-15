@@ -80,3 +80,4 @@ tools/romshot/romshot
 data/scripts/move_tutors.inc
 data/scripts/day_care.inc
 data/scripts/bug_catching_contest.inc
+src/data/trainers_crystaldust.h
