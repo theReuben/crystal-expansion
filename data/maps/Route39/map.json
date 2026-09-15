@@ -166,8 +166,9 @@
       "type": "clone",
       "x": 36,
       "y": 11,
-      "source_id": 4,
-      "source_map": "MAP_ROUTE38"
+      "graphics_id": "OBJ_EVENT_GFX_BEAUTY",
+      "target_local_id": 4,
+      "target_map": "MAP_ROUTE38"
     },
     {
       "type": "object",
@@ -216,9 +217,7 @@
       "dest_warp_id": 0
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",

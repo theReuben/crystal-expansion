@@ -196,8 +196,9 @@
       "type": "clone",
       "x": 58,
       "y": 13,
-      "source_id": 1,
-      "source_map": "MAP_ROUTE33"
+      "graphics_id": "OBJ_EVENT_GFX_HIKER",
+      "target_local_id": 1,
+      "target_map": "MAP_ROUTE33"
     }
   ],
   "warp_events": [

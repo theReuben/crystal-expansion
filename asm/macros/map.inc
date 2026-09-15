@@ -1,13 +1,13 @@
 @ Most of the macros in this file are for arranging map event data, and are output by mapjson using data from each map's JSON file.
 
 	@ Takes a MAP constant and outputs the map group and map number as separate bytes
+	@ CrystalDust's mapjson emits "constants for unused maps" as #defines, so by the
+	@ time gas sees this macro the argument is already a number and expansion's
+	@ `.ifdef \map_id` typo guard fails on it. CrystalDust drops the guard for exactly
+	@ this reason; a typo now assembles to a bogus map instead of erroring. See D37.
 	.macro map map_id:req
-	.ifdef \map_id
 	.byte \map_id >> 8    @ map group
 	.byte \map_id & 0xFF  @ map num
-	.else
-	.error "undefined map (check for typos)"
-	.endif
 	.endm
 
 	@ Defines a map script. 'type' is any MAP_SCRIPT_* constant (see include/constants/map_scripts.h)

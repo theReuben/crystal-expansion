@@ -888,86 +888,13 @@ static void TakeGabbyAndTyOffTheAir(void)
     gSaveBlock1Ptr->gabbyAndTyData.onAir = FALSE;
 }
 
-// See gabby_and_ty.inc for details
-u8 GabbyAndTyGetBattleNum(void)
-{
-    if (gSaveBlock1Ptr->gabbyAndTyData.battleNum > 5)
-        return (gSaveBlock1Ptr->gabbyAndTyData.battleNum % 3) + 6;
-
-    return gSaveBlock1Ptr->gabbyAndTyData.battleNum;
-}
-
-bool8 IsGabbyAndTyShowOnTheAir(void)
-{
-    return gSaveBlock1Ptr->gabbyAndTyData.onAir;
-}
-
-bool8 GabbyAndTyGetLastQuote(void)
-{
-    if (gSaveBlock1Ptr->gabbyAndTyData.quote[0] == EC_EMPTY_WORD)
-    {
-        return FALSE;
-    }
-    CopyEasyChatWord(gStringVar1, gSaveBlock1Ptr->gabbyAndTyData.quote[0]);
-    gSaveBlock1Ptr->gabbyAndTyData.quote[0] = -1;
-    return TRUE;
-}
-
-u8 GabbyAndTyGetLastBattleTrivia(void)
-{
-    if (!gSaveBlock1Ptr->gabbyAndTyData.battleTookMoreThanOneTurn2)
-        return 1;
-
-    if (gSaveBlock1Ptr->gabbyAndTyData.playerThrewABall2)
-        return 2;
-
-    if (gSaveBlock1Ptr->gabbyAndTyData.playerUsedHealingItem2)
-        return 3;
-
-    if (gSaveBlock1Ptr->gabbyAndTyData.playerLostAMon2)
-        return 4;
-
-    return 0;
-}
-
-// See gabby_and_ty.inc for details
+// Gabby and Ty roam Routes 111, 118 and 120, which are Hoenn and are gone. The
+// local ids they reported went with those maps; the function is kept so
+// gabby_and_ty.inc still links, and reports "no object". See D37.
 void GetGabbyAndTyLocalIds(void)
 {
-    switch (GabbyAndTyGetBattleNum())
-    {
-    case 1:
-        gSpecialVar_0x8004 = LOCALID_ROUTE111_GABBY_1;
-        gSpecialVar_0x8005 = LOCALID_ROUTE111_TY_1;
-        break;
-    case 2:
-        gSpecialVar_0x8004 = LOCALID_ROUTE118_GABBY_1;
-        gSpecialVar_0x8005 = LOCALID_ROUTE118_TY_1;
-        break;
-    case 3:
-        gSpecialVar_0x8004 = LOCALID_ROUTE120_GABBY_1;
-        gSpecialVar_0x8005 = LOCALID_ROUTE120_TY_1;
-        break;
-    case 4:
-        gSpecialVar_0x8004 = LOCALID_ROUTE111_GABBY_2;
-        gSpecialVar_0x8005 = LOCALID_ROUTE111_TY_2;
-        break;
-    case 5:
-        gSpecialVar_0x8004 = LOCALID_ROUTE118_GABBY_2;
-        gSpecialVar_0x8005 = LOCALID_ROUTE118_TY_2;
-        break;
-    case 6:
-        gSpecialVar_0x8004 = LOCALID_ROUTE120_GABBY_2;
-        gSpecialVar_0x8005 = LOCALID_ROUTE120_TY_2;
-        break;
-    case 7:
-        gSpecialVar_0x8004 = LOCALID_ROUTE111_GABBY_3;
-        gSpecialVar_0x8005 = LOCALID_ROUTE111_TY_3;
-        break;
-    case 8:
-        gSpecialVar_0x8004 = LOCALID_ROUTE118_GABBY_3;
-        gSpecialVar_0x8005 = LOCALID_ROUTE118_TY_3;
-        break;
-    }
+    gSpecialVar_0x8004 = LOCALID_NONE;
+    gSpecialVar_0x8005 = LOCALID_NONE;
 }
 
 void InterviewAfter(void)
@@ -2500,10 +2427,7 @@ static bool8 ShouldApplyPokeNewsEffect(u8 newsKind)
     switch (newsKind)
     {
     case POKENEWS_SLATEPORT:
-        if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_SLATEPORT_CITY)
-         && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_SLATEPORT_CITY)
-         && gSpecialVar_LastTalked == LOCALID_SLATEPORT_ENERGY_GURU)
-            return TRUE;
+        // The Energy Guru stands in Slateport City, which is gone. See D37.
         return FALSE;
     case POKENEWS_LILYCOVE:
         if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_ROOFTOP)

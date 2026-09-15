@@ -41,8 +41,9 @@
       "type": "clone",
       "x": 51,
       "y": 19,
-      "source_id": 1,
-      "source_map": "MAP_ROUTE9"
+      "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE",
+      "target_local_id": 1,
+      "target_map": "MAP_ROUTE9"
     },
     {
       "type": "object",
@@ -186,9 +187,7 @@
       "dest_warp_id": 0
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",

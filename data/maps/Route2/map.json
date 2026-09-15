@@ -166,8 +166,9 @@
       "type": "clone",
       "x": 5,
       "y": 85,
-      "source_id": 6,
-      "source_map": "MAP_VIRIDIAN_CITY"
+      "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE",
+      "target_local_id": 6,
+      "target_map": "MAP_VIRIDIAN_CITY"
     }
   ],
   "warp_events": [
@@ -242,9 +243,7 @@
       "dest_warp_id": 1
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",

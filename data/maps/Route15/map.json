@@ -136,8 +136,9 @@
       "type": "clone",
       "x": 73,
       "y": 7,
-      "source_id": 7,
-      "source_map": "MAP_ROUTE14"
+      "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE",
+      "target_local_id": 7,
+      "target_map": "MAP_ROUTE14"
     }
   ],
   "warp_events": [
@@ -156,9 +157,7 @@
       "dest_warp_id": 1
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",

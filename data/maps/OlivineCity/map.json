@@ -91,8 +91,9 @@
       "type": "clone",
       "x": -7,
       "y": 29,
-      "source_id": 1,
-      "source_map": "MAP_ROUTE40"
+      "graphics_id": "OBJ_EVENT_GFX_BOY_1",
+      "target_local_id": 1,
+      "target_map": "MAP_ROUTE40"
     }
   ],
   "warp_events": [

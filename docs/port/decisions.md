@@ -1418,3 +1418,56 @@ deferred Hoenn removal, not before.
 **Gap to flag:** `src/data/heal_locations.json` contains no Johto heal locations
 whatsoever. Every Johto Pokémon Center is currently a dead respawn point, and
 D33's deferred Fly-map port cannot be finished without them. Phase 3 work.
+
+## D37 — The Hoenn orphans go, and the build reaches zero C errors
+
+The FRLG removal (D36) left 153 `undefined map` assembly errors and 293
+"Failed to find matching layout" failures. Both turned out to be the same thing:
+364 Hoenn map directories that survive on disk but appear nowhere in
+CrystalDust's `data/maps/map_groups.json`. Every *live* map has its layout —
+verified by walking all 565 of them against `layouts.json` — so the layout
+failures were entirely orphan maps, and the removal is again purely subtractive.
+929 → 565 map directories, with 361 `.include` lines dropped from
+`data/event_scripts.s`.
+
+Five further things had to be fixed for the data to assemble.
+
+**The `map` macro lost its typo guard.** CrystalDust's mapjson emits a
+"Constants for unused maps" block of plain `#define`s (group 112) so that
+leftover scripts referencing removed maps still compile. Those reach gas as bare
+numbers, and expansion's `map` macro guards itself with `.ifdef \map_id`, which
+is an error on a numeric literal — not a false result, an error. CrystalDust
+drops the guard for exactly this reason and we follow it. **Cost, stated
+plainly: a mistyped map constant in map data now assembles to a bogus map
+instead of failing the build.**
+
+**`MAP_NONE` is now an alias for `MAP_DYNAMIC`.** Same value in both projects,
+`(0x7F | (0x7F << 8))`; 36 CrystalDust map.json files use CrystalDust's name for
+dummy warp destinations.
+
+**18 clone object events were converted.** CrystalDust writes them as
+`source_id`/`source_map` with no `graphics_id`; expansion's mapjson wants
+`target_local_id`/`target_map` and requires a `graphics_id`. Each clone's
+graphics were resolved from the object it clones, so Azalea Town's cloned hiker
+is a hiker and not a placeholder.
+
+**52 songs had no `midi.cfg` entry.** CrystalDust drove mid2agb from per-song
+rules in its own `songs.mk`, which Phase 1 did not carry across; expansion drives
+it from `sound/songs/midi/midi.cfg`. All 52 sets of arguments were carried over
+verbatim with `$(STD_REVERB)` resolved to 50. This is an **eleventh one-side
+merge loss** — every Johto track, from `mus_new_bark` to `mus_vs_johto_leader`,
+was silently unbuildable. Note the file is parsed by a `make` `foreach`, so it
+takes no comments and no blank lines.
+
+**Four Hoenn-only features referenced local ids from deleted maps.** The mart
+employee table in `field_specials.c` walked eleven Hoenn marts to return a value
+its own comment admits is always 1, so it returns 1 directly. Gabby and Ty roam
+Routes 111/118/120 and now report `LOCALID_NONE`. The Slateport Energy Guru
+PokeNews check returns FALSE. The moving-truck intro keeps its code — its
+specials are still in the specials table — and defines the three box local ids
+locally at the values `InsideOfTruck` gave them.
+
+**Result: 0 C errors, 0 assembly errors in map data, all 581 songs building.**
+
+Left over, and being worked next: 12 tilesets over the 256-tile maximum, three
+missing multiboot `.gba` images, and `ITEM_MACHINE_PART`.

@@ -12,6 +12,11 @@ enum
     MAP_UNDEFINED = (0xFF | (0xFF << 8)),
 };
 
+// CrystalDust's name for expansion's MAP_DYNAMIC; both are (0x7F | (0x7F << 8)),
+// and 36 of CrystalDust's map.json files still use it for dummy warp destinations.
+// See D37.
+#define MAP_NONE MAP_DYNAMIC
+
 #define MAP_GROUP(map) (map >> 8)
 #define MAP_NUM(map) (map & 0xFF)
 

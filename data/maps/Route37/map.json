@@ -91,16 +91,13 @@
       "type": "clone",
       "x": 13,
       "y": -4,
-      "source_id": 6,
-      "source_map": "MAP_ECRUTEAK_CITY"
+      "graphics_id": "OBJ_EVENT_GFX_WORKER_F",
+      "target_local_id": 6,
+      "target_map": "MAP_ECRUTEAK_CITY"
     }
   ],
-  "warp_events": [
-
-  ],
-  "coord_events": [
-
-  ],
+  "warp_events": [],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",

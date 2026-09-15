@@ -281,15 +281,17 @@
       "type": "clone",
       "x": 26,
       "y": 43,
-      "source_id": 6,
-      "source_map": "MAP_ROUTE43"
+      "graphics_id": "OBJ_EVENT_GFX_POKEMANIAC",
+      "target_local_id": 6,
+      "target_map": "MAP_ROUTE43"
     },
     {
       "type": "clone",
       "x": 27,
       "y": 45,
-      "source_id": 5,
-      "source_map": "MAP_ROUTE43"
+      "graphics_id": "OBJ_EVENT_GFX_POKEMANIAC",
+      "target_local_id": 5,
+      "target_map": "MAP_ROUTE43"
     }
   ],
   "warp_events": [
@@ -308,9 +310,7 @@
       "dest_warp_id": 0
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",

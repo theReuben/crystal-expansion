@@ -136,8 +136,9 @@
       "type": "clone",
       "x": 77,
       "y": 13,
-      "source_id": 4,
-      "source_map": "MAP_MAHOGANY_TOWN"
+      "graphics_id": "OBJ_EVENT_GFX_OLD_MAN",
+      "target_local_id": 4,
+      "target_map": "MAP_MAHOGANY_TOWN"
     }
   ],
   "warp_events": [

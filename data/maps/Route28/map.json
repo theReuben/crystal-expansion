@@ -26,8 +26,9 @@
       "type": "clone",
       "x": -5,
       "y": 9,
-      "source_id": 2,
-      "source_map": "MAP_SILVER_CAVE_OUTSIDE"
+      "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE",
+      "target_local_id": 2,
+      "target_map": "MAP_SILVER_CAVE_OUTSIDE"
     }
   ],
   "warp_events": [
@@ -46,9 +47,7 @@
       "dest_warp_id": 0
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",

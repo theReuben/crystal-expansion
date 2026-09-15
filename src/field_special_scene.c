@@ -19,6 +19,14 @@
 #include "constants/songs.h"
 #include "constants/metatile_labels.h"
 
+// CrystalDust opens in New Bark Town, so InsideOfTruck was removed with the rest
+// of Hoenn and took these three local ids with it. The truck scene code is kept
+// intact rather than excised, because its specials are still in the specials
+// table; the ids are restored here at the values that map used. See D37.
+#define LOCALID_TRUCK_BOX_TOP      1
+#define LOCALID_TRUCK_BOX_BOTTOM_L 2
+#define LOCALID_TRUCK_BOX_BOTTOM_R 3
+
 // Most of the boxes in the moving truck are map tiles, with the
 // exception of three boxes that are map events that jostle around
 // while the truck is driving. In addition, their sprite's placement
