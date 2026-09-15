@@ -2057,3 +2057,12 @@ calls the right table. Our cry table has 1,159 entries to CrystalDust's 388
 because expansion ships every generation's cries, so no Gen 2 cry is missing.
 
 **Result:** build exit 0; ROM content 29,123,872 B (27.77 MiB, 86.8%).
+
+## D56 — The two "missing graphics" are both non-issues
+
+- `graphics/pokemon/question_mark/footprint.1bpp` — the `.png` source is present;
+  `src/data/graphics/pokemon.h` picks it or `footprint_gba.png` by config.
+- `graphics/interface/hp_numbers.4bpp.lz` — CrystalDust's `LoadBattleBarGfx`
+  LZ-decompresses a pre-rendered HP-digit sheet into `barFontGfx`. Expansion
+  renders the same digits at runtime with `RenderTextHandleBold(..., FONT_BOLD, ...)`
+  in `battle_interface.c`, so the asset is obsolete rather than lost. No action.
