@@ -2551,6 +2551,30 @@ const u16 gTilesetPalettes_SeaCottage[][16] =
     INCGFX_U16("data/tilesets/secondary/sea_cottage_frlg/palettes/15.pal", ".gbapal"),
 };
 
+// CrystalDust ships its own Silph Co. tileset; expansion had it sharing FRLG's
+// Condominiums graphics (D54).
+const u32 gTilesetTiles_SilphCo[] = INCGFX_U32("data/tilesets/secondary/silphco/tiles.png", ".4bpp.fastSmol");
+
+const u16 gTilesetPalettes_SilphCo[][16] =
+{
+    INCGFX_U16("data/tilesets/secondary/silphco/palettes/00.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/silphco/palettes/01.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/silphco/palettes/02.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/silphco/palettes/03.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/silphco/palettes/04.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/silphco/palettes/05.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/silphco/palettes/06.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/silphco/palettes/07.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/silphco/palettes/08.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/silphco/palettes/09.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/silphco/palettes/10.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/silphco/palettes/11.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/silphco/palettes/12.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/silphco/palettes/13.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/silphco/palettes/14.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/silphco/palettes/15.pal", ".gbapal"),
+};
+
 // Shared by SilphCo
 const u32 gTilesetTiles_Condominiums[] = INCGFX_U32("data/tilesets/secondary/condominiums_frlg/tiles.png", ".4bpp.fastSmol");
 

@@ -2014,3 +2014,20 @@ Added `const struct PaletteOverride *paletteOverrides` at offset 0x18 of
   upstream too. Kept for struct compatibility.
 
 **Result:** build exit 0; ROM content 29,117,280 B (27.77 MiB, 86.8%), +2,048 B.
+
+## D54 — Silph Co.'s tileset
+
+Auditing every field of `src/data/tilesets/headers.h` against CrystalDust's
+orphaned `data/tilesets/headers.inc` turned up one more substitution:
+`gTileset_SilphCo` was pointing at FRLG's `gTilesetTiles_Condominiums` and
+`gTilesetPalettes_Condominiums`, while CrystalDust's own
+`data/tilesets/secondary/silphco/` tiles and 16 palettes sat unreferenced in the
+tree. Added both as C and repointed the header. (`BurnedTower` also differed, but
+only because CrystalDust misspells the symbol `gMetatilesAttributes_`; same data.)
+
+That audit closes the orphaned-`.inc` sweep: of 132 non-map `.inc` files, exactly
+four are unreachable from `data/*.s` — `graphics.inc`, `headers.inc`,
+`metatiles.inc` and `overrides.inc` — and all four have now been reconciled
+against their C replacements. `metatiles.inc` had no losses.
+
+**Result:** build exit 0; ROM content 29,117,280 B (27.77 MiB, 86.8%).
