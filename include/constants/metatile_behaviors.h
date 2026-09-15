@@ -115,7 +115,7 @@ enum {
     MB_DEEP_SOUTH_WARP,
     MB_UNUSED_6F,
     MB_BRIDGE_OVER_OCEAN,
-    MB_BRIDGE_OVER_POND_LOW,
+    MB_WHIRLPOOL, // CrystalDust repurposes Hoenn's MB_BRIDGE_OVER_POND_LOW (D51)
     MB_BRIDGE_OVER_POND_MED,
     MB_BRIDGE_OVER_POND_HIGH,
     MB_PACIFIDLOG_VERTICAL_LOG_TOP,
@@ -244,6 +244,9 @@ enum {
     MB_ROCK_CLIMB,
     NUM_METATILE_BEHAVIORS
 };
+// Hoenn's name for the same value; its bridges are out of scope (D37, D51).
+#define MB_BRIDGE_OVER_POND_LOW MB_WHIRLPOOL
+
 
 #define MB_INVALID   UCHAR_MAX
 

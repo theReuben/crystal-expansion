@@ -89,6 +89,7 @@ gFieldEffectScriptPointers::
 	.4byte gFldEffScript_PhotoFlash      		        @ FLDEFF_PHOTO_FLASH
 	.4byte gFieldEffectScript_OWE_SpawnAnim				@ FLDEFF_OW_ENCOUNTER_SPAWN_ANIM
 	.4byte gFieldEffectScript_UseHeadbutt				@ FLDEFF_USE_HEADBUTT
+	.4byte gFieldEffectScript_UseWhirlpool				@ FLDEFF_USE_WHIRLPOOL
 
 gFieldEffectScript_ExclamationMarkIcon1::
 	field_eff_callnative FldEff_ExclamationMarkIcon
@@ -424,4 +425,8 @@ gFieldEffectScript_OWE_SpawnAnim::
 
 gFieldEffectScript_UseHeadbutt::
 	field_eff_callnative FldEff_UseHeadbutt
+	field_eff_end
+
+gFieldEffectScript_UseWhirlpool::
+	field_eff_callnative FldEff_UseWhirlpool
 	field_eff_end

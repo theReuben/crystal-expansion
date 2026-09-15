@@ -86,7 +86,7 @@ static const u8 sTileBitAttributes[NUM_METATILE_BEHAVIORS] =
     [MB_WATER_SOUTH_ARROW_WARP]             = TILE_FLAG_UNUSED | TILE_FLAG_SURFABLE,
     [MB_DEEP_SOUTH_WARP]                    = TILE_FLAG_UNUSED,
     [MB_UNUSED_6F]                          = TILE_FLAG_UNUSED | TILE_FLAG_SURFABLE,
-    [MB_BRIDGE_OVER_POND_LOW]               = TILE_FLAG_UNUSED,
+    [MB_WHIRLPOOL]                          = TILE_FLAG_UNUSED | TILE_FLAG_SURFABLE,
     [MB_BRIDGE_OVER_POND_MED]               = TILE_FLAG_UNUSED,
     [MB_BRIDGE_OVER_POND_HIGH]              = TILE_FLAG_UNUSED,
     [MB_PACIFIDLOG_VERTICAL_LOG_TOP]        = TILE_FLAG_UNUSED,
@@ -749,7 +749,6 @@ bool8 MetatileBehavior_IsFootprints(u8 metatileBehavior)
 bool8 MetatileBehavior_IsBridgeOverWater(u8 metatileBehavior)
 {
     if ((metatileBehavior == MB_BRIDGE_OVER_OCEAN
-      || metatileBehavior == MB_BRIDGE_OVER_POND_LOW
       || metatileBehavior == MB_BRIDGE_OVER_POND_MED
       || metatileBehavior == MB_BRIDGE_OVER_POND_HIGH)
       || (metatileBehavior == MB_BRIDGE_OVER_POND_HIGH_EDGE_1
@@ -764,11 +763,12 @@ bool8 MetatileBehavior_IsBridgeOverWater(u8 metatileBehavior)
 u8 MetatileBehavior_GetBridgeType(u8 metatileBehavior)
 {
     // MB_BRIDGE_OVER_OCEAN     --> BRIDGE_TYPE_OCEAN     (Routes 110/119)
-    // MB_BRIDGE_OVER_POND_LOW  --> BRIDGE_TYPE_POND_LOW  (Unused)
+    // MB_BRIDGE_OVER_POND_LOW  --> now MB_WHIRLPOOL, excluded below (D51)
     // MB_BRIDGE_OVER_POND_MED  --> BRIDGE_TYPE_POND_MED  (Route 120, south)
     // MB_BRIDGE_OVER_POND_HIGH --> BRIDGE_TYPE_POND_HIGH (Route 120, north)
     if (metatileBehavior >= MB_BRIDGE_OVER_OCEAN
-     && metatileBehavior <= MB_BRIDGE_OVER_POND_HIGH)
+     && metatileBehavior <= MB_BRIDGE_OVER_POND_HIGH
+     && metatileBehavior != MB_WHIRLPOOL)
         return metatileBehavior - MB_BRIDGE_OVER_OCEAN;
 
     if (metatileBehavior >= MB_BRIDGE_OVER_POND_MED_EDGE_1
@@ -954,6 +954,15 @@ bool8 MetatileBehavior_IsShortGrass(u8 metatileBehavior)
 bool8 MetatileBehavior_IsHotSprings(u8 metatileBehavior)
 {
     if (metatileBehavior == MB_HOT_SPRINGS)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+// CrystalDust's whirlpool tiles, cleared with the Whirlpool field move (D51).
+bool8 MetatileBehavior_IsWhirlpool(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_WHIRLPOOL)
         return TRUE;
     else
         return FALSE;

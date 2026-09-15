@@ -85,6 +85,7 @@
 #define FLDEFF_PHOTO_FLASH               80
 #define FLDEFF_OW_ENCOUNTER_SPAWN_ANIM   81
 #define FLDEFF_USE_HEADBUTT              82 // CrystalDust (D26)
+#define FLDEFF_USE_WHIRLPOOL             83 // CrystalDust (D51)
 
 #define FLDEFFOBJ_SHADOW_S              0
 #define FLDEFFOBJ_SHADOW_M              1

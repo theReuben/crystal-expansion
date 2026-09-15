@@ -20,6 +20,9 @@ enum FieldMove
     FIELD_MOVE_SWEET_SCENT,
     FIELD_MOVE_ROCK_CLIMB,
     FIELD_MOVE_DEFOG,
+    // CrystalDust's field moves (D51).
+    FIELD_MOVE_WHIRLPOOL,
+    FIELD_MOVE_HEADBUTT,
     FIELD_MOVES_COUNT
 };
 

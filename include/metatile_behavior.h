@@ -99,6 +99,7 @@ bool8 MetatileBehavior_IsNorthBlocked(u8 metatileBehavior);
 bool8 MetatileBehavior_IsSouthBlocked(u8 metatileBehavior);
 bool8 MetatileBehavior_IsShortGrass(u8 metatileBehavior);
 bool8 MetatileBehavior_IsHotSprings(u8 metatileBehavior);
+bool8 MetatileBehavior_IsWhirlpool(u8 metatileBehavior); // CrystalDust (D51)
 bool8 MetatileBehavior_IsWaterfall(u8 metatileBehavior);
 bool8 MetatileBehavior_IsFortreeBridge(u8 metatileBehavior);
 bool8 MetatileBehavior_IsPacifidlogVerticalLogTop(u8 metatileBehavior);

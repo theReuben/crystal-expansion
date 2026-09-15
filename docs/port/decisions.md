@@ -1908,3 +1908,47 @@ The parties referenced 70 constants that the merge had dropped:
 **Result:** the build is clean (exit 0) and ROM content is 29,092,768 B
 (27.75 MiB, 86.7%). Only 3 trainer constants remain without a party, all of them
 non-trainers.
+
+## D51 — CrystalDust's sound engine hooks, extra fanfares and the Whirlpool field move
+
+Phase 4 systems verification found three things the Phase 1 merge had dropped
+entirely rather than merged badly.
+
+1. **The GBS engine was unreachable.** `src/gbs.c` survived the merge but none of
+   its three entry points did. Restored: `GBSMain` and `GBSTrack_Stop` calls in
+   `src/m4a_1.s` (a track is a GBS track when the high nibble of
+   `o_MusicPlayerTrack_patternLevel` is non-zero), and `ply_gbs_switch` in slot 5
+   of `gMPlayJumpTableTemplate` in `src/m4a_tables.c`, which had reverted to
+   `ply_fine`.
+2. **Three fanfares and the GBS duration column were lost.** Re-added
+   `FANFARE_OBTAIN_EGG`, `FANFARE_PKMNCHANNEL_INTERLUDE` and
+   `FANFARE_RG_CAUGHT_INTRO`, plus `durationGBS` on every `sFanfares[]` row;
+   `PlayFanfare` picks the column on `FLAG_SYS_GBS_ENABLED` because the GBS
+   arrangements run shorter than the m4a ones.
+3. **Whirlpool did not exist.** `MB_WHIRLPOOL`, `MetatileBehavior_IsWhirlpool`,
+   `SetUpFieldMove_Whirlpool`, `FldEff_UseWhirlpool` and
+   `EventScript_UseWhirlpool` all had zero references in our tree. Restored via
+   a new `src/fldeff_whirlpool.c`, `FLDEFF_USE_WHIRLPOOL` (83),
+   `gFieldEffectScript_UseWhirlpool`, and CrystalDust's scripts appended to
+   `data/scripts/field_move_scripts.inc`.
+
+### Constraint decisions
+
+- **D51.1 — Hoenn's `MB_BRIDGE_OVER_POND_LOW` is forfeited.** CrystalDust puts
+  `MB_WHIRLPOOL` at behavior 0x71, which collides with it. CrystalDust's Johto
+  general tileset already uses 0x71 for whirlpool tiles, so CrystalDust wins per
+  the standing steer. `#define MB_BRIDGE_OVER_POND_LOW MB_WHIRLPOOL` keeps
+  Hoenn's name compiling; `MetatileBehavior_IsBridgeOverWater` and
+  `GetBridgeType` now exclude it. The low bridges on Hoenn Route 119/120 and
+  Pacifidlog would behave as whirlpools — out of scope under D37 anyway.
+- **D51.2 — Whirlpool is gated on the Glacier Badge** (`FLAG_BADGE07_GET`) as
+  HM06 is in Gen 2, via `BADGE_UNLOCK` in `gFieldMoveInfo[]`.
+- **D51.3 — Headbutt had no party-menu entry either.** `SetUpFieldMove_Headbutt`
+  existed but nothing referenced it; added `FIELD_MOVE_HEADBUTT` as
+  `ALWAYS_UNLOCKED` (it is a TM, not an HM). Both `SetUpFieldMove_*` functions
+  were widened from `bool8` to `bool32` to match expansion's `gFieldMoveInfo`
+  function-pointer type.
+- **D51.4 — Whirlpool plays no sound effect.** CrystalDust's `PlaySE(SE_M_WHIRLPOOL)`
+  is commented out upstream; kept as-is rather than inventing a cue.
+
+**Result:** build exit 0; ROM content 29,097,280 B (27.75 MiB, 86.7%).

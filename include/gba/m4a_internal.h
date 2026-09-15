@@ -475,6 +475,7 @@ void ply_goto(struct MusicPlayerInfo *, struct MusicPlayerTrack *);
 void ply_patt(struct MusicPlayerInfo *, struct MusicPlayerTrack *);
 void ply_pend(struct MusicPlayerInfo *, struct MusicPlayerTrack *);
 void ply_rept(struct MusicPlayerInfo *, struct MusicPlayerTrack *);
+void ply_gbs_switch(struct MusicPlayerInfo *, struct MusicPlayerTrack *); // CrystalDust GBS (D51)
 void ply_memacc(struct MusicPlayerInfo *, struct MusicPlayerTrack *);
 void ply_prio(struct MusicPlayerInfo *, struct MusicPlayerTrack *);
 void ply_tempo(struct MusicPlayerInfo *, struct MusicPlayerTrack *);

@@ -65,7 +65,9 @@ enum {
     TREEMON_SCORE_RARE
 };
 
-bool8 SetUpFieldMove_Headbutt(void);
+bool32 SetUpFieldMove_Headbutt(void);
+bool32 SetUpFieldMove_Whirlpool(void); // CrystalDust (D51)
+bool8 FldEff_UseWhirlpool(void); // CrystalDust (D51)
 bool8 FldEff_UseHeadbutt(void);
 u32 HeadbuttTreeScoreCalc(void);
 

@@ -19,6 +19,10 @@
 #define FANFARE_OBTAIN_B_POINTS     15
 #define FANFARE_OBTAIN_SYMBOL       16
 #define FANFARE_REGISTER_MATCH_CALL 17
+// CrystalDust's extra fanfares (D51).
+#define FANFARE_OBTAIN_EGG          18
+#define FANFARE_PKMNCHANNEL_INTERLUDE 19
+#define FANFARE_RG_CAUGHT_INTRO     20
 
 #define CRY_MODE_NORMAL        0 // Default
 #define CRY_MODE_DOUBLES       1 // Shortened cry for double battles

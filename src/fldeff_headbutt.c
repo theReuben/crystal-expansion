@@ -42,7 +42,7 @@ static void FieldCallback_Headbutt(void)
     ScriptContext_SetupScript(EventScript_UseHeadbutt);
 }
 
-bool8 SetUpFieldMove_Headbutt(void)
+bool32 SetUpFieldMove_Headbutt(void)
 {
     s16 x, y;
     u8 metatileBehavior;

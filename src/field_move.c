@@ -190,4 +190,21 @@ const struct FieldMoveInfo gFieldMoveInfo[FIELD_MOVES_COUNT] =
         .partyMsgID = PARTY_MSG_CANT_USE_HERE,
         .hideIfLocked = TRUE,
     },
+    // CrystalDust's field moves (D51). Whirlpool is HM06 in Gen 2 and gated on
+    // the Glacier Badge; Headbutt is a TM and always available.
+    [FIELD_MOVE_WHIRLPOOL] =
+    {
+        .fieldMoveFunc = SetUpFieldMove_Whirlpool,
+        .unlockType = BADGE_UNLOCK,
+        .moveID = MOVE_WHIRLPOOL,
+        .partyMsgID = PARTY_MSG_CANT_USE_HERE,
+        .arg = FLAG_TO_BADGE(FLAG_BADGE07_GET),
+    },
+    [FIELD_MOVE_HEADBUTT] =
+    {
+        .fieldMoveFunc = SetUpFieldMove_Headbutt,
+        .unlockType = ALWAYS_UNLOCKED,
+        .moveID = MOVE_HEADBUTT,
+        .partyMsgID = PARTY_MSG_CANT_USE_HERE,
+    },
 };
