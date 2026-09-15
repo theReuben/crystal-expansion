@@ -2267,3 +2267,25 @@ matching spawn path.
   the `ROAMER_SUICUNE` slot from D48 stays reserved and unused.
 
 Build exit=0, ROM 29,126,724 B (86.80%).
+
+## D65 — Pokémon Centers set the save-warp again
+
+**Found:** stub-Hoenn-anchor sweep, `src/save_location.c`.
+
+`sSaveLocationPokeCenterList` kept expansion's 39 Hoenn maps. Those constants are
+stubs now, so `IsCurMapPokeCenter()` was never true: `POKECENTER_SAVEWARP` never
+got set, and saving inside a Center did not register it as your reload point.
+
+**Done:** replaced the list with CrystalDust's 20 Johto Centers plus the link-room
+entries it keeps (`BATTLE_COLOSSEUM_2P`, `TRADE_CENTER`, `RECORD_CORNER`,
+`BATTLE_COLOSSEUM_4P`, `BATTLE_FRONTIER_POKEMON_CENTER_1F/2F`).
+
+**One deliberate addition, flagged:** CrystalDust's own list stops at Blackthorn
+and omits all ten Kanto Pokémon Centers, even though it ships Kanto. That looks
+like an oversight rather than a design choice — it would leave Kanto Centers not
+registering as save warps. The 20 Kanto Center maps are added.
+
+`sSaveLocationReloadLocList` (Battle Tower lobby) is unchanged; it is parked with
+the rest of the Frontier under Q3.
+
+Build exit=0, ROM 29,126,724 B (86.80%).
