@@ -42,3 +42,20 @@ EVs: 252 Atk / 252 SpA / 6 SpD
 - Protect
 - Solar Beam
 - Dragon Claw
+
+=== PARTNER_LANCE ===
+Name: LANCE
+Class: Champion
+Pic: Elite Four Lance Frlg
+Gender: Male
+Music: Male
+AI: Basic Trainer
+
+Dragonite
+Brave Nature
+Level: 40
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Fly
+- Twister
+- Thunder
+- Extreme Speed

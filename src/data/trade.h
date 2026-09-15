@@ -966,266 +966,186 @@ static const union AffineAnimCmd *const sAffineAnims_CrossingMonPics[] =
     sAffineAnim_CrossingMonPic
 };
 
+// CrystalDust's in-game trade table, restored in Phase 2 (D41). The Phase 1
+// merge kept expansion's Hoenn/FRLG list; every trade script in the tree is
+// Johto's and indexes this one. The last two entries are the gift mons
+// (Kenya and Shuckie), which store their level in requestedSpecies.
 static const struct InGameTrade sIngameTrades[] =
 {
-    [INGAME_TRADE_SEEDOT] =
+    [INGAME_TRADE_ONIX] = 
     {
-        .nickname = _("DOTS"),
-        .species = SPECIES_SEEDOT,
-        .ivs = {5, 4, 5, 4, 4, 4},
-        .abilityNum = 1,
-        .otId = 38726,
-        .conditions = {30, 5, 5, 5, 5},
-        .personality = 0x84,
-        .heldItem = ITEM_CHESTO_BERRY,
+        .nickname = _("ROCKY"), 
+        .species = SPECIES_ONIX,
+        .ivs = {8, 9, 6, 6, 6, 6},
+        .abilityNum = 1, 
+        .otId = 48926,
+        .conditions = {30, 5, 5, 5, 5}, // cool, beauty, cute, smart, tough
+        .personality = 0x66EB22D7, // Hasty Male
+        .heldItem = ITEM_PERSIM_BERRY, 
         .mailNum = -1,
-        .otName = _("KOBE"),
-        .otGender = MALE,
+        .otName = _("KYLE"), 
+        .otGender = MALE, 
         .sheen = 10,
-        .requestedSpecies = SPECIES_RALTS
-    },
-    [INGAME_TRADE_PLUSLE] =
+        .requestedSpecies = SPECIES_BELLSPROUT
+    }, 
+    [INGAME_TRADE_MACHOP] = 
     {
-        .nickname = _("PLUSES"),
-        .species = SPECIES_PLUSLE,
-        .ivs = {4, 4, 4, 5, 5, 4},
+        .nickname = _("MUSCLE"), 
+        .species = SPECIES_MACHOP,
+        .ivs = {12, 3, 7, 6, 6, 6},
         .abilityNum = 0,
-        .otId = 73996,
-        .conditions = {5, 5, 30, 5, 5},
-        .personality = 0x6F,
-        .heldItem = ITEM_WOOD_MAIL,
-        .mailNum = 0,
-        .otName = _("ROMAN"),
-        .otGender = MALE,
+        .otId = 37460,
+        .conditions = {5, 5, 5, 5, 30}, // cool, beauty, cute, smart, tough
+        .personality = 0x4B7EA131, // Lonely Female
+        .heldItem = ITEM_MACHO_BRACE, // originally a Sitrus Berry, is Macho Brace in HGSS
+        .mailNum = -1,
+        .otName = _("MIKE"), 
+        .otGender = MALE, 
         .sheen = 10,
-        .requestedSpecies = SPECIES_VOLBEAT
-    },
-    [INGAME_TRADE_HORSEA] =
-    {
-        .nickname = _("SEASOR"),
-        .species = SPECIES_HORSEA,
-        .ivs = {5, 4, 4, 4, 5, 4},
-        .abilityNum = 0,
-        .otId = 46285,
-        .conditions = {5, 5, 5, 5, 30},
-        .personality = 0x7F,
-        .heldItem = ITEM_WAVE_MAIL,
-        .mailNum = 1,
-        .otName = _("SKYLAR"),
-        .otGender = MALE,
-        .sheen = 10,
-        .requestedSpecies = SPECIES_BAGON
-    },
-    [INGAME_TRADE_MEOWTH] =
+        .requestedSpecies = SPECIES_ABRA
+    }, 
+    [INGAME_TRADE_MEOWTH] = 
     {
         .nickname = _("MEOWOW"),
         .species = SPECIES_MEOWTH,
         .ivs = {4, 5, 4, 5, 4, 4},
-        .abilityNum = 0,
+        .abilityNum = 0, 
         .otId = 91481,
-        .conditions = {5, 5, 5, 30, 5},
+        .conditions = {5, 5, 5, 30, 5}, // cool, beauty, cute, smart, tough
         .personality = 0x8B,
-        .heldItem = ITEM_RETRO_MAIL,
+        .heldItem = ITEM_RETRO_MAIL, 
         .mailNum = 2,
-        .otName = _("ISIS"),
-        .otGender = FEMALE,
+        .otName = _("ISIS"), 
+        .otGender = FEMALE, 
         .sheen = 10,
         .requestedSpecies = SPECIES_SKITTY
     },
-    [INGAME_TRADE_MR_MIME] = 
+    [INGAME_TRADE_VOLTORB] = 
     {
-        .nickname = _("MIMIEN"),
-        .species = SPECIES_MR_MIME,
-        .ivs = {20, 15, 17, 24, 23, 22},
-        .abilityNum = 0,
-        .otId = 1985,
-        .conditions = {5, 5, 5, 30, 5},
-        .personality = 0x00009cae,
-        .heldItem = ITEM_NONE,
-        .mailNum = MAIL_NONE,
-        .otName = _("REYLEY"),
-        .otGender = MALE,
-        .sheen = 10,
-        .requestedSpecies = SPECIES_ABRA
-    },
-    [INGAME_TRADE_JYNX] = 
-    {
-        .nickname = _("ZYNX"),
-        .species = SPECIES_JYNX,
-        .ivs = {18, 17, 18, 22, 25, 21},
-        .abilityNum = 0,
-        .otId = 36728,
-        .conditions = {5, 30, 5, 5, 5},
-        .personality = 0x498a2e1d,
-        .heldItem = ITEM_FAB_MAIL,
-        .mailNum = 3,
-        .otName = _("DONTAE"),
-        .otGender = MALE,
-        .sheen = 10,
-        .requestedSpecies = SPECIES_POLIWHIRL
-    },
-    [INGAME_TRADE_NIDORAN] = 
-    {
-#if defined(FIRERED)
-        .nickname = _("MS. NIDO"),
-        .species = SPECIES_NIDORAN_F,
-        .ivs = {22, 18, 25, 19, 15, 22},
-        .abilityNum = 0,
-        .otId = 63184,
-        .conditions = {5, 5, 5, 5, 30},
-        .personality = 0x4c970b89,
-        .heldItem = ITEM_TINY_MUSHROOM,
-        .mailNum = MAIL_NONE,
-        .otName = _("SAIGE"),
-        .otGender = FEMALE,
-        .sheen = 10,
-        .requestedSpecies = SPECIES_NIDORAN_M
-#else
-        .nickname = _("MR. NIDO"),
-        .species = SPECIES_NIDORAN_M,
-        .ivs = {19, 25, 18, 22, 22, 15},
-        .abilityNum = 0,
-        .otId = 63184,
-        .conditions = {30, 5, 5, 5, 5},
-        .personality = 0x4c970b9e,
-        .heldItem = ITEM_TINY_MUSHROOM,
-        .mailNum = MAIL_NONE,
-        .otName = _("SAIGE"),
-        .otGender = FEMALE,
-        .sheen = 10,
-        .requestedSpecies = SPECIES_NIDORAN_F
-#endif
-    },
-    [INGAME_TRADE_FARFETCHD] = 
-    {
-        .nickname = _("CH'DING"),
-        .species = SPECIES_FARFETCHD,
-        .ivs = {20, 25, 21, 24, 15, 20},
-        .abilityNum = 0,
-        .otId = 8810,
-        .conditions = {30, 5, 5, 5, 5},
-        .personality = 0x151943d7,
-        .heldItem = ITEM_STICK,
-        .mailNum = MAIL_NONE,
-        .otName = _("ELYSSA"),
-        .otGender = MALE,
-        .sheen = 10,
-        .requestedSpecies = SPECIES_SPEAROW
-    },
-    [INGAME_TRADE_NIDORINOA] = 
-    {
-#if defined(FIRERED)
-        .nickname = _("NINA"),
-        .species = SPECIES_NIDORINA,
-        .ivs = {22, 25, 18, 19, 22, 15},
-        .abilityNum = 0,
-        .otId = 13637,
-        .conditions = {5, 5, 30, 5, 5},
-        .personality = 0x00eeca15,
-        .heldItem = ITEM_NONE,
-        .mailNum = 255,
-        .otName = _("TURNER"),
-        .otGender = MALE,
-        .sheen = 10,
-        .requestedSpecies = SPECIES_NIDORINO
-#else
-        .nickname = _("NINO"),
-        .species = SPECIES_NIDORINO,
-        .ivs = {19, 18, 25, 22, 15, 22},
-        .abilityNum = 0,
-        .otId = 13637,
-        .conditions = {5, 5, 5, 5, 30},
-        .personality = 0x00eeca19,
-        .heldItem = ITEM_NONE,
-        .mailNum = MAIL_NONE,
-        .otName = _("TURNER"),
-        .otGender = MALE,
-        .sheen = 10,
-        .requestedSpecies = SPECIES_NIDORINA
-#endif
-    },
-    [INGAME_TRADE_LICKITUNG] = 
-    {
-        .nickname = _("MARC"),
-        .species = SPECIES_LICKITUNG,
-        .ivs = {24, 19, 21, 15, 23, 21},
-        .abilityNum = 0,
-        .otId = 1239,
-        .conditions = {5, 5, 5, 5, 30},
-        .personality = 0x451308ab,
-        .heldItem = ITEM_NONE,
-        .mailNum = MAIL_NONE,
-        .otName = _("HADEN"),
-        .otGender = MALE,
-        .sheen = 10,
-#if defined(FIRERED)
-        .requestedSpecies = SPECIES_GOLDUCK
-#else
-        .requestedSpecies = SPECIES_SLOWBRO
-#endif
-    },
-    [INGAME_TRADE_ELECTRODE] = 
-    {
-        .nickname = _("ESPHERE"),
-        .species = SPECIES_ELECTRODE,
-        .ivs = {19, 16, 18, 25, 25, 19},
+        .nickname = _("VOLTY"), 
+        .species = SPECIES_VOLTORB,
+        .ivs = {8, 9, 8, 8, 8, 8},
         .abilityNum = 1,
-        .otId = 50298,
-        .conditions = {30, 5, 5, 5, 5},
-        .personality = 0x06341016,
-        .heldItem = ITEM_NONE,
-        .mailNum = 255,
-        .otName = _("CLIFTON"),
+        .otId = 29189,
+        .conditions = {5, 5, 30, 5, 5}, // cool, beauty, cute, smart, tough
+        .personality = 0x668ABF81, // Hardy
+        .heldItem = ITEM_CHERI_BERRY, 
+        .mailNum = -1,
+        .otName = _("TIM"), 
+        .otGender = MALE, 
+        .sheen = 10,
+        .requestedSpecies = SPECIES_KRABBY
+    }, 
+    [INGAME_TRADE_DODRIO] = 
+    {
+        .nickname = _("DORIS"), 
+        .species = SPECIES_DODRIO,
+        .ivs = {12, 7, 7, 6, 6, 6},
+        .abilityNum = 0,
+        .otId = 283,
+        .conditions = {5, 5, 5, 30, 5}, // cool, beauty, cute, smart, tough
+        .personality = 0xA84B6F04, // Impish Female
+        .heldItem = ITEM_SMOKE_BALL, 
+        .mailNum = -1,
+        .otName = _("EMY"), 
+        .otGender = FEMALE, 
+        .sheen = 10,
+        .requestedSpecies = SPECIES_DRAGONAIR
+    }, 
+    [INGAME_TRADE_AERODACTYL] = 
+    {
+        .nickname = _("AEROY"), 
+        .species = SPECIES_AERODACTYL,
+        .ivs = {8, 9, 6, 6, 6, 6},
+        .abilityNum = 0,
+        .otId = 26491,
+        .conditions = {30, 5, 5, 5, 5}, // cool, beauty, cute, smart, tough
+        .personality = 0x002978E8, // Adamant Male
+        .heldItem = ITEM_SITRUS_BERRY, 
+        .mailNum = -1,
+        .otName = _("KIM"), 
+        .otGender = FEMALE, 
+        .sheen = 10,
+        .requestedSpecies = SPECIES_CHANSEY
+    },
+    [INGAME_TRADE_XATU] = 
+    {
+        .nickname = _("PAUL"), 
+        .species = SPECIES_XATU,
+        .ivs = {8, 9, 6, 8, 6, 6},
+        .abilityNum = 0,
+        .otId = 15616,
+        .conditions = {5, 5, 5, 30, 5}, // cool, beauty, cute, smart, tough
+        .personality = 0x640D3D9C, // Modest Male
+        .heldItem = ITEM_LEPPA_BERRY, 
+        .mailNum = -1,
+        .otName = _("CHRIS"), 
+        .otGender = MALE, 
+        .sheen = 10,
+        .requestedSpecies = SPECIES_HAUNTER
+    },
+    [INGAME_TRADE_MAGNETON] = 
+    {
+        .nickname = _("MAGGIE"), 
+        .species = SPECIES_MAGNETON,
+        .ivs = {8, 9, 6, 6, 6, 6},
+        .abilityNum = 0,
+        .otId = 50082,
+        .conditions = {30, 5, 5, 5, 5}, // cool, beauty, cute, smart, tough
+        .personality = 0x9AEE0E5C, // Impish
+        .heldItem = ITEM_METAL_COAT, 
+        .mailNum = -1,
+        .otName = _("FOREST"), 
+        .otGender = MALE, 
+        .sheen = 10,
+        .requestedSpecies = SPECIES_DUGTRIO
+    },
+    [INGAME_TRADE_GIFT_SPEAROW] = 
+    {
+        .nickname = _("KENYA"),
+        .species = SPECIES_SPEAROW,
+        .ivs = {5, 4, 4, 4, 5, 4},
+        .abilityNum = 0, 
+        .otId = 1001,
+        .conditions = {5, 5, 5, 5, 30}, // cool, beauty, cute, smart, tough
+        .personality = 0x7F,
+        .heldItem = ITEM_TROPIC_MAIL, 
+        .mailNum = 0,
+        .otName = _("RANDY"), 
         .otGender = MALE,
         .sheen = 10,
-        .requestedSpecies = SPECIES_RAICHU
+        .requestedSpecies = 10 // level
     },
-    [INGAME_TRADE_TANGELA] = 
+    [INGAME_TRADE_GIFT_SHUCKLE] = 
     {
-        .nickname = _("TANGENY"),
-        .species = SPECIES_TANGELA,
-        .ivs = {22, 17, 25, 16, 23, 20},
+        .nickname = _("SHUCKIE"), 
+        .species = SPECIES_SHUCKLE,
+        .ivs = {15, 15, 15, 15, 15, 15},
         .abilityNum = 0,
-        .otId = 60042,
-        .conditions = {5, 5, 30, 5, 5},
-        .personality = 0x5c77ecfa,
-        .heldItem = ITEM_STARDUST,
-        .mailNum = 255,
-        .otName = _("NORMA"),
-        .otGender = FEMALE,
+        .otId = 518,
+        .conditions = {5, 5, 30, 5, 5}, // cool, beauty, cute, smart, tough
+        .personality = 0xE47B81C6, // Careful Male
+        .heldItem = ITEM_ORAN_BERRY, 
+        .mailNum = -1,
+        .otName = _("MANIA"), 
+        .otGender = MALE, 
         .sheen = 10,
-        .requestedSpecies = SPECIES_VENONAT
+        .requestedSpecies = 15 // level
     },
-    [INGAME_TRADE_SEEL] = 
-    {
-        .nickname = _("SEELOR"),
-        .species = SPECIES_SEEL,
-        .ivs = {24, 15, 22, 16, 23, 22},
-        .abilityNum = 0,
-        .otId = 9853,
-        .conditions = {5, 5, 5, 5, 30},
-        .personality = 0x482cac89,
-        .heldItem = ITEM_NONE,
-        .mailNum = 255,
-        .otName = _("GARETT"),
-        .otGender = MALE,
-        .sheen = 10,
-        .requestedSpecies = SPECIES_PONYTA
-    }
 };
 
 static const u16 sIngameTradeMail[][MAIL_WORDS_COUNT + 1] =
 {
     {
-        EC_WORD_BE,
-        EC_WORD_NICE,
-        EC_WORD_TO,
-        EC_POKEMON(PLUSLE),
-        EC_WORD_EXCL,
-        EC_POKEMON(VOLBEAT),
-        EC_WORD_WILL,
-        EC_WORD_BE,
-        EC_WORD_FANTASTIC
+        EC_WORD_DARK,
+        EC_WORD_PLACE,
+        EC_WORD_NEAR,
+        EC_WORD_YOU,
+        EC_WORD_LET_S,
+        EC_WORD_GO,
+        EC_WORD_HAVE,
+        EC_WORD_AN,
+        EC_WORD_ADVENTURE
     }, {
         EC_WORD_I,
         EC_WORD_WILL,
@@ -1246,17 +1166,6 @@ static const u16 sIngameTradeMail[][MAIL_WORDS_COUNT + 1] =
         EC_WORD_A,
         EC_WORD_CUTE,
         EC_WORD_WAY
-    },
-    {
-        EC_WORD_THAT_S,
-        EC_WORD_A,
-        EC_WORD_HEALTHY,
-        EC_POKEMON(JYNX),
-        EC_WORD_EXCL,
-        EC_WORD_BE,
-        EC_WORD_KIND,
-        EC_WORD_TO,
-        EC_WORD_IT
     }
 };
 

@@ -2013,6 +2013,10 @@
 #define FLAG_HIDDEN_ITEM_BURNED_TOWER_1F_ETHER                                        (CRYSTAL_FLAGS_START + 343)
 #define FLAG_HIDDEN_ITEM_BURNED_TOWER_1F_ULTRA_BALL                                   (CRYSTAL_FLAGS_START + 344)
 #define FLAG_HIDDEN_ITEM_CERULEAN_CITY_BERSERK_GENE                                   (CRYSTAL_FLAGS_START + 345)
+// Skipped when the crystal block was allocated because expansion's FRLG stub list
+// already used this name (stubbed to 0, which the bg_hidden_item_event macro
+// rejects). Allocated here out of sequence, in the last free slot of the pool.
+#define FLAG_HIDDEN_ITEM_CELADON_CITY_PP_UP                                           (CRYSTAL_FLAGS_START + 877)
 #define FLAG_HIDDEN_ITEM_CERULEAN_CITY_GYM_MACHINE_PART                               (CRYSTAL_FLAGS_START + 346)
 #define FLAG_HIDDEN_ITEM_CIANWOOD_CITY_REVIVE                                         (CRYSTAL_FLAGS_START + 347)
 #define FLAG_HIDDEN_ITEM_CIANWOOD_CITY_MAX_ETHER                                      (CRYSTAL_FLAGS_START + 348)
@@ -3111,7 +3115,6 @@
 #define FLAG_HIDDEN_ITEM_UNUSED_0x2C                                       0
 #define FLAG_HIDDEN_ITEM_UNUSED_0x2D                                       0
 #define FLAG_HIDDEN_ITEM_UNUSED_0x2E                                       0
-#define FLAG_HIDDEN_ITEM_CELADON_CITY_PP_UP                                0
 #define FLAG_HIDDEN_ITEM_VERMILION_CITY_MAX_ETHER                          0
 #define FLAG_HIDDEN_ITEM_CERULEAN_CITY_RARE_CANDY                          0
 #define FLAG_HIDDEN_ITEM_ROUTE4_GREAT_BALL                                 0

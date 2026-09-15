@@ -6027,6 +6027,26 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Koga = {
     .affineAnims = gDummySpriteAffineAnimTable,
 };
 
+// CrystalDust
+const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Janine = {
+    .tileTag = TAG_NONE,
+    .paletteTag = OBJ_EVENT_PAL_TAG_NPC_4,
+    .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
+    .size = 256,
+    .width = 16,
+    .height = 32,
+    .paletteSlot = PALSLOT_NPC_1,
+    .shadowSize = SHADOW_SIZE_M,
+    .inanimate = FALSE,
+    .compressed = FALSE,
+    .tracks = TRACKS_FOOT,
+    .oam = &gObjectEventBaseOam_16x32,
+    .subspriteTables = sOamTables_16x32,
+    .anims = sAnimTable_Standard,
+    .images = sPicTable_Janine,
+    .affineAnims = gDummySpriteAffineAnimTable,
+};
+
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Giovanni = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_NPC_WHITE,
@@ -6632,6 +6652,26 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Voltorb = {
     .subspriteTables = sOamTables_16x16,
     .anims = sAnimTable_Standard,
     .images = sPicTable_Voltorb,
+    .affineAnims = gDummySpriteAffineAnimTable,
+};
+
+// CrystalDust
+const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_SlowpokeTailless = {
+    .tileTag = TAG_NONE,
+    .paletteTag = OBJ_EVENT_PAL_TAG_NPC_2,
+    .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
+    .size = 128,
+    .width = 16,
+    .height = 16,
+    .paletteSlot = PALSLOT_NPC_2,
+    .shadowSize = SHADOW_SIZE_M,
+    .inanimate = FALSE,
+    .compressed = FALSE,
+    .tracks = TRACKS_FOOT,
+    .oam = &gObjectEventBaseOam_16x16,
+    .subspriteTables = sOamTables_16x16,
+    .anims = sAnimTable_Standard,
+    .images = sPicTable_SlowpokeTailless,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
 

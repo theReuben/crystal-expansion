@@ -276,6 +276,17 @@
 #define MOVEMENT_ACTION_SPIN_UP                         0xB3
 #define MOVEMENT_ACTION_SPIN_LEFT                       0xB4
 #define MOVEMENT_ACTION_SPIN_RIGHT                      0xB5
+// CrystalDust's double-speed and half-speed two-tile jumps, used by its ledge
+// and Sudowoodo/boulder scripts. Lost in the Phase 1 merge; restored at the end
+// of expansion's list rather than CrystalDust's 0x9E-0xA5, which expansion uses.
+#define MOVEMENT_ACTION_JUMP_2_DOWN_FAST             0xB6
+#define MOVEMENT_ACTION_JUMP_2_UP_FAST               0xB7
+#define MOVEMENT_ACTION_JUMP_2_LEFT_FAST             0xB8
+#define MOVEMENT_ACTION_JUMP_2_RIGHT_FAST            0xB9
+#define MOVEMENT_ACTION_JUMP_2_DOWN_SLOW             0xBA
+#define MOVEMENT_ACTION_JUMP_2_UP_SLOW               0xBB
+#define MOVEMENT_ACTION_JUMP_2_LEFT_SLOW             0xBC
+#define MOVEMENT_ACTION_JUMP_2_RIGHT_SLOW            0xBD
 
 #define MOVEMENT_ACTION_STEP_END 0xFE
 #define MOVEMENT_ACTION_NONE     0xFF

@@ -25,9 +25,9 @@ script GoldenrodCity_DeptStore_5F_EventScript_Clerk {
 raw `
 .align 2
 GoldenrodCity_DeptStore_5F_Pokemart_Clerk:
-	.2byte ITEM_TM03_WATER_PULSE
-	.2byte ITEM_TM33_REFLECT
-	.2byte ITEM_TM16_LIGHT_SCREEN
+	.2byte ITEM_TM_WATER_PULSE
+	.2byte ITEM_TM_REFLECT
+	.2byte ITEM_TM_LIGHT_SCREEN
 	.2byte ITEM_NONE
 `
 
@@ -46,7 +46,7 @@ script GoldenrodCity_DeptStore_5F_EventScript_ReturnFrustrationLady {
             msgbox("It's very attached to you.\p"
                    "This move should be perfect for\n"
                    "a pair like you.")
-            checkitemspace(ITEM_TM27_RETURN, 1)
+            checkitemspace(ITEM_TM_RETURN, 1)
             if (!var(VAR_RESULT))
             {
                 goto(Common_EventScript_ShowBagIsFull)
@@ -54,7 +54,7 @@ script GoldenrodCity_DeptStore_5F_EventScript_ReturnFrustrationLady {
             else
             {
                 givetmhm_msg("{PLAYER} received TM27\n"
-                            "from the woman.", ITEM_TM27_RETURN)
+                            "from the woman.", ITEM_TM_RETURN)
                 setflag(FLAG_DAILY_GOLDENROD_DEPT_STORE_RETURN_FRUSTRATION_EVENT)
             }
         }
@@ -67,7 +67,7 @@ script GoldenrodCity_DeptStore_5F_EventScript_ReturnFrustrationLady {
         {
             msgbox("It looks evil.\n"
                    "How about this TM for it?")
-            checkitemspace(ITEM_TM21_FRUSTRATION, 1)
+            checkitemspace(ITEM_TM_FRUSTRATION, 1)
             if (!var(VAR_RESULT))
             {
                 goto(Common_EventScript_ShowBagIsFull)
@@ -75,7 +75,7 @@ script GoldenrodCity_DeptStore_5F_EventScript_ReturnFrustrationLady {
             else
             {
                 givetmhm_msg("{PLAYER} received TM21\n"
-                            "from the woman.", ITEM_TM21_FRUSTRATION)
+                            "from the woman.", ITEM_TM_FRUSTRATION)
                 setflag(FLAG_DAILY_GOLDENROD_DEPT_STORE_RETURN_FRUSTRATION_EVENT)
             }
         }

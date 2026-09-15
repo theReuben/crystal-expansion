@@ -17,6 +17,8 @@
 #include "text.h"
 #include "constants/battle_frontier.h"
 #include "constants/battle_special.h"
+#include "constants/battle_partner.h"
+#include "constants/opponents.h"
 
 static void HandleSpecialTrainerBattleEnd(void);
 static void Task_StartBattleAfterTransition(u8 taskId);
@@ -97,6 +99,20 @@ void DoSpecialTrainerBattle(void)
         PlayMapChosenOrBattleBGM(0);
         BattleTransition_StartOnField(GetSpecialBattleTransition(B_TRANSITION_GROUP_E_READER));
     #endif //FREE_BATTLE_TOWER_E_READER
+        break;
+    // CrystalDust's Team Rocket Base double battle, restored in Phase 2 (D42).
+    // CrystalDust built Lance's Dragonite by hand and read the two opponents out
+    // of never-executed scripts; expansion's partner table and trainer party data
+    // hold both, so this uses those instead.
+    case SPECIAL_BATTLE_LANCE:
+        gBattleTypeFlags = BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER;
+        gPartnerTrainerId = TRAINER_PARTNER(PARTNER_LANCE);
+        FillPartnerParty(gPartnerTrainerId);
+        TRAINER_BATTLE_PARAM.opponentA = TRAINER_MAHOGANY_EXECUTIVE_F;
+        TRAINER_BATTLE_PARAM.opponentB = TRAINER_ROCKET_EXEC_PARTNER;
+        CreateTask(Task_StartBattleAfterTransition, 1);
+        PlayMapChosenOrBattleBGM(0);
+        BattleTransition_StartOnField(GetSpecialBattleTransition(B_TRANSITION_GROUP_SECRET_BASE));
         break;
     case SPECIAL_BATTLE_MULTI:
     default:

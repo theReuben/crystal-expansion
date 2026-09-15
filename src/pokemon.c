@@ -16,6 +16,7 @@
 #include "daycare.h"
 #include "dexnav.h"
 #include "event_data.h"
+#include "script_pokemon_util.h"
 #include "event_object_movement.h"
 #include "evolution_scene.h"
 #include "field_player_avatar.h"
@@ -645,6 +646,13 @@ static const s8 sFriendshipEventModifiers[][3] =
     [FRIENDSHIP_EVENT_FAINT_FIELD_PSN] = {-5, -5, -10},
     [FRIENDSHIP_EVENT_FAINT_LARGE]     = {-5, -5, -10},
     [FRIENDSHIP_EVENT_MASSAGE]         = { 3,  3,  3 },
+    [FRIENDSHIP_EVENT_OLDER_HAIRCUT_BROTHER_0]   = { 1,  1,  1},
+    [FRIENDSHIP_EVENT_OLDER_HAIRCUT_BROTHER_1]   = { 3,  3,  1},
+    [FRIENDSHIP_EVENT_OLDER_HAIRCUT_BROTHER_2]   = { 5,  5,  2},
+    [FRIENDSHIP_EVENT_YOUNGER_HAIRCUT_BROTHER_0] = { 1,  1,  1},
+    [FRIENDSHIP_EVENT_YOUNGER_HAIRCUT_BROTHER_1] = { 3,  3,  1},
+    [FRIENDSHIP_EVENT_YOUNGER_HAIRCUT_BROTHER_2] = {10, 10,  4},
+    [FRIENDSHIP_EVENT_DAISY_GROOMING]            = { 3,  3,  1},
 };
 
 static const struct SpeciesItem sAlteringCaveWildMonHeldItems[] =
@@ -6975,4 +6983,14 @@ void CreateMonFromTemplate(struct Pokemon *mon, const struct PokemonTemplate *mo
 
     CalculateMonStats(mon);
     TryFormChange(mon, FORM_CHANGE_ITEM_HOLD, B_TRAINER_PLAYER);
+}
+
+// CrystalDust special, restored in Phase 2 (D41). Used by the Lugia and Ho-Oh
+// encounters. CrystalDust called CreateEventLegalMon to set MON_DATA_EVENT_LEGAL;
+// expansion has no such field, so this defers to expansion's scripted wild mon
+// setup. The only behaviour lost is the "event legal" marker, which nothing in
+// this tree reads.
+void CreateEventLegalEnemyMon(void)
+{
+    CreateScriptedWildMon(gSpecialVar_0x8004, gSpecialVar_0x8005, gSpecialVar_0x8006);
 }

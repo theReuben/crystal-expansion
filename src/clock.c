@@ -15,6 +15,9 @@
 #include "time_events.h"
 #include "tv.h"
 #include "wallclock.h"
+#include "string_util.h"
+#include "text.h"
+#include "constants/characters.h"
 #include "constants/form_change_types.h"
 #include "apricorn_tree.h"
 
@@ -115,4 +118,57 @@ void StartWallClock(void)
 {
     SetMainCallback2(CB2_StartWallClock);
     gMain.savedCallback = ReturnFromStartWallClock;
+}
+
+// ---- CrystalDust, restored in Phase 2 (see D40) ----
+
+// Formats hours:minutes, honouring the Pokegear's 12/24-hour setting, and
+// returns a pointer to the terminator so callers can keep appending.
+u8 *WriteTimeString(u8 *dest, u8 hours, u8 minutes, bool8 twentyFourHourMode, bool8 shouldWriteAMPM)
+{
+    bool8 isPM = FALSE;
+
+    if (!twentyFourHourMode)
+    {
+        if (hours == 0)
+            hours = 12;
+        else if (hours == 12)
+            isPM = TRUE;
+        else if (hours > 12)
+        {
+            isPM = TRUE;
+            hours -= 12;
+        }
+    }
+
+    dest = ConvertIntToDecimalStringN(dest, hours, STR_CONV_MODE_LEFT_ALIGN, (hours >= 10) ? 2 : 1);
+    *dest++ = CHAR_COLON;
+    dest = ConvertIntToDecimalStringN(dest, minutes, STR_CONV_MODE_LEADING_ZEROS, 2);
+
+    if (!twentyFourHourMode && shouldWriteAMPM)
+    {
+        *dest++ = CHAR_SPACE;
+        *dest++ = isPM ? CHAR_P : CHAR_A;
+        *dest++ = CHAR_M;
+    }
+    *dest = EOS;
+
+    return dest;
+}
+
+void WriteCurrentTimeStringToStrVar1(void)
+{
+    WriteTimeString(gStringVar1, gLocalTime.hours, gLocalTime.minutes, gSaveBlock2Ptr->twentyFourHourClock, TRUE);
+}
+
+// CrystalDust stored the weekday in struct Time and set it directly. Expansion
+// derives it from the date, so setting it means shifting the day count until the
+// derived weekday matches what the script asked for.
+void SetDayOfWeek(void)
+{
+    s32 diff = (s32)gSpecialVar_0x8004 - (s32)GetDayOfWeek();
+
+    RtcCalcLocalTime();
+    RtcCalcLocalTimeOffset(gLocalTime.days + diff, gLocalTime.hours, gLocalTime.minutes, gLocalTime.seconds);
+    InitTimeBasedEvents();
 }

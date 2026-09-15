@@ -6482,3 +6482,24 @@ void ResetTVShowState(void)
 {
     sTVShowState = 0;
 }
+
+// CrystalDust: the rival naming screen, reached from the Elm's-lab intro script.
+// Lost when the Phase 1 merge resolved this file to expansion's side. See D40.
+void SetRivalNickname(void)
+{
+    StringCopy(gSaveBlock1Ptr->rivalName, gText_DefaultNameSilver);
+    DoNamingScreen(NAMING_SCREEN_RIVAL, gSaveBlock1Ptr->rivalName, 0, 0, 0, CB2_ReturnToFieldContinueScriptPlayMapMusic);
+}
+
+// CrystalDust's Name Rater, restored in Phase 2 (D42). The old nickname is left
+// in gStringVar3 by the script before the naming screen runs.
+bool8 NameRaterWasNicknameChanged(void)
+{
+    GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_NICKNAME, gStringVar1);
+
+    if (!StringCompare(gStringVar3, gStringVar1)) // nickname was not changed
+        return FALSE;
+
+    PutNameRaterShowOnTheAir();
+    return TRUE;
+}

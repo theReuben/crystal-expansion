@@ -1009,7 +1009,8 @@
 	.endm
 
 	@ Displays a box containing the front sprite for the specified Pokemon species.
-	.macro showmonpic species:req, x:req, y:req
+	@ CrystalDust added the shiny argument.
+	.macro showmonpic species:req, x:req, y:req, shiny=FALSE
 	.byte SCR_OP_SHOWMONPIC
 	.2byte \species
 	.byte \x
@@ -1377,19 +1378,25 @@
 	.endm
 
 	@ Subtracts value from the player's money. If the player has less than 'value' money, their money is set to 0.
-	.macro removemoney value:req
+	@ CrystalDust added isVar: when set, value is a var id.
+	.macro removemoney value:req, isVar=FALSE
 	.byte SCR_OP_REMOVEMONEY
 	.4byte \value
+	.byte \isVar
 	.endm
 
 	@ Checks if the player has money >= value. VAR_RESULT is set to TRUE if the player has enough money, or FALSE if they do not.
-	.macro checkmoney value:req
+	@ CrystalDust added isVar: when set, value is a var id.
+	.macro checkmoney value:req, isVar=FALSE
 	.byte SCR_OP_CHECKMONEY
 	.4byte \value
+	.byte \isVar
 	.endm
 
 	@ Creates a window showing how much money the player has.
-	.macro showmoneybox x:req, y:req
+	@ CrystalDust's third argument suppresses the box entirely; it is FALSE at
+	@ every call site in this tree, so it is accepted and discarded.
+	.macro showmoneybox x:req, y:req, ignore=FALSE
 	.byte SCR_OP_SHOWMONEYBOX
 	.byte \x
 	.byte \y
@@ -1401,7 +1408,10 @@
 	.endm
 
 	@ Updates the window created by showmoneybox.
-	.macro updatemoneybox
+	@ CrystalDust passes x, y and an ignore flag here; expansion's money box
+	@ remembers its own position and the flag is FALSE everywhere in this tree,
+	@ so the arguments are accepted and discarded.
+	.macro updatemoneybox x=0, y=0, ignore=FALSE
 	.byte SCR_OP_UPDATEMONEYBOX
 	.endm
 
@@ -1715,12 +1725,14 @@
 	.endm
 
 	@ Destroys the window created by showcoins.
-	.macro hidecoinsbox
+	@ CrystalDust passes x, y; expansion's coins box remembers its own position.
+	.macro hidecoinsbox x=0, y=0
 	.byte SCR_OP_HIDECOINSBOX
 	.endm
 
 	@ Updates the window created by showcoins.
-	.macro updatecoinsbox
+	@ CrystalDust passes x, y; expansion's coins box remembers its own position.
+	.macro updatecoinsbox x=0, y=0
 	.byte SCR_OP_UPDATECOINSBOX
 	.endm
 
@@ -3155,8 +3167,12 @@
 	.endm
 
 @ CrystalDust (wrapper, no opcode)
+	@ CrystalDust's no-intro win/lose battle. Its TRAINER_BATTLE_CONTINUE_SCRIPT_WINTEXT
+	@ mode is expansion's early-rival battle: same four arguments, and its tutorial
+	@ mode word is expansion's rival_battle_flags (TUTORIAL_BATTLE_HEAL_AFTER and
+	@ RIVAL_BATTLE_HEAL_AFTER are both 1). See D39.
 	.macro trainerbattle_wintext trainer:req, mode:req, lose_text:req, win_text:req
-	trainerbattle TRAINER_BATTLE_CONTINUE_SCRIPT_WINTEXT, \trainer, \mode, \lose_text, \win_text
+	trainerbattle_earlyrival \trainer, \mode, \lose_text, \win_text
 	.endm
 
 @ CrystalDust (was 0x5d)

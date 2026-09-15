@@ -4,6 +4,9 @@
 // TODO: time of day and seconds in a day defines
 
 void InitTimeBasedEvents(void);
+u8 *WriteTimeString(u8 *dest, u8 hours, u8 minutes, bool8 twentyFourHourMode, bool8 shouldWriteAMPM);
+void WriteCurrentTimeStringToStrVar1(void);
+void SetDayOfWeek(void);
 void DoTimeBasedEvents(void);
 void FormChangeTimeUpdate();
 void UpdateDailySeed(void);

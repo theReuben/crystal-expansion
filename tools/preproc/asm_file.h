@@ -31,6 +31,7 @@ enum class Directive
     Include,
     String,
     Braille,
+    Unown,
     Enum,
     Macro,
     Unknown
@@ -60,6 +61,7 @@ public:
     std::string ReadPath();
     int ReadString(unsigned char* s);
     int ReadBraille(unsigned char* s);
+    int ReadUnown(unsigned char* s);
     bool IsAtEnd();
     void OutputLine();
     void OutputLocation();

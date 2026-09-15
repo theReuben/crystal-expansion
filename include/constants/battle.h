@@ -151,6 +151,8 @@ enum BattleSide
 
 #define RIVAL_BATTLE_HEAL_AFTER  1
 #define RIVAL_BATTLE_TUTORIAL    3
+// CrystalDust's name for the same bit; its scripts pass it to trainerbattle_wintext.
+#define TUTORIAL_BATTLE_HEAL_AFTER  RIVAL_BATTLE_HEAL_AFTER
 
 // Battle Outcome defines
 #define B_OUTCOME_WON                  1

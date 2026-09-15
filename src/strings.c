@@ -1912,3 +1912,20 @@ const u8 gText_TM15AndPrice[] = _("TM15{CLEAR_TO 0x48}{FONT SMALL}7,500 COINS");
 const u8 gText_Flamethrower[] = _("TM35 FLAMETHROWER");
 const u8 gText_Thunderbolt[] = _("TM13 ICE BEAM");
 const u8 gText_Ice_Beam[] = _("TM24 THUNDERBOLT");
+
+// CrystalDust's mini credits (Route 36 NPC), restored in Phase 2 (D41). The
+// Phase 1 merge kept expansion's strings.c, so only the externs survived.
+const u8 gString_MiniCreditsCrystalDustDevTeam[] = _("POKéMON CRYSTALDUST DEVELOPMENT TEAM");
+const u8 gString_MiniCreditsDevTeam1[] = _("Sierraffinity{CLEAR 10}huderlem{CLEAR 10}Jambo51{CLEAR 10}Shiro");
+const u8 gString_MiniCreditsDevTeam2[] = _("Alpha Remaster{CLEAR 10}CyanSMP64 “Furret”{CLEAR 10}Tetra");
+const u8 gString_MiniCreditsDevTeam3[] = _("Jilly Shears{CLEAR 10}Kurausukun{CLEAR 10}MrAPT1{CLEAR 10}Farore");
+const u8 gString_MiniCreditsDevTeam4[] = _("EesrekYT{CLEAR 10}KecleonTencho{CLEAR 10}PlatinumMaster");
+const u8 gString_MiniCreditsDevTeam5[] = _("ShadowOne333{CLEAR 10}Chaos Rush{CLEAR 10}Spherical Ice");
+const u8 gString_MiniCreditsDevTeam6[] = _("RoryAllegory{CLEAR 10}{FONT SMALL}…and surely many more…");
+const u8 gString_MiniCreditsSpecialThanks[] = _("SPECIAL THANKS");
+const u8 gString_MiniCreditsThanks1[] = _("shadowndacorner");
+const u8 gString_MiniCreditsThanks2[] = _("axipher");
+const u8 gString_MiniCreditsThanks3[] = _("Worcestershirey");
+const u8 gString_MiniCreditsThanks4[] = _("Capt'nDingPot");
+const u8 gString_MiniCreditsThanks5[] = _("Feltlikeit");
+const u8 gString_MiniCreditsThanks6[] = _("…and all those who tested v2 and below!");

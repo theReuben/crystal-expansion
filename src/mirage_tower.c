@@ -73,7 +73,7 @@ static void Task_FossilFallAndSink(u8);
 static void SpriteCB_FallingFossil(struct Sprite *);
 static void UpdateDisintegrationEffect(u8 *, u16, u8, u8, u8);
 
-static const ALIGNED(2) u8 sMirageTower_Gfx[] = INCGFX_U8("graphics/misc/mirage_tower.png", ".4bpp", "-num_tiles 73 -Wnum_tiles");
+static const ALIGNED(2) u8 sMirageTower_Gfx[] = INCGFX_U8("graphics/misc/mirage_tower.png", ".4bpp", "-num_tiles 72 -Wnum_tiles");
 static const u16 sMirageTowerTilemap[] = INCBIN_U16("graphics/misc/mirage_tower.bin");
 static const u16 sFossil_Pal[] = INCGFX_U16("graphics/object_events/pics/misc/fossil.png", ".gbapal"); // Unused
 static const u8 sFossil_Gfx[] = INCGFX_U8("graphics/object_events/pics/misc/fossil.png", ".4bpp"); // Duplicate of gObjectEventPic_Fossil
@@ -326,6 +326,11 @@ void StartPlayerDescendMirageTower(void)
 {
     CreateTask(PlayerDescendMirageTower, 8);
 }
+
+// Route111 was removed with the rest of Hoenn (D37) and took this local id with
+// it. The mirage tower code is kept linkable rather than excised, so the id is
+// restored here at the value that map used (object index 45).
+#define LOCALID_ROUTE111_PLAYER_FALLING 45
 
 // As the tower disintegrates, a duplicate object event of the player
 // is created at the top of the tower and moved down to show the player falling

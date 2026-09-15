@@ -1988,10 +1988,11 @@ bool8 ScrCmd_showmonpic(struct ScriptContext *ctx)
     enum Species species = VarGet(ScriptReadHalfword(ctx));
     u8 x = ScriptReadByte(ctx);
     u8 y = ScriptReadByte(ctx);
+    bool8 isShiny = ScriptReadByte(ctx); // CrystalDust
 
     Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
 
-    ScriptMenu_ShowPokemonPic(species, x, y);
+    ScriptMenu_ShowPokemonPic(species, x, y, isShiny);
     return FALSE;
 }
 
@@ -2333,9 +2334,12 @@ bool8 ScrCmd_addmoney(struct ScriptContext *ctx)
 bool8 ScrCmd_removemoney(struct ScriptContext *ctx)
 {
     u32 amount = ScriptReadWord(ctx);
+    u8 isVar = ScriptReadByte(ctx); // CrystalDust: the amount may be a var id
 
     Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
 
+    if (isVar)
+        amount = VarGet(amount);
     RemoveMoney(&gSaveBlock1Ptr->money, amount);
     return FALSE;
 }
@@ -2343,9 +2347,12 @@ bool8 ScrCmd_removemoney(struct ScriptContext *ctx)
 bool8 ScrCmd_checkmoney(struct ScriptContext *ctx)
 {
     u32 amount = ScriptReadWord(ctx);
+    u8 isVar = ScriptReadByte(ctx); // CrystalDust: the amount may be a var id
 
     Script_RequestEffects(SCREFF_V1);
 
+    if (isVar)
+        amount = VarGet(amount);
     gSpecialVar_Result = IsEnoughMoney(&gSaveBlock1Ptr->money, amount);
 
     return FALSE;

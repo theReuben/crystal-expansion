@@ -564,6 +564,19 @@ void StartOldManTutorialBattle(void)
     CreateBattleStartTask(B_TRANSITION_SLICE, 0);
 }
 
+// CrystalDust's Violet City Dude catching tutorial, restored in Phase 2 (D41).
+// CrystalDust used its own BATTLE_TYPE_DUDE_TUTORIAL bit; it is bit 9, the same
+// bit and the same scripted-player behaviour as expansion's
+// BATTLE_TYPE_CATCH_TUTORIAL, so that is what this sets.
+void StartDudeTutorialBattle(void)
+{
+    CreateMaleMon(&gParties[B_TRAINER_OPPONENT_A][0], SPECIES_RATTATA, 5);
+    LockPlayerFieldControls();
+    gMain.savedCallback = CB2_ReturnToFieldContinueScriptPlayMapMusic;
+    gBattleTypeFlags = BATTLE_TYPE_CATCH_TUTORIAL;
+    CreateBattleStartTask(B_TRANSITION_SLICE, 0);
+}
+
 void BattleSetup_StartScriptedWildBattle(void)
 {
     LockPlayerFieldControls();

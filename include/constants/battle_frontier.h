@@ -36,6 +36,8 @@
 #define SPECIAL_BATTLE_SECRET_BASE 1
 #define SPECIAL_BATTLE_EREADER 2
 #define SPECIAL_BATTLE_MULTI 3
+// CrystalDust's Team Rocket Base fight alongside Lance.
+#define SPECIAL_BATTLE_LANCE 4
 
 // Facility trainer Battles
 #define FACILITY_BATTLE_TOWER           0

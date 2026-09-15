@@ -332,6 +332,7 @@ enum
     OBJ_EVENT_GFX_LT_SURGE,
     OBJ_EVENT_GFX_ERIKA,
     OBJ_EVENT_GFX_KOGA,
+    OBJ_EVENT_GFX_JANINE, // CrystalDust: Fuchsia Gym's leader in Gen 2
     OBJ_EVENT_GFX_SABRINA,
     OBJ_EVENT_GFX_BLAINE,
     OBJ_EVENT_GFX_GIOVANNI,
@@ -390,6 +391,7 @@ enum
     OBJ_EVENT_GFX_SEEL,
     OBJ_EVENT_GFX_VOLTORB,
     OBJ_EVENT_GFX_SLOWPOKE,
+    OBJ_EVENT_GFX_SLOWPOKE_TAILLESS, // CrystalDust: Azalea Town's Rocket-shorn Slowpoke
     OBJ_EVENT_GFX_SLOWBRO,
     OBJ_EVENT_GFX_MACHOP,
     OBJ_EVENT_GFX_WIGGLYTUFF,
@@ -499,6 +501,14 @@ enum
 // can be spawned for the camera to track instead of the player. Additionally, the value 0 is reserved as an "empty" indicator.
 #define LOCALID_NONE                              0
 #define LOCALID_CAMERA                          127
+
+// The Littleroot player's-house maps were removed with the rest of Hoenn (D37),
+// but data/scripts/players_house.inc is still included: src/debug.c and
+// src/field_control_avatar.c reference three of its scripts. These are the
+// values those maps gave the ids. See D37.
+#define LOCALID_PLAYERS_HOUSE_1F_MOM              1
+#define LOCALID_PLAYERS_HOUSE_1F_DAD              5
+#define LOCALID_PLAYERS_HOUSE_2F_MOM             14
 #define LOCALID_BERRY_BLENDER_PLAYER_END        240 // This will use 5 (MAX_RFU_PLAYERS) IDs ending at 240, i.e. 236-240
 #define LOCALID_OW_ENCOUNTER_END                252 // This will use 4 (OWE_SPAWNS_MAX) IDs ending at 252, i.e. 249-252
 #define LOCALID_FOLLOWING_POKEMON               254

@@ -50,6 +50,7 @@
 #include "constants/region_map_sections.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
+#include "constants/trade.h"
 #include "constants/union_room.h"
 
 // IDs for RunTradeMenuCallback
@@ -4633,6 +4634,10 @@ enum Species GetTradeSpecies(void)
     if (GetBoxMonData(boxmon, MON_DATA_IS_EGG))
         return SPECIES_NONE;
     enum Species species = GetBoxMonData(boxmon, MON_DATA_SPECIES);
+    // CrystalDust: the Blackthorn Dodrio trade only accepts a female Dragonair.
+    // Restored in Phase 2 (D41); expansion's version had no gender check.
+    if (species == SPECIES_DRAGONAIR && GetBoxMonGender(boxmon) != MON_FEMALE)
+        return SPECIES_NONE;
     return species;
 }
 
@@ -5114,4 +5119,152 @@ static void CB2_SaveAndEndWirelessTrade(void)
     AnimateSprites();
     BuildOamBuffer();
     UpdatePaletteFade();
+}
+
+// ---- CrystalDust gift-mon specials, restored in Phase 2 (D41) ----
+// Kenya (Route 35 gatehouse -> Route 31) and Shuckie (Mania, Cianwood) are given
+// outright rather than traded, and are later checked for by identity.
+
+static bool8 IsMonGiftMon(struct Pokemon *mon, const struct InGameTrade *trade)
+{
+    u8 stringBuffer[max(POKEMON_NAME_BUFFER_SIZE, TRAINER_NAME_LENGTH + 1)];
+
+    if (GetMonData(mon, MON_DATA_LANGUAGE, NULL) != GAME_LANGUAGE)
+        return FALSE;
+    GetMonData(mon, MON_DATA_OT_NAME, stringBuffer);
+    if (StringCompareWithoutExtCtrlCodes(stringBuffer, trade->otName))
+        return FALSE;
+    if (GetMonData(mon, MON_DATA_OT_GENDER, NULL) != trade->otGender)
+        return FALSE;
+    if (GetMonData(mon, MON_DATA_OT_ID, NULL) != trade->otId)
+        return FALSE;
+    if (GetMonData(mon, MON_DATA_PERSONALITY, NULL) != trade->personality)
+        return FALSE;
+    GetMonData(mon, MON_DATA_NICKNAME, stringBuffer);
+    if (StringCompareN(stringBuffer, trade->nickname, POKEMON_NAME_LENGTH))
+        return FALSE;
+
+    return TRUE;
+}
+
+void IsMonGiftShuckle(void)
+{
+    const struct InGameTrade *trade = &sIngameTrades[INGAME_TRADE_GIFT_SHUCKLE];
+    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][gSpecialVar_0x8005];
+
+    gSpecialVar_Result = IsMonGiftMon(mon, trade);
+    if (gSpecialVar_Result == TRUE)
+        gSpecialVar_0x8006 = GetMonData(mon, MON_DATA_FRIENDSHIP, NULL);
+    else
+        gSpecialVar_0x8006 = 0;
+}
+
+void ZeroMonAtSlot0x8004AndCompact(void)
+{
+    ZeroMonData(&gParties[B_TRAINER_PLAYER][gSpecialVar_0x8004]);
+    CompactPartySlots();
+}
+
+static bool8 _GivePlayerSpecialGiftMon(u8 whichSpecialMon)
+{
+    u8 partyIdx;
+
+    for (partyIdx = 0; partyIdx < PARTY_SIZE; partyIdx++)
+    {
+        if (GetMonData(&gParties[B_TRAINER_PLAYER][partyIdx], MON_DATA_SPECIES, NULL) == SPECIES_NONE)
+            break;
+    }
+
+    if (partyIdx < PARTY_SIZE)
+    {
+        const struct InGameTrade *inGameTrade = &sIngameTrades[whichSpecialMon];
+        struct Mail mail;
+        struct Pokemon *pokemon = &gParties[B_TRAINER_PLAYER][partyIdx];
+
+        // Gift entries keep their level in requestedSpecies; see src/data/trade.h.
+        CreateMon(pokemon, inGameTrade->species, inGameTrade->requestedSpecies, inGameTrade->personality, OTID_STRUCT_PRESET(inGameTrade->otId));
+        GiveMonInitialMoveset(pokemon);
+
+        SetMonData(pokemon, MON_DATA_HP_IV, &inGameTrade->ivs[0]);
+        SetMonData(pokemon, MON_DATA_ATK_IV, &inGameTrade->ivs[1]);
+        SetMonData(pokemon, MON_DATA_DEF_IV, &inGameTrade->ivs[2]);
+        SetMonData(pokemon, MON_DATA_SPEED_IV, &inGameTrade->ivs[3]);
+        SetMonData(pokemon, MON_DATA_SPATK_IV, &inGameTrade->ivs[4]);
+        SetMonData(pokemon, MON_DATA_SPDEF_IV, &inGameTrade->ivs[5]);
+        SetMonData(pokemon, MON_DATA_NICKNAME, inGameTrade->nickname);
+        SetMonData(pokemon, MON_DATA_OT_NAME, inGameTrade->otName);
+        SetMonData(pokemon, MON_DATA_OT_GENDER, &inGameTrade->otGender);
+        SetMonData(pokemon, MON_DATA_ABILITY_NUM, &inGameTrade->abilityNum);
+        SetMonData(pokemon, MON_DATA_BEAUTY, &inGameTrade->conditions[1]);
+        SetMonData(pokemon, MON_DATA_CUTE, &inGameTrade->conditions[2]);
+        SetMonData(pokemon, MON_DATA_COOL, &inGameTrade->conditions[0]);
+        SetMonData(pokemon, MON_DATA_SMART, &inGameTrade->conditions[3]);
+        SetMonData(pokemon, MON_DATA_TOUGH, &inGameTrade->conditions[4]);
+        SetMonData(pokemon, MON_DATA_SHEEN, &inGameTrade->sheen);
+
+        if (inGameTrade->heldItem != ITEM_NONE)
+        {
+            SetMonData(pokemon, MON_DATA_HELD_ITEM, &inGameTrade->heldItem);
+            if (ItemIsMail(inGameTrade->heldItem))
+            {
+                GetInGameTradeMail(&mail, inGameTrade);
+                GiveMailToMon(pokemon, &mail);
+            }
+        }
+        CalculateMonStats(pokemon);
+        UpdatePokedexForReceivedMon(partyIdx);
+        CalculatePlayerPartyCount();
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+void GivePlayerSpecialGiftMon(void)
+{
+    gSpecialVar_Result = _GivePlayerSpecialGiftMon(gSpecialVar_0x8004);
+}
+
+static u8 _CheckForGiftMonAndTakeMail(u8 partyIdx, u8 whichGiftMon)
+{
+    const struct InGameTrade *trade = &sIngameTrades[whichGiftMon];
+    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][partyIdx];
+    struct Mail *mail;
+    u32 mailTID;
+    int i;
+
+    if (!MonHasMail(mon))
+        return GIFTMON_NO_MAIL;
+
+    mail = &gSaveBlock1Ptr->mail[GetMonData(mon, MON_DATA_MAIL, NULL)];
+    mailTID = (mail->trainerId[0] << 24) | (mail->trainerId[1] << 16) | (mail->trainerId[2] << 8) | mail->trainerId[3];
+
+    if (mail->itemId != trade->heldItem || trade->otId != mailTID)
+        return GIFTMON_WRONG_MAIL;
+
+    for (i = 0; i < MAIL_WORDS_COUNT; i++)
+    {
+        if (mail->words[i] != sIngameTradeMail[trade->mailNum][i])
+            return GIFTMON_WRONG_MAIL;
+    }
+
+    if (!IsMonGiftMon(mon, trade))
+    {
+        TakeMailFromMon(mon);
+        return GIFTMON_WRONG_MON;
+    }
+
+    if (CountPartyAliveNonEggMonsExcept(partyIdx) == 0)
+        return GIFTMON_LAST_MON;
+
+    TakeMailFromMon(mon);
+    ZeroMonData(mon);
+    CompactPartySlots();
+    CalculatePlayerPartyCount();
+    return GIFTMON_MATCH;
+}
+
+void CheckForGiftMonAndTakeMail(void)
+{
+    gSpecialVar_Result = _CheckForGiftMonAndTakeMail(gSpecialVar_0x8004, gSpecialVar_0x8005);
 }

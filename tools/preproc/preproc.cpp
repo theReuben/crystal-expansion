@@ -99,6 +99,13 @@ void PreprocAsmFile(std::string filename, bool isStdin, bool doEnum, bool doSize
             PrintAsmBytes(s, length);
             break;
         }
+        case Directive::Unown:
+        {
+            unsigned char s[kMaxStringLength];
+            int length = stack.top().ReadUnown(s);
+            PrintAsmBytes(s, length);
+            break;
+        }
         case Directive::Enum:
         {
             if (!stack.top().ParseEnum())

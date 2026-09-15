@@ -1471,3 +1471,66 @@ locally at the values `InsideOfTruck` gave them.
 
 Left over, and being worked next: 12 tilesets over the 256-tile maximum, three
 missing multiboot `.gba` images, and `ITEM_MACHINE_PART`.
+
+## D42 — the last assembly errors, and the first link
+
+The build now compiles every C file and assembles every script. What follows is
+what it cost.
+
+**Six CrystalDust script commands took more arguments than expansion's macros.**
+Three were pure cosmetics and are **accepted and discarded**: `updatemoneybox`
+and `updatecoinsbox`/`hidecoinsbox` take CrystalDust's `x, y`, and `showmoneybox`
+takes its third "suppress the box" flag. Expansion's money and coins boxes
+remember their own position, and the suppress flag is `FALSE` at every call site
+in this tree, so nothing is lost in practice. Three were real and were ported
+into expansion's script commands: `checkmoney`/`removemoney` regained
+CrystalDust's `isVar` argument (`checkmoney VAR_TEMP_1, TRUE` is a live call
+site, in the Goldenrod prize scripts), and `showmonpic` regained its shininess
+argument, which meant threading `isShiny` through `ScriptMenu_ShowPokemonPic`
+and `CreateMonSprite_PicBox`.
+
+**CrystalDust's TM item names were renumbered away.** Twenty constants of the
+form `ITEM_TM24_THUNDERBOLT` became expansion's `ITEM_TM_THUNDERBOLT`. Expansion
+no longer pins a TM to a number, so the number in the name would be a lie.
+
+**`TRAINER_BATTLE_SET_TRAINER_A`/`_B` do not exist in expansion.** CrystalDust
+used them in two never-executed scripts in the Team Rocket Base, whose only
+purpose is to be a byte layout that `battle_tower.c` reads the Lance double
+battle's opponents out of. Expansion's `trainerbattle` emits a single
+`TrainerBattleParameter` block, and `trainerbattle_no_intro` emits exactly the
+block that was wanted, so that is what those two scripts now use.
+
+**The Lance double battle was rebuilt on expansion's partner system.**
+`SPECIAL_BATTLE_LANCE` is new, and `PARTNER_LANCE` (Dragonite, level 40, Brave,
+Fly/Twister/Thunder/Extreme Speed) is a new entry in `battle_partners.party`.
+CrystalDust hand-rolled that Dragonite inside `battle_tower.c` with a fixed OT id
+of 149 and a rejection loop to force it male and non-shiny; expansion's partner
+generator covers the same ground, so the hand-rolled version is gone. **Cost:
+the Dragonite's OT id is no longer pinned to 149.**
+
+**CrystalDust's move tutor index is now a move id.** CrystalDust kept a
+`TUTOR_MOVE_*` index in `VAR_0x8005`; expansion's tutor reads a `MOVE_*` id from
+the same variable. The two live call sites (Bugsy's Fury Cutter, Route 31's
+Nightmare) and the ported Poke Seer specials set move ids.
+
+**Two CrystalDust overworld sprites were restored:** Janine (Fuchsia Gym) and the
+tailless Slowpoke (Azalea Town). Both were referenced by scripts and map data
+that had survived Phase 1 while the graphics had not — the one-side merge loss
+again, now the twelfth and thirteenth instances.
+
+**Six specials were restored.** `PokeSeerGetMoveToTeachLeadPokemon` and
+`HasLearnedAllMovesFromPokeSeerTutor` (the Cianwood ultimate-move tutor) and
+`NameRaterWasNicknameChanged` were ported; `FindPhoneContactNameFromFlag`,
+`CopyBugCatchingContestRemainingMinutesToVar1` and `GetPlayerBugContestPlace`
+existed in C but had no `def_special` entry.
+
+**One duplicate symbol.** CrystalDust's Bugsy script and expansion's Verdanturf
+tutor both defined `MoveTutor_EventScript_FuryCutterDeclined`. CrystalDust's is
+Bugsy-specific (it prints Bugsy's outro), so it was renamed
+`AzaleaTown_Gym_EventScript_FuryCutterDeclined`.
+
+**Result: 0 C errors, 0 assembly errors. The link stage is reached for the first
+time.** It does not link yet: 884 undefined symbols and 6 duplicate definitions
+remain. ROM is at 27,213,184 bytes (81% of 32MB) with the sound bank still
+incomplete — **this is past the 28MB watch line's neighbourhood and needs
+attention before Phase 7 adds anything.**

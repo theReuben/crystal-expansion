@@ -94,7 +94,7 @@ script Route31_EventScript_SleepyMan_TryGiveTM {
         goto(MoveTutor_EventScript_NightmareDeclined)
     }
     msgbox("Which {POKEMON} should learn\nNIGHTMARE?", MSGBOX_DEFAULT)
-    setvar(VAR_0x8005, TUTOR_MOVE_NIGHTMARE)
+    setvar(VAR_0x8005, MOVE_NIGHTMARE)
     call(MoveTutor_EventScript_OpenPartyMenu)
     if (var (VAR_RESULT) == 0) {
         goto(MoveTutor_EventScript_NightmareDeclined)

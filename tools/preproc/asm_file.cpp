@@ -154,6 +154,8 @@ Directive AsmFile::GetDirective()
         return Directive::String;
     else if (CheckForDirective(".braille"))
         return Directive::Braille;
+    else if (CheckForDirective(".unown"))
+        return Directive::Unown;
     else if (CheckForDirective("enum"))
         return Directive::Enum;
     else if (CheckForDirective(".macro"))
@@ -324,6 +326,86 @@ void AsmFile::VerifyStringLength(int length)
 {
     if (length == kMaxStringLength)
         RaiseError("mapped string longer than %d bytes", kMaxStringLength);
+}
+
+// CrystalDust's Unown text, used by the Ruins of Alph chamber puzzles. It is a
+// separate directive from .braille because its glyph numbering is the Unown
+// font's, not expansion's BRAILLE_CHAR_* set. Ported from CrystalDust. See D39.
+int AsmFile::ReadUnown(unsigned char* s)
+{
+    static std::map<char, unsigned char> encoding =
+    {
+        { 'A', 0x01 },
+        { 'B', 0x02 },
+        { 'C', 0x03 },
+        { 'D', 0x04 },
+        { 'E', 0x05 },
+        { 'F', 0x06 },
+        { 'G', 0x07 },
+        { 'H', 0x08 },
+        { 'I', 0x09 },
+        { 'J', 0x0A },
+        { 'K', 0x0B },
+        { 'L', 0x0C },
+        { 'M', 0x0D },
+        { 'N', 0x0E },
+        { 'O', 0x0F },
+        { 'P', 0x10 },
+        { 'Q', 0x11 },
+        { 'R', 0x12 },
+        { 'S', 0x13 },
+        { 'T', 0x14 },
+        { 'U', 0x15 },
+        { 'V', 0x16 },
+        { 'W', 0x17 },
+        { 'X', 0x18 },
+        { 'Y', 0x19 },
+        { 'Z', 0x20 },
+        { ' ', 0x00 },
+        { ',', 0x21 },
+        { '.', 0x22 },
+        { '$', EOS },
+    };
+
+    SkipWhitespace();
+
+    int length = 0;
+
+    if (m_buffer[m_pos] != '"')
+        RaiseError("expected unown string literal");
+
+    m_pos++;
+
+    while (m_buffer[m_pos] != '"')
+    {
+        if (m_buffer[m_pos] == '\\' && m_buffer[m_pos + 1] == 'n')
+        {
+            VerifyStringLength(length);
+            s[length++] = CHAR_NEWLINE;
+            m_pos += 2;
+            continue;
+        }
+
+        char c = m_buffer[m_pos];
+
+        if (encoding.count(c) == 0)
+        {
+            if (IsAsciiPrintable(c))
+                RaiseError("character '%c' not valid in unown string", c);
+            else
+                RaiseError("character '\\x%02X' not valid in unown string", c);
+        }
+
+        VerifyStringLength(length);
+        s[length++] = encoding[c];
+        m_pos++;
+    }
+
+    m_pos++;
+
+    ExpectEmptyRestOfLine();
+
+    return length;
 }
 
 int AsmFile::ReadBraille(unsigned char* s)

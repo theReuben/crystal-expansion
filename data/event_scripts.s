@@ -75,6 +75,15 @@
 #include "constants/vars.h"
 #include "constants/weather.h"
 #include "constants/speaker_names.h"
+// CrystalDust's event_scripts.s included these; the Phase 1 merge kept
+// expansion's include list, so every constant they define was an undefined
+// symbol once the Johto scripts started assembling. See D39.
+#include "constants/day_night.h"
+#include "constants/fruit_trees.h"
+#include "constants/phone_contact.h"
+#include "constants/radio.h"
+#include "constants/room_decor.h"
+#include "constants/text.h"
 	.include "asm/macros.inc"
 	.include "asm/macros/event.inc"
 	.include "constants/constants.inc"
@@ -243,9 +252,39 @@ gStdScripts_End::
 
 @ FRLG scripts
 
+
+	.include "data/scripts/trainer_tower.inc"
+	.include "data/scripts/fame_checker_frlg.inc"
+	.include "data/text/fame_checker_frlg.inc"
+	.include "data/scripts/item_ball_scripts_frlg.inc"
+	.include "data/scripts/silphco_doors.inc"
+	.include "data/scripts/move_tutors_frlg.inc"
+	.include "data/scripts/cable_club_frlg.inc"
+	.include "data/scripts/trainer_card_frlg.inc"
+	.include "data/text/trainer_card_frlg.inc"
+	.include "data/scripts/mystery_event_club.inc"
+	.include "data/scripts/day_care_frlg.inc"
+	.include "data/text/day_care_frlg.inc"
+	.include "data/scripts/seagallop.inc"
+	.include "data/scripts/static_pokemon.inc"
+	.include "data/scripts/aide.inc"
+	.include "data/scripts/pokemon_mansion.inc"
+	.include "data/scripts/pokemon_league.inc"
+	.include "data/scripts/route23.inc"
+	.include "data/text/new_game_intro_frlg.inc"
+	.include "data/scripts/trainers_frlg.inc"
+	.include "data/text/trainers_frlg.inc"
+	.include "data/text/ingame_trade_frlg.inc"
+	.include "data/scripts/flavor_text.inc"
+	.include "data/scripts/pkmn_center_nurse_frlg.inc"
+
+.endif
+
 @ CrystalDust's map script includes. The Phase 1 merge kept expansion's list
 @ wholesale, so none of Johto was assembled at all. Restored in CrystalDust's
 @ own order. See D34.
+@ Moved out of the .if IS_FRLG block: D34 appended them inside it, so none of
+@ Johto assembled and every Johto map script was an undefined reference at link.
 	.include "data/maps/VioletCity/scripts.inc"
 	.include "data/maps/GoldenrodCity/scripts.inc"
 	.include "data/maps/NewBarkTown/scripts.inc"
@@ -655,32 +694,6 @@ gStdScripts_End::
 	.include "data/maps/CeruleanCity_BerryCrushHouse/scripts.inc"
 	.include "data/maps/Route40_FrontierGate/scripts.inc"
 
-	.include "data/scripts/trainer_tower.inc"
-	.include "data/scripts/fame_checker_frlg.inc"
-	.include "data/text/fame_checker_frlg.inc"
-	.include "data/scripts/item_ball_scripts_frlg.inc"
-	.include "data/scripts/silphco_doors.inc"
-	.include "data/scripts/move_tutors_frlg.inc"
-	.include "data/scripts/cable_club_frlg.inc"
-	.include "data/scripts/trainer_card_frlg.inc"
-	.include "data/text/trainer_card_frlg.inc"
-	.include "data/scripts/mystery_event_club.inc"
-	.include "data/scripts/day_care_frlg.inc"
-	.include "data/text/day_care_frlg.inc"
-	.include "data/scripts/seagallop.inc"
-	.include "data/scripts/static_pokemon.inc"
-	.include "data/scripts/aide.inc"
-	.include "data/scripts/pokemon_mansion.inc"
-	.include "data/scripts/pokemon_league.inc"
-	.include "data/scripts/route23.inc"
-	.include "data/text/new_game_intro_frlg.inc"
-	.include "data/scripts/trainers_frlg.inc"
-	.include "data/text/trainers_frlg.inc"
-	.include "data/text/ingame_trade_frlg.inc"
-	.include "data/scripts/flavor_text.inc"
-	.include "data/scripts/pkmn_center_nurse_frlg.inc"
-
-.endif
 
 	.include "data/scripts/std_msgbox.inc"
 	.include "data/scripts/trainer_battle.inc"

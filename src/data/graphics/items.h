@@ -2112,3 +2112,35 @@ const u16 gItemIconPalette_SwapSnack[] = INCGFX_U16("graphics/items/icon_palette
 
 const u32 gItemIcon_TwiceSpicedRadish[] = INCGFX_U32("graphics/items/icons/twice_spiced_radish.png", ".4bpp.smol");
 const u16 gItemIconPalette_TwiceSpicedRadish[] = INCGFX_U16("graphics/items/icon_palettes/twice_spiced_radish.pal", ".gbapal");
+
+// CrystalDust's Gen 2 key item icons (D38).
+const u32 gItemIcon_Squirtbottle[] = INCGFX_U32("graphics/items/icons/squirtbottle.png", ".4bpp.smol");
+const u16 gItemIconPalette_Squirtbottle[] = INCGFX_U16("graphics/items/icon_palettes/squirtbottle.pal", ".gbapal");
+const u32 gItemIcon_SecretPotion[] = INCGFX_U32("graphics/items/icons/secret_potion.png", ".4bpp.smol");
+const u16 gItemIconPalette_SecretPotion[] = INCGFX_U16("graphics/items/icon_palettes/secret_potion.pal", ".gbapal");
+const u32 gItemIcon_RedScale[] = INCGFX_U32("graphics/items/icons/red_scale.png", ".4bpp.smol");
+const u16 gItemIconPalette_RedScale[] = INCGFX_U16("graphics/items/icon_palettes/red_scale.pal", ".gbapal");
+const u32 gItemIcon_MachinePart[] = INCGFX_U32("graphics/items/icons/machine_part.png", ".4bpp.smol");
+const u16 gItemIconPalette_MachinePart[] = INCGFX_U16("graphics/items/icon_palettes/machine_part.pal", ".gbapal");
+const u32 gItemIcon_ClearBell[] = INCGFX_U32("graphics/items/icons/clear_bell.png", ".4bpp.smol");
+const u16 gItemIconPalette_ClearBell[] = INCGFX_U16("graphics/items/icon_palettes/clear_bell.pal", ".gbapal");
+const u32 gItemIcon_RainbowWing[] = INCGFX_U32("graphics/items/icons/rainbow_wing.png", ".4bpp.smol");
+const u16 gItemIconPalette_RainbowWing[] = INCGFX_U16("graphics/items/icon_palettes/rainbow_wing.pal", ".gbapal");
+const u32 gItemIcon_SilverWing[] = INCGFX_U32("graphics/items/icons/silver_wing.png", ".4bpp.smol");
+const u16 gItemIconPalette_SilverWing[] = INCGFX_U16("graphics/items/icon_palettes/silver_wing.pal", ".gbapal");
+const u32 gItemIcon_GSBall[] = INCGFX_U32("graphics/items/icons/gs_ball.png", ".4bpp.smol");
+const u16 gItemIconPalette_GSBall[] = INCGFX_U16("graphics/items/icon_palettes/gs_ball.pal", ".gbapal");
+const u32 gItemIcon_MysteryEgg[] = INCGFX_U32("graphics/items/icons/mystery_egg.png", ".4bpp.smol");
+const u16 gItemIconPalette_MysteryEgg[] = INCGFX_U16("graphics/items/icon_palettes/mystery_egg.pal", ".gbapal");
+const u32 gItemIcon_Pass[] = INCGFX_U32("graphics/items/icons/pass.png", ".4bpp.smol");
+const u16 gItemIconPalette_Pass[] = INCGFX_U16("graphics/items/icon_palettes/pass.pal", ".gbapal");
+const u32 gItemIcon_LostItem[] = INCGFX_U32("graphics/items/icons/lost_item.png", ".4bpp.smol");
+const u16 gItemIconPalette_LostItem[] = INCGFX_U16("graphics/items/icon_palettes/lost_item.pal", ".gbapal");
+const u32 gItemIcon_BlueCard[] = INCGFX_U32("graphics/items/icons/blue_card.png", ".4bpp.smol");
+const u16 gItemIconPalette_BlueCard[] = INCGFX_U16("graphics/items/icon_palettes/blue_card.pal", ".gbapal");
+const u32 gItemIcon_EggTicket[] = INCGFX_U32("graphics/items/icons/egg_ticket.png", ".4bpp.smol");
+const u16 gItemIconPalette_EggTicket[] = INCGFX_U16("graphics/items/icon_palettes/egg_ticket.pal", ".gbapal");
+const u32 gItemIcon_SlowpokeTail[] = INCGFX_U32("graphics/items/icons/slowpoke_tail.png", ".4bpp.smol");
+const u16 gItemIconPalette_SlowpokeTail[] = INCGFX_U16("graphics/items/icon_palettes/slowpoke_tail.pal", ".gbapal");
+const u32 gItemIcon_GBPlayer[] = INCGFX_U32("graphics/items/icons/gb_player.png", ".4bpp.smol");
+const u16 gItemIconPalette_GBPlayer[] = INCGFX_U16("graphics/items/icon_palettes/gb_player.pal", ".gbapal");

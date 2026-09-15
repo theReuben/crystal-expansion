@@ -1873,6 +1873,11 @@ static const struct SpriteFrameImage sPicTable_Koga[] = {
     overworld_frame(gObjectEventPic_Koga, 2, 4, 2),
 };
 
+// CrystalDust
+static const struct SpriteFrameImage sPicTable_Janine[] = {
+    overworld_ascending_frames(gObjectEventPic_Janine, 2, 4),
+};
+
 static const struct SpriteFrameImage sPicTable_Giovanni[] = {
     overworld_ascending_frames(gObjectEventPic_Giovanni, 2, 4),
 };
@@ -2155,6 +2160,11 @@ static const struct SpriteFrameImage sPicTable_Voltorb[] = {
     overworld_frame(gObjectEventPic_VoltorbOld, 2, 2, 1),
     overworld_frame(gObjectEventPic_VoltorbOld, 2, 2, 2),
     overworld_frame(gObjectEventPic_VoltorbOld, 2, 2, 2),
+};
+
+// CrystalDust
+static const struct SpriteFrameImage sPicTable_SlowpokeTailless[] = {
+    overworld_ascending_frames(gObjectEventPic_SlowpokeTailless, 2, 2),
 };
 
 static const struct SpriteFrameImage sPicTable_Slowpoke[] = {

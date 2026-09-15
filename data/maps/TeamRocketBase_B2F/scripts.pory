@@ -385,13 +385,13 @@ script TeamRocketBase_B2F_EventScript_BossTriggers{
 
 //used only to grab the enemy roster in battle_tower.c
 script TeamRocketBase_B2F_EventScript_ExecTrainer{
-    trainerbattle(TRAINER_BATTLE_SET_TRAINER_A, TRAINER_MAHOGANY_EXECUTIVE_F, 0, TeamRocketBase_B2F_Text_ExecutiveLoss, TeamRocketBase_B2F_Text_ExecutiveLoss)
+    trainerbattle_no_intro(TRAINER_MAHOGANY_EXECUTIVE_F, TeamRocketBase_B2F_Text_ExecutiveLoss)
 }text(local) TeamRocketBase_B2F_Text_ExecutiveLoss{
     "Tch, you really are strong.\nIt's too bad.\pIf you were to join TEAM ROCKET,\nyou could become an EXECUTIVE."
 }
 
 script TeamRocketBase_B2F_EventScript_ExecPartnerTrainer{
-    trainerbattle(TRAINER_BATTLE_SET_TRAINER_B, TRAINER_ROCKET_EXEC_PARTNER, 0, TeamRocketBase_B2F_Text_ExecutivePartnerLoss, TeamRocketBase_B2F_Text_ExecutivePartnerLoss)
+    trainerbattle_no_intro(TRAINER_ROCKET_EXEC_PARTNER, TeamRocketBase_B2F_Text_ExecutivePartnerLoss)
 }text(local) TeamRocketBase_B2F_Text_ExecutivePartnerLoss{
     "…"
 }

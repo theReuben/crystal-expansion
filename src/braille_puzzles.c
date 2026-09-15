@@ -338,3 +338,11 @@ bool8 ShouldDoBrailleRegicePuzzle(void)
 
     return FALSE;
 }
+
+// CrystalDust's name for the short shake, used by its Ruins of Alph scripts.
+// Identical to DoSealedChamberShakingEffect_Short; kept as a wrapper so the
+// scripts do not have to be rewritten. See D40.
+void DoSealedChamberShakingEffect2(void)
+{
+    DoSealedChamberShakingEffect_Short();
+}

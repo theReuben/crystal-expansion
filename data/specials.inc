@@ -639,3 +639,50 @@ gSpecials::
 	def_special StickerManGetBragFlags
 	def_special CheckAddCoins
 	def_special HeadbuttTreeWildEncounter @ CrystalDust (D26)
+
+@ CrystalDust specials the Phase 1 merge dropped with the rest of this file.
+@ Every one is called by a live Johto script. See D40.
+	def_special BargainShop
+	def_special BuenasPasswordMultichoice
+	def_special BuildBugContestPlacementString
+	def_special CheckForGiftMonAndTakeMail
+	def_special CopyBugContestPlacementScoreToVar1
+	def_special CopyDayOfWeekStringToVar1
+	def_special CreateEventLegalEnemyMon
+	def_special DaisyGrooming
+	def_special DetermineBugCatchingContestStandings
+	def_special DoMiniCredits
+	def_special DoRuinsOfAlphPuzzle
+	def_special DoSealedChamberShakingEffect2
+	def_special EndBugCatchingContest
+	def_special GetDSTMode
+	def_special GetWinningBugContestSpecies
+	def_special GiveCaughtBugCatchingContestMon
+	def_special GiveOddEgg
+	def_special GivePlayerSpecialGiftMon
+	def_special HerbShop
+	def_special HidePointsWindow
+	def_special IsPlayersMonOfSpeciesInParty
+	def_special MomBank
+	def_special OlderHaircutBrother
+	def_special PlayCardFlip
+	def_special PlayChosenMonCry
+	def_special RooftopSaleShop
+	def_special SelectApricornForKurt
+	def_special SetAwardsCeremonyBugContestObjectEventGraphics
+	def_special SetDayOfWeek
+	def_special SetInitialDSTMode
+	def_special SetRivalNickname
+	def_special ShowPointsWindowAtTopLeft
+	def_special StartDudeTutorialBattle
+	def_special SwitchDSTMode
+	def_special UpdatePointsWindow
+	def_special WriteCurrentTimeStringToStrVar1
+	def_special YoungerHaircutBrother
+	@ CrystalDust specials restored in Phase 2 (D42)
+	def_special CopyBugCatchingContestRemainingMinutesToVar1
+	def_special FindPhoneContactNameFromFlag
+	def_special GetPlayerBugContestPlace
+	def_special HasLearnedAllMovesFromPokeSeerTutor
+	def_special NameRaterWasNicknameChanged
+	def_special PokeSeerGetMoveToTeachLeadPokemon

@@ -4,6 +4,10 @@
 extern struct ItemSlot gMartPurchaseHistory[3];
 
 void CreatePokemartMenu(const u16 *itemsForSale);
+// CrystalDust's special marts, restored in Phase 2 (D41).
+void CreateBargainShopMenu(const u16 *itemsForSale, const u16 *customItemPrices);
+void CreateHerbShopMenu(const u16 *itemsForSale);
+void CreateRooftopSaleShopMenu(const u16 *itemsForSale, const u16 *customItemPrices);
 void CreateDecorationShop1Menu(const u16 *itemsForSale);
 void CreateDecorationShop2Menu(const u16 *itemsForSale);
 void CB2_ExitSellMenu(void);

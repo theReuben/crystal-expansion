@@ -153,13 +153,13 @@ script CeladonCity_GameCorner_EventScript_TMClerk_ShowChoice {
     switch (var(VAR_RESULT))
     {
         case 0:
-            setvar(VAR_TEMP_1, ITEM_TM32_DOUBLE_TEAM)
+            setvar(VAR_TEMP_1, ITEM_TM_DOUBLE_TEAM)
             call(CeladonCity_GameCorner_EventScript_TMClerk_ConfirmPrize)
         case 1:
-            setvar(VAR_TEMP_1, ITEM_TM29_PSYCHIC)
+            setvar(VAR_TEMP_1, ITEM_TM_PSYCHIC)
             call(CeladonCity_GameCorner_EventScript_TMClerk_ConfirmPrize)
         case 2:
-            setvar(VAR_TEMP_1, ITEM_TM15_HYPER_BEAM)
+            setvar(VAR_TEMP_1, ITEM_TM_HYPER_BEAM)
             call(CeladonCity_GameCorner_EventScript_TMClerk_ConfirmPrize)
         default:
             msgbox(GoldenrodCity_GameCorner_Text_PrizeVendorOutro)
@@ -176,11 +176,11 @@ script CeladonCity_GameCorner_EventScript_TMClerk_ConfirmPrize {
     {
         switch(var(VAR_TEMP_1))
         {
-            case ITEM_TM32_DOUBLE_TEAM:
+            case ITEM_TM_DOUBLE_TEAM:
                 setvar(VAR_TEMP_5, 1500)
-            case ITEM_TM29_PSYCHIC:
+            case ITEM_TM_PSYCHIC:
                 setvar(VAR_TEMP_5, 3500)
-            case ITEM_TM15_HYPER_BEAM:
+            case ITEM_TM_HYPER_BEAM:
                 setvar(VAR_TEMP_5, 7500)
         }
         checkcoins(VAR_RESULT)

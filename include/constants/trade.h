@@ -7,22 +7,27 @@
 // In-game Trade IDs
 enum InGameTradeID
 {
-    INGAME_TRADE_SEEDOT,
-    INGAME_TRADE_PLUSLE,
-    INGAME_TRADE_HORSEA,
+    // CrystalDust's Johto trades, restored in Phase 2 (D41). Expansion's
+    // Hoenn/FRLG ids went with the maps that used them.
+    INGAME_TRADE_ONIX,
+    INGAME_TRADE_MACHOP,
     INGAME_TRADE_MEOWTH,
-    // FRLG
-    INGAME_TRADE_MR_MIME,
-    INGAME_TRADE_JYNX,
-    INGAME_TRADE_NIDORAN,
-    INGAME_TRADE_FARFETCHD,
-    INGAME_TRADE_NIDORINOA,
-    INGAME_TRADE_LICKITUNG,
-    INGAME_TRADE_ELECTRODE,
-    INGAME_TRADE_TANGELA,
-    INGAME_TRADE_SEEL,
+    INGAME_TRADE_VOLTORB,
+    INGAME_TRADE_DODRIO,
+    INGAME_TRADE_AERODACTYL,
+    INGAME_TRADE_XATU,
+    INGAME_TRADE_MAGNETON,
+    // Gift mons: given outright, with the level in requestedSpecies.
+    INGAME_TRADE_GIFT_SPEAROW,
+    INGAME_TRADE_GIFT_SHUCKLE,
 };
 
+// Return values for CheckForGiftMonAndTakeMail
+#define GIFTMON_MATCH       0
+#define GIFTMON_WRONG_MON   1
+#define GIFTMON_NO_MAIL     2
+#define GIFTMON_WRONG_MAIL  3
+#define GIFTMON_LAST_MON    4
 // Return values for CanTradeSelectedMon and CanSpinTradeMon
 enum CanTradeMon
 {

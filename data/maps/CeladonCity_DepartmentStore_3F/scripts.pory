@@ -41,10 +41,10 @@ script CeladonCity_DepartmentStore_3F_Eventscript_Clerk {
 raw `
 .align 2
 CeladonCity_DepartmentStore_3F_Pokemart_Clerk:
-    .2byte ITEM_TM10_HIDDEN_POWER
-    .2byte ITEM_TM11_SUNNY_DAY
-	.2byte ITEM_TM17_PROTECT
-    .2byte ITEM_TM18_RAIN_DANCE
-    .2byte ITEM_TM37_SANDSTORM
+    .2byte ITEM_TM_HIDDEN_POWER
+    .2byte ITEM_TM_SUNNY_DAY
+	.2byte ITEM_TM_PROTECT
+    .2byte ITEM_TM_RAIN_DANCE
+    .2byte ITEM_TM_SANDSTORM
 	.2byte ITEM_NONE
 `

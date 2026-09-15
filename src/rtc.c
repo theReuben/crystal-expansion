@@ -8,6 +8,7 @@
 #include "text.h"
 #include "fake_rtc.h"
 #include "overworld.h"
+#include "event_data.h"
 
 // iwram bss
 static u16 sErrorStatus;
@@ -497,4 +498,40 @@ u32 GetTotalMinutes(struct Time *time)
 u32 GetTotalSeconds(struct Time *time)
 {
     return GetTotalMinutes(time) * 60 + time->seconds;
+}
+
+// ---- CrystalDust's daylight saving clock, restored in Phase 2 (see D40) ----
+// The Pokegear clock menu offers to shift the clock an hour forward or back.
+// CrystalDust kept the flag in SaveBlock2 and moved the local time offset with it.
+
+void GetDSTMode(void)
+{
+    gSpecialVar_Result = gSaveBlock2Ptr->daylightSavingTime;
+}
+
+void SetInitialDSTMode(void)
+{
+    gSaveBlock2Ptr->daylightSavingTime = !!gSpecialVar_0x8004;
+}
+
+void SwitchDSTMode(void)
+{
+    RtcCalcLocalTime();
+
+    if (gSaveBlock2Ptr->daylightSavingTime)
+    {
+        if (gLocalTime.hours > 0)
+        {
+            gSaveBlock2Ptr->daylightSavingTime = FALSE;
+            RtcCalcLocalTimeOffset(gLocalTime.days, gLocalTime.hours - 1, gLocalTime.minutes, gLocalTime.seconds);
+        }
+    }
+    else
+    {
+        if (gLocalTime.hours < HOURS_PER_DAY - 1)
+        {
+            gSaveBlock2Ptr->daylightSavingTime = TRUE;
+            RtcCalcLocalTimeOffset(gLocalTime.days, gLocalTime.hours + 1, gLocalTime.minutes, gLocalTime.seconds);
+        }
+    }
 }

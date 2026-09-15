@@ -4,6 +4,8 @@
 
 #define PARTNER_NONE 0
 #define PARTNER_STEVEN 1
-#define PARTNER_COUNT 2
+// CrystalDust: Lance fights alongside you in the Team Rocket Base.
+#define PARTNER_LANCE 2
+#define PARTNER_COUNT 3
 
 #endif  // GUARD_CONSTANTS_BATTLE_PARTNERS_H

@@ -68,11 +68,11 @@ script GoldenrodCity_EventScript_MoveTutor{
     switch (var(VAR_RESULT))
     {
         case 0:
-            setvar(VAR_TEMP_1, ITEM_TM35_FLAMETHROWER)
+            setvar(VAR_TEMP_1, ITEM_TM_FLAMETHROWER)
         case 1:
-            setvar(VAR_TEMP_1, ITEM_TM13_ICE_BEAM)
+            setvar(VAR_TEMP_1, ITEM_TM_ICE_BEAM)
         case 2:
-            setvar(VAR_TEMP_1, ITEM_TM24_THUNDERBOLT)
+            setvar(VAR_TEMP_1, ITEM_TM_THUNDERBOLT)
         default:
             msgbox(GoldenrodCity_Text_MoveTutorDecline3, MSGBOX_DEFAULT)
             hidecoinsbox(20, 0)

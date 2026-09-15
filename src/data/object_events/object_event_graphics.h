@@ -503,6 +503,8 @@ const u16 gObjectEventPic_Daisy[] = INCGFX_U16("graphics/object_events/pics/peop
 const u16 gObjectEventPic_Lorelei[] = INCGFX_U16("graphics/object_events/pics/people/lorelei.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u16 gObjectEventPic_Erika[] = INCGFX_U16("graphics/object_events/pics/people/erika.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u16 gObjectEventPic_Koga[] = INCGFX_U16("graphics/object_events/pics/people/koga.png", ".4bpp", "-mwidth 2 -mheight 4");
+// CrystalDust
+const u16 gObjectEventPic_Janine[] = INCGFX_U16("graphics/object_events/pics/people/janine.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u16 gObjectEventPic_Brock[] = INCGFX_U16("graphics/object_events/pics/people/brock.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u16 gObjectEventPic_LtSurge[] = INCGFX_U16("graphics/object_events/pics/people/lt_surge.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u16 gObjectEventPic_Bill[] = INCGFX_U16("graphics/object_events/pics/people/bill.png", ".4bpp", "-mwidth 2 -mheight 4");
@@ -614,6 +616,8 @@ const u16 gObjectEventPic_NidorinoOld[] = INCGFX_U16("graphics/object_events/pic
 const u16 gObjectEventPic_MeowthOld[] = INCGFX_U16("graphics/object_events/pics/pokemon_old/meowth.png", ".4bpp", "-mwidth 2 -mheight 2");
 const u16 gObjectEventPic_SeelOld[] = INCGFX_U16("graphics/object_events/pics/pokemon_old/seel.png", ".4bpp", "-mwidth 2 -mheight 2");
 const u16 gObjectEventPic_VoltorbOld[] = INCGFX_U16("graphics/object_events/pics/pokemon_old/voltorb.png", ".4bpp", "-mwidth 2 -mheight 2");
+// CrystalDust
+const u16 gObjectEventPic_SlowpokeTailless[] = INCGFX_U16("graphics/object_events/pics/pokemon/slowpoke_tailless.png", ".4bpp", "-mwidth 2 -mheight 2");
 const u16 gObjectEventPic_SlowpokeOld[] = INCGFX_U16("graphics/object_events/pics/pokemon_old/slowpoke.png", ".4bpp", "-mwidth 2 -mheight 2");
 const u16 gObjectEventPic_SlowbroOld[] = INCGFX_U16("graphics/object_events/pics/pokemon_old/slowbro.png", ".4bpp", "-mwidth 2 -mheight 2");
 const u16 gObjectEventPic_MachopOld[] = INCGFX_U16("graphics/object_events/pics/pokemon_old/machop.png", ".4bpp", "-mwidth 2 -mheight 2");

@@ -36,6 +36,23 @@ u8 MovementAction_WalkNormalLeft_Step0(struct ObjectEvent *, struct Sprite *);
 u8 MovementAction_WalkNormalLeft_Step1(struct ObjectEvent *, struct Sprite *);
 u8 MovementAction_WalkNormalRight_Step0(struct ObjectEvent *, struct Sprite *);
 u8 MovementAction_WalkNormalRight_Step1(struct ObjectEvent *, struct Sprite *);
+// CrystalDust's fast/slow two-tile jumps. See D39.
+u8 MovementAction_Jump2DownFast_Step0(struct ObjectEvent *, struct Sprite *);
+u8 MovementAction_Jump2DownFast_Step1(struct ObjectEvent *, struct Sprite *);
+u8 MovementAction_Jump2UpFast_Step0(struct ObjectEvent *, struct Sprite *);
+u8 MovementAction_Jump2UpFast_Step1(struct ObjectEvent *, struct Sprite *);
+u8 MovementAction_Jump2LeftFast_Step0(struct ObjectEvent *, struct Sprite *);
+u8 MovementAction_Jump2LeftFast_Step1(struct ObjectEvent *, struct Sprite *);
+u8 MovementAction_Jump2RightFast_Step0(struct ObjectEvent *, struct Sprite *);
+u8 MovementAction_Jump2RightFast_Step1(struct ObjectEvent *, struct Sprite *);
+u8 MovementAction_Jump2DownSlow_Step0(struct ObjectEvent *, struct Sprite *);
+u8 MovementAction_Jump2DownSlow_Step1(struct ObjectEvent *, struct Sprite *);
+u8 MovementAction_Jump2UpSlow_Step0(struct ObjectEvent *, struct Sprite *);
+u8 MovementAction_Jump2UpSlow_Step1(struct ObjectEvent *, struct Sprite *);
+u8 MovementAction_Jump2LeftSlow_Step0(struct ObjectEvent *, struct Sprite *);
+u8 MovementAction_Jump2LeftSlow_Step1(struct ObjectEvent *, struct Sprite *);
+u8 MovementAction_Jump2RightSlow_Step0(struct ObjectEvent *, struct Sprite *);
+u8 MovementAction_Jump2RightSlow_Step1(struct ObjectEvent *, struct Sprite *);
 u8 MovementAction_Jump2Down_Step0(struct ObjectEvent *, struct Sprite *);
 u8 MovementAction_Jump2Down_Step1(struct ObjectEvent *, struct Sprite *);
 u8 MovementAction_Jump2Up_Step0(struct ObjectEvent *, struct Sprite *);
@@ -315,6 +332,14 @@ u8 (*const gMovementActionFuncs_WalkNormalDown[])(struct ObjectEvent *, struct S
 u8 (*const gMovementActionFuncs_WalkNormalUp[])(struct ObjectEvent *, struct Sprite *);
 u8 (*const gMovementActionFuncs_WalkNormalLeft[])(struct ObjectEvent *, struct Sprite *);
 u8 (*const gMovementActionFuncs_WalkNormalRight[])(struct ObjectEvent *, struct Sprite *);
+u8 (*const gMovementActionFuncs_Jump2DownFast[])(struct ObjectEvent *, struct Sprite *);
+u8 (*const gMovementActionFuncs_Jump2UpFast[])(struct ObjectEvent *, struct Sprite *);
+u8 (*const gMovementActionFuncs_Jump2LeftFast[])(struct ObjectEvent *, struct Sprite *);
+u8 (*const gMovementActionFuncs_Jump2RightFast[])(struct ObjectEvent *, struct Sprite *);
+u8 (*const gMovementActionFuncs_Jump2DownSlow[])(struct ObjectEvent *, struct Sprite *);
+u8 (*const gMovementActionFuncs_Jump2UpSlow[])(struct ObjectEvent *, struct Sprite *);
+u8 (*const gMovementActionFuncs_Jump2LeftSlow[])(struct ObjectEvent *, struct Sprite *);
+u8 (*const gMovementActionFuncs_Jump2RightSlow[])(struct ObjectEvent *, struct Sprite *);
 u8 (*const gMovementActionFuncs_Jump2Down[])(struct ObjectEvent *, struct Sprite *);
 u8 (*const gMovementActionFuncs_Jump2Up[])(struct ObjectEvent *, struct Sprite *);
 u8 (*const gMovementActionFuncs_Jump2Left[])(struct ObjectEvent *, struct Sprite *);
@@ -672,6 +697,14 @@ u8 (*const *const gMovementActionFuncs[])(struct ObjectEvent *, struct Sprite *)
     [MOVEMENT_ACTION_SPIN_UP]          = gMovementActionFuncs_SpinUp,
     [MOVEMENT_ACTION_SPIN_LEFT]        = gMovementActionFuncs_SpinLeft,
     [MOVEMENT_ACTION_SPIN_RIGHT]       = gMovementActionFuncs_SpinRight,
+    [MOVEMENT_ACTION_JUMP_2_DOWN_FAST] = gMovementActionFuncs_Jump2DownFast,
+    [MOVEMENT_ACTION_JUMP_2_UP_FAST] = gMovementActionFuncs_Jump2UpFast,
+    [MOVEMENT_ACTION_JUMP_2_LEFT_FAST] = gMovementActionFuncs_Jump2LeftFast,
+    [MOVEMENT_ACTION_JUMP_2_RIGHT_FAST] = gMovementActionFuncs_Jump2RightFast,
+    [MOVEMENT_ACTION_JUMP_2_DOWN_SLOW] = gMovementActionFuncs_Jump2DownSlow,
+    [MOVEMENT_ACTION_JUMP_2_UP_SLOW] = gMovementActionFuncs_Jump2UpSlow,
+    [MOVEMENT_ACTION_JUMP_2_LEFT_SLOW] = gMovementActionFuncs_Jump2LeftSlow,
+    [MOVEMENT_ACTION_JUMP_2_RIGHT_SLOW] = gMovementActionFuncs_Jump2RightSlow,
 };
 
 u8 (*const gMovementActionFuncs_FaceDown[])(struct ObjectEvent *, struct Sprite *) = {
@@ -807,6 +840,54 @@ static const s16 sJumpDisplacements[] = {
     [JUMP_DISTANCE_IN_PLACE] = 0,
     [JUMP_DISTANCE_NORMAL] = 0,
     [JUMP_DISTANCE_FAR] = 1,
+};
+
+u8 (*const gMovementActionFuncs_Jump2DownFast[])(struct ObjectEvent *, struct Sprite *) = {
+    MovementAction_Jump2DownFast_Step0,
+    MovementAction_Jump2DownFast_Step1,
+    MovementAction_PauseSpriteAnim,
+};
+
+u8 (*const gMovementActionFuncs_Jump2UpFast[])(struct ObjectEvent *, struct Sprite *) = {
+    MovementAction_Jump2UpFast_Step0,
+    MovementAction_Jump2UpFast_Step1,
+    MovementAction_PauseSpriteAnim,
+};
+
+u8 (*const gMovementActionFuncs_Jump2LeftFast[])(struct ObjectEvent *, struct Sprite *) = {
+    MovementAction_Jump2LeftFast_Step0,
+    MovementAction_Jump2LeftFast_Step1,
+    MovementAction_PauseSpriteAnim,
+};
+
+u8 (*const gMovementActionFuncs_Jump2RightFast[])(struct ObjectEvent *, struct Sprite *) = {
+    MovementAction_Jump2RightFast_Step0,
+    MovementAction_Jump2RightFast_Step1,
+    MovementAction_PauseSpriteAnim,
+};
+
+u8 (*const gMovementActionFuncs_Jump2DownSlow[])(struct ObjectEvent *, struct Sprite *) = {
+    MovementAction_Jump2DownSlow_Step0,
+    MovementAction_Jump2DownSlow_Step1,
+    MovementAction_PauseSpriteAnim,
+};
+
+u8 (*const gMovementActionFuncs_Jump2UpSlow[])(struct ObjectEvent *, struct Sprite *) = {
+    MovementAction_Jump2UpSlow_Step0,
+    MovementAction_Jump2UpSlow_Step1,
+    MovementAction_PauseSpriteAnim,
+};
+
+u8 (*const gMovementActionFuncs_Jump2LeftSlow[])(struct ObjectEvent *, struct Sprite *) = {
+    MovementAction_Jump2LeftSlow_Step0,
+    MovementAction_Jump2LeftSlow_Step1,
+    MovementAction_PauseSpriteAnim,
+};
+
+u8 (*const gMovementActionFuncs_Jump2RightSlow[])(struct ObjectEvent *, struct Sprite *) = {
+    MovementAction_Jump2RightSlow_Step0,
+    MovementAction_Jump2RightSlow_Step1,
+    MovementAction_PauseSpriteAnim,
 };
 
 u8 (*const gMovementActionFuncs_Jump2Down[])(struct ObjectEvent *, struct Sprite *) = {

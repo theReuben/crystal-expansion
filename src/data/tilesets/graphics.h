@@ -330,7 +330,7 @@ const u16 gTilesetPalettes_Sootopolis[][16] =
     INCGFX_U16("data/tilesets/secondary/sootopolis/palettes/15.pal", ".gbapal"),
 };
 
-const u32 gTilesetTiles_BattleFrontierOutsideWest[] = INCGFX_U32("data/tilesets/secondary/battle_frontier_outside_west/tiles.png", ".4bpp.fastSmol", "-num_tiles 508 -Wnum_tiles");
+const u32 gTilesetTiles_BattleFrontierOutsideWest[] = INCGFX_U32("data/tilesets/secondary/battle_frontier_outside_west/tiles.png", ".4bpp.fastSmol", "-num_tiles 384 -Wnum_tiles");
 
 const u16 gTilesetPalettes_BattleFrontierOutsideWest[][16] =
 {
@@ -352,7 +352,7 @@ const u16 gTilesetPalettes_BattleFrontierOutsideWest[][16] =
     INCGFX_U16("data/tilesets/secondary/battle_frontier_outside_west/palettes/15.pal", ".gbapal"),
 };
 
-const u32 gTilesetTiles_BattleFrontierOutsideEast[] = INCGFX_U32("data/tilesets/secondary/battle_frontier_outside_east/tiles.png", ".4bpp.fastSmol", "-num_tiles 508 -Wnum_tiles");
+const u32 gTilesetTiles_BattleFrontierOutsideEast[] = INCGFX_U32("data/tilesets/secondary/battle_frontier_outside_east/tiles.png", ".4bpp.fastSmol", "-num_tiles 384 -Wnum_tiles");
 
 const u16 gTilesetPalettes_BattleFrontierOutsideEast[][16] =
 {
@@ -396,7 +396,7 @@ const u16 gTilesetPalettes_InsideBuilding[][16] =
     INCGFX_U16("data/tilesets/primary/building/palettes/15.pal", ".gbapal"),
 };
 
-const u32 gTilesetTiles_Shop[] = INCGFX_U32("data/tilesets/secondary/shop/tiles.png", ".4bpp.fastSmol", "-num_tiles 502 -Wnum_tiles");
+const u32 gTilesetTiles_Shop[] = INCGFX_U32("data/tilesets/secondary/shop/tiles.png", ".4bpp.fastSmol", "-num_tiles 48 -Wnum_tiles");
 
 const u16 gTilesetPalettes_Shop[][16] =
 {
@@ -418,7 +418,7 @@ const u16 gTilesetPalettes_Shop[][16] =
     INCGFX_U16("data/tilesets/secondary/shop/palettes/15.pal", ".gbapal"),
 };
 
-const u32 gTilesetTiles_PokemonCenter[] = INCGFX_U32("data/tilesets/secondary/pokemon_center/tiles.png", ".4bpp.fastSmol", "-num_tiles 478 -Wnum_tiles");
+const u32 gTilesetTiles_PokemonCenter[] = INCGFX_U32("data/tilesets/secondary/pokemon_center/tiles.png", ".4bpp.fastSmol", "-num_tiles 384 -Wnum_tiles");
 
 const u16 gTilesetPalettes_PokemonCenter[][16] =
 {
@@ -440,7 +440,7 @@ const u16 gTilesetPalettes_PokemonCenter[][16] =
     INCGFX_U16("data/tilesets/secondary/pokemon_center/palettes/15.pal", ".gbapal"),
 };
 
-const u32 gTilesetTiles_Cave[] = INCGFX_U32("data/tilesets/secondary/cave/tiles.png", ".4bpp.fastSmol", "-num_tiles 425 -Wnum_tiles");
+const u32 gTilesetTiles_Cave[] = INCGFX_U32("data/tilesets/secondary/cave/tiles.png", ".4bpp.fastSmol", "-num_tiles 352 -Wnum_tiles");
 
 const u16 gTilesetPalettes_Cave[][16] =
 {
@@ -462,7 +462,7 @@ const u16 gTilesetPalettes_Cave[][16] =
     INCGFX_U16("data/tilesets/secondary/cave/palettes/15.pal", ".gbapal"),
 };
 
-const u32 gTilesetTiles_PokemonSchool[] = INCGFX_U32("data/tilesets/secondary/pokemon_school/tiles.png", ".4bpp.fastSmol", "-num_tiles 278 -Wnum_tiles");
+const u32 gTilesetTiles_PokemonSchool[] = INCGFX_U32("data/tilesets/secondary/pokemon_school/tiles.png", ".4bpp.fastSmol", "-num_tiles 64 -Wnum_tiles");
 
 const u16 gTilesetPalettes_PokemonSchool[][16] =
 {
@@ -639,7 +639,7 @@ const u16 gTilesetPalettes_PrettyPetalFlowerShop[][16] =
     INCGFX_U16("data/tilesets/secondary/pretty_petal_flower_shop/palettes/15.pal", ".gbapal"),
 };
 
-const u32 gTilesetTiles_PokemonDayCare[] = INCGFX_U32("data/tilesets/secondary/pokemon_day_care/tiles.png", ".4bpp.fastSmol", "-num_tiles 355 -Wnum_tiles");
+const u32 gTilesetTiles_PokemonDayCare[] = INCGFX_U32("data/tilesets/secondary/pokemon_day_care/tiles.png", ".4bpp.fastSmol", "-num_tiles 112 -Wnum_tiles");
 
 const u16 gTilesetPalettes_PokemonDayCare[][16] =
 {
@@ -921,7 +921,7 @@ const u16 gTilesetPalettes_BrendansMaysHouse[][16] =
     INCGFX_U16("data/tilesets/secondary/brendans_mays_house/palettes/15.pal", ".gbapal"),
 };
 
-const u32 gTilesetTiles_Lab[] = INCGFX_U32("data/tilesets/secondary/lab/tiles.png", ".4bpp.fastSmol", "-num_tiles 500 -Wnum_tiles");
+const u32 gTilesetTiles_Lab[] = INCGFX_U32("data/tilesets/secondary/lab/tiles.png", ".4bpp.fastSmol", "-num_tiles 144 -Wnum_tiles");
 
 const u16 gTilesetPalettes_Lab[][16] =
 {
@@ -1229,7 +1229,7 @@ const u16 gTilesetPalettes_TrickHousePuzzle[][16] =
     INCGFX_U16("data/tilesets/secondary/trick_house_puzzle/palettes/15.pal", ".gbapal"),
 };
 
-const u32 gTilesetTiles_InsideShip[] = INCGFX_U32("data/tilesets/secondary/inside_ship/tiles.png", ".4bpp.fastSmol", "-num_tiles 342 -Wnum_tiles");
+const u32 gTilesetTiles_InsideShip[] = INCGFX_U32("data/tilesets/secondary/inside_ship/tiles.png", ".4bpp.fastSmol", "-num_tiles 256 -Wnum_tiles");
 
 const u16 gTilesetPalettes_InsideShip[][16] =
 {
@@ -1273,7 +1273,7 @@ const u16 gTilesetPalettes_EliteFour[][16] =
     INCGFX_U16("data/tilesets/secondary/elite_four/palettes/15.pal", ".gbapal"),
 };
 
-const u32 gTilesetTiles_BattleFrontier[] = INCGFX_U32("data/tilesets/secondary/battle_frontier/tiles.png", ".4bpp.fastSmol", "-num_tiles 310 -Wnum_tiles");
+const u32 gTilesetTiles_BattleFrontier[] = INCGFX_U32("data/tilesets/secondary/battle_frontier/tiles.png", ".4bpp.fastSmol", "-num_tiles 304 -Wnum_tiles");
 
 const u16 gTilesetPalettes_BattleFrontier[][16] =
 {

@@ -60,18 +60,18 @@ script AzaleaTown_Gym_EventScript_GiveSteelWing {
            "{POKEMON} how to use it?", MSGBOX_YESNO)
     if(!var(VAR_RESULT))
     {
-        goto(MoveTutor_EventScript_FuryCutterDeclined)
+        goto(AzaleaTown_Gym_EventScript_FuryCutterDeclined)
     }
     msgbox("Okay, which {POKEMON} should I tutor?", MSGBOX_DEFAULT)
-    setvar(VAR_0x8005, TUTOR_MOVE_FURY_CUTTER)
+    setvar(VAR_0x8005, MOVE_FURY_CUTTER)
 	call(MoveTutor_EventScript_OpenPartyMenu)
     if(var(VAR_RESULT) == 0)
     {
-        goto(MoveTutor_EventScript_FuryCutterDeclined)
+        goto(AzaleaTown_Gym_EventScript_FuryCutterDeclined)
     }
     setflag(FLAG_MOVE_TUTOR_TAUGHT_FURY_CUTTER)
     goto(AzaleaTown_Gym_EventScript_Bugsy)
-}script(local) MoveTutor_EventScript_FuryCutterDeclined{
+}script(local) AzaleaTown_Gym_EventScript_FuryCutterDeclined{
     msgbox(AzaleaTown_Gym_Text_BugsyOutro)
     release
 }text(local) AzaleaTown_Gym_Text_BugsyOutro{

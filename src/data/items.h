@@ -14338,6 +14338,241 @@ const struct ItemInfo gItemsInfo[] =
 
 // Story Key Items
 
+// CrystalDust's Gen 2 key items (D38). The Squirtbottle uses expansion's Wailmer
+// Pail handler: it already waters Sudowoodo, which is the Squirtbottle's whole
+// purpose in Gold/Silver/Crystal. It also waters berry trees, which the Wailmer
+// Pail does and the Squirtbottle did not -- a superset, noted rather than trimmed.
+    [ITEM_SQUIRTBOTTLE] =
+    {
+        .name = ITEM_NAME("Squirtbottle"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "A bottle used for watering plants.\n"
+            "It is shaped like a SQUIRTLE."),
+        .importance = 2,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_FIELD,
+        .fieldUseFunc = ItemUseOutOfBattle_WailmerPail,
+        .iconPic = gItemIcon_Squirtbottle,
+        .iconPalette = gItemIconPalette_Squirtbottle,
+    },
+
+    [ITEM_SECRET_POTION] =
+    {
+        .name = ITEM_NAME("Secret Potion"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "A fantastic medicine dispensed by\n"
+            "the pharmacy in CIANWOOD. It fully\n"
+            "heals a POKéMON of any ailment."),
+        .importance = 2,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        .iconPic = gItemIcon_SecretPotion,
+        .iconPalette = gItemIconPalette_SecretPotion,
+    },
+
+    [ITEM_RED_SCALE] =
+    {
+        .name = ITEM_NAME("Red Scale"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "A scale from the red GYARADOS.\n"
+            "It glows red like a flame."),
+        .importance = 2,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        .iconPic = gItemIcon_RedScale,
+        .iconPalette = gItemIconPalette_RedScale,
+    },
+
+    [ITEM_MACHINE_PART] =
+    {
+        .name = ITEM_NAME("Machine Part"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "An important machine part for the\n"
+            "POWER PLANT that was stolen."),
+        .importance = 2,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        .iconPic = gItemIcon_MachinePart,
+        .iconPalette = gItemIconPalette_MachinePart,
+    },
+
+    [ITEM_CLEAR_BELL] =
+    {
+        .name = ITEM_NAME("Clear Bell"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "A very old-fashioned bell that\n"
+            "makes a gentle ringing sound."),
+        .importance = 2,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        .iconPic = gItemIcon_ClearBell,
+        .iconPalette = gItemIconPalette_ClearBell,
+    },
+
+    [ITEM_RAINBOW_WING] =
+    {
+        .name = ITEM_NAME("Rainbow Wing"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "A mystical feather of rainbow\n"
+            "colors that sparkles."),
+        .importance = 2,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        .iconPic = gItemIcon_RainbowWing,
+        .iconPalette = gItemIconPalette_RainbowWing,
+    },
+
+    [ITEM_SILVER_WING] =
+    {
+        .name = ITEM_NAME("Silver Wing"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "A strange, silver-colored feather\n"
+            "that sparkles."),
+        .importance = 2,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        .iconPic = gItemIcon_SilverWing,
+        .iconPalette = gItemIconPalette_SilverWing,
+    },
+
+    [ITEM_GS_BALL] =
+    {
+        .name = ITEM_NAME("GS Ball"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "A mysterious POKé BALL that is\n"
+            "impossible to open. KURT in\n"
+            "AZALEA TOWN may want to see this."),
+        .importance = 2,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        .iconPic = gItemIcon_GSBall,
+        .iconPalette = gItemIconPalette_GSBall,
+    },
+
+    [ITEM_MYSTERY_EGG] =
+    {
+        .name = ITEM_NAME("Mystery Egg"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "A mysterious EGG obtained from\n"
+            "MR. POKéMON.\n"
+            "What's in the EGG is unknown."),
+        .importance = 2,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        .iconPic = gItemIcon_MysteryEgg,
+        .iconPalette = gItemIconPalette_MysteryEgg,
+    },
+
+    [ITEM_PASS] =
+    {
+        .name = ITEM_NAME("Pass"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "A pass required for riding the\n"
+            "MAGNET TRAIN. Its holder may\n"
+            "ride as often as they'd like."),
+        .importance = 2,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        .iconPic = gItemIcon_Pass,
+        .iconPalette = gItemIconPalette_Pass,
+    },
+
+    [ITEM_LOST_ITEM] =
+    {
+        .name = ITEM_NAME("Lost Item"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "The POKé DOLL lost by the\n"
+            "COPYCAT."),
+        .importance = 2,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        .iconPic = gItemIcon_LostItem,
+        .iconPalette = gItemIconPalette_LostItem,
+    },
+
+    [ITEM_BLUE_CARD] =
+    {
+        .name = ITEM_NAME("Blue Card"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "A card to save points for the\n"
+            "BUENA'S PASSWORD radio show."),
+        .importance = 2,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        .iconPic = gItemIcon_BlueCard,
+        .iconPalette = gItemIconPalette_BlueCard,
+    },
+
+    [ITEM_EGG_TICKET] =
+    {
+        .name = ITEM_NAME("Egg Ticket"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "A ticket for use at the\n"
+            "TRADE CORNER in GOLDENROD\n"
+            "CITY's POKéCOM CENTER."),
+        .importance = 2,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        .iconPic = gItemIcon_EggTicket,
+        .iconPalette = gItemIconPalette_EggTicket,
+    },
+
+    [ITEM_SLOWPOKE_TAIL] =
+    {
+        .name = ITEM_NAME("Slowpoke Tail"),
+        .price = 9800,
+        .description = COMPOUND_STRING(
+            "A very tasty tail of something.\n"
+            "It can be sold at a high price."),
+        .importance = 0,
+        .pocket = POCKET_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        .iconPic = gItemIcon_SlowpokeTail,
+        .iconPalette = gItemIconPalette_SlowpokeTail,
+    },
+
+    [ITEM_GB_PLAYER] =
+    {
+        .name = ITEM_NAME("GB Player"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "A music player from long ago.\n"
+            "It allows you to listen to nostalgic\n"
+            "songs at the flick of a switch."),
+        .importance = 2,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        .iconPic = gItemIcon_GBPlayer,
+        .iconPalette = gItemIconPalette_GBPlayer,
+    },
+
     [ITEM_SS_TICKET] =
     {
         .name = ITEM_NAME("S.S. Ticket"),

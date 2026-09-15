@@ -199,7 +199,21 @@ enum OtIdMethod
 #define FRIENDSHIP_EVENT_FAINT_SMALL      6
 #define FRIENDSHIP_EVENT_FAINT_FIELD_PSN  7
 #define FRIENDSHIP_EVENT_FAINT_LARGE      8 // If opponent was >= 30 levels higher. See AdjustFriendshipOnBattleFaint
+// CrystalDust's starter indices, restored in Phase 2 (D41); VAR_STARTER_MON holds one.
+#define STARTER_CHIKORITA 0
+#define STARTER_TOTODILE  1
+#define STARTER_CYNDAQUIL 2
+
 #define FRIENDSHIP_EVENT_MASSAGE          9
+// CrystalDust's Goldenrod haircut brothers and Daisy's grooming. Their constants
+// and friendship modifiers came across with neither side of the merge. See D40.
+#define FRIENDSHIP_EVENT_OLDER_HAIRCUT_BROTHER_0    10
+#define FRIENDSHIP_EVENT_OLDER_HAIRCUT_BROTHER_1    11
+#define FRIENDSHIP_EVENT_OLDER_HAIRCUT_BROTHER_2    12
+#define FRIENDSHIP_EVENT_YOUNGER_HAIRCUT_BROTHER_0  13
+#define FRIENDSHIP_EVENT_YOUNGER_HAIRCUT_BROTHER_1  14
+#define FRIENDSHIP_EVENT_YOUNGER_HAIRCUT_BROTHER_2  15
+#define FRIENDSHIP_EVENT_DAISY_GROOMING             16
 
 // Constants for GetLeadMonFriendshipScore
 #define FRIENDSHIP_NONE        0

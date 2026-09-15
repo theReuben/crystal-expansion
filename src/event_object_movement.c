@@ -85,6 +85,8 @@ enum {
     JUMP_DISTANCE_IN_PLACE,
     JUMP_DISTANCE_NORMAL,
     JUMP_DISTANCE_FAR,
+    JUMP_DISTANCE_FAR_FAST, // CrystalDust: two tiles at double speed
+    JUMP_DISTANCE_FAR_SLOW, // CrystalDust: two tiles at half speed
 };
 
 // Used for storing conditional emotes
@@ -7434,6 +7436,143 @@ static bool8 DoJumpInPlaceAnim(struct ObjectEvent *objectEvent, struct Sprite *s
     }
 }
 
+// CrystalDust's double-speed and half-speed two-tile jumps. See D39.
+bool8 MovementAction_Jump2DownFast_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    InitJumpRegular(objectEvent, sprite, DIR_SOUTH, JUMP_DISTANCE_FAR_FAST, JUMP_TYPE_HIGH);
+    return MovementAction_Jump2DownFast_Step1(objectEvent, sprite);
+}
+
+bool8 MovementAction_Jump2DownFast_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    if (DoJumpAnim(objectEvent, sprite))
+    {
+        objectEvent->noShadow = FALSE;
+        sprite->sActionFuncId = 2;
+        return TRUE;
+    }
+    return FALSE;
+}
+
+bool8 MovementAction_Jump2UpFast_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    InitJumpRegular(objectEvent, sprite, DIR_NORTH, JUMP_DISTANCE_FAR_FAST, JUMP_TYPE_HIGH);
+    return MovementAction_Jump2UpFast_Step1(objectEvent, sprite);
+}
+
+bool8 MovementAction_Jump2UpFast_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    if (DoJumpAnim(objectEvent, sprite))
+    {
+        objectEvent->noShadow = FALSE;
+        sprite->sActionFuncId = 2;
+        return TRUE;
+    }
+    return FALSE;
+}
+
+bool8 MovementAction_Jump2LeftFast_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    InitJumpRegular(objectEvent, sprite, DIR_WEST, JUMP_DISTANCE_FAR_FAST, JUMP_TYPE_HIGH);
+    return MovementAction_Jump2LeftFast_Step1(objectEvent, sprite);
+}
+
+bool8 MovementAction_Jump2LeftFast_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    if (DoJumpAnim(objectEvent, sprite))
+    {
+        objectEvent->noShadow = FALSE;
+        sprite->sActionFuncId = 2;
+        return TRUE;
+    }
+    return FALSE;
+}
+
+bool8 MovementAction_Jump2RightFast_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    InitJumpRegular(objectEvent, sprite, DIR_EAST, JUMP_DISTANCE_FAR_FAST, JUMP_TYPE_HIGH);
+    return MovementAction_Jump2RightFast_Step1(objectEvent, sprite);
+}
+
+bool8 MovementAction_Jump2RightFast_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    if (DoJumpAnim(objectEvent, sprite))
+    {
+        objectEvent->noShadow = FALSE;
+        sprite->sActionFuncId = 2;
+        return TRUE;
+    }
+    return FALSE;
+}
+
+bool8 MovementAction_Jump2DownSlow_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    InitJumpRegular(objectEvent, sprite, DIR_SOUTH, JUMP_DISTANCE_FAR_SLOW, JUMP_TYPE_HIGH);
+    return MovementAction_Jump2DownSlow_Step1(objectEvent, sprite);
+}
+
+bool8 MovementAction_Jump2DownSlow_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    if (DoJumpAnim(objectEvent, sprite))
+    {
+        objectEvent->noShadow = FALSE;
+        sprite->sActionFuncId = 2;
+        return TRUE;
+    }
+    return FALSE;
+}
+
+bool8 MovementAction_Jump2UpSlow_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    InitJumpRegular(objectEvent, sprite, DIR_NORTH, JUMP_DISTANCE_FAR_SLOW, JUMP_TYPE_HIGH);
+    return MovementAction_Jump2UpSlow_Step1(objectEvent, sprite);
+}
+
+bool8 MovementAction_Jump2UpSlow_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    if (DoJumpAnim(objectEvent, sprite))
+    {
+        objectEvent->noShadow = FALSE;
+        sprite->sActionFuncId = 2;
+        return TRUE;
+    }
+    return FALSE;
+}
+
+bool8 MovementAction_Jump2LeftSlow_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    InitJumpRegular(objectEvent, sprite, DIR_WEST, JUMP_DISTANCE_FAR_SLOW, JUMP_TYPE_HIGH);
+    return MovementAction_Jump2LeftSlow_Step1(objectEvent, sprite);
+}
+
+bool8 MovementAction_Jump2LeftSlow_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    if (DoJumpAnim(objectEvent, sprite))
+    {
+        objectEvent->noShadow = FALSE;
+        sprite->sActionFuncId = 2;
+        return TRUE;
+    }
+    return FALSE;
+}
+
+bool8 MovementAction_Jump2RightSlow_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    InitJumpRegular(objectEvent, sprite, DIR_EAST, JUMP_DISTANCE_FAR_SLOW, JUMP_TYPE_HIGH);
+    return MovementAction_Jump2RightSlow_Step1(objectEvent, sprite);
+}
+
+bool8 MovementAction_Jump2RightSlow_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    if (DoJumpAnim(objectEvent, sprite))
+    {
+        objectEvent->noShadow = FALSE;
+        sprite->sActionFuncId = 2;
+        return TRUE;
+    }
+    return FALSE;
+}
+
 bool8 MovementAction_Jump2Down_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
     InitJumpRegular(objectEvent, sprite, DIR_SOUTH, JUMP_DISTANCE_FAR, JUMP_TYPE_HIGH);
@@ -10802,14 +10941,55 @@ static u8 DoJumpSpriteMovement(struct Sprite *sprite)
         [JUMP_DISTANCE_IN_PLACE] = 16,
         [JUMP_DISTANCE_NORMAL] = 16,
         [JUMP_DISTANCE_FAR] = 32,
+        [JUMP_DISTANCE_FAR_FAST] = 16,
+        [JUMP_DISTANCE_FAR_SLOW] = 32,
     };
     u8 distanceToShift[] =
     {
         [JUMP_DISTANCE_IN_PLACE] = 0,
         [JUMP_DISTANCE_NORMAL] = 0,
         [JUMP_DISTANCE_FAR] = 1,
+        [JUMP_DISTANCE_FAR_FAST] = 0,
+        [JUMP_DISTANCE_FAR_SLOW] = 1,
     };
     u8 result = 0;
+
+    // CrystalDust's two-tile jumps at double and half speed. The fast one covers
+    // two tiles in half the frames by stepping two pixels; the slow one steps one
+    // pixel every other frame, so its progress is sTimer / 2. See D39.
+    if (sprite->sDistance == JUMP_DISTANCE_FAR_FAST)
+    {
+        Step2(sprite, sprite->sDirection);
+        sprite->y2 = GetJumpY(sprite->sTimer >> distanceToShift[sprite->sDistance], sprite->sJumpType);
+        sprite->sTimer++;
+        if (sprite->sTimer == distanceToTime[sprite->sDistance] >> 1)
+            result = JUMP_HALFWAY;
+        if (sprite->sTimer >= distanceToTime[sprite->sDistance])
+        {
+            sprite->y2 = 0;
+            result = JUMP_FINISHED;
+        }
+        return result;
+    }
+    else if (sprite->sDistance == JUMP_DISTANCE_FAR_SLOW)
+    {
+        s16 steps;
+
+        if (!(sprite->sTimer & 1))
+            Step1(sprite, sprite->sDirection);
+        sprite->sTimer++;
+        steps = sprite->sTimer >> 1;
+        if (steps < distanceToTime[sprite->sDistance])
+            sprite->y2 = GetJumpY(steps >> distanceToShift[sprite->sDistance], sprite->sJumpType);
+        if (steps == distanceToTime[sprite->sDistance] >> 1)
+            result = JUMP_HALFWAY;
+        if (steps >= distanceToTime[sprite->sDistance])
+        {
+            sprite->y2 = 0;
+            result = JUMP_FINISHED;
+        }
+        return result;
+    }
 
     if (sprite->sDistance != JUMP_DISTANCE_IN_PLACE)
         Step1(sprite, sprite->sDirection);
@@ -10851,11 +11031,17 @@ static u8 DoJumpSpecialSpriteMovement(struct Sprite *sprite)
         [JUMP_DISTANCE_IN_PLACE] = 32,
         [JUMP_DISTANCE_NORMAL] = 32,
         [JUMP_DISTANCE_FAR] = 64,
+        // No jump-special uses CrystalDust's fast/slow distances; these keep the
+        // table indexable by the whole enum rather than enabling the behaviour.
+        [JUMP_DISTANCE_FAR_FAST] = 64,
+        [JUMP_DISTANCE_FAR_SLOW] = 64,
     };
     u8 distanceToShift[] = {
         [JUMP_DISTANCE_IN_PLACE] = 1,
         [JUMP_DISTANCE_NORMAL] = 1,
         [JUMP_DISTANCE_FAR] = 2,
+        [JUMP_DISTANCE_FAR_FAST] = 2,
+        [JUMP_DISTANCE_FAR_SLOW] = 2,
     };
     u8 result = 0;
 

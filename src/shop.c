@@ -2,6 +2,7 @@
 #include "bg.h"
 #include "data.h"
 #include "decompress.h"
+#include "event_data.h"
 #include "decoration.h"
 #include "decoration_inventory.h"
 #include "event_object_movement.h"
@@ -70,6 +71,12 @@ enum {
 
 enum {
     MART_TYPE_NORMAL,
+    // CrystalDust's three special marts, restored in Phase 2 (D41). They sell a
+    // fixed list at fixed prices, skip the Buy/Sell/Quit menu, and have their own
+    // clerk dialogue. Kept below MART_TYPE_DECOR so IsItemMart() stays a compare.
+    MART_TYPE_HERB,
+    MART_TYPE_BARGAIN,
+    MART_TYPE_ROOFTOP_SALE,
     MART_TYPE_DECOR,
     MART_TYPE_DECOR2,
 };
@@ -89,6 +96,7 @@ struct MartInfo
     void (*callback)(void);
     const struct MenuAction *menuActions;
     const u16 *itemList;
+    const u16 *customItemPrices; // CrystalDust: overrides GetItemPrice when set
     u16 itemCount;
     u8 windowId;
     u8 martType;
@@ -105,6 +113,7 @@ struct ShopData
     u8 scrollIndicatorsTaskId;
     u8 iconSlot;
     u8 itemSpriteIds[2];
+    u8 bargainShopPurchasedItems; // CrystalDust: one bit per bargain shop slot
     s16 viewportObjects[OBJECT_EVENTS_COUNT][5];
 };
 
@@ -343,6 +352,34 @@ static const u8 sShopBuyMenuTextColors[][3] =
 
 static const enum Item sShopItemsListDummy[] = { ITEM_NONE };
 
+// CrystalDust marts that sell items rather than decorations.
+static bool32 IsItemMart(void)
+{
+    return sMartInfo.martType < MART_TYPE_DECOR;
+}
+
+// CrystalDust: the price shown and charged, honouring a custom price list.
+static u32 GetMartItemPrice(u32 itemId, u32 index)
+{
+    if (sMartInfo.customItemPrices)
+        return sMartInfo.customItemPrices[index];
+    return GetItemPrice(itemId) >> IsPokeNewsActive(POKENEWS_SLATEPORT);
+}
+
+// BuyMenuPrintPriceInList only gets the item, not its row; the custom-price marts
+// all sell each item at most once, so the first match is the right row.
+static u32 GetMartItemIndex(u32 itemId)
+{
+    u32 i;
+
+    for (i = 0; i < sMartInfo.itemCount; i++)
+    {
+        if (sMartInfo.itemList[i] == itemId)
+            return i;
+    }
+    return 0;
+}
+
 static u8 CreateShopMenu(u8 martType)
 {
     int numMenuItems;
@@ -386,6 +423,7 @@ static void SetShopItemsForSale(const u16 *items)
     u16 i = 0;
 
     sMartInfo.itemList = items;
+    sMartInfo.customItemPrices = NULL;
     sMartInfo.itemCount = 0;
 
     assertf(items != NULL, "Shop items list should never be set as NULL")
@@ -461,6 +499,18 @@ static void Task_HandleShopMenuQuit(u8 taskId)
         sMartInfo.callback();
 }
 
+// CrystalDust: the special marts never showed a Buy/Sell/Quit menu, so there is
+// no window to tear down on the way out.
+static void Task_HandleShopMenuQuitNoOptions(u8 taskId)
+{
+    TryPutSmartShopperOnAir();
+    UnlockPlayerFieldControls();
+    DestroyTask(taskId);
+
+    if (sMartInfo.callback)
+        sMartInfo.callback();
+}
+
 static void Task_GoToBuyOrSellMenu(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
@@ -483,6 +533,8 @@ static void Task_ReturnToShopMenu(u8 taskId)
     {
         if (sMartInfo.martType == MART_TYPE_DECOR2)
             DisplayItemMessageOnField(taskId, gText_CanIHelpWithAnythingElse, ShowShopMenuAfterExitingBuyOrSellMenu);
+        else if (sMartInfo.martType == MART_TYPE_HERB || sMartInfo.martType == MART_TYPE_BARGAIN || sMartInfo.martType == MART_TYPE_ROOFTOP_SALE)
+            Task_HandleShopMenuQuitNoOptions(taskId); // CrystalDust: these clerks say their goodbyes in script
         else
             DisplayItemMessageOnField(taskId, gText_AnythingElseICanHelp, ShowShopMenuAfterExitingBuyOrSellMenu);
     }
@@ -596,7 +648,7 @@ static void BuyMenuBuildListMenuTemplate(void)
 
 static void BuyMenuSetListEntry(struct ListMenuItem *menuItem, enum Item item, u8 *name)
 {
-    if (sMartInfo.martType == MART_TYPE_NORMAL)
+    if (IsItemMart())
         CopyItemName(item, name);
     else
         StringCopy(name, gDecorations[item].name);
@@ -620,7 +672,7 @@ static void BuyMenuPrintItemDescriptionAndShowItemIcon(s32 item, bool8 onInit, s
     sShopData->iconSlot ^= 1;
     if (item != LIST_CANCEL)
     {
-        if (sMartInfo.martType == MART_TYPE_NORMAL)
+        if (IsItemMart())
             description = GetItemDescription(item);
         else
             description = gDecorations[item].description;
@@ -640,11 +692,11 @@ static void BuyMenuPrintPriceInList(u8 windowId, u32 itemId, u8 y)
 
     if (itemId != LIST_CANCEL)
     {
-        if (sMartInfo.martType == MART_TYPE_NORMAL)
+        if (IsItemMart())
         {
             ConvertIntToDecimalStringN(
                 gStringVar1,
-                GetItemPrice(itemId) >> IsPokeNewsActive(POKENEWS_SLATEPORT),
+                GetMartItemPrice(itemId, GetMartItemIndex(itemId)),
                 STR_CONV_MODE_LEFT_ALIGN,
                 6);
         }
@@ -704,7 +756,7 @@ static void BuyMenuAddItemIcon(enum Item item, u8 iconSlot)
     if (*spriteIdPtr != SPRITE_NONE)
         return;
 
-    if (sMartInfo.martType == MART_TYPE_NORMAL || item == ITEM_LIST_END)
+    if (IsItemMart() || item == ITEM_LIST_END)
     {
         spriteId = AddItemIconSprite(iconSlot + TAG_ITEM_ICON_BASE, iconSlot + TAG_ITEM_ICON_BASE, item);
         if (spriteId != MAX_SPRITES)
@@ -1016,20 +1068,40 @@ static void Task_BuyMenu(u8 taskId)
             BuyMenuRemoveScrollIndicatorArrows();
             BuyMenuPrintCursor(tListTaskId, COLORID_GRAY_CURSOR);
 
-            if (sMartInfo.martType == MART_TYPE_NORMAL)
-                sShopData->totalCost = (GetItemPrice(itemId) >> IsPokeNewsActive(POKENEWS_SLATEPORT));
+            if (IsItemMart())
+                sShopData->totalCost = GetMartItemPrice(itemId, sShopData->scrollOffset + sShopData->selectedRow);
             else
                 sShopData->totalCost = gDecorations[itemId].price;
 
-            if (GetItemImportance(itemId) && (CheckBagHasItem(itemId, 1) || CheckPCHasItem(itemId, 1)))
+            // CrystalDust: the bargain shop sells one of each per day.
+            if (sMartInfo.martType == MART_TYPE_BARGAIN
+             && (sShopData->bargainShopPurchasedItems & (1 << (sShopData->scrollOffset + sShopData->selectedRow))))
+            {
+                BuyMenuDisplayMessage(taskId, gText_BoughtItemAlready, BuyMenuReturnToItemList);
+            }
+            else if (GetItemImportance(itemId) && (CheckBagHasItem(itemId, 1) || CheckPCHasItem(itemId, 1)))
                 BuyMenuDisplayMessage(taskId, gText_ThatItemIsSoldOut, BuyMenuReturnToItemList);
             else if (!IsEnoughMoney(&gSaveBlock1Ptr->money, sShopData->totalCost))
             {
-                BuyMenuDisplayMessage(taskId, gText_YouDontHaveMoney, BuyMenuReturnToItemList);
+                // CrystalDust: each special clerk turns you away in their own words.
+                if (sMartInfo.martType == MART_TYPE_BARGAIN)
+                    BuyMenuDisplayMessage(taskId, gText_ShortOnFunds, BuyMenuReturnToItemList);
+                else if (sMartInfo.martType == MART_TYPE_HERB)
+                    BuyMenuDisplayMessage(taskId, gText_HeheheYouDontHaveTheMoney, BuyMenuReturnToItemList);
+                else
+                    BuyMenuDisplayMessage(taskId, gText_YouDontHaveMoney, BuyMenuReturnToItemList);
+            }
+            else if (sMartInfo.martType == MART_TYPE_BARGAIN)
+            {
+                // CrystalDust: no quantity prompt, it is always one.
+                tItemCount = 1;
+                CopyItemName(itemId, gStringVar1);
+                ConvertIntToDecimalStringN(gStringVar2, sShopData->totalCost, STR_CONV_MODE_LEFT_ALIGN, MAX_MONEY_DIGITS);
+                BuyMenuDisplayMessage(taskId, gText_Var1CostsVar2WantIt, BuyMenuConfirmPurchase);
             }
             else
             {
-                if (sMartInfo.martType == MART_TYPE_NORMAL)
+                if (IsItemMart())
                 {
                     CopyItemName(itemId, gStringVar1);
                     if (GetItemImportance(itemId))
@@ -1044,6 +1116,10 @@ static void Task_BuyMenu(u8 taskId)
                     {
                         StringCopy(gStringVar2, GetMoveName(ItemIdToBattleMoveId(itemId)));
                         BuyMenuDisplayMessage(taskId, gText_Var1CertainlyHowMany2, Task_BuyHowManyDialogueInit);
+                    }
+                    else if (sMartInfo.martType == MART_TYPE_HERB)
+                    {
+                        BuyMenuDisplayMessage(taskId, gText_Var1HeheheOkayHowMany, Task_BuyHowManyDialogueInit);
                     }
                     else
                     {
@@ -1104,7 +1180,7 @@ static void Task_BuyHowManyDialogueHandleInput(u8 taskId)
 
     if (AdjustQuantityAccordingToDPadInput(&tItemCount, sShopData->maxQuantity) == TRUE)
     {
-        sShopData->totalCost = (GetItemPrice(tItemId) >> IsPokeNewsActive(POKENEWS_SLATEPORT)) * tItemCount;
+        sShopData->totalCost = GetMartItemPrice(tItemId, sShopData->scrollOffset + sShopData->selectedRow) * tItemCount;
         BuyMenuPrintItemQuantityAndPrice(taskId);
     }
     else
@@ -1120,7 +1196,10 @@ static void Task_BuyHowManyDialogueHandleInput(u8 taskId)
             CopyItemName(tItemId, gStringVar1);
             ConvertIntToDecimalStringN(gStringVar2, tItemCount, STR_CONV_MODE_LEFT_ALIGN, MAX_ITEM_DIGITS);
             ConvertIntToDecimalStringN(gStringVar3, sShopData->totalCost, STR_CONV_MODE_LEFT_ALIGN, MAX_MONEY_DIGITS);
-            BuyMenuDisplayMessage(taskId, gText_Var1AndYouWantedVar2, BuyMenuConfirmPurchase);
+            if (sMartInfo.martType == MART_TYPE_HERB)
+                BuyMenuDisplayMessage(taskId, gText_Var1AndVar2OfThem, BuyMenuConfirmPurchase);
+            else
+                BuyMenuDisplayMessage(taskId, gText_Var1AndYouWantedVar2, BuyMenuConfirmPurchase);
         }
         else if (JOY_NEW(B_BUTTON))
         {
@@ -1145,17 +1224,34 @@ static void BuyMenuTryMakePurchase(u8 taskId)
 
     PutWindowTilemap(WIN_ITEM_LIST);
 
-    if (sMartInfo.martType == MART_TYPE_NORMAL)
+    if (IsItemMart())
     {
         if (AddBagItem(tItemId, tItemCount) == TRUE)
         {
             GetSetItemObtained(tItemId, FLAG_SET_ITEM_OBTAINED);
             RecordItemPurchase(taskId);
-            BuyMenuDisplayMessage(taskId, gText_HereYouGoThankYou, BuyMenuSubtractMoney);
+            if (sMartInfo.martType == MART_TYPE_BARGAIN)
+            {
+                sShopData->bargainShopPurchasedItems |= (1 << (sShopData->scrollOffset + sShopData->selectedRow));
+                BuyMenuDisplayMessage(taskId, gText_Thanks, BuyMenuSubtractMoney);
+            }
+            else if (sMartInfo.martType == MART_TYPE_HERB)
+            {
+                BuyMenuDisplayMessage(taskId, gText_ThankYouDearHehehehe, BuyMenuSubtractMoney);
+            }
+            else
+            {
+                BuyMenuDisplayMessage(taskId, gText_HereYouGoThankYou, BuyMenuSubtractMoney);
+            }
         }
         else
         {
-            BuyMenuDisplayMessage(taskId, gText_NoMoreRoomForThis, BuyMenuReturnToItemList);
+            if (sMartInfo.martType == MART_TYPE_BARGAIN)
+                BuyMenuDisplayMessage(taskId, gText_BagIsChockFull, BuyMenuReturnToItemList);
+            else if (sMartInfo.martType == MART_TYPE_HERB)
+                BuyMenuDisplayMessage(taskId, gText_OhYourBagIsFullDear, BuyMenuReturnToItemList);
+            else
+                BuyMenuDisplayMessage(taskId, gText_NoMoreRoomForThis, BuyMenuReturnToItemList);
         }
     }
     else
@@ -1181,7 +1277,7 @@ static void BuyMenuSubtractMoney(u8 taskId)
     PlaySE(SE_SHOP);
     PrintMoneyAmountInMoneyBox(WIN_MONEY, GetMoney(&gSaveBlock1Ptr->money), 0);
 
-    if (sMartInfo.martType == MART_TYPE_NORMAL)
+    if (IsItemMart())
         gTasks[taskId].func = Task_ReturnToItemListAfterItemPurchase;
     else
         gTasks[taskId].func = Task_ReturnToItemListAfterDecorationPurchase;
@@ -1257,6 +1353,10 @@ static void BuyMenuPrintItemQuantityAndPrice(u8 taskId)
 
 static void ExitBuyMenu(u8 taskId)
 {
+    // CrystalDust: buying anything here uses up the day's bargains.
+    if (sMartInfo.martType == MART_TYPE_BARGAIN && sShopData->bargainShopPurchasedItems)
+        FlagSet(FLAG_DAILY_GOLDENROD_UNDERGROUND_BARGAINS);
+
     gFieldCallback = MapPostLoadHook_ReturnToShopMenu;
     BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
     gTasks[taskId].func = Task_ExitBuyMenu;
@@ -1315,6 +1415,42 @@ void CreatePokemartMenu(const u16 *itemsForSale)
 {
     CreateShopMenu(MART_TYPE_NORMAL);
     SetShopItemsForSale(itemsForSale);
+    ClearItemPurchases();
+    SetShopMenuCallback(ScriptContext_Enable);
+}
+
+// ---- CrystalDust's three special marts, restored in Phase 2 (D41) ----
+// Each goes straight to the buy list: the clerk's own script handles the
+// greeting and the goodbye, so there is no Buy/Sell/Quit menu to create.
+static u8 CreateShopMenuSkipOptions(u8 martType)
+{
+    LockPlayerFieldControls();
+    sMartInfo.martType = martType;
+    return CreateTask(Task_HandleShopMenuBuy, 8);
+}
+
+void CreateBargainShopMenu(const u16 *itemsForSale, const u16 *customItemPrices)
+{
+    SetShopItemsForSale(itemsForSale);
+    sMartInfo.customItemPrices = customItemPrices;
+    CreateShopMenuSkipOptions(MART_TYPE_BARGAIN);
+    ClearItemPurchases();
+    SetShopMenuCallback(ScriptContext_Enable);
+}
+
+void CreateHerbShopMenu(const u16 *itemsForSale)
+{
+    SetShopItemsForSale(itemsForSale);
+    CreateShopMenuSkipOptions(MART_TYPE_HERB);
+    ClearItemPurchases();
+    SetShopMenuCallback(ScriptContext_Enable);
+}
+
+void CreateRooftopSaleShopMenu(const u16 *itemsForSale, const u16 *customItemPrices)
+{
+    SetShopItemsForSale(itemsForSale);
+    sMartInfo.customItemPrices = customItemPrices;
+    CreateShopMenuSkipOptions(MART_TYPE_ROOFTOP_SALE);
     ClearItemPurchases();
     SetShopMenuCallback(ScriptContext_Enable);
 }

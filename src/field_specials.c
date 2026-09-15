@@ -44,6 +44,8 @@
 #include "region_map.h"
 #include "rtc.h"
 #include "script.h"
+#include "shop.h"
+#include "gpu_regs.h"
 #include "script_menu.h"
 #include "sound.h"
 #include "starter_choose.h"
@@ -75,6 +77,7 @@
 #include "constants/weather.h"
 #include "constants/metatile_labels.h"
 #include "constants/rgb.h"
+#include "constants/region_map_sections.h"
 #include "palette.h"
 #include "battle_util.h"
 #include "naming_screen.h"
@@ -2338,12 +2341,13 @@ void BufferBattleTowerElevatorFloors(void)
 #define tKeepOpenAfterSelect data[6]
 #define tScrollOffset        data[7]
 #define tSelectedRow         data[8]
+#define tIgnoreBPress        data[9] // CrystalDust: day-of-week cannot be cancelled
 #define tScrollMultiId       data[11]
 #define tScrollArrowId       data[12]
 #define tWindowId            data[13]
 #define tListTaskId          data[14]
 #define tTaskId              data[15]
-// data[9] and [10] unused
+// data[10] unused
 
 void ShowScrollableMultichoice(void)
 {
@@ -2481,6 +2485,48 @@ void ShowScrollableMultichoice(void)
         task->tTop = 1;
         task->tWidth = 12;
         task->tHeight = 8;
+        task->tKeepOpenAfterSelect = FALSE;
+        task->tTaskId = taskId;
+        break;
+    // ---- CrystalDust's menus, restored in Phase 2 (D41) ----
+    case SCROLL_MULTI_DAY_OF_WEEK:
+        task->tMaxItemsOnScreen = MAX_SCROLL_MULTI_ON_SCREEN;
+        task->tNumItems = 7;
+        task->tLeft = 21;
+        task->tTop = 1;
+        task->tWidth = 10;
+        task->tHeight = 12;
+        task->tKeepOpenAfterSelect = FALSE;
+        task->tIgnoreBPress = TRUE; // the clock must be set
+        task->tTaskId = taskId;
+        break;
+    case SCROLL_MULTI_BLUE_CARD_PRIZES:
+        task->tMaxItemsOnScreen = MAX_SCROLL_MULTI_ON_SCREEN;
+        task->tNumItems = 10;
+        task->tLeft = 11;
+        task->tTop = 1;
+        task->tWidth = 15;
+        task->tHeight = 12;
+        task->tKeepOpenAfterSelect = FALSE;
+        task->tTaskId = taskId;
+        break;
+    case SCROLL_MULTI_GOLDENROD_DEPT_STORE_FLOORS:
+        task->tMaxItemsOnScreen = MAX_SCROLL_MULTI_ON_SCREEN;
+        task->tNumItems = 8;
+        task->tLeft = 1;
+        task->tTop = 1;
+        task->tWidth = 7;
+        task->tHeight = 12;
+        task->tKeepOpenAfterSelect = FALSE;
+        task->tTaskId = taskId;
+        break;
+    case SCROLL_MULTI_CELADON_DEPT_STORE_FLOORS:
+        task->tMaxItemsOnScreen = MAX_SCROLL_MULTI_ON_SCREEN;
+        task->tNumItems = 6;
+        task->tLeft = 1;
+        task->tTop = 1;
+        task->tWidth = 7;
+        task->tHeight = 12;
         task->tKeepOpenAfterSelect = FALSE;
         task->tTaskId = taskId;
         break;
@@ -2683,7 +2729,51 @@ static const u8 *const sScrollableMultichoiceOptions[][MAX_SCROLL_MULTI_LENGTH] 
         gText_2F,
         gText_1F,
         gText_Exit,
-    }
+    },
+    // ---- CrystalDust's menus, restored in Phase 2 (D41) ----
+    [SCROLL_MULTI_DAY_OF_WEEK] =
+    {
+        gText_Sunday,
+        gText_Monday,
+        gText_Tuesday,
+        gText_Wednesday,
+        gText_Thursday,
+        gText_Friday,
+        gText_Saturday,
+    },
+    [SCROLL_MULTI_BLUE_CARD_PRIZES] =
+    {
+        gText_UltraBall2Points,
+        gText_FullRestore2Points,
+        gText_Nugget3Points,
+        gText_RareCandy3Points,
+        gText_Protein5Points,
+        gText_Iron5Points,
+        gText_Carbos5Points,
+        gText_Calcium5Points,
+        gText_HPUp5Points,
+        gText_Exit,
+    },
+    [SCROLL_MULTI_GOLDENROD_DEPT_STORE_FLOORS] =
+    {
+        gText_6F,
+        gText_5F,
+        gText_4F,
+        gText_3F,
+        gText_2F,
+        gText_1F,
+        gText_B1F,
+        gText_Exit,
+    },
+    [SCROLL_MULTI_CELADON_DEPT_STORE_FLOORS] =
+    {
+        gText_5F,
+        gText_4F,
+        gText_3F,
+        gText_2F,
+        gText_1F,
+        gText_Exit,
+    },
 };
 
 static void Task_ShowScrollableMultichoice(u8 taskId)
@@ -2787,6 +2877,8 @@ static void ScrollableMultichoice_ProcessInput(u8 taskId)
     case LIST_NOTHING_CHOSEN:
         break;
     case LIST_CANCEL:
+        if (task->tIgnoreBPress) // CrystalDust
+            break;
         gSpecialVar_Result = MULTI_B_PRESSED;
         PlaySE(SE_SELECT);
         CloseScrollableMultichoice(taskId);
@@ -5742,4 +5834,497 @@ bool8 CheckAddCoins(void)
         return FALSE;
     else
         return TRUE;
+}
+
+// ---- CrystalDust specials, restored in Phase 2 (see D40) ----
+// Every function below is called by a live Johto script but was lost when the
+// Phase 1 merge resolved this file to expansion's side.
+
+void DaisyGrooming(void)
+{
+    AdjustFriendship(&gPlayerParty[gSpecialVar_0x8004], FRIENDSHIP_EVENT_DAISY_GROOMING);
+    gSpecialVar_Result = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPECIES);
+}
+
+void OlderHaircutBrother(void)
+{
+    u8 haircutLevel = 0;
+    u16 random = Random() % 100;
+
+    if (random >= 30)
+        haircutLevel++;
+    if (random >= 80)
+        haircutLevel++;
+
+    AdjustFriendship(&gPlayerParty[gSpecialVar_0x8004], FRIENDSHIP_EVENT_OLDER_HAIRCUT_BROTHER_0 + haircutLevel);
+    gSpecialVar_Result = haircutLevel;
+}
+
+void YoungerHaircutBrother(void)
+{
+    u8 haircutLevel = 0;
+    u16 random = Random() % 100;
+
+    if (random >= 60)
+        haircutLevel++;
+    if (random >= 90)
+        haircutLevel++;
+
+    AdjustFriendship(&gPlayerParty[gSpecialVar_0x8004], FRIENDSHIP_EVENT_YOUNGER_HAIRCUT_BROTHER_0 + haircutLevel);
+    gSpecialVar_Result = haircutLevel;
+}
+
+void PlayChosenMonCry(void)
+{
+    u32 species = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPECIES, NULL);
+
+    // CrystalDust called PlayCry5, which pret has since renamed PlayCry_Script.
+    PlayCry_Script(species, 0);
+}
+
+void IsPlayersMonOfSpeciesInParty(void)
+{
+    u32 i;
+    u16 species = gSpecialVar_0x8004;
+    u8 partyCount = CalculatePlayerPartyCount();
+
+    for (i = 0; i < partyCount; i++)
+    {
+        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG, NULL) == species
+         && GetMonData(&gPlayerParty[i], MON_DATA_OT_ID) == T1_READ_32(gSaveBlock2Ptr->playerTrainerId))
+        {
+            gSpecialVar_Result = TRUE;
+            return;
+        }
+    }
+    gSpecialVar_Result = FALSE;
+}
+
+// ---- CrystalDust's mini credits, restored in Phase 2 (D41) ----
+// Shown by the Route 36 NPC. Ported verbatim apart from the renamed script
+// context helpers (ScriptContext2_Enable -> LockPlayerFieldControls,
+// EnableBothScriptContexts -> ScriptContext_Enable).
+static void Task_MiniCredits(u8 taskId);
+
+#define tState      data[0]
+#define tAdvance    data[1]
+#define tWindowId   data[2]
+#define tTimer      data[3]
+
+void DoMiniCredits(void)
+{
+    u8 taskId = FindTaskIdByFunc(Task_MiniCredits);
+
+    if (taskId == 0xFF)
+    {
+        taskId = CreateTask(Task_MiniCredits, 8);
+        if (taskId != 0xFF)
+        {
+            s16 *data = gTasks[taskId].data;
+            LockPlayerFieldControls();
+            tWindowId = 0xFF;
+        }
+    }
+    else
+    {
+        gTasks[taskId].tAdvance = TRUE;
+    }
+}
+
+static const struct WindowTemplate sCreditsWindowTemplate = {
+    .bg = 0,
+    .tilemapLeft = 0,
+    .tilemapTop = 0,
+    .width = 30,
+    .height = 13,
+    .paletteNum = 14,
+    .baseBlock = 0x001
+};
+
+static void CreateCreditsWindow(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+
+    tWindowId = AddWindow(&sCreditsWindowTemplate);
+    FillWindowPixelBuffer(tWindowId, PIXEL_FILL(0));
+    PutWindowTilemap(tWindowId);
+    CopyWindowToVram(tWindowId, COPYWIN_FULL);
+}
+
+static void DestroyCreditsWindow(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+
+    if (tWindowId != 0xFF)
+    {
+        FillWindowPixelBuffer(tWindowId, PIXEL_FILL(0));
+        ClearWindowTilemap(tWindowId);
+        CopyWindowToVram(tWindowId, COPYWIN_FULL);
+        RemoveWindow(tWindowId);
+        tWindowId = 0xFF;
+    }
+}
+
+static const u8 sTextColor_Header[3] = {0, 5, 2};
+static const u8 sTextColor_Regular[3] = {0, 1, 2};
+
+static bool8 Credits_OpenWindow(s8 speed, u8 topStopPos)
+{
+    u16 win0v = GetGpuReg(REG_OFFSET_WIN0V);
+    u8 win0vTop = win0v >> 8;
+    u8 win0vBottom = win0v & 0xFF;
+
+    if ((speed > 0 && win0vTop <= topStopPos) ||
+        (speed < 0 && win0vTop >= topStopPos))
+    {
+        return TRUE;
+    }
+    else
+    {
+        win0vTop -= speed;
+        win0vBottom += speed;
+        SetGpuReg(REG_OFFSET_WIN0V, (win0vTop << 8) | win0vBottom);
+    }
+    return FALSE;
+}
+
+static void Task_MiniCredits(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+
+    switch (tState)
+    {
+    case 0:
+        SetGpuRegBits(REG_OFFSET_DISPCNT, DISPCNT_WIN0_ON | DISPCNT_WIN1_ON);
+        SetGpuReg(REG_OFFSET_WININ, WININ_WIN0_ALL |
+                                    WININ_WIN1_BG_ALL |
+                                    WININ_WIN1_OBJ);
+        SetGpuReg(REG_OFFSET_WINOUT, WINOUT_WIN01_BG1 |
+                                     WINOUT_WIN01_BG2 |
+                                     WINOUT_WIN01_BG3 |
+                                     WINOUT_WIN01_OBJ);
+        SetGpuReg(REG_OFFSET_WIN0H, WIN_RANGE(0, 240));
+        SetGpuReg(REG_OFFSET_WIN0V, WIN_RANGE(56, 56));
+        SetGpuReg(REG_OFFSET_WIN1H, WIN_RANGE(0, 240));
+        SetGpuReg(REG_OFFSET_WIN1V, WIN_RANGE(112, 160));
+        tState++;
+        break;
+    case 1:
+        SetGpuReg(REG_OFFSET_BLDCNT, BLDCNT_TGT1_BG1 |
+                                     BLDCNT_TGT1_BG2 |
+                                     BLDCNT_TGT1_BG3 |
+                                     BLDCNT_TGT1_OBJ |
+                                     BLDCNT_EFFECT_DARKEN);
+        SetGpuReg(REG_OFFSET_BLDALPHA, BLDALPHA_BLEND(16, 4));
+        SetGpuReg(REG_OFFSET_BLDY, 10);
+        CreateCreditsWindow(taskId);
+        AddTextPrinterParameterized4(tWindowId, 2, GetStringCenterAlignXOffset(2, gString_MiniCreditsCrystalDustDevTeam, 240), 6, 1, 2, sTextColor_Header, 0, gString_MiniCreditsCrystalDustDevTeam);
+        AddTextPrinterParameterized4(tWindowId, 2, GetStringCenterAlignXOffset(2, gString_MiniCreditsDevTeam1, 240), 20, 0, 0, sTextColor_Regular, 0, gString_MiniCreditsDevTeam1);
+        AddTextPrinterParameterized4(tWindowId, 2, GetStringCenterAlignXOffset(2, gString_MiniCreditsDevTeam2, 240), 34, 0, 0, sTextColor_Regular, 0, gString_MiniCreditsDevTeam2);
+        AddTextPrinterParameterized4(tWindowId, 2, GetStringCenterAlignXOffset(2, gString_MiniCreditsDevTeam3, 240), 48, 0, 0, sTextColor_Regular, 0, gString_MiniCreditsDevTeam3);
+        AddTextPrinterParameterized4(tWindowId, 2, GetStringCenterAlignXOffset(2, gString_MiniCreditsDevTeam4, 240), 62, 0, 0, sTextColor_Regular, 0, gString_MiniCreditsDevTeam4);
+        AddTextPrinterParameterized4(tWindowId, 2, GetStringCenterAlignXOffset(2, gString_MiniCreditsDevTeam5, 240), 76, 0, 0, sTextColor_Regular, 0, gString_MiniCreditsDevTeam5);
+        AddTextPrinterParameterized4(tWindowId, 2, GetStringCenterAlignXOffset(0, gString_MiniCreditsDevTeam6, 240), 90, 0, 0, sTextColor_Regular, 0, gString_MiniCreditsDevTeam6);
+        Menu_LoadStdPalAt(0xE0);
+        //gPlttBufferUnfaded[0xFF] = RGB_BLACK;
+        //gPlttBufferFaded[0xFF] = RGB_BLACK;
+        tState++;
+        break;
+    case 2:
+        if (Credits_OpenWindow(2, 4))
+        {
+            tTimer = 30;
+            tState++;
+        }
+        break;
+    case 3:
+        if (tTimer == 0)
+        {
+            ScriptContext_Enable();
+            tState++;
+        }
+        else
+        {
+            tTimer--;
+        }
+        break;
+    case 4:
+        if (tAdvance != FALSE)
+        {
+            tAdvance = FALSE;
+            tState++;
+        }
+        break;
+    case 5:
+        if (Credits_OpenWindow(-4, 56))
+        {
+            tState++;
+        }
+        break;
+    case 6:
+        FillWindowPixelBuffer(tWindowId, PIXEL_FILL(0));
+        AddTextPrinterParameterized4(tWindowId, 2, GetStringCenterAlignXOffset(2, gString_MiniCreditsSpecialThanks, 240), 6, 1, 2, sTextColor_Header, 0, gString_MiniCreditsSpecialThanks);
+        AddTextPrinterParameterized4(tWindowId, 2, GetStringCenterAlignXOffset(2, gString_MiniCreditsThanks1, 240), 20, 0, 0, sTextColor_Regular, 0, gString_MiniCreditsThanks1);
+        AddTextPrinterParameterized4(tWindowId, 2, GetStringCenterAlignXOffset(2, gString_MiniCreditsThanks2, 240), 34, 0, 0, sTextColor_Regular, 0, gString_MiniCreditsThanks2);
+        AddTextPrinterParameterized4(tWindowId, 2, GetStringCenterAlignXOffset(2, gString_MiniCreditsThanks3, 240), 48, 0, 0, sTextColor_Regular, 0, gString_MiniCreditsThanks3);
+        AddTextPrinterParameterized4(tWindowId, 2, GetStringCenterAlignXOffset(2, gString_MiniCreditsThanks4, 240), 62, 0, 0, sTextColor_Regular, 0, gString_MiniCreditsThanks4);
+        AddTextPrinterParameterized4(tWindowId, 2, GetStringCenterAlignXOffset(2, gString_MiniCreditsThanks5, 240), 76, 0, 0, sTextColor_Regular, 0, gString_MiniCreditsThanks5);
+        AddTextPrinterParameterized4(tWindowId, 0, GetStringCenterAlignXOffset(0, gString_MiniCreditsThanks6, 240), 90, 0, 0, sTextColor_Regular, 0, gString_MiniCreditsThanks6);
+        Menu_LoadStdPalAt(0xE0);
+        //gPlttBufferUnfaded[0xFF] = RGB_BLACK;
+        //gPlttBufferFaded[0xFF] = RGB_BLACK;
+        tState++;
+        break;
+    case 7:
+        if (Credits_OpenWindow(4, 4))
+        {
+            tTimer = 30;
+            tState++;
+        }
+        break;
+    case 8:
+        if (tTimer == 0)
+        {
+            ScriptContext_Enable();
+            tState++;
+        }
+        else
+        {
+            tTimer--;
+        }
+        break;
+    case 9:
+        if (tAdvance != FALSE)
+        {
+            tAdvance = FALSE;
+            tState++;
+        }
+        break;
+    case 10:
+        if (Credits_OpenWindow(-2, 56))
+        {
+            tTimer = 30;
+            tState++;
+        }
+        break;
+    case 11:
+        if (tTimer == 0)
+        {
+            DestroyCreditsWindow(taskId);
+            ScriptContext_Enable();
+            tState++;
+        }
+        else
+        {
+            tTimer--;
+        }
+        break;
+    default:
+        ClearGpuRegBits(REG_OFFSET_DISPCNT, DISPCNT_WIN0_ON | DISPCNT_WIN1_ON);
+        SetGpuReg(REG_OFFSET_WININ, 0);
+        SetGpuReg(REG_OFFSET_WINOUT, 0);
+        SetGpuReg(REG_OFFSET_BLDCNT, 0);
+        SetGpuReg(REG_OFFSET_BLDALPHA, 0);
+        SetGpuReg(REG_OFFSET_BLDY, 0);
+        DestroyTask(taskId);
+        break;
+    }
+}
+
+#undef tState
+#undef tAdvance
+#undef tWindowId
+
+// CrystalDust special, restored in Phase 2 (D41). The Goldenrod Pokemon Center
+// Odd Egg: one of seven baby mon, shiny half the time, knowing Dizzy Punch.
+// CrystalDust's CreateEgg took a met location and a force-shiny flag; expansion's
+// takes neither, so both are applied here afterwards.
+void GiveOddEgg(void)
+{
+    static const u16 sOddEggSpecies[] = {
+        SPECIES_PICHU,
+        SPECIES_CLEFFA,
+        SPECIES_IGGLYBUFF,
+        SPECIES_TYROGUE,
+        SPECIES_SMOOCHUM,
+        SPECIES_ELEKID,
+        SPECIES_MAGBY,
+    };
+
+    struct Pokemon mon;
+    bool8 isShiny = Random() & 1; // 50% chance of shiny
+    u16 species = sOddEggSpecies[Random() % ARRAY_COUNT(sOddEggSpecies)];
+    u32 metLocation = MAPSEC_GOLDENROD_CITY;
+
+    CreateEgg(&mon, species, FALSE);
+    SetMonData(&mon, MON_DATA_MET_LOCATION, &metLocation);
+    SetMonData(&mon, MON_DATA_IS_SHINY, &isShiny);
+    GiveMoveToMon(&mon, MOVE_DIZZY_PUNCH);
+
+    // Return value ignored: this can only ever be reached with a party slot free.
+    GiveCapturedMonToPlayer(&mon);
+}
+
+// ---- CrystalDust's Goldenrod shops, restored in Phase 2 (D41) ----
+// Prices are CrystalDust's, carried over verbatim; they override the items'
+// normal prices through struct MartInfo's customItemPrices.
+
+void BargainShop(void)
+{
+    static const u16 sBargainShopItems[] = {
+        ITEM_NUGGET,
+        ITEM_PEARL,
+        ITEM_BIG_PEARL,
+        ITEM_STARDUST,
+        ITEM_STAR_PIECE,
+        ITEM_NONE
+    };
+
+    static const u16 sBargainShopItemPrices[] = {
+        4500,
+         650,
+        3500,
+         900,
+        4600
+    };
+
+    CreateBargainShopMenu(sBargainShopItems, sBargainShopItemPrices);
+    ScriptContext_Stop();
+}
+
+void HerbShop(void)
+{
+    static const u16 sHerbShopItems[] = {
+        ITEM_ENERGY_POWDER,
+        ITEM_ENERGY_ROOT,
+        ITEM_HEAL_POWDER,
+        ITEM_REVIVAL_HERB,
+        ITEM_NONE
+    };
+
+    CreateHerbShopMenu(sHerbShopItems);
+    ScriptContext_Stop();
+}
+
+void RooftopSaleShop(void)
+{
+    static const u16 sRooftopSaleItems1[] = {
+        ITEM_POKE_BALL,    ITEM_GREAT_BALL,
+        ITEM_SUPER_POTION, ITEM_FULL_HEAL,
+        ITEM_REVIVE,       ITEM_NONE
+    };
+
+    static const u16 sRooftopSalePrices1[] = {
+         150, 500,
+         500, 500,
+        1200
+    };
+
+    static const u16 sRooftopSaleItems2[] = {
+        ITEM_HYPER_POTION, ITEM_FULL_RESTORE,
+        ITEM_FULL_HEAL,    ITEM_ULTRA_BALL,
+        ITEM_PROTEIN,      ITEM_NONE
+    };
+
+    static const u16 sRooftopSalePrices2[] = {
+        1000, 2000,
+         500, 1000,
+        7800
+    };
+
+    // The stock changes once the Elite Four have been beaten.
+    if (FlagGet(FLAG_SYS_GAME_CLEAR))
+        CreateRooftopSaleShopMenu(sRooftopSaleItems2, sRooftopSalePrices2);
+    else
+        CreateRooftopSaleShopMenu(sRooftopSaleItems1, sRooftopSalePrices1);
+
+    ScriptContext_Stop();
+}
+
+// ---- CrystalDust's Cianwood Poke Seer ultimate-move tutor, restored in Phase 2 (D42) ----
+// CrystalDust stored its own TUTOR_MOVE_ index in VAR_0x8005; expansion's move
+// tutor takes a MOVE_ id there, so these set move ids instead.
+static const u16 sPokeSeerCompatibleSpecies[] = {
+    SPECIES_MEGANIUM,
+    SPECIES_TYPHLOSION,
+    SPECIES_FERALIGATR
+};
+
+bool8 PokeSeerGetMoveToTeachLeadPokemon(void)
+{
+    // Returns:
+    //   8005 = Move to teach
+    //   8006 = Num moves known by lead mon
+    //   8007 = Index of lead mon
+    //   to specialvar = whether a move can be taught in the first place
+    u32 i;
+    u8 tutorMonId = 0;
+    u8 numMovesKnown = 0;
+    u8 leadMonSlot = GetLeadMonIndex();
+
+    gSpecialVar_0x8007 = leadMonSlot;
+    for (i = 0; i < ARRAY_COUNT(sPokeSeerCompatibleSpecies); i++)
+    {
+        if (GetMonData(&gPlayerParty[leadMonSlot], MON_DATA_SPECIES_OR_EGG, NULL) == sPokeSeerCompatibleSpecies[i])
+        {
+            tutorMonId = i;
+            break;
+        }
+    }
+    if (i == ARRAY_COUNT(sPokeSeerCompatibleSpecies) || GetMonData(&gPlayerParty[leadMonSlot], MON_DATA_FRIENDSHIP) != MAX_FRIENDSHIP)
+        return FALSE;
+
+    if (tutorMonId == 0)
+    {
+        StringCopy(gStringVar2, GetMoveName(MOVE_FRENZY_PLANT));
+        gSpecialVar_0x8005 = MOVE_FRENZY_PLANT;
+        if (FlagGet(FLAG_TUTOR_FRENZY_PLANT) == TRUE)
+            return FALSE;
+    }
+    else if (tutorMonId == 1)
+    {
+        StringCopy(gStringVar2, GetMoveName(MOVE_BLAST_BURN));
+        gSpecialVar_0x8005 = MOVE_BLAST_BURN;
+        if (FlagGet(FLAG_TUTOR_BLAST_BURN) == TRUE)
+            return FALSE;
+    }
+    else
+    {
+        StringCopy(gStringVar2, GetMoveName(MOVE_HYDRO_CANNON));
+        gSpecialVar_0x8005 = MOVE_HYDRO_CANNON;
+        if (FlagGet(FLAG_TUTOR_HYDRO_CANNON) == TRUE)
+            return FALSE;
+    }
+
+    if (GetMonData(&gPlayerParty[leadMonSlot], MON_DATA_MOVE1) != MOVE_NONE)
+        numMovesKnown++;
+    if (GetMonData(&gPlayerParty[leadMonSlot], MON_DATA_MOVE2) != MOVE_NONE)
+        numMovesKnown++;
+    if (GetMonData(&gPlayerParty[leadMonSlot], MON_DATA_MOVE3) != MOVE_NONE)
+        numMovesKnown++;
+    if (GetMonData(&gPlayerParty[leadMonSlot], MON_DATA_MOVE4) != MOVE_NONE)
+        numMovesKnown++;
+    gSpecialVar_0x8006 = numMovesKnown;
+    return TRUE;
+}
+
+bool8 HasLearnedAllMovesFromPokeSeerTutor(void)
+{
+    // 8005 is set by PokeSeerGetMoveToTeachLeadPokemon
+    u8 count = 0;
+
+    if (gSpecialVar_0x8005 == MOVE_FRENZY_PLANT)
+        FlagSet(FLAG_TUTOR_FRENZY_PLANT);
+    else if (gSpecialVar_0x8005 == MOVE_BLAST_BURN)
+        FlagSet(FLAG_TUTOR_BLAST_BURN);
+    else
+        FlagSet(FLAG_TUTOR_HYDRO_CANNON);
+
+    if (FlagGet(FLAG_TUTOR_FRENZY_PLANT) == TRUE)
+        count++;
+    if (FlagGet(FLAG_TUTOR_BLAST_BURN) == TRUE)
+        count++;
+    if (FlagGet(FLAG_TUTOR_HYDRO_CANNON) == TRUE)
+        count++;
+    return (count == 3);
 }

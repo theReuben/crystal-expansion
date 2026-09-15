@@ -1052,6 +1052,25 @@ enum __attribute__((packed)) Item
     ITEM_TATSUGIRINITE = 872,
     ITEM_GLIMMORANITE = 873,
 
+
+    // CrystalDust's Gen 2 key items, restored in D38. The four unused ROOM_*_KEY
+    // constants are deliberately not among them: CrystalDust ships no art for them
+    // and no script refers to them.
+    ITEM_SQUIRTBOTTLE,
+    ITEM_SECRET_POTION,
+    ITEM_RED_SCALE,
+    ITEM_MACHINE_PART,
+    ITEM_CLEAR_BELL,
+    ITEM_RAINBOW_WING,
+    ITEM_SILVER_WING,
+    ITEM_GS_BALL,
+    ITEM_MYSTERY_EGG,
+    ITEM_PASS,
+    ITEM_LOST_ITEM,
+    ITEM_BLUE_CARD,
+    ITEM_EGG_TICKET,
+    ITEM_SLOWPOKE_TAIL,
+    ITEM_GB_PLAYER,
     ITEMS_COUNT,
     ITEM_FIELD_ARROW = ITEMS_COUNT,
 };

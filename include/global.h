@@ -603,7 +603,8 @@ struct SaveBlock2
              u16 optionsBattleSceneOff:1; // whether battle animations are disabled
              u16 regionMapZoom:1; // whether the map is zoomed in
              u16 twentyFourHourClock:1; // CrystalDust: whether the Pokegear clock is 24-hour (D33)
-             //u16 padding1:3;
+             u16 daylightSavingTime:1; // CrystalDust: clock is shifted an hour forward (D40)
+             //u16 padding1:2;
              //u16 padding2;
     /*0x18*/ struct Pokedex pokedex;
     /*0x90*/ u8 filler_90[0x8];
@@ -1358,8 +1359,10 @@ struct SaveBlock1
     u32 towerChallengeId;
     struct TrainerTower trainerTower[NUM_TOWER_CHALLENGE_TYPES];
 #endif //FREE_TRAINER_TOWER
-#if IS_FRLG
+    // CrystalDust names the rival (Silver) too, so this is no longer FRLG-only.
+    // Restored in Phase 2 (D41); src/tv.c's SetRivalNickname writes it.
     u8 rivalName[PLAYER_NAME_LENGTH + 1];
+#if IS_FRLG
     struct DaycareMon route5DayCareMon;
 #endif
     // sizeof: 0x3???
