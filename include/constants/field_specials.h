@@ -5,7 +5,7 @@
 enum PCLocation
 {
     PC_LOCATION_OTHER,
-    PC_LOCATION_BRENDANS_HOUSE,
+    PC_LOCATION_PLAYERS_HOUSE, // CrystalDust's bedroom PC, was Brendan's (D62)
     PC_LOCATION_MAYS_HOUSE,
     PC_LOCATION_PLAYER_HOUSE_FRLG
 };

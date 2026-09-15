@@ -2201,3 +2201,17 @@ already uses), the four `MovementAction_WalkFastest*` pairs added, the func
 tables and `asm/macros/movement.inc` extended, and the six downgraded script
 lines restored across Cerulean Gym, Fast Ship B1F, Lance's Room and the Route 40
 frontier gate.
+
+### D62 Bedroom PC turned on the wrong metatile
+
+**Loss.** CrystalDust defines `PC_LOCATION_PLAYERS_HOUSE = 1` and swaps the
+bedroom PC between metatiles 0x3 and 0xD of the `playersroom` tileset. The merge
+kept expansion's `enum PCLocation`, in which 1 is `PC_LOCATION_BRENDANS_HOUSE`.
+New Bark Town's `EventScript_PlayerPC` still passes a literal `1` — the constant
+is a C enum and so cannot be named from the assembled scripts — so booting the PC
+in the player's bedroom stamped Brendan's Hoenn PC metatile over it, in all three
+of `PCTurnOnEffect_SetMetatile`'s branches and in `PCTurnOffEffect`.
+
+**Fix.** Slot 1 is renamed `PC_LOCATION_PLAYERS_HOUSE` and given CrystalDust's
+0x3/0xD, matching the literal the script already passes. `PC_LOCATION_MAYS_HOUSE`
+stays at 2; no script in the tree references it now that Hoenn is cut.
