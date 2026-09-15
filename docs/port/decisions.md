@@ -2231,3 +2231,39 @@ group numbering already matches CrystalDust's exactly. `MAP_GROUP_TOWNS_AND_ROUT
 is dropped: Kanto and Johto towns share group 0 here, so it duplicated the Johto
 case label and the compiler caught it. The Feebas special-case row, which pointed
 at Hoenn's Route 119, is now `MAP_UNDEFINED` as in CrystalDust.
+
+## D64 — Roaming legendaries roam Johto, and it's Raikou and Entei
+
+**Found:** the stub-Hoenn-anchor sweep opened after D63.
+
+`src/roamer.c` kept expansion's side wholesale. Two losses, both silent:
+
+1. `sRoamerLocations` listed Hoenn routes 110–134. Those map constants are now
+   stubs resolving to a nonexistent map group, so the roamer sat on a map the
+   player can never reach — roaming was dead.
+2. `InitRoamer` spawned Latias or Latios off `gSpecialVar_0x8004`. But the only
+   caller is `data/maps/BurnedTower_B1F/scripts.pory`, CrystalDust's beast
+   release, which passes no such variable. Releasing the beasts gave you an
+   Eon duo instead.
+
+**Done:** ported CrystalDust's 16 Johto route sets (Routes 29–39, 42–46) into
+expansion's 6-column/`___` table shape, and rewrote `InitRoamer` to
+`DeactivateAllRoamers()` then add Raikou and Entei at level 40. `RegenerateRaikou`
+/ `RegenerateEntei` / `IsRaikouActive` / `IsEnteiActive` from D48 now have a
+matching spawn path.
+
+**Two deliberate divergences from CrystalDust, both flagged rather than silent:**
+
+- *Route 39 gains Route 42 as a third destination.* CrystalDust's Route 39 set
+  offers only Route 38. Both engines pick a destination in a `do/while` that
+  rejects the map the player stood on two moves ago, so a player who was on
+  Route 38 two moves ago hangs the game. This is a live bug in CrystalDust; the
+  third entry is the minimal fix and matches the invariant expansion documents
+  above the table.
+- *Suicune does not roam.* CrystalDust's `NUM_ROAMERS` is 2 and its
+  `CreateInitialRoamerMon` loop computes `species += i`, which yields Raikou,
+  Entei, then Larvitar — a bug that never fires because the loop stops at 2.
+  Suicune is scripted (Burned Tower, Routes 36/42, Bell Tower), not roamed, so
+  the `ROAMER_SUICUNE` slot from D48 stays reserved and unused.
+
+Build exit=0, ROM 29,126,724 B (86.80%).
