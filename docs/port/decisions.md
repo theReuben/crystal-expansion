@@ -1586,3 +1586,35 @@ definitions. This pass cleared the duplicates and the three largest
   pic table declares; the frame is the whole image either way.
 
 Remaining at the end of this pass: 737 undefined symbols, 0 multiple definitions.
+
+## D44 — the Johto tilesets
+
+`src/data/tilesets/{headers,graphics,metatiles}.h` are what expansion actually
+compiles (via `src/tilesets.c`); `data/tilesets/*.inc` is dead assembly-era code.
+62 `gTileset_*` symbols were undefined at link. 24 were the Kanto/FRLG set, which
+expansion hides behind `#if !IS_FRLG ... #else ... #endif`; CrystalDust needs both
+halves, so the split was removed in all three files and both branches now always
+compile. The other 38 were CrystalDust's Johto tilesets: the assets were all
+present under `data/tilesets/{primary,secondary}/<name>/` from the Phase 1 merge,
+but the C declarations had been lost. They were regenerated from CrystalDust's
+`headers.inc`/`graphics.inc`/`metatiles.inc` in expansion's C form.
+
+Constraint decisions, none of them silent:
+
+1. **Johto tileset animations are not running yet.** CrystalDust's 38 headers name
+   `InitTilesetAnim_*` callbacks that do not exist in our `src/tileset_anims.c`;
+   every new header is emitted with `.callback = NULL`. Animated water, flowers
+   and the like on Johto maps will be static until the anim functions are ported.
+2. **`gTilesetPalOverrides_*` is dropped.** CrystalDust's assembly header has a
+   seventh word for per-metatile palette overrides; expansion's `struct Tileset`
+   has no `palOverrides` field. The override assets (e.g. `palettes/09_over.pal`)
+   stay in the tree, unused, pending the D31 `gPaletteOverrides` follow-up.
+3. **Palette lists are contiguous.** A few of CrystalDust's `.inc` palette lists
+   skip indices (Azalea lists 13 of 16). Expansion indexes `tileset->palettes[i]`
+   absolutely, so skipping would shift every later slot; each header now lists
+   every `NN.pal` present in the asset directory, in order.
+4. `gTileset_Goldenrod` keeps CrystalDust's cross-reference to
+   `gTilesetPalettes_Rustboro` rather than getting its own copy.
+
+Link errors: 713 undefined -> 675 undefined, 0 multiple definitions, 0 compile
+errors.
