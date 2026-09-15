@@ -637,3 +637,74 @@ const u16 gObjectEventPic_PidgeyOld[] = INCGFX_U16("graphics/object_events/pics/
 const u16 gObjectEventPic_ClefairyOld[] = INCGFX_U16("graphics/object_events/pics/pokemon_old/clefairy.png", ".4bpp", "-mwidth 2 -mheight 2");
 
 #endif // IS_FRLG
+
+// ---- CrystalDust overworld sprites, restored in Phase 2 (D43). The PNGs came
+// across in Phase 1; only the C tables were lost. ----
+const u16 gObjectEventPic_AbraGen2[] = INCGFX_U16("graphics/object_events/pics/pokemon/abra.png", ".4bpp", "-mwidth 2 -mheight 2");
+const u16 gObjectEventPic_AmpharosGen2[] = INCGFX_U16("graphics/object_events/pics/pokemon/ampharos.png", ".4bpp", "-mwidth 2 -mheight 2");
+const u16 gObjectEventPic_BayleefGen2[] = INCGFX_U16("graphics/object_events/pics/pokemon/bayleef.png", ".4bpp", "-mwidth 2 -mheight 2");
+const u16 gObjectEventPic_BlisseyGen2[] = INCGFX_U16("graphics/object_events/pics/pokemon/blissey.png", ".4bpp", "-mwidth 2 -mheight 2");
+const u16 gObjectEventPic_Boarder[] = INCGFX_U16("graphics/object_events/pics/people/boarder.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPic_Book[] = INCGFX_U16("graphics/object_events/pics/misc/book.png", ".4bpp", "-mwidth 2 -mheight 2");
+const u16 gObjectEventPic_Buena[] = INCGFX_U16("graphics/object_events/pics/people/buena.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPic_Bugsy[] = INCGFX_U16("graphics/object_events/pics/people/gym_leaders/bugsy.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPic_ButterfreeGen2[] = INCGFX_U16("graphics/object_events/pics/pokemon/butterfree.png", ".4bpp", "-mwidth 2 -mheight 2");
+const u16 gObjectEventPic_Chuck[] = INCGFX_U16("graphics/object_events/pics/people/gym_leaders/chuck.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPic_Clair[] = INCGFX_U16("graphics/object_events/pics/people/gym_leaders/clair.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPic_DiglettGen2[] = INCGFX_U16("graphics/object_events/pics/pokemon/diglett.png", ".4bpp", "-mwidth 2 -mheight 2");
+const u16 gObjectEventPic_DodrioGen2[] = INCGFX_U16("graphics/object_events/pics/pokemon/dodrio.png", ".4bpp", "-mwidth 4 -mheight 4");
+const u16 gObjectEventPic_DragoniteGen2[] = INCGFX_U16("graphics/object_events/pics/pokemon/dragonite.png", ".4bpp", "-mwidth 4 -mheight 4");
+const u16 gObjectEventPic_DratiniGen2[] = INCGFX_U16("graphics/object_events/pics/pokemon/dratini.png", ".4bpp", "-mwidth 2 -mheight 2");
+const u16 gObjectEventPic_ElectrodeGen2[] = INCGFX_U16("graphics/object_events/pics/pokemon/electrode.png", ".4bpp", "-mwidth 2 -mheight 2");
+const u16 gObjectEventPic_Eusine[] = INCGFX_U16("graphics/object_events/pics/people/eusine.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPic_Falkner[] = INCGFX_U16("graphics/object_events/pics/people/gym_leaders/falkner.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPic_FarfetchdGen2[] = INCGFX_U16("graphics/object_events/pics/pokemon/farfetchd.png", ".4bpp", "-mwidth 2 -mheight 2");
+const u16 gObjectEventPic_Firebreather[] = INCGFX_U16("graphics/object_events/pics/people/firebreather.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPic_GoldNormal[] = INCGFX_U16("graphics/object_events/pics/people/gold/walking.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPic_GoldRunning[] = INCGFX_U16("graphics/object_events/pics/people/gold/running.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPic_Jasmine[] = INCGFX_U16("graphics/object_events/pics/people/gym_leaders/jasmine.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPic_Karen[] = INCGFX_U16("graphics/object_events/pics/people/elite_four/karen.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPic_KimonoGirl[] = INCGFX_U16("graphics/object_events/pics/people/kimono_girl.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPic_KrisNormal[] = INCGFX_U16("graphics/object_events/pics/people/kris/walking.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPic_KrisRunning[] = INCGFX_U16("graphics/object_events/pics/people/kris/running.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPic_Kurt[] = INCGFX_U16("graphics/object_events/pics/people/kurt.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPic_KurtLyingDown[] = INCGFX_U16("graphics/object_events/pics/people/kurt_lying_down.png", ".4bpp", "-mwidth 4 -mheight 4");
+const u16 gObjectEventPic_MarillGen2[] = INCGFX_U16("graphics/object_events/pics/pokemon/marill.png", ".4bpp", "-mwidth 2 -mheight 2");
+const u16 gObjectEventPic_MiltankGen2[] = INCGFX_U16("graphics/object_events/pics/pokemon/miltank.png", ".4bpp", "-mwidth 2 -mheight 2");
+const u16 gObjectEventPic_Morty[] = INCGFX_U16("graphics/object_events/pics/people/gym_leaders/morty.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPic_MrPokemon[] = INCGFX_U16("graphics/object_events/pics/people/mr_pokemon.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPic_MurkrowGen2[] = INCGFX_U16("graphics/object_events/pics/pokemon/murkrow.png", ".4bpp", "-mwidth 2 -mheight 2");
+const u16 gObjectEventPic_Officer[] = INCGFX_U16("graphics/object_events/pics/people/officer.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPic_PersianGen2[] = INCGFX_U16("graphics/object_events/pics/pokemon/persian.png", ".4bpp", "-mwidth 4 -mheight 4");
+const u16 gObjectEventPic_Pokemaniac[] = INCGFX_U16("graphics/object_events/pics/people/pokemaniac.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPic_ProfElm[] = INCGFX_U16("graphics/object_events/pics/people/prof_elm.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPic_Pryce[] = INCGFX_U16("graphics/object_events/pics/people/gym_leaders/pryce.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPic_RattataGen2[] = INCGFX_U16("graphics/object_events/pics/pokemon/rattata.png", ".4bpp", "-mwidth 2 -mheight 2");
+const u16 gObjectEventPic_RedGyarados[] = INCGFX_U16("graphics/object_events/pics/pokemon/red_gyarados.png", ".4bpp", "-mwidth 4 -mheight 4");
+const u16 gObjectEventPic_RedsMom[] = INCGFX_U16("graphics/object_events/pics/people/reds_mom.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPic_RhydonGen2[] = INCGFX_U16("graphics/object_events/pics/pokemon/rhydon.png", ".4bpp", "-mwidth 2 -mheight 2");
+const u16 gObjectEventPic_RocketGruntF[] = INCGFX_U16("graphics/object_events/pics/people/team_rocket/rocket_grunt_f.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPic_RocketGruntM[] = INCGFX_U16("graphics/object_events/pics/people/team_rocket/rocket_grunt_m.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPic_SSAqua[] = INCGFX_U16("graphics/object_events/pics/misc/ss_aqua.png", ".4bpp");
+const u16 gObjectEventPic_Sage[] = INCGFX_U16("graphics/object_events/pics/people/sage.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPic_SentretGen2[] = INCGFX_U16("graphics/object_events/pics/pokemon/sentret.png", ".4bpp", "-mwidth 2 -mheight 2");
+const u16 gObjectEventPic_Silver[] = INCGFX_U16("graphics/object_events/pics/people/silver.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPic_Skier[] = INCGFX_U16("graphics/object_events/pics/people/skier.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPic_SuperNerd[] = INCGFX_U16("graphics/object_events/pics/people/super_nerd.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPic_Whitney[] = INCGFX_U16("graphics/object_events/pics/people/gym_leaders/whitney.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPic_Will[] = INCGFX_U16("graphics/object_events/pics/people/elite_four/will.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPic_WooperGen2[] = INCGFX_U16("graphics/object_events/pics/pokemon/wooper.png", ".4bpp", "-mwidth 2 -mheight 2");
+const u16 gObjectEventPic_ZubatGen2[] = INCGFX_U16("graphics/object_events/pics/pokemon/zubat.png", ".4bpp", "-mwidth 4 -mheight 4");
+
+// CrystalDust's own overworld palettes, restored in Phase 2 (D43).
+const u16 gObjectEventPal_Gold[] = INCGFX_U16("graphics/object_events/palettes/gold.pal", ".gbapal");
+const u16 gObjectEventPal_Kris[] = INCGFX_U16("graphics/object_events/palettes/kris.pal", ".gbapal");
+const u16 gObjectEventPal_ProfElm[] = INCGFX_U16("graphics/object_events/palettes/prof_elm.pal", ".gbapal");
+const u16 gObjectEventPal_Silver[] = INCGFX_U16("graphics/object_events/palettes/silver.pal", ".gbapal");
+const u16 gObjectEventPal_Butterfree[] = INCGFX_U16("graphics/object_events/palettes/butterfree.pal", ".gbapal");
+const u16 gObjectEventPal_Will[] = INCGFX_U16("graphics/object_events/palettes/will.pal", ".gbapal");
+const u16 gObjectEventPal_RedGyarados[] = INCGFX_U16("graphics/object_events/palettes/red_gyarados.pal", ".gbapal");
+const u16 gObjectEventPal_Murkrow[] = INCGFX_U16("graphics/object_events/palettes/murkrow.pal", ".gbapal");
+const u16 gObjectEventPal_Eusine[] = INCGFX_U16("graphics/object_events/palettes/eusine.pal", ".gbapal");
+const u16 gObjectEventPal_Dragonite[] = INCGFX_U16("graphics/object_events/palettes/dragonite.pal", ".gbapal");
+const u16 gObjectEventPal_SSAqua[] = INCGFX_U16("graphics/object_events/pics/misc/ss_aqua.png", ".gbapal");

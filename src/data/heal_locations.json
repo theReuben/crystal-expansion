@@ -293,6 +293,134 @@
       "y": 21,
       "respawn_map": "MAP_ROUTE10_POKEMON_CENTER_1F",
       "respawn_npc": "0"
+    },
+    {
+      "id": "HEAL_LOCATION_NEW_BARK_TOWN",
+      "map": "MAP_NEW_BARK_TOWN",
+      "x": 16,
+      "y": 8,
+      "respawn_map": "MAP_NEW_BARK_TOWN_PLAYERS_HOUSE_1F",
+      "respawn_npc": "0"
+    },
+    {
+      "id": "HEAL_LOCATION_CHERRYGROVE_CITY",
+      "map": "MAP_CHERRYGROVE_CITY",
+      "x": 42,
+      "y": 6,
+      "respawn_map": "MAP_CHERRYGROVE_CITY_POKEMON_CENTER_1F",
+      "respawn_npc": "0"
+    },
+    {
+      "id": "HEAL_LOCATION_VIOLET_CITY",
+      "map": "MAP_VIOLET_CITY",
+      "x": 38,
+      "y": 29,
+      "respawn_map": "MAP_VIOLET_CITY_POKEMON_CENTER_1F",
+      "respawn_npc": "0"
+    },
+    {
+      "id": "HEAL_LOCATION_ROUTE32",
+      "map": "MAP_ROUTE32",
+      "x": 17,
+      "y": 100,
+      "respawn_map": "MAP_ROUTE32_POKEMON_CENTER_1F",
+      "respawn_npc": "0"
+    },
+    {
+      "id": "HEAL_LOCATION_AZALEA_TOWN",
+      "map": "MAP_AZALEA_TOWN",
+      "x": 26,
+      "y": 10,
+      "respawn_map": "MAP_AZALEA_TOWN_POKEMON_CENTER_1F",
+      "respawn_npc": "0"
+    },
+    {
+      "id": "HEAL_LOCATION_GOLDENROD_CITY",
+      "map": "MAP_GOLDENROD_CITY",
+      "x": 18,
+      "y": 31,
+      "respawn_map": "MAP_GOLDENROD_CITY_POKEMON_CENTER_1F",
+      "respawn_npc": "0"
+    },
+    {
+      "id": "HEAL_LOCATION_ECRUTEAK_CITY",
+      "map": "MAP_ECRUTEAK_CITY",
+      "x": 32,
+      "y": 44,
+      "respawn_map": "MAP_ECRUTEAK_CITY_POKEMON_CENTER_1F",
+      "respawn_npc": "0"
+    },
+    {
+      "id": "HEAL_LOCATION_OLIVINE_CITY",
+      "map": "MAP_OLIVINE_CITY",
+      "x": 17,
+      "y": 24,
+      "respawn_map": "MAP_OLIVINE_CITY_POKEMON_CENTER_1F",
+      "respawn_npc": "0"
+    },
+    {
+      "id": "HEAL_LOCATION_CIANWOOD_CITY",
+      "map": "MAP_CIANWOOD_CITY",
+      "x": 31,
+      "y": 53,
+      "respawn_map": "MAP_CIANWOOD_CITY_POKEMON_CENTER_1F",
+      "respawn_npc": "0"
+    },
+    {
+      "id": "HEAL_LOCATION_MAHOGANY_TOWN",
+      "map": "MAP_MAHOGANY_TOWN",
+      "x": 18,
+      "y": 19,
+      "respawn_map": "MAP_MAHOGANY_TOWN_POKEMON_CENTER_1F",
+      "respawn_npc": "0"
+    },
+    {
+      "id": "HEAL_LOCATION_BLACKTHORN_CITY",
+      "map": "MAP_BLACKTHORN_CITY",
+      "x": 24,
+      "y": 42,
+      "respawn_map": "MAP_BLACKTHORN_CITY_POKEMON_CENTER_1F",
+      "respawn_npc": "0"
+    },
+    {
+      "id": "HEAL_LOCATION_LAKE_OF_RAGE",
+      "map": "MAP_LAKE_OF_RAGE",
+      "x": 25,
+      "y": 33,
+      "respawn_map": "MAP_MAHOGANY_TOWN_POKEMON_CENTER_1F",
+      "respawn_npc": "0"
+    },
+    {
+      "id": "HEAL_LOCATION_SILVER_CAVE_OUTSIDE",
+      "map": "MAP_SILVER_CAVE_OUTSIDE",
+      "x": 34,
+      "y": 18,
+      "respawn_map": "MAP_SILVER_CAVE_OUTSIDE_POKEMON_CENTER_1F",
+      "respawn_npc": "0"
+    },
+    {
+      "id": "HEAL_LOCATION_ROUTE23",
+      "map": "MAP_ROUTE23",
+      "x": 11,
+      "y": 7,
+      "respawn_map": "MAP_INDIGO_PLATEAU_POKEMON_CENTER_1F",
+      "respawn_npc": "0"
+    },
+    {
+      "id": "HEAL_LOCATION_ROUTE3",
+      "map": "MAP_ROUTE3",
+      "x": 71,
+      "y": 7,
+      "respawn_map": "MAP_ROUTE3_POKEMON_CENTER_1F",
+      "respawn_npc": "0"
+    },
+    {
+      "id": "HEAL_LOCATION_FAST_SHIP_CABIN",
+      "map": "MAP_FAST_SHIP_CABINS_NNW_NNE_NE",
+      "x": 6,
+      "y": 3,
+      "respawn_map": "MAP_FAST_SHIP_CABINS_NNW_NNE_NE",
+      "respawn_npc": "0"
     }
   ]
 }

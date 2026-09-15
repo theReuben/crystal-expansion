@@ -124,7 +124,6 @@ static const u8 sMapSectionLayout_JohtoSecondary[] = INCBIN_U8("graphics/region_
 static const u8 sMapSectionLayout_KantoPrimary[] = INCBIN_U8("graphics/region_map/mapsec_layout_kanto_primary.bin");
 static const u8 sMapSectionLayout_KantoSecondary[] = INCBIN_U8("graphics/region_map/mapsec_layout_kanto_secondary.bin");
 
-#include "data/region_map/region_map_entries.h"
 // region_map_names_emerald.h dropped: its MAPSECEM_* constants were lost in the Phase 1 merge and the table is unused here (D33).
 #include "data/region_map/mapsec_flags.h"
 #include "data/region_map/mapsec_to_region.h"

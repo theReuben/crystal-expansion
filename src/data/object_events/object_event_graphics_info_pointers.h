@@ -1,3 +1,57 @@
+// CrystalDust overworld sprites, restored in Phase 2 (D43).
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Abra;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Ampharos;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Bayleef;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Blissey;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Boarder;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Book;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Buena;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Bugsy;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Butterfree;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Chuck;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Clair;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Diglett;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Dodrio;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Dragonite;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Dratini;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Electrode;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Eusine;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Falkner;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Farfetchd;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Firebreather;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_GoldNormal;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Jasmine;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Karen;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_KimonoGirlRed;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_KrisNormal;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Kurt;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_KurtLyingDown;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Marill;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Miltank;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Morty;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_MrPokemon;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Murkrow;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Officer;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Persian;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Pokemaniac;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_ProfElm;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Pryce;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Rattata;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_RedGyarados;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_RedsMom;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Rhydon;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Silver;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_RocketGruntF;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_RocketGruntM;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Sage;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Sentret;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Skier;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_SSAqua;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_SuperNerd;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Whitney;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Will;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Wooper;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Zubat;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_BrendanNormal;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_BrendanMachBike;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_BrendanSurfing;
@@ -793,6 +847,60 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
     [OBJ_EVENT_GFX_DEOXYS_N]                 = &gObjectEventGraphicsInfo_DeoxysN,
     [OBJ_EVENT_GFX_SS_ANNE]                  = &gObjectEventGraphicsInfo_SSAnne,
 #endif // IS_FRLG
+    // CrystalDust overworld sprites, restored in Phase 2 (D43).
+    [OBJ_EVENT_GFX_ABRA] = &gObjectEventGraphicsInfo_Abra,
+    [OBJ_EVENT_GFX_AMPHAROS] = &gObjectEventGraphicsInfo_Ampharos,
+    [OBJ_EVENT_GFX_BAYLEEF] = &gObjectEventGraphicsInfo_Bayleef,
+    [OBJ_EVENT_GFX_BLISSEY] = &gObjectEventGraphicsInfo_Blissey,
+    [OBJ_EVENT_GFX_BOARDER] = &gObjectEventGraphicsInfo_Boarder,
+    [OBJ_EVENT_GFX_BOOK] = &gObjectEventGraphicsInfo_Book,
+    [OBJ_EVENT_GFX_BUENA] = &gObjectEventGraphicsInfo_Buena,
+    [OBJ_EVENT_GFX_BUGSY] = &gObjectEventGraphicsInfo_Bugsy,
+    [OBJ_EVENT_GFX_BUTTERFREE] = &gObjectEventGraphicsInfo_Butterfree,
+    [OBJ_EVENT_GFX_CHUCK] = &gObjectEventGraphicsInfo_Chuck,
+    [OBJ_EVENT_GFX_CLAIR] = &gObjectEventGraphicsInfo_Clair,
+    [OBJ_EVENT_GFX_DIGLETT] = &gObjectEventGraphicsInfo_Diglett,
+    [OBJ_EVENT_GFX_DODRIO] = &gObjectEventGraphicsInfo_Dodrio,
+    [OBJ_EVENT_GFX_DRAGONITE] = &gObjectEventGraphicsInfo_Dragonite,
+    [OBJ_EVENT_GFX_DRATINI] = &gObjectEventGraphicsInfo_Dratini,
+    [OBJ_EVENT_GFX_ELECTRODE] = &gObjectEventGraphicsInfo_Electrode,
+    [OBJ_EVENT_GFX_EUSINE] = &gObjectEventGraphicsInfo_Eusine,
+    [OBJ_EVENT_GFX_FALKNER] = &gObjectEventGraphicsInfo_Falkner,
+    [OBJ_EVENT_GFX_FARFETCHD] = &gObjectEventGraphicsInfo_Farfetchd,
+    [OBJ_EVENT_GFX_FIREBREATHER] = &gObjectEventGraphicsInfo_Firebreather,
+    [OBJ_EVENT_GFX_GOLD_NORMAL] = &gObjectEventGraphicsInfo_GoldNormal,
+    [OBJ_EVENT_GFX_JASMINE] = &gObjectEventGraphicsInfo_Jasmine,
+    [OBJ_EVENT_GFX_KAREN] = &gObjectEventGraphicsInfo_Karen,
+    [OBJ_EVENT_GFX_KIMONO_GIRL_RED] = &gObjectEventGraphicsInfo_KimonoGirlRed,
+    [OBJ_EVENT_GFX_KRIS_NORMAL] = &gObjectEventGraphicsInfo_KrisNormal,
+    [OBJ_EVENT_GFX_KURT] = &gObjectEventGraphicsInfo_Kurt,
+    [OBJ_EVENT_GFX_KURT_LYING_DOWN] = &gObjectEventGraphicsInfo_KurtLyingDown,
+    [OBJ_EVENT_GFX_MARILL] = &gObjectEventGraphicsInfo_Marill,
+    [OBJ_EVENT_GFX_MILTANK] = &gObjectEventGraphicsInfo_Miltank,
+    [OBJ_EVENT_GFX_MORTY] = &gObjectEventGraphicsInfo_Morty,
+    [OBJ_EVENT_GFX_MR_POKEMON] = &gObjectEventGraphicsInfo_MrPokemon,
+    [OBJ_EVENT_GFX_MURKROW] = &gObjectEventGraphicsInfo_Murkrow,
+    [OBJ_EVENT_GFX_OFFICER] = &gObjectEventGraphicsInfo_Officer,
+    [OBJ_EVENT_GFX_PERSIAN] = &gObjectEventGraphicsInfo_Persian,
+    [OBJ_EVENT_GFX_POKEMANIAC] = &gObjectEventGraphicsInfo_Pokemaniac,
+    [OBJ_EVENT_GFX_PROF_ELM] = &gObjectEventGraphicsInfo_ProfElm,
+    [OBJ_EVENT_GFX_PRYCE] = &gObjectEventGraphicsInfo_Pryce,
+    [OBJ_EVENT_GFX_RATTATA] = &gObjectEventGraphicsInfo_Rattata,
+    [OBJ_EVENT_GFX_RED_GYARADOS] = &gObjectEventGraphicsInfo_RedGyarados,
+    [OBJ_EVENT_GFX_REDS_MOM] = &gObjectEventGraphicsInfo_RedsMom,
+    [OBJ_EVENT_GFX_RHYDON] = &gObjectEventGraphicsInfo_Rhydon,
+    [OBJ_EVENT_GFX_RIVAL] = &gObjectEventGraphicsInfo_Silver,
+    [OBJ_EVENT_GFX_ROCKET_GRUNT_F] = &gObjectEventGraphicsInfo_RocketGruntF,
+    [OBJ_EVENT_GFX_ROCKET_GRUNT_M] = &gObjectEventGraphicsInfo_RocketGruntM,
+    [OBJ_EVENT_GFX_SAGE] = &gObjectEventGraphicsInfo_Sage,
+    [OBJ_EVENT_GFX_SENTRET] = &gObjectEventGraphicsInfo_Sentret,
+    [OBJ_EVENT_GFX_SKIER] = &gObjectEventGraphicsInfo_Skier,
+    [OBJ_EVENT_GFX_SS_AQUA] = &gObjectEventGraphicsInfo_SSAqua,
+    [OBJ_EVENT_GFX_SUPER_NERD] = &gObjectEventGraphicsInfo_SuperNerd,
+    [OBJ_EVENT_GFX_WHITNEY] = &gObjectEventGraphicsInfo_Whitney,
+    [OBJ_EVENT_GFX_WILL] = &gObjectEventGraphicsInfo_Will,
+    [OBJ_EVENT_GFX_WOOPER] = &gObjectEventGraphicsInfo_Wooper,
+    [OBJ_EVENT_GFX_ZUBAT] = &gObjectEventGraphicsInfo_Zubat,
 };
 
 const struct ObjectEventGraphicsInfo *const gMauvilleOldManGraphicsInfoPointers[] = {

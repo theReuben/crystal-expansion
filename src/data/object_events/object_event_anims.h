@@ -1651,3 +1651,13 @@ static const union AnimCmd *const sAnimTable_RedGreenVSSeeker[] = {
 static const union AnimCmd *const sAnimTable_RedGreenVSSeekerBike[] = {
     sAnim_VSSeekerBike,
 };
+
+// CrystalDust's player anim table, restored in Phase 2 (D43).
+static const union AnimCmd *const sAnimTable_GoldKrisNormal[] = {
+    sAnim_FaceSouth, sAnim_FaceNorth, sAnim_FaceWest, sAnim_FaceEast,
+    sAnim_GoSouth, sAnim_GoNorth, sAnim_GoWest, sAnim_GoEast,
+    sAnim_GoFastSouth, sAnim_GoFastNorth, sAnim_GoFastWest, sAnim_GoFastEast,
+    sAnim_GoFasterSouth, sAnim_GoFasterNorth, sAnim_GoFasterWest, sAnim_GoFasterEast,
+    sAnim_GoFastestSouth, sAnim_GoFastestNorth, sAnim_GoFastestWest, sAnim_GoFastestEast,
+    sAnim_RunSouth, sAnim_RunNorth, sAnim_RunWest, sAnim_RunEast,
+};

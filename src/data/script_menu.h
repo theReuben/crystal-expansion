@@ -1133,6 +1133,285 @@ struct MultichoiceListStruct
     u8 count;
 };
 
+// ---- CrystalDust's multichoice lists, restored in Phase 2 (D43) ----
+static const struct MenuAction MultichoiceList_AmberClaw[] =
+{
+    { gText_OldAmber },
+    { gText_ClawFossil },
+    {gText_Exit},
+};
+
+static const struct MenuAction MultichoiceList_AmberRoot[] =
+{
+    { gText_OldAmber },
+    { gText_RootFossil },
+    {gText_Exit},
+};
+
+static const struct MenuAction MultichoiceList_AmberRootClaw[] =
+{
+    { gText_OldAmber },
+    { gText_RootFossil },
+    { gText_ClawFossil },
+    {gText_Exit},
+};
+
+static const struct MenuAction MultichoiceList_CeladonGameCornerMons[] =
+{
+    {gText_PikachuPrizeAndPrice},
+    {gText_PorygonPrizeAndPrice},
+    {gText_LarvitarPrizeAndPrice},
+    {gText_Exit},
+};
+
+static const struct MenuAction MultichoiceList_CeladonGameCornerTMs[] =
+{
+    {gText_TM32AndPrice},
+    {gText_TM29AndPrice},
+    {gText_TM15AndPrice},
+    {gText_Exit},
+};
+
+static const struct MenuAction MultichoiceList_Claw[] =
+{
+    { gText_ClawFossil },
+    {gText_Exit},
+};
+
+static const struct MenuAction MultichoiceList_DomeAmberClaw[] =
+{
+    { gText_DomeFossil },
+    { gText_OldAmber },
+    { gText_ClawFossil },
+    {gText_Exit},
+};
+
+static const struct MenuAction MultichoiceList_DomeAmberRoot[] =
+{
+    { gText_DomeFossil },
+    { gText_OldAmber },
+    { gText_RootFossil },
+    {gText_Exit},
+};
+
+static const struct MenuAction MultichoiceList_DomeAmberRootClaw[] =
+{
+    { gText_DomeFossil },
+    { gText_OldAmber },
+    { gText_RootFossil },
+    { gText_ClawFossil },
+    {gText_Exit},
+};
+
+static const struct MenuAction MultichoiceList_DomeClaw[] =
+{
+    { gText_DomeFossil },
+    { gText_ClawFossil },
+    {gText_Exit},
+};
+
+static const struct MenuAction MultichoiceList_DomeRoot[] =
+{
+    { gText_DomeFossil },
+    { gText_RootFossil },
+    {gText_Exit},
+};
+
+static const struct MenuAction MultichoiceList_DomeRootClaw[] =
+{
+    { gText_DomeFossil },
+    { gText_RootFossil },
+    { gText_ClawFossil },
+    {gText_Exit},
+};
+
+static const struct MenuAction MultichoiceList_DragonShrineQuestion1[] =
+{
+    { gText_Pal },
+    { gText_Underling },
+    { gText_Friend }
+};
+
+static const struct MenuAction MultichoiceList_DragonShrineQuestion2[] =
+{
+    { gText_Strategy },
+    { gText_Raising },
+    { gText_Cheating }
+};
+
+static const struct MenuAction MultichoiceList_DragonShrineQuestion3[] =
+{
+    { gText_WeakPerson },
+    { gText_ToughPerson },
+    { gText_Anybody }
+};
+
+static const struct MenuAction MultichoiceList_DragonShrineQuestion4[] =
+{
+    { gText_LoveShrine },
+    { gText_Violence },
+    { gText_Knowledge }
+};
+
+static const struct MenuAction MultichoiceList_DragonShrineQuestion5[] =
+{
+    { gText_ToughShrine },
+    { gText_Both },
+    { gText_Weak }
+};
+
+static const struct MenuAction MultichoiceList_GameCornerMons[] =
+{
+    {gText_AbraPrizeAndPrice},
+    {gText_CubonePrizeAndPrice},
+    {gText_WobbuffetPrizeAndPrice},
+    {gText_Exit},
+};
+
+static const struct MenuAction MultichoiceList_GameCornerTutor[] = 
+{
+    { gText_Flamethrower },
+    { gText_Thunderbolt },
+    { gText_Ice_Beam },
+    { gText_Cancel2 },
+};
+
+static const struct MenuAction MultichoiceList_HelixAmberClaw[] =
+{
+    { gText_HelixFossil },
+    { gText_OldAmber },
+    { gText_ClawFossil },
+    {gText_Exit},
+};
+
+static const struct MenuAction MultichoiceList_HelixAmberRoot[] =
+{
+    { gText_HelixFossil },
+    { gText_OldAmber },
+    { gText_RootFossil },
+    {gText_Exit},
+};
+
+static const struct MenuAction MultichoiceList_HelixAmberRootClaw[] =
+{
+    { gText_HelixFossil },
+    { gText_OldAmber },
+    { gText_RootFossil },
+    { gText_ClawFossil },
+    {gText_Exit},
+};
+
+static const struct MenuAction MultichoiceList_HelixClaw[] =
+{
+    { gText_HelixFossil },
+    { gText_ClawFossil },
+    {gText_Exit},
+};
+
+static const struct MenuAction MultichoiceList_HelixDome[] =
+{
+    { gText_HelixFossil },
+    { gText_DomeFossil },
+    {gText_Exit},
+};
+
+static const struct MenuAction MultichoiceList_HelixDomeAmber[] =
+{
+    { gText_HelixFossil },
+    { gText_DomeFossil },
+    { gText_OldAmber },
+    {gText_Exit},
+};
+
+static const struct MenuAction MultichoiceList_HelixDomeAmberClaw[] =
+{
+    { gText_HelixFossil },
+    { gText_DomeFossil },
+    { gText_OldAmber },
+    { gText_ClawFossil },
+    {gText_Exit},
+};
+
+static const struct MenuAction MultichoiceList_HelixDomeAmberRoot[] =
+{
+    { gText_HelixFossil },
+    { gText_DomeFossil },
+    { gText_OldAmber },
+    { gText_RootFossil },
+    {gText_Exit},
+};
+
+static const struct MenuAction MultichoiceList_HelixDomeAmberRootClaw[] =
+{
+    { gText_HelixFossil },
+    { gText_DomeFossil },
+    { gText_OldAmber },
+    { gText_RootFossil },
+    { gText_ClawFossil },
+    {gText_Exit},
+};
+
+static const struct MenuAction MultichoiceList_HelixDomeClaw[] =
+{
+    { gText_HelixFossil },
+    { gText_DomeFossil },
+    { gText_ClawFossil },
+    {gText_Exit},
+};
+
+static const struct MenuAction MultichoiceList_HelixDomeRoot[] =
+{
+    { gText_HelixFossil },
+    { gText_DomeFossil },
+    { gText_RootFossil },
+    {gText_Exit},
+};
+
+static const struct MenuAction MultichoiceList_HelixDomeRootClaw[] =
+{
+    { gText_HelixFossil },
+    { gText_DomeFossil },
+    { gText_RootFossil },
+    { gText_ClawFossil },
+    {gText_Exit},
+};
+
+static const struct MenuAction MultichoiceList_HelixRoot[] =
+{
+    { gText_HelixFossil },
+    { gText_RootFossil },
+    {gText_Exit},
+};
+
+static const struct MenuAction MultichoiceList_HelixRootClaw[] =
+{
+    { gText_HelixFossil },
+    { gText_RootFossil },
+    { gText_ClawFossil },
+    {gText_Exit},
+};
+
+static const struct MenuAction MultichoiceList_MomBank[] =
+{
+    {gText_Withdraw},
+    {gText_Deposit},
+    {gText_Change},
+    {gText_Exit},
+};
+
+static const struct MenuAction MultichoiceList_Root[] =
+{
+    { gText_RootFossil },
+    {gText_Exit},
+};
+
+static const struct MenuAction MultichoiceList_RootClaw[] =
+{
+    { gText_RootFossil },
+    { gText_ClawFossil },
+    {gText_Exit},
+};
+
 static const struct MultichoiceListStruct sMultichoiceLists[] =
 {
     [MULTI_BRINEY_ON_DEWFORD]          = MULTICHOICE(MultichoiceList_BrineyOnDewford),
@@ -1294,6 +1573,43 @@ static const struct MultichoiceListStruct sMultichoiceLists[] =
     [MULTI_HOF_VICTORIES_QUIT]                         = MULTICHOICE(sMultichoiceList_HOF_Victories_Quit),
     [MULTI_EGGS_VICTORIES_QUIT]                        = MULTICHOICE(sMultichoiceList_Eggs_Victories_Quit),
     [MULTI_HOF_EGGS_VICTORIES_QUIT]                    = MULTICHOICE(sMultichoiceList_HOF_Eggs_Victories_Quit),
+    // CrystalDust's multichoice lists, restored in Phase 2 (D43).
+    [MULTI_AMBER_CLAW] = MULTICHOICE(MultichoiceList_AmberClaw),
+    [MULTI_AMBER_ROOT] = MULTICHOICE(MultichoiceList_AmberRoot),
+    [MULTI_AMBER_ROOT_CLAW] = MULTICHOICE(MultichoiceList_AmberRootClaw),
+    [MULTI_CELADON_GAME_CORNER_MONS] = MULTICHOICE(MultichoiceList_CeladonGameCornerMons),
+    [MULTI_CELADON_GAME_CORNER_TMS] = MULTICHOICE(MultichoiceList_CeladonGameCornerTMs),
+    [MULTI_CLAW] = MULTICHOICE(MultichoiceList_Claw),
+    [MULTI_DOME_AMBER_CLAW] = MULTICHOICE(MultichoiceList_DomeAmberClaw),
+    [MULTI_DOME_AMBER_ROOT] = MULTICHOICE(MultichoiceList_DomeAmberRoot),
+    [MULTI_DOME_AMBER_ROOT_CLAW] = MULTICHOICE(MultichoiceList_DomeAmberRootClaw),
+    [MULTI_DOME_CLAW] = MULTICHOICE(MultichoiceList_DomeClaw),
+    [MULTI_DOME_ROOT] = MULTICHOICE(MultichoiceList_DomeRoot),
+    [MULTI_DOME_ROOT_CLAW] = MULTICHOICE(MultichoiceList_DomeRootClaw),
+    [MULTI_DRAGON_SHRINE_QUESTION_1] = MULTICHOICE(MultichoiceList_DragonShrineQuestion1),
+    [MULTI_DRAGON_SHRINE_QUESTION_2] = MULTICHOICE(MultichoiceList_DragonShrineQuestion2),
+    [MULTI_DRAGON_SHRINE_QUESTION_3] = MULTICHOICE(MultichoiceList_DragonShrineQuestion3),
+    [MULTI_DRAGON_SHRINE_QUESTION_4] = MULTICHOICE(MultichoiceList_DragonShrineQuestion4),
+    [MULTI_DRAGON_SHRINE_QUESTION_5] = MULTICHOICE(MultichoiceList_DragonShrineQuestion5),
+    [MULTI_GAME_CORNER_MONS] = MULTICHOICE(MultichoiceList_GameCornerMons),
+    [MULTI_GAME_CORNER_TUTOR] = MULTICHOICE(MultichoiceList_GameCornerTutor),
+    [MULTI_HELIX_AMBER_CLAW] = MULTICHOICE(MultichoiceList_HelixAmberClaw),
+    [MULTI_HELIX_AMBER_ROOT] = MULTICHOICE(MultichoiceList_HelixAmberRoot),
+    [MULTI_HELIX_AMBER_ROOT_CLAW] = MULTICHOICE(MultichoiceList_HelixAmberRootClaw),
+    [MULTI_HELIX_CLAW] = MULTICHOICE(MultichoiceList_HelixClaw),
+    [MULTI_HELIX_DOME] = MULTICHOICE(MultichoiceList_HelixDome),
+    [MULTI_HELIX_DOME_AMBER] = MULTICHOICE(MultichoiceList_HelixDomeAmber),
+    [MULTI_HELIX_DOME_AMBER_CLAW] = MULTICHOICE(MultichoiceList_HelixDomeAmberClaw),
+    [MULTI_HELIX_DOME_AMBER_ROOT] = MULTICHOICE(MultichoiceList_HelixDomeAmberRoot),
+    [MULTI_HELIX_DOME_AMBER_ROOT_CLAW] = MULTICHOICE(MultichoiceList_HelixDomeAmberRootClaw),
+    [MULTI_HELIX_DOME_CLAW] = MULTICHOICE(MultichoiceList_HelixDomeClaw),
+    [MULTI_HELIX_DOME_ROOT] = MULTICHOICE(MultichoiceList_HelixDomeRoot),
+    [MULTI_HELIX_DOME_ROOT_CLAW] = MULTICHOICE(MultichoiceList_HelixDomeRootClaw),
+    [MULTI_HELIX_ROOT] = MULTICHOICE(MultichoiceList_HelixRoot),
+    [MULTI_HELIX_ROOT_CLAW] = MULTICHOICE(MultichoiceList_HelixRootClaw),
+    [MULTI_MOM_BANK] = MULTICHOICE(MultichoiceList_MomBank),
+    [MULTI_ROOT] = MULTICHOICE(MultichoiceList_Root),
+    [MULTI_ROOT_CLAW] = MULTICHOICE(MultichoiceList_RootClaw),
 };
 
 const u8 *const gStdStrings[] =

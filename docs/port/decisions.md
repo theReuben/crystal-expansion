@@ -1534,3 +1534,55 @@ time.** It does not link yet: 884 undefined symbols and 6 duplicate definitions
 remain. ROM is at 27,213,184 bytes (81% of 32MB) with the sound bank still
 incomplete — **this is past the 28MB watch line's neighbourhood and needs
 attention before Phase 7 adds anything.**
+
+## D43 — the first pass at the link errors
+
+Build p70 reached the linker with 884 undefined symbols and 6 multiple
+definitions. This pass cleared the duplicates and the three largest
+"constant that never got defined" buckets. Constraint decisions:
+
+- **Prof. Oak's Pokedex rating is CrystalDust's, not expansion's.** `src/prof_pc.c`
+  (CrystalDust) and `src/birch_pc.c` (expansion) both defined `ScriptGetPokedexInfo`,
+  `GetPokedexRatingText` and `ShowPokedexRatingMessage`. CrystalDust wins:
+  `birch_pc.c` is deleted, `data/text/pokedex_rating.inc` now carries CrystalDust's
+  21 `gPokedexRatingText_*` strings instead of expansion's `gBirchDexRatingText_*`,
+  and `data/scripts/pokedex_rating.inc` was rewritten to CrystalDust's flow
+  (Johto dex rated in 15-mon bands, then the National dex) in expansion's macro
+  syntax. **Dropped with it:** expansion's FRLG `GetFrlgPokedexCount` and
+  `GetProfOaksRatingMessage` specials and the Hoenn-only `data/scripts/prof_birch.inc`.
+- **`gRegionMapEntries` is defined once, in `src/region_map.c`.** `src/pokegear_map.c`
+  (added in D33) included `data/region_map/region_map_entries.h` a second time; it
+  now uses the extern from `include/region_map.h`.
+- **`gMonIcon_Egg` / `gMonIcon_QuestionMark`**: the stale pokeemerald `INCBIN_U8`
+  definitions in `src/graphics.c` were removed in favour of expansion's generated
+  ones in `src/data/graphics/pokemon.h`.
+- **Johto heal locations added** (16 entries) to `src/data/heal_locations.json`
+  from CrystalDust's table. Expansion's format needs a respawn point, which
+  CrystalDust's did not have: towns use their own Pokemon Center; **New Bark Town
+  respawns in the player's house** (it has no Center), **Lake of Rage respawns at
+  Mahogany Town** and **Route 23 at the Indigo Plateau Center**. These three are
+  judgement calls, not ported data.
+- **36 CrystalDust multichoice lists restored** (`MULTI_MOM_BANK`, the Game Corner
+  prize and tutor menus, the five Dragon Shrine questions, and the fossil-revival
+  combinations that add Root and Claw Fossil to expansion's Helix/Dome/Amber set).
+- **53 CrystalDust overworld sprites restored.** The PNGs came across in Phase 1;
+  only the C tables were lost. Eight more are **aliases onto expansion's existing
+  sprites** rather than ports, so they will look like Emerald rather than
+  CrystalDust: `OBJ_EVENT_GFX_BATTLE_GIRL` -> `GIRL_3`, `GIRL` -> `GIRL_2`,
+  `GYM_GUIDE` -> `MAN_2`, `WOMAN` -> `WOMAN_1`, and CrystalDust's four
+  `Z`-prefixed Hoenn leftovers (`ZMR_BRINEYS_BOAT`, `ZNINJA_BOY`, `ZRICH_BOY`,
+  `ZSCOTT`) onto their unprefixed expansion equivalents.
+- **Twenty of those sprites collide with expansion's follower graphics**
+  (`gObjectEventPic_Abra` and friends are already defined from
+  `graphics/pokemon/*/overworld.png`). CrystalDust's field versions are kept under a
+  `Gen2` suffix (`gObjectEventPic_AbraGen2`), so the map NPCs use CrystalDust's
+  Gen-2-styled sprites while followers keep expansion's.
+- **Eleven CrystalDust overworld palettes restored** with new tags at 0x1170-0x117A
+  (Gold, Kris, Prof. Elm, Silver, Butterfree, Will, Red Gyarados, Murkrow, Eusine,
+  Dragonite, S.S. Aqua). The S.S. Aqua palette is taken from its PNG, since
+  CrystalDust shipped it as a loose `.gbapal` that did not come across.
+- **S.S. Aqua's sprite is converted without metatile arguments.** Its PNG is
+  128x64 (16x8 tiles), which is not a multiple of the 8x16 metatile CrystalDust's
+  pic table declares; the frame is the whole image either way.
+
+Remaining at the end of this pass: 737 undefined symbols, 0 multiple definitions.
