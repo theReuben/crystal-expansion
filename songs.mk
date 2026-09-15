@@ -3,6 +3,9 @@ STD_REVERB = 50
 $(MID_BUILDDIR)/%.o: $(MID_SUBDIR)/%.s
 	$(AS) $(ASFLAGS) -I sound -o $@ $<
 
+$(SONG_BUILDDIR)/%.o: $(SONG_SUBDIR)/%.s
+	$(AS) $(ASFLAGS) -I sound -o $@ $<
+
 $(GBS_BUILDDIR)/%.o: $(GBS_SUBDIR)/%.s
 	$(AS) $(ASFLAGS) -I sound -o $@ $<
 

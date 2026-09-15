@@ -1,5 +1,7 @@
 	.section .rodata
 
+#include "constants/songs.h"
+
 	.include "asm/macros.inc"
 	.include "constants/constants.inc"
 
@@ -11,7 +13,7 @@
 	.include "sound/keysplit_tables.inc"
 	.include "sound/programmable_wave_data.inc"
 	.include "sound/music_player_table.inc"
-	.include "sound/song_table.inc"
+#include "sound/song_table.inc" // cpp, so the MUS_*/SE_* constants reach gGBSSongTable (D45)
 	.include "sound/direct_sound_data.inc"
 
 	.align 2

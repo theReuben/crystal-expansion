@@ -391,3 +391,29 @@
 	.byte 1  @ 105
 	.byte 1  @ 106
 	.byte 1  @ 107
+
+@ pokeemerald-expansion's named keysplit tables, restored in Phase 2 (D45).
+
+keysplit piano, 36
+	split 0, 55
+	split 1, 70
+	split 2, 91
+	split 3, 108
+
+keysplit strings, 36
+	split 0, 69
+	split 1, 81
+	split 2, 108
+
+keysplit trumpet, 36
+	split 0, 66
+	split 1, 84
+	split 2, 108
+
+keysplit tuba, 24
+	split 0, 42
+	split 1, 108
+
+keysplit french_horn, 36
+	split 0, 66
+	split 1, 108

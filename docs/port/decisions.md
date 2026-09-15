@@ -1618,3 +1618,38 @@ Constraint decisions, none of them silent:
 
 Link errors: 713 undefined -> 675 undefined, 0 multiple definitions, 0 compile
 errors.
+
+## D45 — the sound bank
+
+455 of the 675 undefined symbols were the CrystalDust sound bank. The assets were
+all in the tree; the build simply wasn't reaching them.
+
+- `sound/voice_groups.inc` kept only CrystalDust's 191 numbered voicegroups, so
+  expansion's 203 named ones (`voicegroup_abandoned_ship`, ...) were dropped even
+  though every `.inc` file was present. Both lists are now included.
+- `sound/direct_sound_data.inc` kept expansion's side; CrystalDust's 128 sample
+  blocks were re-appended, `programmable_wave_data.inc` and `keysplit_tables.inc`
+  gained the 25 and 5 blocks each had lost from the other side.
+- CrystalDust ships its samples as `.aif`; expansion's `audio_rules.mk` only knew
+  how to convert `.wav`. `tools/aif2pcm` was brought over and a `%.bin: %.aif`
+  rule added.
+- `sound/songs/gbs` (126 GB-sound songs, CrystalDust's own player) was never
+  wired into the Makefile. It now builds, along with `asm/macros/gbs.inc` and
+  `asm/macros/phone.inc`, which the merge had also dropped.
+- `data/sound_data.s` pulled `sound/song_table.inc` with a gas `.include`, which
+  runs after cpp, so the `MUS_*`/`SE_*` constants in `gGBSSongTable` never
+  resolved. It is a cpp `#include` now, with `constants/songs.h` above it.
+
+Constraint decisions:
+
+1. **CrystalDust's `sound/songs/*.s` are not built.** All 110 are byte-for-byte
+   the same songs expansion generates from `sound/songs/midi/*.mid`, and building
+   both gave 110 duplicate definitions. The `.mid` pipeline wins; the `.s` files
+   stay in the tree unused. This is a build-order choice, not a content cut - no
+   song is lost.
+2. **CrystalDust's `gCryTable2` block is not appended.** It uses a `cry2` macro
+   that expansion's `asm/macros/m4a.inc` does not define, and no cry symbol was
+   undefined, so expansion's cry tables (which already cover every species) are
+   kept whole. Revisit if Gen 2 cries sound wrong.
+
+Link errors: 675 undefined -> 218 undefined, 0 multiple definitions, 0 errors.
