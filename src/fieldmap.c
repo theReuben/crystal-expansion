@@ -2,6 +2,7 @@
 #include "battle_pyramid.h"
 #include "bg.h"
 #include "fieldmap.h"
+#include "day_night.h" // CrystalDust palette overrides (D53)
 #include "fldeff.h"
 #include "fldeff_misc.h"
 #include "frontier_util.h"
@@ -981,8 +982,10 @@ static void LoadTilesetPalette(struct Tileset const *tileset, u16 destOffset, u1
 {
     if (tileset)
     {
+        // CrystalDust swaps individual palette slots by time of day (D53).
         if (tileset->isSecondary == FALSE)
         {
+            gPaletteOverrides[0] = (struct PaletteOverride *)tileset->paletteOverrides;
             if (skipFaded)
                 CpuFastCopy(tileset->palettes, &gPlttBufferUnfaded[destOffset], size); // always word-aligned
             else
@@ -992,6 +995,7 @@ static void LoadTilesetPalette(struct Tileset const *tileset, u16 destOffset, u1
         }
         else if (tileset->isSecondary == TRUE)
         {
+            gPaletteOverrides[1] = (struct PaletteOverride *)tileset->paletteOverrides;
             // All 'gTilesetPalettes_' arrays should have ALIGNED(4) in them,
             // but we use SmartCopy here just in case they don't
             if (skipFaded)
@@ -1001,6 +1005,7 @@ static void LoadTilesetPalette(struct Tileset const *tileset, u16 destOffset, u1
         }
         else
         {
+            gPaletteOverrides[2] = (struct PaletteOverride *)tileset->paletteOverrides;
             LoadPalette((const u16 *)tileset->palettes, destOffset, size);
             ApplyGlobalTintToPaletteEntries(destOffset, size >> 1);
         }

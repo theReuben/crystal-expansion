@@ -39,6 +39,7 @@ const struct Tileset gTileset_General =
     .metatiles = gMetatiles_General,
     .metatileAttributes = gMetatileAttributes_General,
     .callback = InitTilesetAnim_General,
+    .paletteOverrides = gTilesetPalOverrides_General,
 };
 
 const struct Tileset gTileset_Petalburg =
@@ -867,6 +868,7 @@ const struct Tileset gTileset_PalletTown =
     .metatiles = gMetatiles_PalletTown,
     .metatileAttributes = gMetatileAttributes_PalletTown,
     .callback = NULL,
+    .paletteOverrides = gTilesetPalOverrides_PalletTown,
 };
 
 const struct Tileset gTileset_ViridianCity =
@@ -878,6 +880,7 @@ const struct Tileset gTileset_ViridianCity =
     .metatiles = gMetatiles_ViridianCity,
     .metatileAttributes = gMetatileAttributes_ViridianCity,
     .callback = NULL,
+    .paletteOverrides = gTilesetPalOverrides_ViridianCity,
 };
 
 const struct Tileset gTileset_PewterCity =
@@ -889,6 +892,7 @@ const struct Tileset gTileset_PewterCity =
     .metatiles = gMetatiles_PewterCity,
     .metatileAttributes = gMetatileAttributes_PewterCity,
     .callback = NULL,
+    .paletteOverrides = gTilesetPalOverrides_PewterCity,
 };
 
 const struct Tileset gTileset_CeruleanCity =
@@ -911,6 +915,7 @@ const struct Tileset gTileset_LavenderTown =
     .metatiles = gMetatiles_LavenderTown,
     .metatileAttributes = gMetatileAttributes_LavenderTown,
     .callback = NULL,
+    .paletteOverrides = gTilesetPalOverrides_LavenderTown,
 };
 
 const struct Tileset gTileset_VermilionCity =
@@ -922,6 +927,7 @@ const struct Tileset gTileset_VermilionCity =
     .metatiles = gMetatiles_VermilionCity,
     .metatileAttributes = gMetatileAttributes_VermilionCity,
     .callback = NULL,
+    .paletteOverrides = gTilesetPalOverrides_VermilionCity,
 };
 
 const struct Tileset gTileset_CeladonCity =
@@ -933,6 +939,7 @@ const struct Tileset gTileset_CeladonCity =
     .metatiles = gMetatiles_CeladonCity,
     .metatileAttributes = gMetatileAttributes_CeladonCity,
     .callback = InitTilesetAnim_CeladonCity,
+    .paletteOverrides = gTilesetPalOverrides_CeladonCity,
 };
 
 const struct Tileset gTileset_FuchsiaCity =
@@ -944,6 +951,7 @@ const struct Tileset gTileset_FuchsiaCity =
     .metatiles = gMetatiles_FuchsiaCity,
     .metatileAttributes = gMetatileAttributes_FuchsiaCity,
     .callback = NULL,
+    .paletteOverrides = gTilesetPalOverrides_FuchsiaCity,
 };
 
 const struct Tileset gTileset_CinnabarIsland =
@@ -966,6 +974,7 @@ const struct Tileset gTileset_IndigoPlateau =
     .metatiles = gMetatiles_IndigoPlateau,
     .metatileAttributes = gMetatileAttributes_IndigoPlateau,
     .callback = NULL,
+    .paletteOverrides = gTilesetPalOverrides_IndigoPlateau,
 };
 
 const struct Tileset gTileset_SaffronCity =
@@ -977,6 +986,7 @@ const struct Tileset gTileset_SaffronCity =
     .metatiles = gMetatiles_SaffronCity,
     .metatileAttributes = gMetatileAttributes_SaffronCity,
     .callback = NULL,
+    .paletteOverrides = gTilesetPalOverrides_SaffronCity,
 };
 
 const struct Tileset gTileset_Mart =
@@ -1274,6 +1284,7 @@ const struct Tileset gTileset_DepartmentStore =
     .metatiles = gMetatiles_DepartmentStore,
     .metatileAttributes = gMetatileAttributes_DepartmentStore,
     .callback = NULL,
+    .paletteOverrides = gTilesetPalOverrides_DepartmentStore,
 };
 
 const struct Tileset gTileset_GenericBuilding2 =
@@ -1553,6 +1564,7 @@ const struct Tileset gTileset_Azalea =
     .metatiles = gMetatiles_Azalea,
     .metatileAttributes = gMetatileAttributes_Azalea,
     .callback = InitTilesetAnim_Azalea,
+    .paletteOverrides = gTilesetPalOverrides_Azalea,
 };
 const struct Tileset gTileset_AzaleaGym =
 {
@@ -1573,6 +1585,7 @@ const struct Tileset gTileset_BattleFrontierPrimary =
     .metatiles = gMetatiles_BattleFrontierPrimary,
     .metatileAttributes = gMetatileAttributes_BattleFrontierPrimary,
     .callback = InitTilesetAnim_General,
+    .paletteOverrides = gTilesetPalOverrides_General,
 };
 const struct Tileset gTileset_BlackthornCity =
 {
@@ -1613,6 +1626,7 @@ const struct Tileset gTileset_CeladonMansion =
     .metatiles = gMetatiles_CeladonMansion,
     .metatileAttributes = gMetatileAttributes_CeladonMansion,
     .callback = NULL,
+    .paletteOverrides = gTilesetPalOverrides_CeladonMansion,
 };
 const struct Tileset gTileset_ChampionsRoom =
 {
@@ -1633,6 +1647,7 @@ const struct Tileset gTileset_DragonsDen_Shrine =
     .metatiles = gMetatiles_DragonsDen_Shrine,
     .metatileAttributes = gMetatileAttributes_DragonsDen_Shrine,
     .callback = InitTilesetAnim_DragonsDen_Shrine,
+    .paletteOverrides = gTilesetPalOverrides_DragonsDen_Shrine,
 };
 const struct Tileset gTileset_EcruteakCity =
 {
@@ -1643,6 +1658,7 @@ const struct Tileset gTileset_EcruteakCity =
     .metatiles = gMetatiles_EcruteakCity,
     .metatileAttributes = gMetatileAttributes_EcruteakCity,
     .callback = NULL,
+    .paletteOverrides = gTilesetPalOverrides_EcruteakCity,
 };
 const struct Tileset gTileset_Forest =
 {
@@ -1673,6 +1689,7 @@ const struct Tileset gTileset_GeneralKanto =
     .metatiles = gMetatiles_GeneralKanto,
     .metatileAttributes = gMetatileAttributes_GeneralKanto,
     .callback = InitTilesetAnim_General,
+    .paletteOverrides = gTilesetPalOverrides_General,
 };
 const struct Tileset gTileset_Goldenrod =
 {
@@ -1683,6 +1700,7 @@ const struct Tileset gTileset_Goldenrod =
     .metatiles = gMetatiles_Goldenrod,
     .metatileAttributes = gMetatileAttributes_Goldenrod,
     .callback = InitTilesetAnim_Goldenrod,
+    .paletteOverrides = gTilesetPalOverrides_Goldenrod,
 };
 const struct Tileset gTileset_GoldenrodGym =
 {
@@ -1753,6 +1771,7 @@ const struct Tileset gTileset_NewBark =
     .metatiles = gMetatiles_NewBark,
     .metatileAttributes = gMetatileAttributes_NewBark,
     .callback = InitTilesetAnim_NewBark,
+    .paletteOverrides = gTilesetPalOverrides_NewBark,
 };
 const struct Tileset gTileset_OlivineCity =
 {
@@ -1763,6 +1782,7 @@ const struct Tileset gTileset_OlivineCity =
     .metatiles = gMetatiles_OlivineCity,
     .metatileAttributes = gMetatileAttributes_OlivineCity,
     .callback = NULL,
+    .paletteOverrides = gTilesetPalOverrides_OlivineCity,
 };
 const struct Tileset gTileset_PagodaTower =
 {
@@ -1873,6 +1893,7 @@ const struct Tileset gTileset_SaffronGeneral =
     .metatiles = gMetatiles_SaffronGeneral,
     .metatileAttributes = gMetatileAttributes_SaffronGeneral,
     .callback = InitTilesetAnim_General,
+    .paletteOverrides = gTilesetPalOverrides_General,
 };
 const struct Tileset gTileset_SoulHouse =
 {
@@ -1903,6 +1924,7 @@ const struct Tileset gTileset_Violet =
     .metatiles = gMetatiles_Violet,
     .metatileAttributes = gMetatileAttributes_Violet,
     .callback = InitTilesetAnim_Violet,
+    .paletteOverrides = gTilesetPalOverrides_Violet,
 };
 const struct Tileset gTileset_VioletGym =
 {

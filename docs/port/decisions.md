@@ -1987,3 +1987,30 @@ Day Care, National Park, Pokémon League, Dragon's Den Shrine), their 8 callback
   benefit until it is back in.
 
 **Result:** build exit 0; ROM content 29,115,232 B (27.77 MiB, 86.8%), +17,952 B.
+
+## D53 — CrystalDust's day/night tileset palette overrides (D31 follow-up)
+
+`gPaletteOverrides` and `LoadPaletteOverrides` survived Phase 1 and run every
+frame, but the array was permanently `{NULL, NULL, NULL, NULL}`: the data lived in
+`data/tilesets/overrides.inc`, another file expansion orphaned when it moved
+tileset headers out of assembly (same failure as D52). Windows stayed dark at
+night, street lamps unlit, and Goldenrod's neon never came on.
+
+Generated `src/data/tilesets/palette_overrides.h` from `overrides.inc` and the
+`gTilesetPalOverride_*` incbins in `graphics.inc` — 29 override palettes and 19
+per-tileset tables, all of whose `_over.pal` sources were already in the tree.
+Added `const struct PaletteOverride *paletteOverrides` at offset 0x18 of
+`struct Tileset`, wired the 22 tilesets that have overrides, and restored the three
+`gPaletteOverrides[n] = tileset->paletteOverrides` assignments in
+`LoadTilesetPalette`.
+
+### Constraint decisions
+
+- **D53.1 — The override palettes are `static` in `palette_overrides.h`.**
+  CrystalDust exported them globally from assembly; nothing outside `tilesets.c`
+  referenced them, so they stay file-local rather than adding 29 externs.
+- **D53.2 — `gPaletteOverrides[3]` is still never written.** CrystalDust only ever
+  populates slots 0–2 (primary, secondary, compressed); the fourth slot is unused
+  upstream too. Kept for struct compatibility.
+
+**Result:** build exit 0; ROM content 29,117,280 B (27.77 MiB, 86.8%), +2,048 B.
