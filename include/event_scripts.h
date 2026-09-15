@@ -425,6 +425,13 @@ extern const u8 EventScript_UseFlash[];
 extern const u8 EventScript_UseCut[];
 extern const u8 EventScript_UseHeadbutt[]; // CrystalDust (D26)
 extern const u8 EventScript_UseWhirlpoolFromPartyMenu[]; // CrystalDust (D51)
+// CrystalDust's furniture, radio and museum exhibits (D60).
+extern const u8 EventScript_Window[];
+extern const u8 EventScript_Radio1[];
+extern const u8 EventScript_AncientPokemonReplica[];
+extern const u8 EventScript_DistinguishedStatue[];
+extern const u8 NewBarkTown_PlayersHouse_2F_DecorPoster[];
+extern const u8 NewBarkTown_PlayersHouse_2F_DecorConsole[];
 extern const u8 EventScript_HeadbuttTree[]; // CrystalDust (D26)
 extern const u8 EventScript_UseRockSmash[];
 extern const u8 EventScript_UseDig[];

@@ -523,6 +523,19 @@ static const u8 *GetInteractedMetatileScript(struct MapPosition *position, u8 me
         return EventScript_Questionnaire;
     if (MetatileBehavior_IsTrainerHillTimer(metatileBehavior) == TRUE)
         return EventScript_TrainerHillTimer;
+    // CrystalDust's furniture, radio and museum exhibits (D60).
+    if (MetatileBehavior_IsAncientPokemonReplica(metatileBehavior) == TRUE)
+        return EventScript_AncientPokemonReplica;
+    if (MetatileBehavior_IsDistinguishedStatue(metatileBehavior) == TRUE)
+        return EventScript_DistinguishedStatue;
+    if (MetatileBehavior_IsWindow(metatileBehavior) == TRUE)
+        return EventScript_Window;
+    if (MetatileBehavior_IsRadio(metatileBehavior) == TRUE)
+        return EventScript_Radio1;
+    if (MetatileBehavior_IsDecorPoster(metatileBehavior) == TRUE)
+        return NewBarkTown_PlayersHouse_2F_DecorPoster;
+    if (MetatileBehavior_IsDecorConsole(metatileBehavior) == TRUE)
+        return NewBarkTown_PlayersHouse_2F_DecorConsole;
     if (IS_FRLG)
     {
         if (MetatileBehavior_IsFood(metatileBehavior) == TRUE)

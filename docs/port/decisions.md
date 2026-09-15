@@ -2156,3 +2156,32 @@ nothing. Adding a third type means touching every one of expansion's binary
 `cardType != CARD_TYPE_FRLG` branches, which is a Phase 7 visual job rather than
 a Phase 4 correctness one. Until then the card keeps expansion's Emerald layout
 (consistent with Q2) but with Johto content. Tracked as a Phase 7 item.
+
+### D60 Furniture, radio and window metatile behaviours restored
+
+**Loss.** CrystalDust's tilesets ship metatile attributes that reference six of
+its own metatile behaviours. The merge kept expansion's
+`constants/metatile_behaviors.h`, so those attribute bytes survived in the `.bin`
+files while the names, the `MetatileBehavior_Is*` predicates and the
+`GetInteractedMetatileScript` hooks all went. The scripts themselves survived
+(`data/scripts/check_furniture.inc`, the New Bark Town 2F map script), reachable
+only from object interactions — the tiles did nothing.
+
+Affected, with live occurrences counted in our own `metatile_attributes.bin`
+files: `MB_RADIO` 0x79 (4 tiles, `players_house`/`playersroom`/`building`),
+`MB_WINDOW` 0x88 (15 tiles across nine Johto tilesets), `MB_DISTINGUISHED_STATUE`
+0xDF (1, `pagoda_tower`), `MB_ANCIENT_POKEMON_REPLICA` 0xDE, and
+`MB_DECOR_POSTER`/`MB_DECOR_CONSOLE` (13 and 2 in `playersroom`).
+
+**Collision, and how it was resolved.** CrystalDust's poster and console sit at
+0xEB and 0xEC, which expansion already uses for `MB_UP_RIGHT_STAIR_WARP` and
+`MB_UP_LEFT_STAIR_WARP` — and the FRLG tilesets in our tree do use them as stair
+warps. Naming them CrystalDust's way would have made every poster in the player's
+bedroom a stair warp. The poster and console were therefore **relocated to the
+free 0xDC/0xDD slots**, and `playersroom/metatile_attributes.bin` was patched
+accordingly (15 entries). Expansion's own unreferenced `MB_WINDOW` at 0xAB became
+`MB_UNUSED_AB` so CrystalDust's could take 0x88; nothing referenced it.
+
+This is the first case where the two sides' behaviour numbering actually
+conflicted rather than one simply being absent, so it is worth re-checking the
+remaining `MB_UNUSED_*` slots if more CrystalDust tiles surface.

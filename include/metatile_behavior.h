@@ -100,6 +100,12 @@ bool8 MetatileBehavior_IsSouthBlocked(u8 metatileBehavior);
 bool8 MetatileBehavior_IsShortGrass(u8 metatileBehavior);
 bool8 MetatileBehavior_IsHotSprings(u8 metatileBehavior);
 bool8 MetatileBehavior_IsWhirlpool(u8 metatileBehavior); // CrystalDust (D51)
+bool8 MetatileBehavior_IsRadio(u8 metatileBehavior); // CrystalDust (D60)
+bool8 MetatileBehavior_IsWindow(u8 metatileBehavior); // CrystalDust (D60)
+bool8 MetatileBehavior_IsAncientPokemonReplica(u8 metatileBehavior); // CrystalDust (D60)
+bool8 MetatileBehavior_IsDistinguishedStatue(u8 metatileBehavior); // CrystalDust (D60)
+bool8 MetatileBehavior_IsDecorPoster(u8 metatileBehavior); // CrystalDust (D60)
+bool8 MetatileBehavior_IsDecorConsole(u8 metatileBehavior); // CrystalDust (D60)
 bool8 MetatileBehavior_IsWaterfall(u8 metatileBehavior);
 bool8 MetatileBehavior_IsFortreeBridge(u8 metatileBehavior);
 bool8 MetatileBehavior_IsPacifidlogVerticalLogTop(u8 metatileBehavior);

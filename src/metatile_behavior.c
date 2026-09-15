@@ -960,6 +960,56 @@ bool8 MetatileBehavior_IsHotSprings(u8 metatileBehavior)
 }
 
 // CrystalDust's whirlpool tiles, cleared with the Whirlpool field move (D51).
+
+// CrystalDust's furniture and radio metatiles, restored in Phase 4 (D60).
+bool8 MetatileBehavior_IsRadio(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_RADIO)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsWindow(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_WINDOW)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsAncientPokemonReplica(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_ANCIENT_POKEMON_REPLICA)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsDistinguishedStatue(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_DISTINGUISHED_STATUE)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsDecorPoster(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_DECOR_POSTER)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsDecorConsole(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_DECOR_CONSOLE)
+        return TRUE;
+    else
+        return FALSE;
+}
+
 bool8 MetatileBehavior_IsWhirlpool(u8 metatileBehavior)
 {
     if (metatileBehavior == MB_WHIRLPOOL)
