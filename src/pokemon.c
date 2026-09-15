@@ -132,6 +132,7 @@ static const struct CombinedMove sCombinedMoves[2] =
 
 #define KANTO_TO_NATIONAL(name)     [KANTO_DEX_##name - 1] = NATIONAL_DEX_##name,
 #define HOENN_TO_NATIONAL(name)     [HOENN_DEX_##name - 1] = NATIONAL_DEX_##name,
+#define JOHTO_TO_NATIONAL(name)     [JOHTO_DEX_##name - 1] = NATIONAL_DEX_##name,
 
 static const enum NationalDexOrder sKantoToNationalOrder[KANTO_DEX_COUNT] =
 {
@@ -143,6 +144,12 @@ static const enum NationalDexOrder sKantoToNationalOrder[KANTO_DEX_COUNT] =
 static const enum NationalDexOrder sHoennToNationalOrder[HOENN_DEX_COUNT - 1] =
 {
     FOREACH_SPECIES_IN_HOENN_DEX_ORDER(HOENN_TO_NATIONAL)
+};
+
+// Assigns all Johto Dex Indexes to a National Dex Index (CrystalDust, D58)
+static const enum NationalDexOrder sJohtoToNationalOrder[JOHTO_DEX_COUNT] =
+{
+    FOREACH_SPECIES_IN_JOHTO_DEX_ORDER(JOHTO_TO_NATIONAL)
 };
 
 // In Battle Palace, moves are chosen based on the Pokémon's nature rather than by the player
@@ -4650,7 +4657,7 @@ u32 NationalToRegionalOrder(enum NationalDexOrder nationalNum)
 {
     if (IS_FRLG)
         return NationalToKantoOrder(nationalNum);
-    return NationalToHoennOrder(nationalNum);
+    return NationalToJohtoOrder(nationalNum); // CrystalDust (D58)
 }
 
 enum KantoDexOrder NationalToKantoOrder(enum NationalDexOrder nationalNum)
@@ -4702,7 +4709,7 @@ u32 SpeciesToRegionalPokedexNum(enum Species species)
 {
     if (IS_FRLG)
         return SpeciesToKantoPokedexNum(species);
-    return SpeciesToHoennPokedexNum(species);
+    return SpeciesToJohtoPokedexNum(species); // CrystalDust (D58)
 }
 
 enum KantoDexOrder SpeciesToKantoPokedexNum(enum Species species)
@@ -4723,7 +4730,7 @@ enum NationalDexOrder RegionalToNationalOrder(u32 regionalNum)
 {
     if (IS_FRLG)
         return KantoToNationalOrder(regionalNum);
-    return HoennToNationalOrder(regionalNum);
+    return JohtoToNationalOrder(regionalNum); // CrystalDust (D58)
 }
 
 enum NationalDexOrder KantoToNationalOrder(enum KantoDexOrder kantoNum)
@@ -4740,6 +4747,37 @@ enum NationalDexOrder HoennToNationalOrder(enum HoennDexOrder hoennNum)
         return 0;
 
     return sHoennToNationalOrder[hoennNum - 1];
+}
+
+// CrystalDust's Johto Dex helpers (D58).
+enum JohtoDexOrder NationalToJohtoOrder(enum NationalDexOrder nationalNum)
+{
+    u16 johtoNum;
+
+    if (!nationalNum)
+        return 0;
+
+    for (johtoNum = 0; johtoNum < JOHTO_DEX_COUNT; johtoNum++)
+    {
+        if (sJohtoToNationalOrder[johtoNum] == nationalNum)
+            return johtoNum + 1;
+    }
+    return 0;
+}
+
+enum JohtoDexOrder SpeciesToJohtoPokedexNum(enum Species species)
+{
+    if (!species)
+        return 0;
+    return NationalToJohtoOrder(gSpeciesInfo[species].natDexNum);
+}
+
+enum NationalDexOrder JohtoToNationalOrder(enum JohtoDexOrder johtoNum)
+{
+    if (!johtoNum || johtoNum > JOHTO_DEX_COUNT)
+        return 0;
+
+    return sJohtoToNationalOrder[johtoNum - 1];
 }
 
 void EvolutionRenameMon(struct Pokemon *mon, enum Species oldSpecies, enum Species newSpecies)

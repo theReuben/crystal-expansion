@@ -888,6 +888,9 @@ u32 NationalToRegionalOrder(enum NationalDexOrder nationalNum);
 enum KantoDexOrder NationalToKantoOrder(enum NationalDexOrder nationalNum);
 enum HoennDexOrder NationalToHoennOrder(enum NationalDexOrder nationalNum);
 enum NationalDexOrder SpeciesToNationalPokedexNum(enum Species species);
+enum JohtoDexOrder NationalToJohtoOrder(enum NationalDexOrder nationalNum); // CrystalDust (D58)
+enum JohtoDexOrder SpeciesToJohtoPokedexNum(enum Species species); // CrystalDust (D58)
+enum NationalDexOrder JohtoToNationalOrder(enum JohtoDexOrder johtoNum); // CrystalDust (D58)
 u32 SpeciesToRegionalPokedexNum(enum Species species);
 enum KantoDexOrder SpeciesToKantoPokedexNum(enum Species species);
 enum HoennDexOrder SpeciesToHoennPokedexNum(enum Species species);

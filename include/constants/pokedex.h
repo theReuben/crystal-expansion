@@ -1042,7 +1042,7 @@ enum NationalDexOrder
     NATIONAL_DEX_PECHARUNT,
 };
 
-#define JOHTO_DEX_COUNT     NATIONAL_DEX_CELEBI
+
 
 #if P_GEN_9_POKEMON == TRUE
     #define NATIONAL_DEX_COUNT  NATIONAL_DEX_PECHARUNT
@@ -1515,6 +1515,270 @@ enum HoennDexOrder
     F(MEWTWO) \
     F(MEW)
 
+// CrystalDust's Johto Pokedex ordering (D58). Gen 2's own order, not
+// National #1-251 -- it starts at Chikorita and runs the Kanto mons from 226.
+#define FOREACH_SPECIES_IN_JOHTO_DEX_ORDER(F) \
+    F(CHIKORITA) \
+    F(BAYLEEF) \
+    F(MEGANIUM) \
+    F(CYNDAQUIL) \
+    F(QUILAVA) \
+    F(TYPHLOSION) \
+    F(TOTODILE) \
+    F(CROCONAW) \
+    F(FERALIGATR) \
+    F(PIDGEY) \
+    F(PIDGEOTTO) \
+    F(PIDGEOT) \
+    F(SPEAROW) \
+    F(FEAROW) \
+    F(HOOTHOOT) \
+    F(NOCTOWL) \
+    F(RATTATA) \
+    F(RATICATE) \
+    F(SENTRET) \
+    F(FURRET) \
+    F(PICHU) \
+    F(PIKACHU) \
+    F(RAICHU) \
+    F(CATERPIE) \
+    F(METAPOD) \
+    F(BUTTERFREE) \
+    F(WEEDLE) \
+    F(KAKUNA) \
+    F(BEEDRILL) \
+    F(LEDYBA) \
+    F(LEDIAN) \
+    F(SPINARAK) \
+    F(ARIADOS) \
+    F(GEODUDE) \
+    F(GRAVELER) \
+    F(GOLEM) \
+    F(ZUBAT) \
+    F(GOLBAT) \
+    F(CROBAT) \
+    F(CLEFFA) \
+    F(CLEFAIRY) \
+    F(CLEFABLE) \
+    F(IGGLYBUFF) \
+    F(JIGGLYPUFF) \
+    F(WIGGLYTUFF) \
+    F(TOGEPI) \
+    F(TOGETIC) \
+    F(SANDSHREW) \
+    F(SANDSLASH) \
+    F(EKANS) \
+    F(ARBOK) \
+    F(DUNSPARCE) \
+    F(MAREEP) \
+    F(FLAAFFY) \
+    F(AMPHAROS) \
+    F(WOOPER) \
+    F(QUAGSIRE) \
+    F(GASTLY) \
+    F(HAUNTER) \
+    F(GENGAR) \
+    F(UNOWN) \
+    F(ONIX) \
+    F(STEELIX) \
+    F(BELLSPROUT) \
+    F(WEEPINBELL) \
+    F(VICTREEBEL) \
+    F(HOPPIP) \
+    F(SKIPLOOM) \
+    F(JUMPLUFF) \
+    F(PARAS) \
+    F(PARASECT) \
+    F(POLIWAG) \
+    F(POLIWHIRL) \
+    F(POLIWRATH) \
+    F(POLITOED) \
+    F(MAGIKARP) \
+    F(GYARADOS) \
+    F(GOLDEEN) \
+    F(SEAKING) \
+    F(SLOWPOKE) \
+    F(SLOWBRO) \
+    F(SLOWKING) \
+    F(ODDISH) \
+    F(GLOOM) \
+    F(VILEPLUME) \
+    F(BELLOSSOM) \
+    F(DROWZEE) \
+    F(HYPNO) \
+    F(ABRA) \
+    F(KADABRA) \
+    F(ALAKAZAM) \
+    F(DITTO) \
+    F(PINECO) \
+    F(FORRETRESS) \
+    F(NIDORAN_F) \
+    F(NIDORINA) \
+    F(NIDOQUEEN) \
+    F(NIDORAN_M) \
+    F(NIDORINO) \
+    F(NIDOKING) \
+    F(YANMA) \
+    F(SUNKERN) \
+    F(SUNFLORA) \
+    F(EXEGGCUTE) \
+    F(EXEGGUTOR) \
+    F(SUDOWOODO) \
+    F(WOBBUFFET) \
+    F(VENONAT) \
+    F(VENOMOTH) \
+    F(SCYTHER) \
+    F(SCIZOR) \
+    F(PINSIR) \
+    F(HERACROSS) \
+    F(KOFFING) \
+    F(WEEZING) \
+    F(GRIMER) \
+    F(MUK) \
+    F(MAGNEMITE) \
+    F(MAGNETON) \
+    F(VOLTORB) \
+    F(ELECTRODE) \
+    F(AIPOM) \
+    F(SNUBBULL) \
+    F(GRANBULL) \
+    F(VULPIX) \
+    F(NINETALES) \
+    F(GROWLITHE) \
+    F(ARCANINE) \
+    F(STANTLER) \
+    F(MARILL) \
+    F(AZUMARILL) \
+    F(DIGLETT) \
+    F(DUGTRIO) \
+    F(MANKEY) \
+    F(PRIMEAPE) \
+    F(MEOWTH) \
+    F(PERSIAN) \
+    F(PSYDUCK) \
+    F(GOLDUCK) \
+    F(MACHOP) \
+    F(MACHOKE) \
+    F(MACHAMP) \
+    F(TYROGUE) \
+    F(HITMONLEE) \
+    F(HITMONCHAN) \
+    F(HITMONTOP) \
+    F(GIRAFARIG) \
+    F(TAUROS) \
+    F(MILTANK) \
+    F(MAGBY) \
+    F(MAGMAR) \
+    F(SMOOCHUM) \
+    F(JYNX) \
+    F(ELEKID) \
+    F(ELECTABUZZ) \
+    F(MR_MIME) \
+    F(SMEARGLE) \
+    F(FARFETCHD) \
+    F(NATU) \
+    F(XATU) \
+    F(QWILFISH) \
+    F(TENTACOOL) \
+    F(TENTACRUEL) \
+    F(KRABBY) \
+    F(KINGLER) \
+    F(SHUCKLE) \
+    F(STARYU) \
+    F(STARMIE) \
+    F(SHELLDER) \
+    F(CLOYSTER) \
+    F(CORSOLA) \
+    F(REMORAID) \
+    F(OCTILLERY) \
+    F(CHINCHOU) \
+    F(LANTURN) \
+    F(SEEL) \
+    F(DEWGONG) \
+    F(LICKITUNG) \
+    F(TANGELA) \
+    F(EEVEE) \
+    F(VAPOREON) \
+    F(JOLTEON) \
+    F(FLAREON) \
+    F(ESPEON) \
+    F(UMBREON) \
+    F(HORSEA) \
+    F(SEADRA) \
+    F(KINGDRA) \
+    F(GLIGAR) \
+    F(DELIBIRD) \
+    F(SWINUB) \
+    F(PILOSWINE) \
+    F(TEDDIURSA) \
+    F(URSARING) \
+    F(PHANPY) \
+    F(DONPHAN) \
+    F(MANTINE) \
+    F(SKARMORY) \
+    F(DODUO) \
+    F(DODRIO) \
+    F(PONYTA) \
+    F(RAPIDASH) \
+    F(CUBONE) \
+    F(MAROWAK) \
+    F(KANGASKHAN) \
+    F(RHYHORN) \
+    F(RHYDON) \
+    F(MURKROW) \
+    F(HOUNDOUR) \
+    F(HOUNDOOM) \
+    F(SLUGMA) \
+    F(MAGCARGO) \
+    F(SNEASEL) \
+    F(MISDREAVUS) \
+    F(PORYGON) \
+    F(PORYGON2) \
+    F(CHANSEY) \
+    F(BLISSEY) \
+    F(LAPRAS) \
+    F(OMANYTE) \
+    F(OMASTAR) \
+    F(KABUTO) \
+    F(KABUTOPS) \
+    F(AERODACTYL) \
+    F(SNORLAX) \
+    F(BULBASAUR) \
+    F(IVYSAUR) \
+    F(VENUSAUR) \
+    F(CHARMANDER) \
+    F(CHARMELEON) \
+    F(CHARIZARD) \
+    F(SQUIRTLE) \
+    F(WARTORTLE) \
+    F(BLASTOISE) \
+    F(ARTICUNO) \
+    F(ZAPDOS) \
+    F(MOLTRES) \
+    F(RAIKOU) \
+    F(ENTEI) \
+    F(SUICUNE) \
+    F(DRATINI) \
+    F(DRAGONAIR) \
+    F(DRAGONITE) \
+    F(LARVITAR) \
+    F(PUPITAR) \
+    F(TYRANITAR) \
+    F(LUGIA) \
+    F(HO_OH) \
+    F(MEWTWO) \
+    F(MEW) \
+    F(CELEBI)
+
+// Johto Pokedex order
+enum JohtoDexOrder
+{
+    JOHTO_DEX_NONE,
+    #define JOHTO_DEX_ENUM(name) JOHTO_DEX_ ##name,
+    FOREACH_SPECIES_IN_JOHTO_DEX_ORDER(JOHTO_DEX_ENUM)
+    #undef JOHTO_DEX_ENUM
+};
+
 // Kanto Pokedex order
 enum KantoDexOrder
 {
@@ -1524,10 +1788,12 @@ enum KantoDexOrder
     #undef KANTO_DEX_ENUM
 };
 
+#define JOHTO_DEX_COUNT JOHTO_DEX_CELEBI
 #define KANTO_DEX_COUNT (KANTO_DEX_MEW + 1)
 #define HOENN_DEX_COUNT (HOENN_DEX_DEOXYS + 1)
 
-#define REGIONAL_DEX_COUNT (IS_FRLG ? KANTO_DEX_COUNT : HOENN_DEX_COUNT)
+// CrystalDust is a Johto game: the regional dex is Johto's (D58).
+#define REGIONAL_DEX_COUNT (IS_FRLG ? KANTO_DEX_COUNT : (JOHTO_DEX_COUNT + 1))
 
 #define DECAGRAMS_IN_POUND             453592
 #define CM_PER_INCH                    2.54

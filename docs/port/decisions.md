@@ -2099,3 +2099,33 @@ against `sMatchCallState` and `GetTrainerMatchCallId`. Setting the flag would fr
 104 save bytes and break the phone.
 
 **Result:** build exit 0; ROM content 29,123,936 B (27.77 MiB, 86.8%).
+
+### D58 Johto Pokédex ordering restored; corrects D24
+
+**Loss.** CrystalDust carries a real Johto Pokédex order — `gJohtoToNationalOrder`
+plus `NationalToJohtoOrder`, `JohtoToNationalOrder` and `SpeciesToJohtoPokedexNum`
+in `src/pokemon.c`, driven by 464 `JOHTO_DEX_*` constants in its `species.h`. The
+Phase 1 merge kept expansion's file, so none of it survived. Our `pokedex.c`
+carried a comment claiming "the Johto Dex is simply National #1-251 in national
+order, so no reordering table is needed. See D24" — that is wrong. The Johto Dex
+runs Chikorita (1) … Snorlax-era Johto natives … Bulbasaur (226) … Mew (250),
+Celebi (251). Every dex count, the numerical list order and the printed dex
+number were showing National numbering.
+
+**Fix.** `include/constants/pokedex.h` gains `FOREACH_SPECIES_IN_JOHTO_DEX_ORDER`
+(251 entries lifted from CrystalDust's table) and `enum JohtoDexOrder`, mirroring
+expansion's Kanto idiom; `JOHTO_DEX_COUNT` is now `JOHTO_DEX_CELEBI` rather than
+`NATIONAL_DEX_CELEBI` (same value, correct meaning) and `REGIONAL_DEX_COUNT` is
+Johto's, not Hoenn's. `src/pokemon.c` gains `sJohtoToNationalOrder` and the three
+lookup functions, and the three `*Regional*` dispatchers now fall through to
+Johto instead of Hoenn. `src/pokedex.c`'s `GetJohtoPokedexCount` walks through
+`JohtoToNationalOrder`, and `HasAllJohtoMons` (missing entirely; CrystalDust uses
+it for the trainer-card star and `def_special HasAllJohtoMons`) is restored,
+excluding Celebi. The special is re-registered in `data/specials.inc`.
+
+**Constraint noted.** Expansion's trainer card field is still spelled
+`caughtAllHoenn`; it now holds the Johto result. Renaming it touches the save
+struct, so it stays as-is — cosmetic only.
+
+Verified against the linked ROM: `sJohtoToNationalOrder[0..2]` = 152/153/154,
+`[225]` = 1, `[249..250]` = 150/151, `[250]` = 251.

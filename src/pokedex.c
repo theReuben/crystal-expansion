@@ -4544,8 +4544,8 @@ u32 GetRegionalPokedexCount(u8 caseID)
     return GetJohtoPokedexCount(caseID);
 }
 
-// The Johto Dex is simply National #1-251 in national order, so no reordering
-// table is needed. See D24.
+// The Johto Dex has its own ordering, so entries must be walked through
+// JohtoToNationalOrder rather than by National number (D58, correcting D24).
 u16 GetJohtoPokedexCount(u8 caseID)
 {
     u16 count = 0;
@@ -4556,11 +4556,11 @@ u16 GetJohtoPokedexCount(u8 caseID)
         switch (caseID)
         {
         case FLAG_GET_SEEN:
-            if (GetSetPokedexFlag(i, FLAG_GET_SEEN))
+            if (GetSetPokedexFlag(JohtoToNationalOrder(i), FLAG_GET_SEEN))
                 count++;
             break;
         case FLAG_GET_CAUGHT:
-            if (GetSetPokedexFlag(i, FLAG_GET_CAUGHT))
+            if (GetSetPokedexFlag(JohtoToNationalOrder(i), FLAG_GET_CAUGHT))
                 count++;
             break;
         }
@@ -4616,7 +4616,23 @@ bool16 HasAllRegionalMons(void)
 {
     if (IS_FRLG)
         return HasAllKantoMons();
-    return HasAllHoennMons();
+    return HasAllJohtoMons(); // CrystalDust (D58)
+}
+
+// CrystalDust's Johto Dex completion check; excludes Celebi (D58).
+bool16 HasAllJohtoMons(void)
+{
+    u32 i, j;
+
+    for (i = 0; i < JOHTO_DEX_COUNT - 1; i++)
+    {
+        j = JohtoToNationalOrder(i + 1);
+        if (!(gSpeciesInfo[NationalPokedexNumToSpecies(j)].isMythical && !gSpeciesInfo[NationalPokedexNumToSpecies(j)].dexForceRequired)
+            && !GetSetPokedexFlag(j, FLAG_GET_CAUGHT))
+            return FALSE;
+    }
+
+    return TRUE;
 }
 
 bool16 HasAllHoennMons(void)
