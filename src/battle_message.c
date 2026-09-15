@@ -90,6 +90,7 @@ static const u8 sText_OpponentMon1Appeared[] = _("{B_OPPONENT_MON1_NAME} appeare
 static const u8 sText_WildPkmnAppeared[] = _("You encountered a wild {B_OPPONENT_MON1_NAME}!\p");
 static const u8 sText_LegendaryPkmnAppeared[] = _("You encountered a wild {B_OPPONENT_MON1_NAME}!\p");
 static const u8 sText_WildPkmnAppearedPause[] = _("You encountered a wild {B_OPPONENT_MON1_NAME}!{PAUSE 127}");
+static const u8 sText_PkmnFellOutOfTree[] = _("{B_OPPONENT_MON1_NAME} fell out\nof the tree!\p"); // CrystalDust (D55)
 static const u8 sText_TwoWildPkmnAppeared[] = _("Oh! A wild {B_OPPONENT_MON1_NAME} and {B_OPPONENT_MON2_NAME} appeared!\p");
 static const u8 sText_GhostAppearedCantId[] = _("The GHOST appeared!\pDarn!\nThe GHOST can't be ID'd!\p");
 static const u8 sText_TheGhostAppeared[] = _("The GHOST appeared!\p");
@@ -2514,6 +2515,9 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
                 stringPtr = sText_TwoWildPkmnAppeared;
             else if (gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL)
                 stringPtr = sText_WildPkmnAppearedPause;
+            // CrystalDust's Headbutt encounters shake the mon out of the tree (D55).
+            else if (gBattleTypeFlags & BATTLE_TYPE_TREE)
+                stringPtr = sText_PkmnFellOutOfTree;
             else
                 stringPtr = sText_WildPkmnAppeared;
         }

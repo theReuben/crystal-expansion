@@ -1240,6 +1240,15 @@ save, set, call and restore the flag.
 pointing at the wrong music. GBS lookups will be correct; the m4a fallbacks
 will not, until D14 is fixed.
 
+**Correction (Phase 4 re-audit).** The note above is stale — D14 *was* resolved in
+its own entry, and re-checking all 588 numeric song constants against the 666
+`gSongTable` rows confirms it: every constant lands on its own label. The only
+four that do not are `SE_INTRO_PICHU_WOOPER` and `SE_INTRO_SUICUNE1`–`3`, which
+are GBS-only sound effects with a deliberate, comment-annotated vanilla m4a
+placeholder (`song se_bike_hop, @ SE_INTRO_PICHU_WOOPER`). CrystalDust does the
+same. `MUS_ROUTE118` (32767) and `MUS_NONE` (65535) are sentinels, and
+`MUS_DESERT` is a vanilla alias of `mus_route111`. Nothing outstanding.
+
 Errors 50 -> 32. Every remaining error is in `src/pokegear.c`.
 
 ## D33 — The Pokegear map card gets its own module; expansion's region map stays
@@ -2031,3 +2040,20 @@ four are unreachable from `data/*.s` — `graphics.inc`, `headers.inc`,
 against their C replacements. `metatiles.inc` had no losses.
 
 **Result:** build exit 0; ROM content 29,117,280 B (27.77 MiB, 86.8%).
+
+## D55 — Headbutt battle cosmetics (D26 follow-up), and D45 closed
+
+**D26's two deferred behaviours are in.** `BATTLE_TYPE_TREE` was being set by
+`battle_setup.c` but nothing read it:
+
+- `battle_message.c` now prints `"<mon> fell out\nof the tree!"` instead of the
+  generic wild-encounter line.
+- `SpriteCB_WildMonAnimate` suppresses the cry and passes `arg3 |= 0x80` when the
+  mon is asleep, so a Headbutt encounter on a sleeping mon stays silent.
+
+**D45 is closed with no action.** CrystalDust's `gCryTable2` is simply
+pokeemerald's `gCryTable_Reverse` under its pre-rename name; `src/sound.c` already
+calls the right table. Our cry table has 1,159 entries to CrystalDust's 388
+because expansion ships every generation's cries, so no Gen 2 cry is missing.
+
+**Result:** build exit 0; ROM content 29,123,872 B (27.77 MiB, 86.8%).
