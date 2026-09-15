@@ -2289,3 +2289,20 @@ registering as save warps. The 20 Kanto Center maps are added.
 the rest of the Frontier under Q3.
 
 Build exit=0, ROM 29,126,724 B (86.80%).
+
+## D66 — A new game starts in New Bark Town
+
+**Found:** stub-Hoenn-anchor sweep, `src/new_game.c`.
+
+`WarpToTruck` still warped to `MAP_INSIDE_OF_TRUCK` (or `MAP_PALLET_TOWN_PLAYERS_HOUSE_2F`
+under `IS_FRLG`). Both are stub constants resolving to a map group that no longer
+exists, so a brand-new game had no valid starting map.
+
+**Done:** warps to `MAP_NEW_BARK_TOWN_PLAYERS_HOUSE_2F` with CrystalDust's own
+arguments (`WARP_ID_NONE, -1, -1`), matching `sources/crystaldust/src/new_game.c:134`.
+The `IS_FRLG` branch is dropped — there is no FRLG start in a Johto game.
+
+The function keeps its upstream name for now; renaming it touches the forward
+declaration and reads as churn. Noted for the Phase 5 sweep.
+
+Build exit=0, ROM 29,126,724 B (86.80%).
