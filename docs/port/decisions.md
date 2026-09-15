@@ -1817,3 +1817,37 @@ trainer parties, Phase 7's expansion features) only adds. Compression of the
 Johto tilesets or trimming unused Hoenn graphics will be needed before Phase 7.
 
 Link errors: 194 undefined -> 0. Compile errors: 0. **Phase 2 gate: passed.**
+
+## D49: CrystalDust's wild encounters, with time of day
+
+`src/data/wild_encounters.json` was the Phase 1 merge's single biggest content
+loss (recorded under D27): expansion's 388 Hoenn and FRLG maps were kept and
+CrystalDust's 132 were discarded, so the game had **no Johto wild encounters at
+all**. This replaces the `gWildMonHeaders` group with CrystalDust's.
+
+The formats differ. CrystalDust nests three tables per field, one per band of
+its three-band clock; pokeemerald-expansion 1.17 has the same feature but
+expresses it as one JSON entry per map per time, with the time named in
+`base_label`, gated behind `OW_TIME_OF_DAY_ENCOUNTERS`. That flag is now `TRUE`
+and CrystalDust's tables were converted.
+
+### Constraint decisions
+
+1. **Evening reuses the night table.** D7 set `OW_TIMES_OF_DAY` to `GEN_LATEST`,
+   a four-band clock (morning/day/evening/night); CrystalDust and real Crystal
+   have three. Rather than invent evening encounters, evening gets Crystal's
+   night table. This is a deliberate reading of Crystal's intent, not a port of
+   something that existed.
+2. **Times identical to morning are not emitted.** Of 132 maps only 209 of a
+   possible 396 time variants actually differ from the morning table; the rest
+   are left out and fall back at runtime (`OW_TIME_OF_DAY_DISABLE_FALLBACK` is
+   `FALSE`). Behaviour is identical and the ROM does not carry four copies of
+   every table.
+3. **Expansion's 388 Hoenn and FRLG encounter tables are gone.** They belonged
+   to maps D37 already cut. This is consistent with the "no Hoenn" scope and is
+   why the change costs only ~25KB despite adding all of Johto.
+4. `gBattlePikeWildMonHeaders` and `gBattlePyramidWildMonHeaders` are kept as
+   expansion had them; the frontier is still deferred (Q3).
+5. The `headbutt_mons` field now carries CrystalDust's `common`/`rare` groups.
+
+ROM: 29,017,952 bytes of content (27.67 MiB, 86.48%), up 25,344 bytes.
