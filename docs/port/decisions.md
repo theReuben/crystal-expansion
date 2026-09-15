@@ -2066,3 +2066,36 @@ because expansion ships every generation's cries, so no Gen 2 cry is missing.
   LZ-decompresses a pre-rendered HP-digit sheet into `barFontGfx`. Expansion
   renders the same digits at runtime with `RenderTextHandleBold(..., FONT_BOLD, ...)`
   in `battle_interface.c`, so the asset is obsolete rather than lost. No action.
+
+## D57 — D2's charmap residue closed
+
+D2 left two things open: 44 Hoenn `MUS_*`/`SE_*` charmap aliases, and three
+battle placeholders said to "need real work". Both are now resolved, and one was
+a genuine latent bug.
+
+**The real bug: charmap still held CrystalDust's original song IDs.** D14
+renumbered CrystalDust's 56 songs to indices 610–665, but `charmap.txt` was never
+updated, so `{MUS_AZALEA}` in any string would have assembled to 427 —
+expansion's `MUS_DEWFORD`. Nothing references them today (the sweep D2 called for
+found exactly one `{MUS_*}` placeholder in the whole tree, `{MUS_LEVEL_UP}` in
+Hoenn's Route 23 script, which is correct and out of scope anyway), so this never
+fired — but it was a landmine for every Phase 5 text edit. All 56 entries are
+repointed; all 542 song names in charmap now agree with `songs.h`, and no two
+names share a byte value.
+
+**The three battle placeholders need no work after all.**
+`B_SCR_ACTIVE_NAME_WITH_PREFIX` (FD 13) and `B_SCR_ACTIVE_ABILITY` (FD 1A) are
+CrystalDust's names for exactly the codes expansion calls `B_SCR_NAME_WITH_PREFIX`
+and `B_SCR_ABILITY` — same battler, same semantics, so the shared byte value is a
+correct alias rather than a collision. `B_BUG_CONTEST_MON` (FD 35) is unused in
+CrystalDust itself, so `FD 35` keeps expansion's `B_ATK_TRAINER_NAME`. The three
+`@ RETIRED by Crystal Expansion` comments in `charmap.txt` claimed the opposite
+and were actively misleading — expansion's names are still defined and used
+hundreds of times in `battle_message.c` — so they have been corrected.
+
+**`FREE_MATCH_CALL` stays `FALSE`, and this is not optional.** CrystalDust's
+phone system (D47) is built on top of `match_call.c`: `gPhoneContacts` is indexed
+against `sMatchCallState` and `GetTrainerMatchCallId`. Setting the flag would free
+104 save bytes and break the phone.
+
+**Result:** build exit 0; ROM content 29,123,936 B (27.77 MiB, 86.8%).
