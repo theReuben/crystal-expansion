@@ -28,7 +28,7 @@
   ],
   "object_events": [
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_POKEFAN_M",
       "in_connection": false,
       "x": 19,
@@ -43,7 +43,7 @@
       "flag": "FLAG_RETURNED_MACHINE_PART"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_POKEFAN_M",
       "in_connection": false,
       "x": 13,
@@ -58,7 +58,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_POKEFAN_M",
       "in_connection": false,
       "x": 12,

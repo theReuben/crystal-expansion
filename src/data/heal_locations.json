@@ -228,7 +228,7 @@
       "x": 6,
       "y": 6,
       "respawn_map": "MAP_LAVENDER_TOWN_POKEMON_CENTER_1F",
-      "respawn_npc": "LOCALID_LAVENDER_NURSE"
+      "respawn_npc": "0"
     },
     {
       "id": "HEAL_LOCATION_VERMILION_CITY",
@@ -236,7 +236,7 @@
       "x": 15,
       "y": 7,
       "respawn_map": "MAP_VERMILION_CITY_POKEMON_CENTER_1F",
-      "respawn_npc": "LOCALID_VERMILION_NURSE"
+      "respawn_npc": "0"
     },
     {
       "id": "HEAL_LOCATION_CELADON_CITY",
@@ -268,7 +268,7 @@
       "x": 11,
       "y": 7,
       "respawn_map": "MAP_INDIGO_PLATEAU_POKEMON_CENTER_1F",
-      "respawn_npc": "LOCALID_LEAGUE_NURSE"
+      "respawn_npc": "LOCALID_INDIGO_NURSE"
     },
     {
       "id": "HEAL_LOCATION_SAFFRON_CITY",
@@ -292,62 +292,6 @@
       "x": 13,
       "y": 21,
       "respawn_map": "MAP_ROUTE10_POKEMON_CENTER_1F",
-      "respawn_npc": "0"
-    },
-    {
-      "id": "HEAL_LOCATION_ONE_ISLAND",
-      "map": "MAP_ONE_ISLAND",
-      "x": 14,
-      "y": 6,
-      "respawn_map": "MAP_ONE_ISLAND_POKEMON_CENTER_1F",
-      "respawn_npc": "0"
-    },
-    {
-      "id": "HEAL_LOCATION_TWO_ISLAND",
-      "map": "MAP_TWO_ISLAND",
-      "x": 21,
-      "y": 8,
-      "respawn_map": "MAP_TWO_ISLAND_POKEMON_CENTER_1F",
-      "respawn_npc": "0"
-    },
-    {
-      "id": "HEAL_LOCATION_THREE_ISLAND",
-      "map": "MAP_THREE_ISLAND",
-      "x": 14,
-      "y": 28,
-      "respawn_map": "MAP_THREE_ISLAND_POKEMON_CENTER_1F",
-      "respawn_npc": "0"
-    },
-    {
-      "id": "HEAL_LOCATION_FOUR_ISLAND",
-      "map": "MAP_FOUR_ISLAND",
-      "x": 18,
-      "y": 21,
-      "respawn_map": "MAP_FOUR_ISLAND_POKEMON_CENTER_1F",
-      "respawn_npc": "0"
-    },
-    {
-      "id": "HEAL_LOCATION_FIVE_ISLAND",
-      "map": "MAP_FIVE_ISLAND",
-      "x": 18,
-      "y": 7,
-      "respawn_map": "MAP_FIVE_ISLAND_POKEMON_CENTER_1F",
-      "respawn_npc": "0"
-    },
-    {
-      "id": "HEAL_LOCATION_SEVEN_ISLAND",
-      "map": "MAP_SEVEN_ISLAND",
-      "x": 12,
-      "y": 4,
-      "respawn_map": "MAP_SEVEN_ISLAND_POKEMON_CENTER_1F",
-      "respawn_npc": "0"
-    },
-    {
-      "id": "HEAL_LOCATION_SIX_ISLAND",
-      "map": "MAP_SIX_ISLAND",
-      "x": 11,
-      "y": 12,
-      "respawn_map": "MAP_SIX_ISLAND_POKEMON_CENTER_1F",
       "respawn_npc": "0"
     }
   ]

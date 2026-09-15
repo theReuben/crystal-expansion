@@ -17,7 +17,7 @@
   "connections": 0,
   "object_events": [
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_BLACK_BELT",
       "in_connection": false,
       "x": 7,
@@ -33,7 +33,7 @@
       "local_id": "LOCALID_ARENA_ATTENDANT"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_COOLTRAINER_F",
       "in_connection": false,
       "x": 2,
@@ -48,7 +48,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_ROCKER",
       "in_connection": false,
       "x": 14,
@@ -63,7 +63,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_CAMPER",
       "in_connection": false,
       "x": 14,
@@ -78,7 +78,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_YOUNGSTER",
       "in_connection": false,
       "x": 14,

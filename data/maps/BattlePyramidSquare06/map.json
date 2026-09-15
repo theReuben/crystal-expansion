@@ -24,7 +24,7 @@
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "1",
-      "type": "original",
+      "type": "object",
       "trainer_sight_or_berry_tree_id": "3",
       "script": "BattlePyramid_TrainerBattle",
       "flag": "0"
@@ -38,7 +38,7 @@
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "1",
-      "type": "original",
+      "type": "object",
       "trainer_sight_or_berry_tree_id": "3",
       "script": "BattlePyramid_TrainerBattle",
       "flag": "0"
@@ -52,7 +52,7 @@
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "1",
-      "type": "original",
+      "type": "object",
       "trainer_sight_or_berry_tree_id": "3",
       "script": "BattlePyramid_TrainerBattle",
       "flag": "0"
@@ -66,7 +66,7 @@
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "1",
-      "type": "original",
+      "type": "object",
       "trainer_sight_or_berry_tree_id": "3",
       "script": "BattlePyramid_TrainerBattle",
       "flag": "0"
@@ -80,7 +80,7 @@
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "0",
-      "type": "original",
+      "type": "object",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "BattlePyramid_FindItemBall",
       "flag": "0"
@@ -94,7 +94,7 @@
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "0",
-      "type": "original",
+      "type": "object",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "BattlePyramid_FindItemBall",
       "flag": "0"
@@ -108,7 +108,7 @@
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "0",
-      "type": "original",
+      "type": "object",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "BattlePyramid_FindItemBall",
       "flag": "0"

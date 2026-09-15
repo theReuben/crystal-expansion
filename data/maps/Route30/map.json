@@ -28,7 +28,7 @@
   ],
   "object_events": [
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_YOUNGSTER",
       "in_connection": false,
       "x": 8,
@@ -43,7 +43,7 @@
       "flag": "FLAG_HIDE_ROUTE_30_YOUNGSTER_BATTLE_OBJECTS"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_YOUNGSTER",
       "in_connection": false,
       "x": 2,
@@ -58,7 +58,7 @@
       "flag": "FLAG_HIDE_ROUTE_30_YOUNGSTER_DEFEATED"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_YOUNGSTER",
       "in_connection": false,
       "x": 8,
@@ -73,7 +73,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_BUG_CATCHER",
       "in_connection": false,
       "x": 4,
@@ -88,7 +88,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_BOY_1",
       "in_connection": false,
       "x": 10,
@@ -103,7 +103,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_PIDGEY",
       "in_connection": false,
       "x": 8,
@@ -118,7 +118,7 @@
       "flag": "FLAG_HIDE_ROUTE_30_YOUNGSTER_BATTLE_OBJECTS"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_RATTATA",
       "in_connection": false,
       "x": 8,
@@ -133,7 +133,7 @@
       "flag": "FLAG_HIDE_ROUTE_30_YOUNGSTER_BATTLE_OBJECTS"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_GIRL",
       "in_connection": false,
       "x": 5,
@@ -148,7 +148,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
       "in_connection": false,
       "x": 9,
@@ -163,7 +163,7 @@
       "flag": "FLAG_ITEM_ROUTE_30_ANTIDOTE"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE",
       "in_connection": false,
       "x": 11,

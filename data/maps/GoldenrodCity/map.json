@@ -28,7 +28,7 @@
   ],
   "object_events": [
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_POKEFAN_M",
       "in_connection": false,
       "x": 8,
@@ -43,7 +43,7 @@
       "flag": "FLAG_HIDE_GOLDENROD_CITY_CIVILIANS"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_BOY_1",
       "in_connection": false,
       "x": 36,
@@ -58,7 +58,7 @@
       "flag": "FLAG_HIDE_GOLDENROD_CITY_CIVILIANS"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_COOLTRAINER_F",
       "in_connection": false,
       "x": 18,
@@ -73,7 +73,7 @@
       "flag": "FLAG_HIDE_GOLDENROD_CITY_CIVILIANS"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_BEAUTY",
       "in_connection": false,
       "x": 24,
@@ -88,7 +88,7 @@
       "flag": "FLAG_HIDE_GOLDENROD_CITY_CIVILIANS"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_YOUNGSTER",
       "in_connection": false,
       "x": 23,
@@ -103,7 +103,7 @@
       "flag": "FLAG_HIDE_GOLDENROD_CITY_CIVILIANS"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_GIRL",
       "in_connection": false,
       "x": 21,
@@ -118,7 +118,7 @@
       "flag": "FLAG_HIDE_GOLDENROD_CITY_CIVILIANS"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_OLD_MAN",
       "in_connection": false,
       "x": 10,
@@ -133,7 +133,7 @@
       "flag": "FLAG_HIDE_GOLDENROD_CITY_CIVILIANS"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_ROCKET_GRUNT_M",
       "in_connection": false,
       "x": 5,
@@ -148,7 +148,7 @@
       "flag": "FLAG_HIDE_GOLDENROD_CITY_ROCKET_SCOUT"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_ROCKET_GRUNT_M",
       "in_connection": false,
       "x": 33,
@@ -163,7 +163,7 @@
       "flag": "FLAG_HIDE_GOLDENROD_CITY_ROCKET_TAKEOVER"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_ROCKET_GRUNT_M",
       "in_connection": false,
       "x": 11,
@@ -178,7 +178,7 @@
       "flag": "FLAG_HIDE_GOLDENROD_CITY_ROCKET_TAKEOVER"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_ROCKET_GRUNT_M",
       "in_connection": false,
       "x": 20,
@@ -193,7 +193,7 @@
       "flag": "FLAG_HIDE_RADIO_TOWER_ROCKET_TAKEOVER"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_ROCKET_GRUNT_M",
       "in_connection": false,
       "x": 34,
@@ -208,7 +208,7 @@
       "flag": "FLAG_HIDE_RADIO_TOWER_ROCKET_TAKEOVER"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_ROCKET_GRUNT_M",
       "in_connection": false,
       "x": 34,
@@ -223,7 +223,7 @@
       "flag": "FLAG_HIDE_RADIO_TOWER_ROCKET_TAKEOVER"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_ROCKET_GRUNT_M",
       "in_connection": false,
       "x": 36,
@@ -238,7 +238,7 @@
       "flag": "FLAG_HIDE_RADIO_TOWER_ROCKET_TAKEOVER"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_POKEFAN_M",
       "in_connection": false,
       "x": 16,

@@ -28,7 +28,7 @@
   ],
   "object_events": [
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_SAILOR",
       "in_connection": false,
       "x": 32,
@@ -43,7 +43,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_LASS",
       "in_connection": false,
       "x": 19,
@@ -58,7 +58,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_SCHOOL_KID_M",
       "in_connection": false,
       "x": 4,
@@ -73,7 +73,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_BEAUTY",
       "in_connection": false,
       "x": 6,
@@ -88,7 +88,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_ROCKER",
       "in_connection": false,
       "x": 16,
@@ -103,7 +103,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_BEAUTY",
       "in_connection": false,
       "x": 23,

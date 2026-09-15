@@ -28,7 +28,7 @@
   ],
   "object_events": [
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_BLUE",
       "in_connection": false,
       "x": 11,
@@ -43,7 +43,7 @@
       "flag": "FLAG_MET_BLUE_IN_CINNABAR"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_BILL",
       "in_connection": false,
       "x": 14,
@@ -58,7 +58,7 @@
       "flag": "FLAG_TEMP_1"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_SEAGALLOP",
       "in_connection": false,
       "x": 24,

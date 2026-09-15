@@ -17,7 +17,7 @@
   "connections": 0,
   "object_events": [
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_LAPRAS",
       "in_connection": false,
       "x": 14,
@@ -32,7 +32,7 @@
       "flag": "FLAG_TEMP_1"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
       "in_connection": false,
       "x": 20,
@@ -47,7 +47,7 @@
       "flag": "FLAG_ITEM_UNION_CAVE_B2F_ELIXIR"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_COOLTRAINER_M",
       "in_connection": false,
       "x": 19,
@@ -62,7 +62,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
       "in_connection": false,
       "x": 16,
@@ -77,7 +77,7 @@
       "flag": "FLAG_ITEM_UNION_CAVE_B2F_HYPER_POTION"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_COOLTRAINER_F",
       "in_connection": false,
       "x": 5,
@@ -92,7 +92,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_COOLTRAINER_F",
       "in_connection": false,
       "x": 4,

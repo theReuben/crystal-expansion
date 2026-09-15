@@ -28,7 +28,7 @@
   ],
   "object_events": [
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_BIKER",
       "in_connection": false,
       "x": 6,
@@ -43,7 +43,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_BIKER",
       "in_connection": false,
       "x": 5,
@@ -58,7 +58,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_BIKER",
       "in_connection": false,
       "x": 12,
@@ -73,7 +73,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_BIKER",
       "in_connection": false,
       "x": 8,

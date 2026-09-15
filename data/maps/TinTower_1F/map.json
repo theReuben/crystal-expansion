@@ -17,7 +17,7 @@
   "connections": 0,
   "object_events": [
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_SUICUNE",
       "in_connection": false,
       "x": 9,
@@ -32,7 +32,7 @@
       "flag": "FLAG_FOUGHT_SUICUNE"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_RAIKOU",
       "in_connection": false,
       "x": 7,
@@ -47,7 +47,7 @@
       "flag": "FLAG_FOUGHT_SUICUNE"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_ENTEI",
       "in_connection": false,
       "x": 11,
@@ -62,7 +62,7 @@
       "flag": "FLAG_FOUGHT_SUICUNE"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_SAGE",
       "in_connection": false,
       "x": 5,
@@ -77,7 +77,7 @@
       "flag": "FLAG_TEMP_1"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_SAGE",
       "in_connection": false,
       "x": 10,
@@ -92,7 +92,7 @@
       "flag": "FLAG_TEMP_1"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_SAGE",
       "in_connection": false,
       "x": 13,
@@ -107,7 +107,7 @@
       "flag": "FLAG_TEMP_1"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_EUSINE",
       "in_connection": false,
       "x": 7,

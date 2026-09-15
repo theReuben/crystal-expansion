@@ -17,7 +17,7 @@
   "connections": 0,
   "object_events": [
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_TEALA",
       "in_connection": false,
       "x": 11,
@@ -33,7 +33,7 @@
       "local_id": "LOCALID_TOWER_PARTNER_ROOM_ATTENDANT"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_VAR_0",
       "in_connection": false,
       "x": 2,
@@ -48,7 +48,7 @@
       "flag": "FLAG_HIDE_BATTLE_TOWER_MULTI_BATTLE_PARTNER_1"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_VAR_1",
       "in_connection": false,
       "x": 17,
@@ -63,7 +63,7 @@
       "flag": "FLAG_HIDE_BATTLE_TOWER_MULTI_BATTLE_PARTNER_2"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_VAR_2",
       "in_connection": false,
       "x": 6,
@@ -78,7 +78,7 @@
       "flag": "FLAG_HIDE_BATTLE_TOWER_MULTI_BATTLE_PARTNER_3"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_VAR_3",
       "in_connection": false,
       "x": 8,
@@ -93,7 +93,7 @@
       "flag": "FLAG_HIDE_BATTLE_TOWER_MULTI_BATTLE_PARTNER_4"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_VAR_4",
       "in_connection": false,
       "x": 10,
@@ -108,7 +108,7 @@
       "flag": "FLAG_HIDE_BATTLE_TOWER_MULTI_BATTLE_PARTNER_5"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_VAR_5",
       "in_connection": false,
       "x": 13,
@@ -123,7 +123,7 @@
       "flag": "FLAG_HIDE_BATTLE_TOWER_MULTI_BATTLE_PARTNER_6"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_VAR_6",
       "in_connection": false,
       "x": 15,
@@ -138,7 +138,7 @@
       "flag": "FLAG_HIDE_BATTLE_TOWER_MULTI_BATTLE_PARTNER_ALT_1"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_VAR_7",
       "in_connection": false,
       "x": 4,

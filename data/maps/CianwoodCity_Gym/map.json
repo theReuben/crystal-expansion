@@ -17,7 +17,7 @@
   "connections": 0,
   "object_events": [
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_BLACK_BELT",
       "in_connection": false,
       "x": 3,
@@ -32,7 +32,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_BLACK_BELT",
       "in_connection": false,
       "x": 9,
@@ -47,7 +47,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_BLACK_BELT",
       "in_connection": false,
       "x": 4,
@@ -62,7 +62,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_BLACK_BELT",
       "in_connection": false,
       "x": 7,
@@ -77,7 +77,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_CHUCK",
       "in_connection": false,
       "x": 6,
@@ -92,7 +92,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_PUSHABLE_BOULDER",
       "in_connection": false,
       "x": 5,
@@ -107,7 +107,7 @@
       "flag": "FLAG_TEMP_11"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_PUSHABLE_BOULDER",
       "in_connection": false,
       "x": 6,
@@ -122,7 +122,7 @@
       "flag": "FLAG_TEMP_12"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_PUSHABLE_BOULDER",
       "in_connection": false,
       "x": 7,
@@ -137,7 +137,7 @@
       "flag": "FLAG_TEMP_13"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_PUSHABLE_BOULDER",
       "in_connection": false,
       "x": 7,

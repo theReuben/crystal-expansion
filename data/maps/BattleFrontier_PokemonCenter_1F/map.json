@@ -17,7 +17,7 @@
   "connections": 0,
   "object_events": [
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_NURSE",
       "in_connection": false,
       "x": 7,
@@ -33,7 +33,7 @@
       "local_id": "LOCALID_FRONTIER_NURSE"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_SUPER_NERD",
       "in_connection": false,
       "x": 4,
@@ -48,7 +48,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_COOLTRAINER_M",
       "in_connection": false,
       "x": 12,
@@ -63,7 +63,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_PICNICKER",
       "in_connection": false,
       "x": 2,
@@ -78,7 +78,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_PIDGEY",
       "in_connection": false,
       "x": 1,

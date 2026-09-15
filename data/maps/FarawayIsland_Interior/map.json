@@ -23,7 +23,7 @@
       "movement_range_x": 15,
       "movement_range_y": 15,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "type": "original",
+      "type": "object",
       "trainer_sight_or_berry_tree_id": "1",
       "script": "FarawayIsland_Interior_EventScript_Mew",
       "flag": "FLAG_HIDE_MEW",

@@ -1365,3 +1365,56 @@ Consequences, all of them simplifications:
   large share of the current mapjson failures, so this removal is folded into the
   map-data pass rather than done as a standalone deletion, and it should ride
   along with the deferred 504-map Hoenn removal.
+
+## D36 — Executing D35: FRLG maps out, object-event types normalised
+
+Three pieces of work that had to land together, because each unblocked the next.
+
+**420 map directories deleted.** Every `data/maps/*_Frlg/` (419) plus
+`data/maps/SevenIsland_UnusedHouse/`. These were pure orphans: not one of them
+appears in `data/maps/map_groups.json`, so nothing referenced them and the
+deletion is purely subtractive. 1349 → 929 map directories. The 418 matching
+`.include` lines came out of `data/event_scripts.s` with them.
+
+**`"type": "original"` → `"type": "object"` in 473 map.json files, 2283 object
+events.** `tools/mapjson/mapjson.cpp:267-292` accepts `""`, `"object"` and
+`"clone"` and calls `FATAL_ERROR` on anything else, so every one of those maps —
+all of Johto among them — was failing to generate its `events.inc`. CrystalDust's
+older mapjson accepted `"original"` as the default kind. We normalise the data
+rather than patch the vendored tool: expansion's tool is the one that also knows
+about clone objects, and a patched tool is a merge hazard at every future pull.
+This took the assembly error count from 674 to 0.
+
+**`src/data/heal_locations.json` was corrupt.** Line 315 held 20 NUL bytes where
+`"id": "HEAL_LOCATION_` should have been, so JSONPROC could not parse the file at
+all. Repaired, then rewritten through `json.dumps(indent=2)`.
+
+With that file parsing again, the Sevii work followed: the seven Sevii heal
+locations are gone (42 → 35 entries), and expansion's fly-destination table in
+`src/region_map.c` has its Sevii rows retargeted to `HEAL_LOCATION_NONE`. The
+rows themselves stay — the table is indexed by `MAPSEC_*`, so removing rows would
+shift nothing but would leave holes that read as deliberate. Fly cannot reach the
+Sevii Islands, which is the intent.
+
+**Six Kanto Pokémon Centers gained a nurse `local_id`.** `heal_locations.json`
+named `LOCALID_VERMILION_NURSE`, `LOCALID_CELADON_NURSE`, `LOCALID_FUCHSIA_NURSE`,
+`LOCALID_CINNABAR_NURSE`, `LOCALID_SAFFRON_NURSE` and `LOCALID_LEAGUE_NURSE` as
+respawn NPCs; those ids lived in the FRLG Pokémon Center maps we just deleted.
+CrystalDust's own Kanto Pokémon Centers declare no local ids at all, but in every
+one of them the nurse is object index 0, so the ids were added there. Indigo
+Plateau is the exception: `LOCALID_LEAGUE_NURSE` already exists as Ever Grande's
+nurse in Hoenn, exactly the name-unification trap D19 documented, so Indigo
+Plateau got its own `LOCALID_INDIGO_NURSE` instead of silently respawning the
+player against a Hoenn object id.
+
+**Still open, and not caused by this work:** 293 "Failed to find matching layout"
+failures and 153 `undefined map` assembly errors. Both are Hoenn leftovers —
+directories that survive on disk but are absent from CrystalDust's
+`map_groups.json` (`MAP_BATTLE_FRONTIER_OUTSIDE_WEST`, `MAP_SOUTHERN_ISLAND_EXTERIOR`,
+`MAP_FARAWAY_ISLAND_ENTRANCE`, `MAP_LILYCOVE_CITY_CONTEST_LOBBY`,
+`MAP_NAVEL_ROCK_HARBOR`, `MAP_BIRTH_ISLAND_HARBOR`). They resolve with the
+deferred Hoenn removal, not before.
+
+**Gap to flag:** `src/data/heal_locations.json` contains no Johto heal locations
+whatsoever. Every Johto Pokémon Center is currently a dead respawn point, and
+D33's deferred Fly-map port cannot be finished without them. Phase 3 work.

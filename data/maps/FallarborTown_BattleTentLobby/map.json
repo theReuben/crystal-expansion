@@ -23,7 +23,7 @@
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "type": "original",
+      "type": "object",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "FallarborTown_BattleTentLobby_EventScript_Attendant",
       "flag": "0",
@@ -38,7 +38,7 @@
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "type": "original",
+      "type": "object",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "FallarborTown_BattleTentLobby_EventScript_Hiker",
       "flag": "0"
@@ -52,7 +52,7 @@
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "type": "original",
+      "type": "object",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "FallarborTown_BattleTentLobby_EventScript_LittleBoy",
       "flag": "0"
@@ -66,7 +66,7 @@
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "type": "original",
+      "type": "object",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "FallarborTown_BattleTentLobby_EventScript_Lass",
       "flag": "0"
@@ -80,7 +80,7 @@
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "type": "original",
+      "type": "object",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "FallarborTown_BattleTentLobby_EventScript_Scott",
       "flag": "FLAG_HIDE_GOLDENROD_CITY_UNDERGROUND_BARGAIN_MAN"

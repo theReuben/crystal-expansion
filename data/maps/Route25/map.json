@@ -23,7 +23,7 @@
   ],
   "object_events": [
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_SCHOOL_KID_M",
       "in_connection": false,
       "x": 18,
@@ -38,7 +38,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_LASS",
       "in_connection": false,
       "x": 26,
@@ -53,7 +53,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_SCHOOL_KID_M",
       "in_connection": false,
       "x": 37,
@@ -68,7 +68,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_LASS",
       "in_connection": false,
       "x": 39,
@@ -83,7 +83,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_CAMPER",
       "in_connection": false,
       "x": 42,
@@ -98,7 +98,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_LASS",
       "in_connection": false,
       "x": 48,
@@ -113,7 +113,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_SUPER_NERD",
       "in_connection": false,
       "x": 52,
@@ -128,7 +128,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_COOLTRAINER_M",
       "in_connection": false,
       "x": 57,
@@ -143,7 +143,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE",
       "in_connection": false,
       "x": 55,
@@ -158,7 +158,7 @@
       "flag": "FLAG_TEMP_11"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
       "in_connection": false,
       "x": 51,
@@ -173,7 +173,7 @@
       "flag": "FLAG_ITEM_ROUTE_25_PROTEIN"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_MISTY",
       "in_connection": false,
       "x": 74,
@@ -188,7 +188,7 @@
       "flag": "FLAG_TEMP_1"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_COOLTRAINER_M",
       "in_connection": false,
       "x": 74,

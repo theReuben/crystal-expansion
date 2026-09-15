@@ -17,7 +17,7 @@
   "connections": 0,
   "object_events": [
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
       "in_connection": false,
       "x": 12,
@@ -32,7 +32,7 @@
       "flag": "FLAG_ITEM_GOLDENROD_CITY_DEPT_STORE_B1F_ETHER"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
       "in_connection": false,
       "x": 21,
@@ -47,7 +47,7 @@
       "flag": "FLAG_ITEM_GOLDENROD_CITY_DEPT_STORE_B1F_AMULET_COIN"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
       "in_connection": false,
       "x": 7,
@@ -62,7 +62,7 @@
       "flag": "FLAG_ITEM_GOLDENROD_CITY_DEPT_STORE_B1F_BURN_HEAL"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
       "in_connection": false,
       "x": 18,
@@ -77,7 +77,7 @@
       "flag": "FLAG_ITEM_GOLDENROD_CITY_DEPT_STORE_B1F_ULTRA_BALL"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_BLACK_BELT",
       "in_connection": false,
       "x": 11,
@@ -92,7 +92,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_BLACK_BELT",
       "in_connection": false,
       "x": 5,
@@ -107,7 +107,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_BLACK_BELT",
       "in_connection": false,
       "x": 7,
@@ -122,7 +122,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_MACHOKE",
       "in_connection": false,
       "x": 8,
@@ -137,7 +137,7 @@
       "flag": "0"
     },
     {
-      "type": "original",
+      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_BLACK_BELT",
       "in_connection": false,
       "x": 7,
