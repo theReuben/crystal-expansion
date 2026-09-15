@@ -247,7 +247,7 @@ const struct Tileset gTileset_Cave =
     .palettes = gTilesetPalettes_Cave,
     .metatiles = gMetatiles_Cave,
     .metatileAttributes = gMetatileAttributes_Cave,
-    .callback = InitTilesetAnim_Cave,
+    .callback = NULL,
 };
 
 const struct Tileset gTileset_PokemonSchool =
@@ -346,7 +346,7 @@ const struct Tileset gTileset_PokemonDayCare =
     .palettes = gTilesetPalettes_PokemonDayCare,
     .metatiles = gMetatiles_PokemonDayCare,
     .metatileAttributes = gMetatileAttributes_PokemonDayCare,
-    .callback = NULL,
+    .callback = InitTilesetAnim_PokemonDayCare,
 };
 
 const struct Tileset gTileset_Facility =
@@ -368,7 +368,7 @@ const struct Tileset gTileset_BikeShop =
     .palettes = gTilesetPalettes_BikeShop,
     .metatiles = gMetatiles_BikeShop,
     .metatileAttributes = gMetatileAttributes_BikeShop,
-    .callback = InitTilesetAnim_BikeShop,
+    .callback = NULL,
 };
 
 const struct Tileset gTileset_RusturfTunnel =
@@ -1141,7 +1141,7 @@ const struct Tileset gTileset_VermilionGym =
     .palettes = gTilesetPalettes_VermilionGym,
     .metatiles = gMetatiles_VermilionGym,
     .metatileAttributes = gMetatileAttributes_VermilionGym,
-    .callback = InitTilesetAnim_VermilionGym,
+    .callback = NULL,
 };
 
 const struct Tileset gTileset_CeladonGym =
@@ -1526,7 +1526,7 @@ const struct Tileset gTileset_PokemonLeague =
     .palettes = gTilesetPalettes_PokemonLeague,
     .metatiles = gMetatiles_PokemonLeague,
     .metatileAttributes = gMetatileAttributes_PokemonLeague,
-    .callback = NULL,
+    .callback = InitTilesetAnim_PokemonLeague,
 };
 
 const struct Tileset gTileset_HallOfFame =
@@ -1552,7 +1552,7 @@ const struct Tileset gTileset_Azalea =
     .palettes = gTilesetPalettes_Azalea,
     .metatiles = gMetatiles_Azalea,
     .metatileAttributes = gMetatileAttributes_Azalea,
-    .callback = NULL,
+    .callback = InitTilesetAnim_Azalea,
 };
 const struct Tileset gTileset_AzaleaGym =
 {
@@ -1562,7 +1562,7 @@ const struct Tileset gTileset_AzaleaGym =
     .palettes = gTilesetPalettes_AzaleaGym,
     .metatiles = gMetatiles_AzaleaGym,
     .metatileAttributes = gMetatileAttributes_AzaleaGym,
-    .callback = NULL,
+    .callback = InitTilesetAnim_AzaleaGym,
 };
 const struct Tileset gTileset_BattleFrontierPrimary =
 {
@@ -1572,7 +1572,7 @@ const struct Tileset gTileset_BattleFrontierPrimary =
     .palettes = gTilesetPalettes_BattleFrontierPrimary,
     .metatiles = gMetatiles_BattleFrontierPrimary,
     .metatileAttributes = gMetatileAttributes_BattleFrontierPrimary,
-    .callback = NULL,
+    .callback = InitTilesetAnim_General,
 };
 const struct Tileset gTileset_BlackthornCity =
 {
@@ -1592,7 +1592,7 @@ const struct Tileset gTileset_BlackthornGym =
     .palettes = gTilesetPalettes_BlackthornGym,
     .metatiles = gMetatiles_BlackthornGym,
     .metatileAttributes = gMetatileAttributes_BlackthornGym,
-    .callback = NULL,
+    .callback = InitTilesetAnim_BlackthornGym,
 };
 const struct Tileset gTileset_BurnedTower =
 {
@@ -1632,7 +1632,7 @@ const struct Tileset gTileset_DragonsDen_Shrine =
     .palettes = gTilesetPalettes_DragonsDen_Shrine,
     .metatiles = gMetatiles_DragonsDen_Shrine,
     .metatileAttributes = gMetatileAttributes_DragonsDen_Shrine,
-    .callback = NULL,
+    .callback = InitTilesetAnim_DragonsDen_Shrine,
 };
 const struct Tileset gTileset_EcruteakCity =
 {
@@ -1672,7 +1672,7 @@ const struct Tileset gTileset_GeneralKanto =
     .palettes = gTilesetPalettes_GeneralKanto,
     .metatiles = gMetatiles_GeneralKanto,
     .metatileAttributes = gMetatileAttributes_GeneralKanto,
-    .callback = NULL,
+    .callback = InitTilesetAnim_General,
 };
 const struct Tileset gTileset_Goldenrod =
 {
@@ -1682,7 +1682,7 @@ const struct Tileset gTileset_Goldenrod =
     .palettes = gTilesetPalettes_Rustboro,
     .metatiles = gMetatiles_Goldenrod,
     .metatileAttributes = gMetatileAttributes_Goldenrod,
-    .callback = NULL,
+    .callback = InitTilesetAnim_Goldenrod,
 };
 const struct Tileset gTileset_GoldenrodGym =
 {
@@ -1692,7 +1692,7 @@ const struct Tileset gTileset_GoldenrodGym =
     .palettes = gTilesetPalettes_GoldenrodGym,
     .metatiles = gMetatiles_GoldenrodGym,
     .metatileAttributes = gMetatileAttributes_GoldenrodGym,
-    .callback = NULL,
+    .callback = InitTilesetAnim_GoldenrodGym,
 };
 const struct Tileset gTileset_IcePath =
 {
@@ -1742,7 +1742,7 @@ const struct Tileset gTileset_NationalPark =
     .palettes = gTilesetPalettes_NationalPark,
     .metatiles = gMetatiles_NationalPark,
     .metatileAttributes = gMetatileAttributes_NationalPark,
-    .callback = NULL,
+    .callback = InitTilesetAnim_NationalPark,
 };
 const struct Tileset gTileset_NewBark =
 {
@@ -1752,7 +1752,7 @@ const struct Tileset gTileset_NewBark =
     .palettes = gTilesetPalettes_NewBark,
     .metatiles = gMetatiles_NewBark,
     .metatileAttributes = gMetatileAttributes_NewBark,
-    .callback = NULL,
+    .callback = InitTilesetAnim_NewBark,
 };
 const struct Tileset gTileset_OlivineCity =
 {
@@ -1772,7 +1772,7 @@ const struct Tileset gTileset_PagodaTower =
     .palettes = gTilesetPalettes_PagodaTower,
     .metatiles = gMetatiles_PagodaTower,
     .metatileAttributes = gMetatileAttributes_PagodaTower,
-    .callback = NULL,
+    .callback = InitTilesetAnim_PagodaTower,
 };
 const struct Tileset gTileset_PewterMuseum =
 {
@@ -1872,7 +1872,7 @@ const struct Tileset gTileset_SaffronGeneral =
     .palettes = gTilesetPalettes_SaffronGeneral,
     .metatiles = gMetatiles_SaffronGeneral,
     .metatileAttributes = gMetatileAttributes_SaffronGeneral,
-    .callback = NULL,
+    .callback = InitTilesetAnim_General,
 };
 const struct Tileset gTileset_SoulHouse =
 {
@@ -1902,7 +1902,7 @@ const struct Tileset gTileset_Violet =
     .palettes = gTilesetPalettes_Violet,
     .metatiles = gMetatiles_Violet,
     .metatileAttributes = gMetatileAttributes_Violet,
-    .callback = NULL,
+    .callback = InitTilesetAnim_Violet,
 };
 const struct Tileset gTileset_VioletGym =
 {

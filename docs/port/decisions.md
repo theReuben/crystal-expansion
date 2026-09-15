@@ -1952,3 +1952,38 @@ entirely rather than merged badly.
   is commented out upstream; kept as-is rather than inventing a cue.
 
 **Result:** build exit 0; ROM content 29,097,280 B (27.75 MiB, 86.7%).
+
+## D52 — CrystalDust's tileset animations (D44 follow-up)
+
+`src/tileset_anims.c` was entirely expansion's — pokeemerald's Hoenn file plus
+expansion's FRLG additions, with nothing from CrystalDust. `data/tilesets/headers.inc`
+*is* CrystalDust's and byte-identical to theirs, but expansion moved tileset headers
+to `src/data/tilesets/headers.h`, so it is an orphan the build never reads
+(the orphaned-header variant of the Phase 1 merge failure, again). The result was
+18 tilesets with `.callback = NULL` and a general tileset animated at Hoenn's tile
+offsets. All 45 of CrystalDust's animation graphics directories were already present
+— only the code that points at them was lost.
+
+Restored: the 12 Johto `InitTilesetAnim_*` entry points (New Bark, Violet, Azalea,
+Goldenrod, Azalea Gym, Goldenrod Gym, Blackthorn Gym, Pagoda/Sprout Tower, Pokémon
+Day Care, National Park, Pokémon League, Dragon's Den Shrine), their 8 callbacks,
+15 queue helpers and 15 frame tables, plus the 18 tileset-header callbacks.
+
+### Constraint decisions
+
+- **D52.1 — Hoenn's shore and waterfall animations are dropped.**
+  `QueueAnimTiles_General_SandWaterEdge`, `_Waterfall` and `_LandWaterEdge` had no
+  corresponding tiles in CrystalDust's general tileset; CrystalDust animates water,
+  fast water, flowers and **whirlpools** there instead. The PNG frame directories
+  are left in the tree but are no longer referenced. Primary counter max goes
+  256 → 640 to fit CrystalDust's longer cycle, and the flower cycle 4 → 5 frames.
+- **D52.2 — `gTileset_Cave`, `_BikeShop` and `_VermilionGym` lose their expansion
+  callbacks.** CrystalDust sets all three to `NULL`; its versions of those tilesets
+  have no animated tiles, so keeping expansion's callbacks would have written
+  animation frames over static tiles. CrystalDust wins per the standing steer.
+- **D52.3 — The Battle Frontier flower and Battle Dome floor-light animations were
+  left on expansion's versions.** CrystalDust has its own, but the Battle Frontier
+  is out of scope for now (Q3), and swapping them is pure risk with no visible
+  benefit until it is back in.
+
+**Result:** build exit 0; ROM content 29,115,232 B (27.77 MiB, 86.8%), +17,952 B.

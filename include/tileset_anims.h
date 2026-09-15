@@ -7,6 +7,20 @@ void UpdateTilesetAnimations(void);
 void TransferTilesetAnimsBuffer(void);
 
 void InitTilesetAnim_General(void);
+// CrystalDust's Johto tileset animations (D52).
+void InitTilesetAnim_Azalea(void);
+void InitTilesetAnim_AzaleaGym(void);
+void InitTilesetAnim_BlackthornGym(void);
+void InitTilesetAnim_DragonsDen_Shrine(void);
+void InitTilesetAnim_Goldenrod(void);
+void InitTilesetAnim_GoldenrodGym(void);
+void InitTilesetAnim_NationalPark(void);
+void InitTilesetAnim_NewBark(void);
+void InitTilesetAnim_PagodaTower(void);
+void InitTilesetAnim_PokemonDayCare(void);
+void InitTilesetAnim_PokemonLeague(void);
+void InitTilesetAnim_Violet(void);
+
 void InitTilesetAnim_Petalburg(void);
 void InitTilesetAnim_Rustboro(void);
 void InitTilesetAnim_Dewford(void);
