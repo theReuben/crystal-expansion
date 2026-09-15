@@ -1688,3 +1688,31 @@ Constraint decisions:
    screen may need a wider mask once they are exercised in game.
 
 Link errors: 218 undefined -> 194 undefined, 0 errors.
+
+## D47 — the phone system
+
+`data/phone.s` — CrystalDust's entire Pokegear phone script bank, including
+`gPhoneScriptCmdTable` — was missing from the tree, which is where the 24
+`PhoneScript_*` and both `gPhoneScriptCmdTable*` symbols were going. It and
+`data/phone_script_cmd_table.inc` are restored. `data/text/match_call.inc` had
+kept CrystalDust's 112 lines and lost expansion's 32 gym-leader ones, which
+`src/pokenav_match_call_data.c` still references; those are appended.
+
+Getting `phone.s` to assemble needed two constant fixes, both of which are worth
+knowing about generally:
+
+1. **`MAPSEC_*` and `REMATCH_*` are `#define`s again.** Expansion had turned both
+   anonymous enums into C enums, and enum members do not exist as far as the
+   assembler is concerned - CrystalDust's phone scripts compare against them, so
+   they assembled to undefined symbols. Both headers are back to preprocessor
+   macros with identical values (this is also what vanilla pokeemerald did).
+2. **`include/constants/asm_enums.h` is new.** `enum MapType` and
+   `enum TimeOfDay` are genuine C types used in function signatures, so they
+   cannot be converted the same way. The new header restates their members as
+   macros for assembly consumers only, and `data/phone.s` includes it. **It must
+   be kept in sync by hand** with `constants/map_types.h` and `constants/rtc.h`.
+3. `data/phone.s` included `constants/battle_setup.h` (gone; nothing in the file
+   used it) and `constants/gym_leader_rematch.h` (now `constants/rematches.h`,
+   which already carries CrystalDust's rematch names from D19).
+
+Link errors: 194 undefined -> 133 undefined, 0 errors.
