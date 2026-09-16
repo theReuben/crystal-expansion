@@ -42,5 +42,6 @@ bool8 CutMoveRuinValleyCheck(void);
 void CutMoveOpenDottedHoleDoor(void);
 
 u8 GetPlayerTrainerIdOnesDigit(void);
+u8 ContextNpcGetTextColor(void);
 
 #endif // GUARD_FIELD_SPECIALS_H

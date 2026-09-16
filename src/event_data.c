@@ -25,6 +25,11 @@ EWRAM_DATA u16 gSpecialVar_Facing = 0;
 EWRAM_DATA u16 gSpecialVar_MonBoxId = 0;
 EWRAM_DATA u16 gSpecialVar_MonBoxPos = 0;
 EWRAM_DATA u16 gSpecialVar_Unused_0x8014 = 0;
+// Crystal Expansion (D81): CrystalDust's per-NPC text colour. Not saved -- it is
+// reset to MSG_COLOR_PREV on every interaction, so it only ever lives for the
+// length of one conversation.
+EWRAM_DATA u16 gSpecialVar_TextColor = 0;
+EWRAM_DATA u16 gSpecialVar_TextColorBackup = 0;
 EWRAM_DATA static u8 sSpecialFlags[SPECIAL_FLAGS_SIZE] = {0};
 
 #if TESTING

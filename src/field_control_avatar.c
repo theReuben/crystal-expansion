@@ -37,6 +37,7 @@
 #include "vs_seeker.h"
 #include "wild_encounter.h"
 #include "wild_encounter_ow.h"
+#include "constants/text.h"
 #include "constants/event_bg.h"
 #include "constants/event_objects.h"
 #include "constants/field_poison.h"
@@ -166,6 +167,9 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
 
     gSpecialVar_LastTalked = LOCALID_NONE;
     gSelectedObjectEvent = 0;
+    // Crystal Expansion (D81): MSG_COLOR_PREV means "no script has overridden
+    // the colour", which sends ContextNpcGetTextColor to the graphics-id table.
+    gSpecialVar_TextColor = MSG_COLOR_PREV;
 
     gMsgIsSignPost = FALSE;
     playerDirection = GetPlayerFacingDirection();

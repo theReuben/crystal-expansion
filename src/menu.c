@@ -14,6 +14,8 @@
 #include "match_call.h"
 #include "pokegear.h"
 #include "menu.h"
+#include "constants/text.h"
+#include "field_specials.h"
 #include "menu_helpers.h"
 #include "palette.h"
 #include "pokedex.h"
@@ -193,8 +195,25 @@ bool16 AddTextPrinterParameterized2(u8 windowId, u8 fontId, const u8 *str, u8 sp
 
 void AddTextPrinterForMessage(bool8 allowSkippingDelayWithButtonPress)
 {
+    // Crystal Expansion (D81): dialogue takes its colour from the speaker.
+    u8 fgColor;
+
     gTextFlags.canABSpeedUpPrint = allowSkippingDelayWithButtonPress;
-    AddTextPrinterParameterized2(0, FONT_NORMAL, gStringVar4, GetPlayerTextSpeedDelay(), NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+
+    switch (ContextNpcGetTextColor())
+    {
+    case MSG_COLOR_BLUE:
+        fgColor = TEXT_COLOR_BLUE;
+        break;
+    case MSG_COLOR_RED:
+        fgColor = TEXT_COLOR_RED;
+        break;
+    default:
+        fgColor = TEXT_COLOR_DARK_GRAY;
+        break;
+    }
+
+    AddTextPrinterParameterized2(0, FONT_NORMAL, gStringVar4, GetPlayerTextSpeedDelay(), NULL, fgColor, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
 }
 
 void AddTextPrinterWithCustomSpeedForMessage(bool8 allowSkippingDelayWithButtonPress, u8 speed)

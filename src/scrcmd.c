@@ -64,6 +64,7 @@
 #include "list_menu.h"
 #include "malloc.h"
 #include "battle.h"
+#include "constants/text.h"
 #include "constants/comparison_operators.h"
 #include "constants/event_objects.h"
 #include "constants/map_types.h"
@@ -3362,8 +3363,19 @@ bool8 ScrCmd_setstartingstatus(struct ScriptContext *ctx)
 
 bool8 ScrCmd_textcolor(struct ScriptContext * ctx)
 {
-    // gSpecialVar_PrevTextColor = gSpecialVar_TextColor;
-    u16 UNUSED gSpecialVar_TextColor = ScriptReadByte(ctx);
+    u8 textColor = ScriptReadByte(ctx);
+
+    // Crystal Expansion (D81): this was a stub that read the byte and threw it
+    // away, so all 188 textcolor calls in Johto's scripts did nothing.
+    if (textColor == MSG_COLOR_PREV)
+    {
+        gSpecialVar_TextColor = gSpecialVar_TextColorBackup;
+    }
+    else
+    {
+        gSpecialVar_TextColorBackup = gSpecialVar_TextColor;
+        gSpecialVar_TextColor = textColor;
+    }
 
     Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
 

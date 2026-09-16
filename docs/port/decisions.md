@@ -2856,3 +2856,53 @@ GoldFieldMove`.
   fishing sheets really do share Gold's palette — CrystalDust assumes they do.
 
 Build: exit 0, ROM 29,069,860 B (86.63%), smoke test clean.
+
+## D81 — dialogue takes its colour from the speaker again
+
+`ScrCmd_textcolor` was a stub: it read the byte off the script and dropped it,
+under a comment saying the command does nothing in Emerald. In CrystalDust it
+does a great deal — Johto's scripts call `textcolor` 104 times, and every NPC
+who is never named in a script still gets a colour from a lookup on their
+overworld sprite. Men and boys speak in blue, women and girls in red, and
+anything that is not a person — signs, machines, Pokémon, the PC — in the
+standard dark grey. None of that survived the merge.
+
+Ported from CrystalDust:
+
+- `gSpecialVar_TextColor` / `gSpecialVar_TextColorBackup` (EWRAM, unsaved).
+- The real `ScrCmd_textcolor`, including `MSG_COLOR_PREV` to pop back to the
+  previous colour.
+- `sTextColorByGraphicsId` — all 271 of CrystalDust's rows — plus
+  `ContextNpcGetTextColor`, in `src/field_specials.c`.
+- The colour switch in `AddTextPrinterForMessage`: blue is `TEXT_COLOR_BLUE`,
+  red `TEXT_COLOR_RED`, everything else `TEXT_COLOR_DARK_GRAY`, all on the
+  existing white/light-grey background and shadow.
+- The `gSpecialVar_TextColor = MSG_COLOR_PREV` reset at the top of
+  `ProcessPlayerFieldInput`, so a colour a script sets lasts exactly one
+  conversation.
+
+### Constraint decisions
+
+- **All 271 rows are carried over, none dropped.** 192 of CrystalDust's names
+  exist verbatim here; 67 are its `Z`-prefixed duplicates of Emerald objects and
+  map onto the unprefixed name; 12 are remapped by hand —
+  `GOLD_BIKE`/`SURFING`/`FIELD_MOVE`/`FISHING` onto `BRENDAN_*` and the `KRIS_*`
+  four onto `MAY_*` (which is where the Gold and Kris art now lives, D80), and
+  `EM_BRENDAN`/`EM_MAY`/`RS_BRENDAN`/`RS_MAY` onto `LINK_BRENDAN`/`LINK_MAY`/
+  `LINK_RS_BRENDAN`/`LINK_RS_MAY`. No two rows collided.
+- **`MSG_COLOR_BLACK` prints as dark grey**, because CrystalDust's own switch
+  has no case for it either — it is a name for "not blue and not red", and the
+  two scripts that use it get the standard colour in both games.
+- **A sprite with no row gets blue**, since `MSG_COLOR_BLUE` is 0 and the table
+  is zero-filled. That is CrystalDust's behaviour, not an accident, so it is
+  kept rather than "fixed" to grey.
+- **CrystalDust's `OBJ_EVENT_GFX_ZBARD` special case is dropped as redundant** —
+  there it was an out-of-range id needing a hand-written blue; here `BARD` is a
+  real enum member with its own row.
+- **`AddTextPrinterForMessage_IgnoreTextColor` is not ported.** Nothing in this
+  tree calls it; the two callers CrystalDust has are in code we do not have.
+- **Not verifiable headlessly.** The ROM boots clean and the test suite is
+  unchanged (32 failures, all the pre-existing `malloc.c` battle-test crashes),
+  but seeing a blue line of dialogue needs a human to talk to an NPC.
+
+Build: exit 0, ROM 29,070,500 B (86.64%), +640 B for the table.

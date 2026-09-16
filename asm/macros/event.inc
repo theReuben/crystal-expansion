@@ -1762,7 +1762,8 @@
 	.2byte \box
 	.endm
 
-	@ Used only in FireRed/LeafGreen, does nothing in Emerald.
+	@ Crystal Expansion (D81): live again. Sets the dialogue colour until the
+	@ next interaction; MSG_COLOR_PREV restores the one before it.
 	.macro textcolor color:req
 	.byte SCR_OP_TEXTCOLOR
 	.byte \color
