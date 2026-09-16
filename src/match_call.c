@@ -151,10 +151,12 @@ static bool32 PopulateRareSpeciesFromTrainerLocation(void);
 
 #define TEXT_ID(topic, id) (((topic) << 8) | ((id) & 0xFF))
 
+// CrystalDust set .location_map_group with MAP_NUM, so the group never matched
+// and none of the three swarms could ever trigger. Fixed here (D71).
 const struct massOutbreakPhoneCallData qwilfishOutbreakData = {
 	.species = SPECIES_QWILFISH,
 	.location_map_num = MAP_NUM(MAP_ROUTE32),
-	.location_map_group = MAP_NUM(MAP_ROUTE32),
+	.location_map_group = MAP_GROUP(MAP_ROUTE32),
 	.probability = 90,
 	.level = 20,
 	.wildState = OUTBREAK_FISHING,
@@ -165,7 +167,7 @@ const struct massOutbreakPhoneCallData qwilfishOutbreakData = {
 const struct massOutbreakPhoneCallData dunsparceOutbreakData = {
 	.species = SPECIES_DUNSPARCE,
 	.location_map_num = MAP_NUM(MAP_DARK_CAVE_SOUTH),
-	.location_map_group = MAP_NUM(MAP_DARK_CAVE_SOUTH),
+	.location_map_group = MAP_GROUP(MAP_DARK_CAVE_SOUTH),
 	.probability = 60,
 	.level = 3,
 	.wildState = OUTBREAK_WALKING,
@@ -176,7 +178,7 @@ const struct massOutbreakPhoneCallData dunsparceOutbreakData = {
 const struct massOutbreakPhoneCallData yanmaOutbreakData = {
 	.species = SPECIES_YANMA,
 	.location_map_num = MAP_NUM(MAP_ROUTE35),
-	.location_map_group = MAP_NUM(MAP_ROUTE35),
+	.location_map_group = MAP_GROUP(MAP_ROUTE35),
 	.probability = 30,
 	.level = 13,
 	.wildState = OUTBREAK_WALKING,
@@ -2777,13 +2779,13 @@ void MatchCall_StartMassOutbreak(struct massOutbreakPhoneCallData *massOutbreak)
 {
     gSaveBlock1Ptr->outbreakPokemonSpecies = massOutbreak->species;
     gSaveBlock1Ptr->outbreakLocationMapNum = massOutbreak->location_map_num;
-    //gSaveBlock1Ptr->outbreakLocationMapGroup = massOutbreak->location_map_group;
-    //Map group seems not to be used
+    // CrystalDust left the group unset and got away with it because every swarm
+    // route is in group 0; set it properly so the check is real (D71).
+    gSaveBlock1Ptr->outbreakLocationMapGroup = massOutbreak->location_map_group;
     gSaveBlock1Ptr->outbreakPokemonLevel = massOutbreak->level;
-    //gSaveBlock1Ptr->outbreakPokemonMoves[0] = massOutbreak->moves[0];
-    //gSaveBlock1Ptr->outbreakPokemonMoves[1] = massOutbreak->moves[1];
-    //gSaveBlock1Ptr->outbreakPokemonMoves[2] = massOutbreak->moves[2];
-    //gSaveBlock1Ptr->outbreakPokemonMoves[3] = massOutbreak->moves[3];
+    // Phone-call swarms carry no moveset; clear any left over from an earlier one.
+    for (u32 i = 0; i < MAX_MON_MOVES; i++)
+        gSaveBlock1Ptr->outbreakPokemonMoves[i] = MOVE_NONE;
     gSaveBlock1Ptr->outbreakPokemonProbability = massOutbreak->probability;
     gSaveBlock1Ptr->outbreakWildState = massOutbreak->wildState;
     gSaveBlock1Ptr->outbreakSpecialLevel1 = massOutbreak->specialLevel1;

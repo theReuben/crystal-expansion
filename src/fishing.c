@@ -5,6 +5,7 @@
 #include "field_effect_helpers.h"
 #include "field_player_avatar.h"
 #include "menu.h"
+#include "mass_outbreak.h"
 #include "metatile_behavior.h"
 #include "random.h"
 #include "script.h"
@@ -133,6 +134,7 @@ static bool32 (*const sFishingStateFuncs[])(struct Task *) =
 #define tFrameCounter      data[1]
 #define tNumDots           data[2]
 #define tDotsRequired      data[3]
+#define tOutbreakCaught    data[4] // CrystalDust (D71): a swarm Pokemon took the hook.
 #define tRoundsPlayed      data[12]
 #define tMinRoundsRequired data[13]
 #define tPlayerGfxId       data[14]
@@ -264,6 +266,13 @@ static bool32 Fishing_CheckForBite(struct Task *task)
     {
         task->tStep = FISHING_NOT_EVEN_NIBBLE;
         return TRUE;
+    }
+
+    // A swarm announced over the Pokegear always bites (D71).
+    if (DoMassOutbreakEncounterTest(OUTBREAK_FISHING))
+    {
+        bite = TRUE;
+        task->tOutbreakCaught = TRUE;
     }
 
     firstMonHasSuctionOrSticky = Fishing_DoesFirstMonInPartyHaveSuctionCupsOrStickyHold();
@@ -400,7 +409,7 @@ static bool32 Fishing_StartEncounter(struct Task *task)
     {
         gPlayerAvatar.preventStep = FALSE;
         UnlockPlayerFieldControls();
-        FishingWildEncounter(task->tFishingRod);
+        FishingWildEncounter(task->tFishingRod, task->tOutbreakCaught);
         RecordFishingAttemptForTV(TRUE);
         DestroyTask(FindTaskIdByFunc(Task_Fishing));
     }
@@ -593,6 +602,7 @@ static u32 CalculateFishingTimeOfDayBoost()
 #undef tMinRoundsRequired
 #undef tPlayerGfxId
 #undef tFishingRod
+#undef tOutbreakCaught
 
 static void AlignFishingAnimationFrames(void)
 {

@@ -736,7 +736,7 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
             }
             else
             {
-                if (DoMassOutbreakEncounterTest() == TRUE && SetUpMassOutbreakEncounter(WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE) == TRUE)
+                if (DoMassOutbreakEncounterTest(OUTBREAK_WALKING) == TRUE && SetUpMassOutbreakEncounter(WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE) == TRUE)
                 {
                     BattleSetup_StartWildBattle();
                     return TRUE;
@@ -1005,7 +1005,7 @@ bool8 SweetScentWildEncounter(void)
                 return TRUE;
             }
 
-            if (DoMassOutbreakEncounterTest() == TRUE)
+            if (DoMassOutbreakEncounterTest(OUTBREAK_WALKING) == TRUE)
                 SetUpMassOutbreakEncounter(0);
             else
                 TryGenerateWildMon(gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo, WILD_AREA_LAND, 0);
@@ -1048,7 +1048,7 @@ bool8 DoesCurrentMapHaveFishingMons(void)
         return FALSE;
 }
 
-void FishingWildEncounter(u8 rod)
+void FishingWildEncounter(u8 rod, bool8 outbreakCaught)
 {
     enum Species species;
     u32 headerId;
@@ -1057,7 +1057,13 @@ void FishingWildEncounter(u8 rod)
 
     gIsFishingEncounter = TRUE;
     GetXYCoordsOneStepInFrontOfPlayer(&x, &y);
-    if (CheckFeebasAtCoords(x, y) == TRUE)
+    if (outbreakCaught)
+    {
+        // CrystalDust's Route 32 Qwilfish swarm, scaled by rod (D71).
+        species = gSaveBlock1Ptr->outbreakPokemonSpecies;
+        CreateWildMon(species, GetMassOutbreakFishingLevel(rod));
+    }
+    else if (CheckFeebasAtCoords(x, y) == TRUE)
     {
         u8 level = ChooseWildMonLevel(&gWildFeebas, 0, WILD_AREA_FISHING);
 

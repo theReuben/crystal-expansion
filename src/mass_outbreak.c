@@ -7,49 +7,38 @@
 #include "region_map.h"
 #include "script.h"
 #include "wild_encounter.h"
+#include "constants/items.h"
 
+// CrystalDust's three swarms (D71). They match the Pokegear phone-call data in
+// match_call.c: Anthony's Dunsparce, Ralph's Qwilfish and Arnie's Yanma. Gen 2's
+// other swarms were never implemented upstream, so none are invented here.
 static const struct MassOutbreak sPokeOutbreakSpeciesList[OUTBREAK_COUNT] = {
-    [OUTBREAK_ID_ROUTE102] = {
-        .species = SPECIES_SEEDOT,
-        .moves = {MOVE_BIDE, MOVE_HARDEN, MOVE_LEECH_SEED},
+    [OUTBREAK_ID_DARK_CAVE] = {
+        .species = SPECIES_DUNSPARCE,
         .level = 3,
-        .probability = 100,
+        .probability = 60,
         .duration = 1,
-        .location = MAP_ROUTE102
-
+        .location = MAP_DARK_CAVE_SOUTH,
+        .wildState = OUTBREAK_WALKING,
     },
-    [OUTBREAK_ID_ROUTE114] = {
-        .species = SPECIES_NUZLEAF,
-        .moves = {MOVE_HARDEN, MOVE_GROWTH, MOVE_NATURE_POWER, MOVE_LEECH_SEED},
-        .level = 15,
-        .probability = 50,
+    [OUTBREAK_ID_ROUTE32] = {
+        .species = SPECIES_QWILFISH,
+        .level = 20,
+        .probability = 90,
         .duration = 1,
-        .location = MAP_ROUTE114,
+        .location = MAP_ROUTE32,
+        .wildState = OUTBREAK_FISHING,
+        .specialLevel1 = 5,
+        .specialLevel2 = 40,
     },
-    [OUTBREAK_ID_ROUTE117] = {
-        .species = SPECIES_SEEDOT,
-        .moves = {MOVE_HARDEN, MOVE_GROWTH, MOVE_NATURE_POWER, MOVE_LEECH_SEED},
+    [OUTBREAK_ID_ROUTE35] = {
+        .species = SPECIES_YANMA,
         .level = 13,
-        .probability = 50,
+        .probability = 30,
         .duration = 1,
-        .location = MAP_ROUTE117,
+        .location = MAP_ROUTE35,
+        .wildState = OUTBREAK_WALKING,
     },
-    [OUTBREAK_ID_ROUTE120] = {
-        .species = SPECIES_SEEDOT,
-        .moves = {MOVE_GIGA_DRAIN, MOVE_FRUSTRATION, MOVE_SOLAR_BEAM, MOVE_LEECH_SEED},
-        .level = 25,
-        .probability = 50,
-        .duration = 1,
-        .location = MAP_ROUTE120,
-    },
-    [OUTBREAK_ID_ROUTE116] = {
-        .species = SPECIES_SKITTY,
-        .moves = {MOVE_GROWL, MOVE_TACKLE, MOVE_TAIL_WHIP, MOVE_ATTRACT},
-        .level = 8,
-        .probability = 50,
-        .duration = 1,
-        .location = MAP_ROUTE116,
-    }
 };
 
 void ZeroMassOutbreak(void)
@@ -63,6 +52,9 @@ void ZeroMassOutbreak(void)
         gSaveBlock1Ptr->outbreakPokemonMoves[i] = 0;
     gSaveBlock1Ptr->outbreakPokemonProbability = 0;
     gSaveBlock1Ptr->outbreakDaysLeft = 0;
+    gSaveBlock1Ptr->outbreakWildState = 0;
+    gSaveBlock1Ptr->outbreakSpecialLevel1 = 0;
+    gSaveBlock1Ptr->outbreakSpecialLevel2 = 0;
 }
 
 struct MassOutbreak GetStaticOutbreak(enum MassOutbreakIndex outbreakIdx)
@@ -103,6 +95,9 @@ void StartMassOutbreak(struct MassOutbreak outbreak)
     }
     gSaveBlock1Ptr->outbreakPokemonProbability = outbreak.probability;
     gSaveBlock1Ptr->outbreakDaysLeft = outbreak.duration;
+    gSaveBlock1Ptr->outbreakWildState = outbreak.wildState;
+    gSaveBlock1Ptr->outbreakSpecialLevel1 = outbreak.specialLevel1;
+    gSaveBlock1Ptr->outbreakSpecialLevel2 = outbreak.specialLevel2;
 }
 
 void StartStaticMassOutbreak(enum MassOutbreakIndex outbreakIdx)
@@ -123,21 +118,46 @@ bool32 IsMassOutbreakActive(void)
     return (gSaveBlock1Ptr->outbreakDaysLeft > 0);
 }
 
+// CrystalDust scales a fished-up swarm by rod: Old Rod gets the small form,
+// Super Rod the large one (D71).
+u8 GetMassOutbreakFishingLevel(u8 rod)
+{
+    switch (rod)
+    {
+    case OLD_ROD:
+        return gSaveBlock1Ptr->outbreakSpecialLevel1;
+    case SUPER_ROD:
+        return gSaveBlock1Ptr->outbreakSpecialLevel2;
+    default:
+        return gSaveBlock1Ptr->outbreakPokemonLevel;
+    }
+}
+
 bool8 SetUpMassOutbreakEncounter(u8 flags)
 {
     if (flags & WILD_CHECK_REPEL && !IsWildLevelAllowedByRepel(gSaveBlock1Ptr->outbreakPokemonLevel))
         return FALSE;
 
     CreateWildMon(gSaveBlock1Ptr->outbreakPokemonSpecies, gSaveBlock1Ptr->outbreakPokemonLevel);
-    for (u32 i = 0; i < MAX_MON_MOVES; i++)
-        SetMonMoveSlot(&gParties[B_TRAINER_OPPONENT_A][0], gSaveBlock1Ptr->outbreakPokemonMoves[i], i);
+    // CrystalDust's phone-call swarms carry no move list, so leave the level-up
+    // moveset alone rather than blanking all four slots (D71).
+    if (gSaveBlock1Ptr->outbreakPokemonMoves[0] != MOVE_NONE)
+    {
+        for (u32 i = 0; i < MAX_MON_MOVES; i++)
+            SetMonMoveSlot(&gParties[B_TRAINER_OPPONENT_A][0], gSaveBlock1Ptr->outbreakPokemonMoves[i], i);
+    }
 
     return TRUE;
 }
 
-bool8 DoMassOutbreakEncounterTest(void)
+// A swarm only replaces the encounter kind it was announced for, so Ralph's
+// Qwilfish is fished up and does not walk out of the grass (D71).
+bool8 DoMassOutbreakEncounterTest(u8 wildState)
 {
     if (gSaveBlock1Ptr->outbreakDaysLeft == 0)
+        return FALSE;
+
+    if (gSaveBlock1Ptr->outbreakWildState != wildState)
         return FALSE;
 
     if (gSaveBlock1Ptr->location.mapNum != gSaveBlock1Ptr->outbreakLocationMapNum || gSaveBlock1Ptr->location.mapGroup != gSaveBlock1Ptr->outbreakLocationMapGroup)

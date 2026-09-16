@@ -2422,3 +2422,50 @@ The static's name is still `sLilycoveDeptStore_DefaultFloorChoice`; renaming is
 Phase 5 text-sweep work.
 
 Build exit=0, ROM 29,126,404 B (86.80%).
+
+## D71 — Swarms are CrystalDust's Pokégear calls, not Emerald's TV outbreaks
+
+**Phase 4.** `src/mass_outbreak.c` carried expansion's five Hoenn outbreaks
+(`OUTBREAK_ID_ROUTE102` … `ROUTE116`), every `.location` a stub map constant, so
+no static outbreak could ever resolve to a real map. CrystalDust's own swarm
+system — announced by Pokégear phone calls in `match_call.c` — was ported in D20
+but had never been wired to the encounter code, and carried two upstream bugs.
+
+Five things changed:
+
+1. **`sPokeOutbreakSpeciesList` is now Johto's three swarms** — Dunsparce in
+   Dark Cave (Anthony), Qwilfish on Route 32 (Ralph), Yanma on Route 35 (Arnie).
+   These mirror the phone-call data exactly. Gen 2's other swarms (Remoraid,
+   Marill, Snubbull) were never implemented in CrystalDust either, so none are
+   invented here — see the constraint note below.
+2. **`.location_map_group` was set with `MAP_NUM`** in all three CrystalDust
+   phone-call structs. Fixed to `MAP_GROUP`.
+3. **`MatchCall_StartMassOutbreak` never stored the map group at all** (the line
+   was commented out with "Map group seems not to be used"). It works upstream
+   only because every swarm route happens to be in group 0 and the field is
+   zeroed on end. Now stored properly.
+4. **Swarms respect their encounter kind.** `DoMassOutbreakEncounterTest` takes
+   a `wildState`, so Ralph's Qwilfish is fished up rather than walking out of the
+   grass on Route 32. `src/fishing.c` gains the guaranteed-bite path and
+   `FishingWildEncounter` takes an `outbreakCaught` flag; rod choice picks
+   `specialLevel1` (Old Rod, lv5), the base level (Good Rod, lv20) or
+   `specialLevel2` (Super Rod, lv40).
+5. **Moveless swarms keep their level-up moveset.** `SetUpMassOutbreakEncounter`
+   blanked all four move slots unconditionally; the phone-call swarms carry no
+   move list, so it now only overwrites when one is present.
+
+`OUTBREAK_WALKING` / `OUTBREAK_SURFING` / `OUTBREAK_FISHING` moved from
+`include/match_call.h` to `include/constants/mass_outbreak.h`.
+
+**Constraint decisions (nothing silently dropped):**
+
+- **Surf swarms are unreachable.** `OUTBREAK_SURFING` exists in CrystalDust's
+  enum but no swarm uses it and expansion's water encounter path has no outbreak
+  hook. Left unwired rather than invented.
+- **The TV mass-outbreak show now advertises Johto.**
+  `PrepareTvShowForRandomOutbreak` picks from the same three-entry table, so
+  Emerald's TV segment survives with CrystalDust content rather than Hoenn's.
+- **Three of Gen 2's six swarms are absent** (Remoraid/Route 44, Marill/Route
+  42, Snubbull/Route 38, delivered by Tully, Arnie's relatives and Derek in the
+  original). CrystalDust never implemented them; adding them would mean writing
+  new phone-call text, which belongs in Phase 6 with the rest of CD's TODO.

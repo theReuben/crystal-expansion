@@ -508,7 +508,7 @@ static bool32 CreateEnemyPartyOWE(struct InfoOWE *info, s32 x, s32 y)
 
             return TRUE;
         }
-        else if (DoMassOutbreakEncounterTest() && MetatileBehavior_IsLandWildEncounter(metatileBehavior))
+        else if (DoMassOutbreakEncounterTest(OUTBREAK_WALKING) && MetatileBehavior_IsLandWildEncounter(metatileBehavior))
         {
             SetUpMassOutbreakEncounter(0);
             info->category = OWE_CATEGORY_MASS_OUTBREAK;

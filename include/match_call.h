@@ -56,10 +56,6 @@ int GetTrainerMatchCallId(int);
 bool8 TrainerIsEligibleForRematch(int);
 void Script_PopulateRareSpeciesFromTrainerLocation(void);
 
-#define OUTBREAK_WALKING 1
-#define OUTBREAK_SURFING 2
-#define OUTBREAK_FISHING 3
-
 struct massOutbreakPhoneCallData{
     u16 species;
     u8 location_map_num;
