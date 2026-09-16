@@ -3063,21 +3063,11 @@ u32 GetPlayerIDAsU32(void)
 
 u8 CheckForPlayersHouseNews(void)
 {
-    // Check if not in Littleroot house map group
-    if (gSaveBlock1Ptr->location.mapGroup != MAP_GROUP(MAP_LITTLEROOT_TOWN_BRENDANS_HOUSE_1F))
+    // Gold and Kris share one house in New Bark Town, so there is no gendered
+    // second house to check (D69).
+    if (gSaveBlock1Ptr->location.mapGroup != MAP_GROUP(MAP_NEW_BARK_TOWN_PLAYERS_HOUSE_1F)
+     || gSaveBlock1Ptr->location.mapNum != MAP_NUM(MAP_NEW_BARK_TOWN_PLAYERS_HOUSE_1F))
         return PLAYERS_HOUSE_TV_NONE;
-
-    // Check if not in player's house (dependent on gender)
-    if (gSaveBlock2Ptr->playerGender == MALE)
-    {
-        if (gSaveBlock1Ptr->location.mapNum != MAP_NUM(MAP_LITTLEROOT_TOWN_BRENDANS_HOUSE_1F))
-            return PLAYERS_HOUSE_TV_NONE;
-    }
-    else
-    {
-        if (gSaveBlock1Ptr->location.mapNum != MAP_NUM(MAP_LITTLEROOT_TOWN_MAYS_HOUSE_1F))
-            return PLAYERS_HOUSE_TV_NONE;
-    }
 
     if (FlagGet(FLAG_SYS_TV_LATIAS_LATIOS) == TRUE)
         return PLAYERS_HOUSE_TV_LATI;
@@ -3091,24 +3081,11 @@ u8 CheckForPlayersHouseNews(void)
 void GetMomOrDadStringForTVMessage(void)
 {
     // If the player is checking the TV in their house it will only refer to their Mom.
-    if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_LITTLEROOT_TOWN_BRENDANS_HOUSE_1F))
+    if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_NEW_BARK_TOWN_PLAYERS_HOUSE_1F)
+     && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_NEW_BARK_TOWN_PLAYERS_HOUSE_1F))
     {
-        if (gSaveBlock2Ptr->playerGender == MALE)
-        {
-            if (gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_LITTLEROOT_TOWN_BRENDANS_HOUSE_1F))
-            {
-                StringCopy(gStringVar1, gText_Mom);
-                VarSet(VAR_TEMP_3, 1);
-            }
-        }
-        else
-        {
-            if (gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_LITTLEROOT_TOWN_MAYS_HOUSE_1F))
-            {
-                StringCopy(gStringVar1, gText_Mom);
-                VarSet(VAR_TEMP_3, 1);
-            }
-        }
+        StringCopy(gStringVar1, gText_Mom);
+        VarSet(VAR_TEMP_3, 1);
     }
     if (VarGet(VAR_TEMP_3) == 1)
     {

@@ -2377,3 +2377,23 @@ Group 112/113/117/118 match no real map, so they are inert rather than wrong.
 They are left alone rather than churned.
 
 Build exit=0, ROM 29,126,372 B (86.80%).
+
+## D69 — The TV in the player's house works again
+
+**Found:** stub-Hoenn-anchor sweep, `src/tv.c`.
+
+`CheckForPlayersHouseNews` and `GetMomOrDadStringForTVMessage` both gated on
+`MAP_LITTLEROOT_TOWN_BRENDANS_HOUSE_1F` / `MAYS_HOUSE_1F`. Those are stubs, so the
+group test failed immediately: the TV downstairs in New Bark Town never showed the
+home movie or the roaming-legendary news, and the TV narration never resolved to
+"Mom".
+
+**Done:** both now test `MAP_NEW_BARK_TOWN_PLAYERS_HOUSE_1F`.
+
+**Divergence from CrystalDust, flagged:** CrystalDust's own copies keep Emerald's
+gender split and send the female branch to `NEW_BARK_TOWN_ELMS_HOUSE` — Gold gets
+the TV news, Kris gets it in Professor Elm's house instead of her own. That is a
+stale find-and-replace on their side: Gold and Kris live in the same house. The
+gender split is dropped rather than reproduced.
+
+Build exit=0, ROM 29,126,308 B (86.80%).
