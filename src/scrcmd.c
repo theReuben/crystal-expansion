@@ -895,7 +895,12 @@ bool8 ScrCmd_gettime(struct ScriptContext *ctx)
     RtcCalcLocalTime();
     gSpecialVar_0x8000 = gLocalTime.hours;
     gSpecialVar_0x8001 = gLocalTime.minutes;
-    gSpecialVar_0x8002 = gLocalTime.seconds;
+    // Crystal Expansion (D79): Emerald put seconds here and had no weekday at
+    // all. CrystalDust's scripts read 0x8002 as the time of day and 0x8003 as
+    // the day of the week -- every Johto script that gates on morning/night or
+    // on a weekday goes through these two. Nothing in the tree reads seconds.
+    gSpecialVar_0x8002 = GetTimeOfDay();
+    gSpecialVar_0x8003 = GetDayOfWeek();
     return FALSE;
 }
 

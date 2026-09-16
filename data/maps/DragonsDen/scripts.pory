@@ -29,14 +29,17 @@ mapscripts DragonsDen_MapScripts {
                 clearflag(FLAG_HIDE_CLAIR)
             }
         }
-        if(!(defeated(TRAINER_RIVAL_MT_MOON_CHIKORITA) || defeated(TRAINER_RIVAL_MT_MOON_TOTODILE) || defeated(TRAINER_RIVAL_MT_MOON_CYNDAQUIL)))
+        // Crystal Expansion (D79): CrystalDust's own TODO lists this as a bug --
+        // the Rival showed up on the wrong days and before you were Champion.
+        // Crystal's DragonsDenB1FCheckRivalCallback hides him unless you have
+        // beaten him at Mt. Moon AND it is Tuesday or Thursday; this had the
+        // beaten-check inverted, so he appeared exactly when he should not.
+        gettime
+        if(!(defeated(TRAINER_RIVAL_MT_MOON_CHIKORITA) || defeated(TRAINER_RIVAL_MT_MOON_TOTODILE) || defeated(TRAINER_RIVAL_MT_MOON_CYNDAQUIL))
+           || !(var(VAR_0x8003) == DAY_TUESDAY || var(VAR_0x8003) == DAY_THURSDAY))
         {
-            gettime
-            if(!(var(VAR_0x8003) == DAY_TUESDAY || var(VAR_0x8003) == DAY_THURSDAY))
-            {
-                setflag(FLAG_HIDE_RIVAL)
-                end
-            }
+            setflag(FLAG_HIDE_RIVAL)
+            end
         }
     }
     MAP_SCRIPT_ON_FRAME_TABLE[

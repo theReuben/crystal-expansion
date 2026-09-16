@@ -2780,3 +2780,34 @@ up means porting CrystalDust's card-style selector — the same
 and is a Phase 7 item, not a rename.
 
 Build: exit 0, ROM 29,067,236 B (86.63%), smoke test clean.
+
+## D79 — `gettime` never told a script what day it was
+
+Phase 6 opens on CrystalDust's TODO list. The first item chased there —
+"The Rival is in Dragon's Den on the wrong days and before becoming Champion" —
+turned out to sit on top of a much larger engine bug.
+
+**`ScrCmd_gettime` was Emerald's.** It filled `VAR_0x8000` with hours,
+`VAR_0x8001` with minutes and `VAR_0x8002` with *seconds*, and set no weekday at
+all. CrystalDust's fills `0x8002` with the time of day and `0x8003` with the day
+of the week, and every Johto script reads them that way: 19 map scripts branch
+on `VAR_0x8003` as a weekday, and every `var(VAR_0x8002) == TIME_NIGHT` test in
+the tree — the Pokémon Center nurse's greeting, Route 29, the National Park
+gatehouses, the Goldenrod dept store, Mt. Moon Square — was comparing a
+seconds-hand against a time-of-day constant. Nothing anywhere read seconds.
+Now `gettime` sets `GetTimeOfDay()` and `GetDayOfWeek()`, matching CrystalDust.
+
+*Note on the evening:* the user's Q1 decision put `OW_TIMES_OF_DAY` on
+`GEN_LATEST`, which has four times of day; Crystal had three. CrystalDust's
+scripts only ever test morning, day and night, so between the evening hours they
+take the else branch. Left as is — it is a consequence of a decision already
+made, not a merge loss.
+
+**Dragon's Den.** Crystal's `DragonsDenB1FCheckRivalCallback` hides the Rival
+unless you have beaten him at Mt. Moon *and* it is Tuesday or Thursday.
+CrystalDust's port had the beaten-check inverted and nested, so the day test
+only ran for players who had *not* beaten him — he appeared on the wrong days
+and before the player was Champion, exactly as their TODO says. Rewritten as a
+single "hide unless both hold".
+
+Build: exit 0, ROM 29,067,236 B (86.63%), smoke test clean.
