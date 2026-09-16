@@ -3246,3 +3246,46 @@ silently corrupts the rest of the format string — use `%d`/`%p`/`%s`. And an
 `AGB_ASSERT` failure presents as an "Illegal opcode" plus a ROM restart, which
 reads exactly like a jump to NULL; the assertion line in the log is the real
 first event, not the reset.
+
+### D90: CrystalDust's own trainer card, and why `CARD_TYPE_EMERALD` is now unreachable
+
+CrystalDust ships a fourth card type with its own sheet, tilemaps, star palettes and
+female background (the `*_cd` assets). Every one of them was in our tree and referenced
+by nothing; D59 had settled for dressing the Hoenn card in Johto badges and CD player
+sprites. The card is now real: `CARD_TYPE_CRYSTALDUST` in `include/constants/trainer_card.h`,
+the `gJohtoTrainerCard*` assets moved from the old LZ pipeline to smol (the LZ blobs
+could not be read by `DecompressDataWithHeaderWram` at all, so they would have decoded
+to garbage the moment anything pointed at them), and three-way branches in
+`LoadCardGfx()`, `SetCardBgsAndPals()` and `DrawStarsAndBadgesOnCard()`.
+
+Constraint decisions, none of them silent:
+
+- **`VERSION_CRYSTAL_DUST 7` collides with expansion's `VERSION_HEART_GOLD 7`.** We do
+  not add CrystalDust's constant. `GAME_VERSION` stays `VERSION_EMERALD`, and the card
+  type is chosen in `GetSetCardType()` instead: a save whose `version` is `VERSION_EMERALD`
+  now yields `CARD_TYPE_CRYSTALDUST`. The consequence is that **`CARD_TYPE_EMERALD` is
+  unreachable for our own saves** — it survives only for cards received over link from a
+  genuine Emerald. That is deliberate: our saves *are* CrystalDust saves wearing Emerald's
+  version byte.
+- **The card carries Emerald's data set, not CrystalDust's.** `VersionToCardType()` is
+  untouched, so `SetPlayerCardData()` and the link-copy switch still fill and read the
+  Emerald fields (trades, link contests, Pokéblocks, frontier BP) at the Emerald offsets.
+  CrystalDust's back page is `{CONTESTS, BATTLE_POINTS, NONE}`; ours shows the Emerald
+  stat list. Approximation, not a drop — changing it means moving fields inside the saved
+  `struct TrainerCard`, which breaks link compatibility with Emerald for no gain.
+- **No stickers and no party-icon strip on the CD card.** Those live in FRLG-only save
+  fields (`shouldDrawStickers`, `stickers[]`, `monIconTint`) that an Emerald-shaped card
+  never populates. Same reason as above.
+- **Text placement follows the Kanto card**, via the new `IsKantoStyleCard()` helper and
+  `isHoenn = FALSE`. This is not a guess: every offset row CrystalDust defines for
+  `CARD_TYPE_CRYSTALDUST` is byte-identical to the Kanto row. The trainer-pic offset
+  `{13, 4}` is Kanto's and is the one item here that CrystalDust may place differently;
+  it is on the play-test list.
+- **Tile layout is ours, not CrystalDust's.** CrystalDust's sheet is 224 tiles where
+  expansion loads 192, so it overruns bg3's base tile of 192 where the badges live.
+  CrystalDust solved this with wrapping arithmetic across its own bg layout; we instead
+  load `0x1C00` for the CD sheet and push the CD badges to `CD_BADGE_TILE_OFFSET` (160,
+  i.e. VRAM tile 352), which is clear of the mon icons (224–319) and stickers (320–351).
+
+Not verifiable by build: whether the card actually *looks* right. It joins the human
+play-test list with D76/D80–D87.

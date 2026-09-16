@@ -167,6 +167,11 @@ static bool8 Task_AnimateCardFlipUp(struct Task *task);
 static bool8 Task_EndCardFlip(struct Task *task);
 static void UpdateCardFlipRegs(u16);
 static void LoadMonIconGfx(void);
+static bool8 IsKantoStyleCard(void);
+
+// bg3's tiles run: badges at its base tile, mon icons from +32, stickers at +128.
+// The CrystalDust badges go above all of them because its card sheet is larger.
+#define CD_BADGE_TILE_OFFSET 160
 
 static const u32 sTrainerCardStickers_Gfx[]      = INCGFX_U32("graphics/trainer_card/frlg/stickers.png", ".4bpp.smol");
 static const u16 sUnused_Pal[]                   = INCGFX_U16("graphics/trainer_card/unused.pal", ".gbapal");
@@ -190,6 +195,12 @@ static const u16 sTrainerCardSticker3_Pal[]      = INCGFX_U16("graphics/trainer_
 static const u16 sTrainerCardSticker4_Pal[]      = INCGFX_U16("graphics/trainer_card/frlg/stickers4.pal", ".gbapal");
 static const u32 sHoennTrainerCardBadges_Gfx[]   = INCGFX_U32("graphics/trainer_card/badges_johto.png", ".4bpp.smol"); // CrystalDust (D59)
 static const u32 sKantoTrainerCardBadges_Gfx[]   = INCGFX_U32("graphics/trainer_card/frlg/badges.png", ".4bpp.smol");
+// CrystalDust's own card (D90). Its badge sheet is the Johto one the Hoenn-style card already uses.
+static const u16 sJohtoTrainerCardBronze_Pal[]   = INCGFX_U16("graphics/trainer_card/one_star_cd.pal", ".gbapal");
+static const u16 sJohtoTrainerCardCopper_Pal[]   = INCGFX_U16("graphics/trainer_card/two_stars_cd.pal", ".gbapal");
+static const u16 sJohtoTrainerCardSilver_Pal[]   = INCGFX_U16("graphics/trainer_card/three_stars_cd.pal", ".gbapal");
+static const u16 sJohtoTrainerCardGold_Pal[]     = INCGFX_U16("graphics/trainer_card/four_stars_cd.pal", ".gbapal");
+static const u16 sJohtoTrainerCardFemaleBg_Pal[] = INCGFX_U16("graphics/trainer_card/female_bg_cd.pal", ".gbapal");
 
 static const struct BgTemplate sTrainerCardBgTemplates[4] =
 {
@@ -281,6 +292,15 @@ static const u16 *const sKantoTrainerCardPals[] =
     sKantoTrainerCardGold_Pal,   // 4 stars
 };
 
+static const u16 *const sJohtoTrainerCardPals[] =
+{
+    gJohtoTrainerCard0Star_Pal,  // Default (0 stars)
+    sJohtoTrainerCardBronze_Pal, // 1 star
+    sJohtoTrainerCardCopper_Pal, // 2 stars
+    sJohtoTrainerCardSilver_Pal, // 3 stars
+    sJohtoTrainerCardGold_Pal,   // 4 stars
+};
+
 static const u8 sTrainerCardTextColors[] = {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_LIGHT_GRAY};
 static const u8 sTrainerCardStatColors[] = {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_RED, TEXT_COLOR_LIGHT_RED};
 static const u8 sTimeColonInvisibleTextColors[6] = {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_TRANSPARENT, TEXT_COLOR_TRANSPARENT};
@@ -314,6 +334,11 @@ static const u8 sTrainerPicFacilityClass[][GENDER_COUNT] =
     [CARD_TYPE_EMERALD] =
     {
         // CrystalDust's player characters, not Brendan and May (D59).
+        [MALE]   = FACILITY_CLASS_GOLD,
+        [FEMALE] = FACILITY_CLASS_KRIS
+    },
+    [CARD_TYPE_CRYSTALDUST] =
+    {
         [MALE]   = FACILITY_CLASS_GOLD,
         [FEMALE] = FACILITY_CLASS_KRIS
     }
@@ -531,18 +556,29 @@ static void Task_TrainerCard(u8 taskId)
    }
 }
 
+// The CrystalDust card shares the Kanto card's text placement; every offset
+// row CrystalDust defines for it is identical to the Kanto one (D90).
+static bool8 IsKantoStyleCard(void)
+{
+    return sData->cardType == CARD_TYPE_FRLG || sData->cardType == CARD_TYPE_CRYSTALDUST;
+}
+
 static bool8 LoadCardGfx(void)
 {
     switch (sData->gfxLoadState)
     {
     case 0:
-        if (sData->cardType != CARD_TYPE_FRLG)
+        if (sData->cardType == CARD_TYPE_CRYSTALDUST)
+            DecompressDataWithHeaderWram(gJohtoTrainerCardBg_Tilemap, sData->bgTilemap);
+        else if (sData->cardType != CARD_TYPE_FRLG)
             DecompressDataWithHeaderWram(gHoennTrainerCardBg_Tilemap, sData->bgTilemap);
         else
             DecompressDataWithHeaderWram(gKantoTrainerCardBg_Tilemap, sData->bgTilemap);
         break;
     case 1:
-        if (sData->cardType != CARD_TYPE_FRLG)
+        if (sData->cardType == CARD_TYPE_CRYSTALDUST)
+            DecompressDataWithHeaderWram(gJohtoTrainerCardBack_Tilemap, sData->backTilemap);
+        else if (sData->cardType != CARD_TYPE_FRLG)
             DecompressDataWithHeaderWram(gHoennTrainerCardBack_Tilemap, sData->backTilemap);
         else
             DecompressDataWithHeaderWram(gKantoTrainerCardBack_Tilemap, sData->backTilemap);
@@ -550,14 +586,18 @@ static bool8 LoadCardGfx(void)
     case 2:
         if (!sData->isLink)
         {
-            if (sData->cardType != CARD_TYPE_FRLG)
+            if (sData->cardType == CARD_TYPE_CRYSTALDUST)
+                DecompressDataWithHeaderWram(gJohtoTrainerCardFront_Tilemap, sData->frontTilemap);
+            else if (sData->cardType != CARD_TYPE_FRLG)
                 DecompressDataWithHeaderWram(gHoennTrainerCardFront_Tilemap, sData->frontTilemap);
             else
                 DecompressDataWithHeaderWram(gKantoTrainerCardFront_Tilemap, sData->frontTilemap);
         }
         else
         {
-            if (sData->cardType != CARD_TYPE_FRLG)
+            if (sData->cardType == CARD_TYPE_CRYSTALDUST)
+                DecompressDataWithHeaderWram(gJohtoTrainerCardFrontLink_Tilemap, sData->frontTilemap);
+            else if (sData->cardType != CARD_TYPE_FRLG)
                 DecompressDataWithHeaderWram(gHoennTrainerCardFrontLink_Tilemap, sData->frontTilemap);
             else
                 DecompressDataWithHeaderWram(gKantoTrainerCardFrontLink_Tilemap, sData->frontTilemap);
@@ -570,7 +610,9 @@ static bool8 LoadCardGfx(void)
             DecompressDataWithHeaderWram(sKantoTrainerCardBadges_Gfx, sData->badgeTiles);
         break;
     case 4:
-        if (sData->cardType != CARD_TYPE_FRLG)
+        if (sData->cardType == CARD_TYPE_CRYSTALDUST)
+            DecompressDataWithHeaderWram(gJohtoTrainerCard_Gfx, sData->cardTiles);
+        else if (sData->cardType != CARD_TYPE_FRLG)
             DecompressDataWithHeaderWram(gHoennTrainerCard_Gfx, sData->cardTiles);
         else
             DecompressDataWithHeaderWram(gKantoTrainerCard_Gfx, sData->cardTiles);
@@ -735,6 +777,7 @@ static void SetPlayerCardData(struct TrainerCard *trainerCard, u8 cardType)
 
     switch (cardType)
     {
+    case CARD_TYPE_CRYSTALDUST:
     case CARD_TYPE_EMERALD:
         trainerCard->battleTowerWins = 0;
         trainerCard->battleTowerStraightWins = 0;
@@ -817,6 +860,7 @@ void CopyTrainerCardData(struct TrainerCard *dst, struct TrainerCard *src, u8 ga
     case CARD_TYPE_RS:
         memcpy(dst, src, 0x38);
         break;
+    case CARD_TYPE_CRYSTALDUST:
     case CARD_TYPE_EMERALD:
         memcpy(dst, src, 0x60);
         dst->linkPoints.frontier = 0;
@@ -1022,7 +1066,7 @@ static void PrintNameOnCardFront(void)
     txtPtr = StringCopy(buffer, gText_TrainerCardName);
     StringCopy(txtPtr, sData->trainerCard.playerName);
     ConvertInternationalString(txtPtr, sData->language);
-    if (sData->cardType == CARD_TYPE_FRLG)
+    if (IsKantoStyleCard())
         AddTextPrinterParameterized3(WIN_CARD_TEXT, FONT_NORMAL, 20, 28, sTrainerCardTextColors, TEXT_SKIP_DRAW, buffer);
     else
         AddTextPrinterParameterized3(WIN_CARD_TEXT, FONT_NORMAL, 16, 33, sTrainerCardTextColors, TEXT_SKIP_DRAW, buffer);
@@ -1036,7 +1080,7 @@ static void PrintIdOnCard(void)
     u32 top;
     txtPtr = StringCopy(buffer, gText_TrainerCardIDNo);
     ConvertIntToDecimalStringN(txtPtr, sData->trainerCard.trainerId, STR_CONV_MODE_LEADING_ZEROS, 5);
-    if (sData->cardType == CARD_TYPE_FRLG)
+    if (IsKantoStyleCard())
     {
         xPos = GetStringCenterAlignXOffset(FONT_NORMAL, buffer, 80) + 132;
         top = 9;
@@ -1180,7 +1224,7 @@ static void BufferNameForCardBack(void)
 {
     StringCopy(sData->textPlayersCard, sData->trainerCard.playerName);
     ConvertInternationalString(sData->textPlayersCard, sData->language);
-    if (sData->cardType != CARD_TYPE_FRLG)
+    if (!IsKantoStyleCard())
     {
         StringCopy(gStringVar1, sData->textPlayersCard);
         StringExpandPlaceholders(sData->textPlayersCard, gText_Var1sTrainerCard);
@@ -1227,7 +1271,8 @@ static const u8 *const sLinkBattleTexts[] =
 {
     [CARD_TYPE_FRLG]    = gText_LinkBattles,
     [CARD_TYPE_RS]      = gText_LinkCableBattles,
-    [CARD_TYPE_EMERALD] = gText_LinkBattles
+    [CARD_TYPE_EMERALD] = gText_LinkBattles,
+    [CARD_TYPE_CRYSTALDUST] = gText_LinkBattles
 };
 
 static void BufferLinkBattleResults(void)
@@ -1326,6 +1371,7 @@ static void BufferBattleFacilityStats(void)
             StringExpandPlaceholders(sData->textBattleFacilityStat, gText_WinsStraight);
         }
         break;
+    case CARD_TYPE_CRYSTALDUST:
     case CARD_TYPE_EMERALD:
         if (sData->trainerCard.frontierBP)
         {
@@ -1346,6 +1392,7 @@ static void PrintBattleFacilityStringOnCard(void)
         if (sData->hasBattleTowerWins)
             PrintStatOnBackOfCard(5, gText_BattleTower, sData->textBattleFacilityStat, sTrainerCardTextColors);
         break;
+    case CARD_TYPE_CRYSTALDUST:
     case CARD_TYPE_EMERALD:
         if (sData->trainerCard.frontierBP)
             PrintStatOnBackOfCard(5, gText_BattlePtsWon, sData->textBattleFacilityStat, sTrainerCardStatColors);
@@ -1438,13 +1485,23 @@ static u8 SetCardBgsAndPals(void)
     switch (sData->bgPalLoadState)
     {
     case 0:
-        LoadBgTiles(3, sData->badgeTiles, ARRAY_COUNT(sData->badgeTiles), 0);
+        // The CrystalDust sheet is 224 tiles, so it runs over bg3's base tile (192)
+        // and the badges have to move above the mon icons and stickers (D90).
+        LoadBgTiles(3, sData->badgeTiles, ARRAY_COUNT(sData->badgeTiles),
+                    sData->cardType == CARD_TYPE_CRYSTALDUST ? CD_BADGE_TILE_OFFSET : 0);
         break;
     case 1:
-        LoadBgTiles(0, sData->cardTiles, 0x1800, 0);
+        LoadBgTiles(0, sData->cardTiles, sData->cardType == CARD_TYPE_CRYSTALDUST ? 0x1C00 : 0x1800, 0);
         break;
     case 2:
-        if (sData->cardType != CARD_TYPE_FRLG)
+        if (sData->cardType == CARD_TYPE_CRYSTALDUST)
+        {
+            LoadPalette(sJohtoTrainerCardPals[sData->trainerCard.stars], BG_PLTT_ID(0), 3 * PLTT_SIZE_4BPP);
+            LoadPalette(sHoennTrainerCardBadges_Pal, BG_PLTT_ID(3), PLTT_SIZE_4BPP);
+            if (sData->trainerCard.gender != MALE)
+                LoadPalette(sJohtoTrainerCardFemaleBg_Pal, BG_PLTT_ID(1), PLTT_SIZE_4BPP);
+        }
+        else if (sData->cardType != CARD_TYPE_FRLG)
         {
             LoadPalette(sHoennTrainerCardPals[sData->trainerCard.stars], BG_PLTT_ID(0), 3 * PLTT_SIZE_4BPP);
             LoadPalette(sHoennTrainerCardBadges_Pal, BG_PLTT_ID(3), PLTT_SIZE_4BPP);
@@ -1516,7 +1573,7 @@ static void DrawStarsAndBadgesOnCard(void)
     static const u8 yOffsets[] = {7, 7};
 
     s16 i, x, y;
-    u16 tileNum = 192;
+    u16 tileNum = sData->cardType == CARD_TYPE_CRYSTALDUST ? 192 + CD_BADGE_TILE_OFFSET : 192;
     u8 palNum = 3;
 
     FillBgTilemapBufferRect(3, 143, 15, yOffsets[sData->isHoenn], sData->trainerCard.stars, 1, 4);
@@ -1861,7 +1918,7 @@ static u8 GetSetCardType(void)
         if (gGameVersion == VERSION_FIRE_RED || gGameVersion == VERSION_LEAF_GREEN)
             return CARD_TYPE_FRLG;
         else if (gGameVersion == VERSION_EMERALD)
-            return CARD_TYPE_EMERALD;
+            return CARD_TYPE_CRYSTALDUST;
         else
             return CARD_TYPE_RS;
     }
@@ -1874,8 +1931,10 @@ static u8 GetSetCardType(void)
         }
         else if (sData->trainerCard.version == VERSION_EMERALD)
         {
-            sData->isHoenn = TRUE;
-            return CARD_TYPE_EMERALD;
+            // Our own saves are version EMERALD but the card is CrystalDust's,
+            // which lays out like the Kanto one (D90).
+            sData->isHoenn = FALSE;
+            return CARD_TYPE_CRYSTALDUST;
         }
         else
         {
