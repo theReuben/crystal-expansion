@@ -3122,3 +3122,82 @@ Constraint decisions:
 - Not verifiable headlessly; reading a sign needs a human.
 
 Build: exit 0, ROM 29,072,740 B (unchanged — data-only).
+
+## D88 — Phase 6 close-out: what CrystalDust's TODO means for this port
+
+Phase 6 was scoped as "work through CrystalDust's `TODO.md`". Working through it
+produced a scoping rule worth stating plainly, because it decides a lot of
+items at once:
+
+> **A feature CrystalDust never implemented is not CrystalDust content.** This
+> project ports CrystalDust's content onto expansion. Where CrystalDust's TODO
+> says something is "entirely unimplemented" or "needs art/music", there is
+> nothing to port; implementing it would be new authoring for a game neither
+> upstream has. Those items are *out of scope*, not dropped.
+
+That rule is what the real Phase 6 work turned out to be instead: not
+implementing CrystalDust's wish-list, but finding the places where CrystalDust
+*did* have the content and our merge lost or broke it. That hunt produced
+D82–D87 — the Bug Catching Contest, the fruit trees, the build stamp, the room
+decor, the staircases and the signposts — every one of them a working
+CrystalDust feature that was silently dead here.
+
+### Out of scope: needs authoring CrystalDust never did
+
+Missing music and placeholder tunes; missing OW sprites (DJ Mary, Janine,
+Bayleef, Morty's and Clair's side frames, legendary beast walk frames, Peeko and
+Mr. Briney); the Tin Tower roof tileset; Magnet Train tiles and cutscene; the
+credits sequence; Pokédex diploma graphics; Ilex Forest tree-wiggle art; the
+Unown Dex; the IR Mystery Gift replacement; the bedroom decorating menu; the
+Trainer House basement; Mom's obscure item calls; the Game Director and Artist
+scripts; Vermilion Gym's puzzle. All of these are unimplemented *upstream*.
+
+### Out of scope by earlier decision
+
+Sevii Islands (D35) and everything downstream of them, including the
+Pokémon Communication Center unlock and Pokémon Contests. Battle Frontier
+(Q3, parked). Hoenn (D37).
+
+### In scope, still open, and deliberately parked
+
+- **Fishing encounter percentages are Emerald's, not Crystal's.** Confirmed by
+  comparison with `sources/pokecrystal/data/wild/fish.asm`: Crystal's model is
+  per-fishing-group with three or four cumulative slots per rod, while ours is
+  Emerald's fixed 2/3/5-slot model, and our constants are byte-identical to
+  CrystalDust's — CrystalDust never fixed this either. Fixing it properly means
+  changing the number of fishing slots per rod, which changes the encounter JSON
+  schema and every water map's data. Real work, real risk, and CrystalDust
+  itself deferred it. Parked, not dropped.
+- **Cut-tree and smashable-rock pop-in at map connections.** CrystalDust has a
+  workaround (`ShouldTreeOrRockObjectBeCreated`, `IsConnectionTreeOrRockOnScreen`,
+  `IsTreeOrRockOffScreenPostWalkTransition` in `event_object_movement.c`) which
+  this tree lacks. Not ported: it hooks object spawning, which expansion has
+  restructured heavily around follower NPCs, and the payoff is cosmetic. Parked
+  with the call sites recorded here.
+- **Phone-call timing follows Emerald, not Crystal** (calls can be re-rolled by
+  soft-resetting), contact ordering is fixed rather than acquisition-ordered, and
+  the rematch-roster-repeat question is unanswered. CrystalDust's own TODO lists
+  all three as open.
+- The Azalea map-name popup, the radio channel-change text overflow, and the
+  Dragon's Den rival's day/Champion conditions are CrystalDust script bugs that
+  came across with the scripts. Inherited as-is.
+
+### Verified as *not* problems
+
+- `B_TRANSITION_WAVE` (CrystalDust's bug report) is expansion's own untouched
+  transition code.
+- CrystalDust's `TextboxUseSignBorder` has no counterpart here because expansion
+  does the same job with `gMsgIsSignPost` — and as of D87 the signpost
+  behaviours finally reach it.
+- CrystalDust's layered region map is present, as `src/pokegear_map.c` with a
+  `CDMap_` prefix.
+- All 515 map script includes and all 401 `scripts.pory` files are present,
+  matching CrystalDust exactly.
+- Every CrystalDust special absent from `data/specials.inc` is either Hoenn
+  content (the Mauville old men, the storyteller, the decoration trader), Battle
+  Frontier, or an expansion rename. Three scrollable-multichoice specials remain
+  parked from D48.12/D70.
+
+Test suite at the gate: 32 FAILED / 14 KNOWN_FAILING / 521 TO_DO /
+9 EXPECT_FAILING / 4615 PASSED / 5191 TOTAL — identical to the baseline.
+ROM 29,072,740 B (86.64%).
