@@ -2306,3 +2306,36 @@ The function keeps its upstream name for now; renaming it touches the forward
 declaration and reads as churn. Noted for the Phase 5 sweep.
 
 Build exit=0, ROM 29,126,724 B (86.80%).
+
+## D67 — Fly goes to Johto
+
+**Found:** stub-Hoenn-anchor sweep, `src/region_map.c`.
+
+Expansion's side survived Phase 1 intact, so the whole Fly path was Hoenn's:
+
+- `sMapHealLocations` — 39 Hoenn rows of stub map constants. Every Fly target
+  resolved to a nonexistent map.
+- `GetMapsecType` — the Hoenn town cases can never be reached now, so no Johto
+  town ever reported `MAPSECTYPE_CITY_CANFLY`. The Kanto cases were fine.
+- `sFlyLocations` — the Fly-icon table, 17 Hoenn entries.
+- `FilterFlyDestination` — Littleroot's gendered house, Ever Grande's league and
+  Southern Island.
+
+**Done:** ported CrystalDust's 24-row `sMapHealLocations` (10 Johto towns, Route 32's
+Pokémon Center, Lake of Rage, Silver Cave, 10 Kanto cities, Indigo Plateau via
+Route 23); replaced the Hoenn `GetMapsecType` cases with the Johto ones keyed on
+`FLAG_VISITED_*` / `FLAG_LANDMARK_*`; replaced the Hoenn `sFlyLocations` block
+with the matching 13 Johto entries; and dropped the Hoenn special cases from
+`FilterFlyDestination`, which CrystalDust does not have.
+
+`MAPSEC_ROUTE_3_FLYDUP` / `MAPSEC_ROUTE_10_FLYDUP` are still absent — the mapsec
+table is at its 252-entry ceiling, per D33. Kanto's Routes 3 and 10 therefore Fly
+to their single map section rather than CrystalDust's split pair.
+
+**Rename:** `REGION_MAP_HOENN` → `REGION_MAP_JOHTO`. That enumerator is the "home
+region" slot and `GetRegionMapType` already returns it for every non-Kanto
+section; the old name was actively misleading. Two files touched.
+
+The Sevii entries in `sFlyLocations` are left in place but unreachable (D35).
+
+Build exit=0, ROM 29,126,468 B (86.80%).

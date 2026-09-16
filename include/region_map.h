@@ -8,7 +8,7 @@
 
 enum RegionMapType
 {
-    REGION_MAP_HOENN,
+    REGION_MAP_JOHTO, // CrystalDust's home region (D67)
     REGION_MAP_KANTO,
     REGION_MAP_SEVII123,
     REGION_MAP_SEVII45,
