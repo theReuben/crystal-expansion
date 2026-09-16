@@ -2509,3 +2509,25 @@ as intentionally dead.
 credits/Hall-of-Fame paths are features that exist in the tree but can never
 trigger. They are not dropped — they are parked, and listed here so Phase 7 can
 pick them up.
+
+## D73 — The Moss Rock and Ice Rock move to Johto
+
+**Phase 4.** Three location-gated evolutions pointed at stub Hoenn maps and so
+could never trigger:
+
+- **Leafeon** — `MAP_PETALBURG_WOODS`
+- **Glaceon** — `MAP_SHOAL_CAVE_LOW_TIDE_ICE_ROOM`
+- **Crabominable** — `MAP_SHOAL_CAVE_LOW_TIDE_ICE_ROOM`
+
+Repointed to `MAPSEC_ILEX_FOREST` and `MAPSEC_ICE_PATH`, the natural Johto
+stand-ins for the Moss Rock and Ice Rock. `IF_IN_MAPSEC` is used rather than
+`IF_IN_MAP` so every floor of the Ice Path counts, instead of the player having
+to find the one correct room.
+
+All three keep their evolution-stone alternative (`ITEM_LEAF_STONE`,
+`ITEM_ICE_STONE`), so none was fully unobtainable before this — but the
+location method was dead, and with it the Gen 4 way of getting them.
+
+**Constraint decision:** Johto has no in-game Moss Rock or Ice Rock object, so
+these are whole-area conditions rather than a specific overworld landmark. If
+Phase 7 adds the rocks as objects, tighten the condition back to a single map.
