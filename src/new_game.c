@@ -19,6 +19,7 @@
 #include "rtc.h"
 #include "easy_chat.h"
 #include "event_data.h"
+#include "game_build.h"
 #include "money.h"
 #include "trainer_hill.h"
 #include "trainer_tower.h"
@@ -229,6 +230,7 @@ void NewGameInitData(void)
     ResetTrainerHillResults();
     ResetTrainerTowerResults();
     ResetContestLinkResults();
+    SetBuildNumber(); // Crystal Expansion (D84): stamp the save with its build
     SetCurrentDifficultyLevel(DIFFICULTY_NORMAL);
     ResetItemFlags();
     ResetDexNav();

@@ -2982,3 +2982,27 @@ human play-test: the tree art and the day-rollover regrowth cannot be checked
 headlessly.
 
 Build: exit 0, ROM 29,072,324 B (86.64%).
+
+## D84 — Saves are stamped with a build number; the load-time rejection is not
+
+`game_build.h` was the second file the D82/D83 audit flagged: CrystalDust
+includes it from four files, this tree from one. `src/game_build.c` is present
+and `struct SaveBlock1` still carries `gameBuild` and `saveBlockMagic`, but
+nothing wrote them and nothing read them.
+
+- **`SetBuildNumber()` is restored** in `NewGameInitData`, next to
+  `ResetContestLinkResults` as in CrystalDust, so a new save is stamped.
+- **CrystalDust's load-time rejection is deliberately NOT ported.** In
+  CrystalDust, `save.c` maps a bad magic to `SAVE_STATUS_CORRUPT` and a build
+  mismatch to `SAVE_STATUS_BUILD_MISMATCH`, and `main_menu.c` then shows a big
+  error window pointing at CrystalDust's own save-updater URL. Three reasons to
+  leave it out: this tree has no `SAVE_STATUS_BUILD_MISMATCH` and its main menu
+  is expansion's, not CrystalDust's; the error text
+  (`gText_BuildVersionMismatch`, already in `strings.c`) sends the player to
+  `domoreaweso.me/cdupdate`, which is not this project's updater and has no save
+  converter for it; and switching it on now would make every save created
+  before this commit read as corrupt, since their magic is zero. This is a
+  parked feature, not a dropped one — the check can be turned on once this
+  project has its own version line and a reason to break save compatibility.
+
+Build: exit 0, ROM 29,072,676 B (86.64%).
