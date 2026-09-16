@@ -2469,3 +2469,43 @@ Five things changed:
   42, Snubbull/Route 38, delivered by Tully, Arnie's relatives and Derek in the
   original). CrystalDust never implemented them; adding them would mean writing
   new phone-call text, which belongs in Phase 6 with the rest of CD's TODO.
+
+## D72 — Post-credits landing, PC release guard, and the rest of the stub-anchor sweep
+
+**Phase 4.** Two live fixes plus the close-out of the stub-Hoenn-anchor sweep
+opened after D63.
+
+**Fixed:**
+
+- **`GameClear` in `src/post_battle_event_funcs.c`** set the continue-game warp
+  to `HEAL_LOCATION_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F` /
+  `..._MAYS_HOUSE_2F` by gender. This is the live path — the Hall of Fame
+  script calls `special(GameClear)` — so after the credits the player resumed in
+  a Hoenn bedroom that no longer exists. Now `HEAL_LOCATION_NEW_BARK_TOWN`,
+  matching CrystalDust, and the gendered split is gone with the shared house
+  (see D69). `EnterHallOfFame` (the FRLG variant, currently unreachable) had
+  `HEAL_LOCATION_PALLET_TOWN` and was corrected to match.
+- **`sRestrictedReleaseMoves` in `src/pokemon_storage_system.c`** stopped you
+  releasing your Strength or Rock Smash user inside Hoenn's Pokémon League,
+  both stub maps. Replaced with one row for Johto's Victory Road, the only map
+  in CrystalDust where releasing your Strength user can strand you. The two
+  `MAP_GROUPS_COUNT` rows (Surf, Dive — restricted everywhere) were always fine.
+
+**Checked and deliberately left alone — none is lost CrystalDust content:**
+
+| File | Stub anchor | Why it is not a loss |
+| --- | --- | --- |
+| `follower_helper.c` | 10 `MATCH_MAP` conditional-message rows (Ever Grande, Route 112, Route 117 Day Care, Mauville Bike Shop, New Mauville, Stern's Shipyard…) | Expansion's follower flavour text, group-guarded so it simply never fires. Writing Johto equivalents is Phase 7 polish, not a port gap. |
+| `wild_encounter.c` | `CheckFeebasAtCoords` (Route 119), `AreLegendariesInSootopolisPreventingEncounters` | Feebas and the Kyogre/Groudon standoff are Hoenn-only; CrystalDust has neither. Both group-guarded. |
+| `braille_puzzles.c`, `mirage_tower.c` | Sealed Chamber, Desert Ruins, Ancient Tomb, Island Cave, Route 111 | The Regi and Mirage Tower questlines went with Hoenn (D37). |
+| `seagallop.c` | the six island harbours | Sevii was cut (D35). |
+| `credits_frlg.c`, `hall_of_fame_frlg.c` | Route 21 North, Indigo Plateau Exterior | The FRLG credits and Hall of Fame are unreachable; CrystalDust uses the Emerald path. Left as dead code rather than deleted, since Phase 7 may want the FRLG credits scroller. |
+
+That closes the sweep: no unguarded `MAP_NUM(stub)` use remains anywhere in
+`src/`, and every guarded one is now either repointed at Johto or recorded above
+as intentionally dead.
+
+**Constraint decision:** the ten follower conditional messages and the FRLG
+credits/Hall-of-Fame paths are features that exist in the tree but can never
+trigger. They are not dropped — they are parked, and listed here so Phase 7 can
+pick them up.
