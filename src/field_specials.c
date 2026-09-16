@@ -1846,33 +1846,42 @@ static const u16 sElevatorWindowTiles_Descending[ELEVATOR_WINDOW_HEIGHT][ELEVATO
     },
 };
 
+// CrystalDust's department store is Goldenrod's, seven floors plus a basement
+// (D70). Expansion kept Lilycove's, whose map constants are stubs.
 void SetDeptStoreFloor(void)
 {
     enum DeptStoreFloorNumber deptStoreFloor;
     switch (gSaveBlock1Ptr->dynamicWarp.mapNum)
     {
-    case MAP_NUM(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_1F):
+    case MAP_NUM(MAP_GOLDENROD_CITY_DEPT_STORE_B1F):
+        deptStoreFloor = DEPT_STORE_FLOORNUM_B1F;
+        break;
+    case MAP_NUM(MAP_GOLDENROD_CITY_DEPT_STORE_1F):
         deptStoreFloor = DEPT_STORE_FLOORNUM_1F;
         break;
-    case MAP_NUM(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_2F):
+    case MAP_NUM(MAP_GOLDENROD_CITY_DEPT_STORE_2F):
         deptStoreFloor = DEPT_STORE_FLOORNUM_2F;
         break;
-    case MAP_NUM(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_3F):
+    case MAP_NUM(MAP_GOLDENROD_CITY_DEPT_STORE_3F):
         deptStoreFloor = DEPT_STORE_FLOORNUM_3F;
         break;
-    case MAP_NUM(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_4F):
+    case MAP_NUM(MAP_GOLDENROD_CITY_DEPT_STORE_4F):
         deptStoreFloor = DEPT_STORE_FLOORNUM_4F;
         break;
-    case MAP_NUM(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_5F):
+    case MAP_NUM(MAP_GOLDENROD_CITY_DEPT_STORE_5F):
         deptStoreFloor = DEPT_STORE_FLOORNUM_5F;
         break;
-    case MAP_NUM(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_ROOFTOP):
+    case MAP_NUM(MAP_GOLDENROD_CITY_DEPT_STORE_6F):
+        deptStoreFloor = DEPT_STORE_FLOORNUM_6F;
+        break;
+    case MAP_NUM(MAP_GOLDENROD_CITY_DEPT_STORE_ROOFTOP):
         deptStoreFloor = DEPT_STORE_FLOORNUM_ROOFTOP;
         break;
     default:
         deptStoreFloor = DEPT_STORE_FLOORNUM_1F;
         break;
     }
+
     VarSet(VAR_DEPT_STORE_FLOOR, deptStoreFloor);
 }
 
@@ -1880,24 +1889,30 @@ u16 GetDeptStoreDefaultFloorChoice(void)
 {
     sLilycoveDeptStore_DefaultFloorChoice = 0;
 
-    if (gSaveBlock1Ptr->dynamicWarp.mapGroup == MAP_GROUP(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_1F))
+    if (gSaveBlock1Ptr->dynamicWarp.mapGroup == MAP_GROUP(MAP_GOLDENROD_CITY_DEPT_STORE_1F))
     {
         switch (gSaveBlock1Ptr->dynamicWarp.mapNum)
         {
-        case MAP_NUM(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_5F):
+        case MAP_NUM(MAP_GOLDENROD_CITY_DEPT_STORE_6F):
             sLilycoveDeptStore_DefaultFloorChoice = 0;
             break;
-        case MAP_NUM(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_4F):
+        case MAP_NUM(MAP_GOLDENROD_CITY_DEPT_STORE_5F):
             sLilycoveDeptStore_DefaultFloorChoice = 1;
             break;
-        case MAP_NUM(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_3F):
+        case MAP_NUM(MAP_GOLDENROD_CITY_DEPT_STORE_4F):
             sLilycoveDeptStore_DefaultFloorChoice = 2;
             break;
-        case MAP_NUM(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_2F):
+        case MAP_NUM(MAP_GOLDENROD_CITY_DEPT_STORE_3F):
             sLilycoveDeptStore_DefaultFloorChoice = 3;
             break;
-        case MAP_NUM(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_1F):
+        case MAP_NUM(MAP_GOLDENROD_CITY_DEPT_STORE_2F):
             sLilycoveDeptStore_DefaultFloorChoice = 4;
+            break;
+        case MAP_NUM(MAP_GOLDENROD_CITY_DEPT_STORE_1F):
+            sLilycoveDeptStore_DefaultFloorChoice = 5;
+            break;
+        case MAP_NUM(MAP_GOLDENROD_CITY_DEPT_STORE_B1F):
+            sLilycoveDeptStore_DefaultFloorChoice = 6;
             break;
         }
     }

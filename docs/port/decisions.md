@@ -2397,3 +2397,28 @@ stale find-and-replace on their side: Gold and Kris live in the same house. The
 gender split is dropped rather than reproduced.
 
 Build exit=0, ROM 29,126,308 B (86.80%).
+
+## D70 — The department store elevator is Goldenrod's
+
+**Found:** stub-Hoenn-anchor sweep, `src/field_specials.c`.
+
+`SetDeptStoreFloor` switched on `dynamicWarp.mapNum` alone, with no map-group
+guard, against stub `MAP_LILYCOVE_CITY_DEPARTMENT_STORE_*` constants — the same
+misfire shape as D68, so it could set `VAR_DEPT_STORE_FLOOR` from an unrelated
+map whose number happened to collide. `GetDeptStoreDefaultFloorChoice` did guard
+on the group, so it was merely inert.
+
+**Done:** both now use `MAP_GOLDENROD_CITY_DEPT_STORE_*` — eight floors
+(B1F, 1F–6F, rooftop) for `SetDeptStoreFloor` and CrystalDust's seven-entry
+default-cursor order (6F first down to B1F) for `GetDeptStoreDefaultFloorChoice`.
+
+**Still open, not dropped:** the Goldenrod and Celadon scrollable-multichoice
+floor lists from D48.12 are still parked — the store scripts have not landed yet,
+and `SCROLL_MULTI_GOLDENROD_DEPT_STORE_FLOORS` has no case block. This decision
+fixes the elevator's floor bookkeeping, not the floor menu. Celadon has no
+department store maps in the tree at all yet.
+
+The static's name is still `sLilycoveDeptStore_DefaultFloorChoice`; renaming is
+Phase 5 text-sweep work.
+
+Build exit=0, ROM 29,126,404 B (86.80%).
