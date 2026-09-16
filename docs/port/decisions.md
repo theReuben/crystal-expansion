@@ -3028,3 +3028,47 @@ bedroom PC is unimplemented upstream too (it is on their TODO), so the player
 still cannot change it. That remains a genuine gap, now recorded.
 
 Build: exit 0, ROM 29,072,740 B (86.64%).
+
+## D86 — CrystalDust's diagonal staircases pointed at the wrong behaviours
+
+CrystalDust defines four metatile behaviours for its diagonal staircase warps
+at `0x2C`–`0x2F` (`MB_STAIRCASE_UP_EAST`, `UP_WEST`, `DOWN_EAST`, `DOWN_WEST`).
+Expansion uses those four ids for something else entirely — `MB_FAST_WATER`,
+`MB_CYCLING_ROAD_WATER`, `MB_UNUSED_2E`, `MB_UNUSED_2F` — and its own
+directional stair warps live at `0xEB`–`0xEE`. The CrystalDust tilesets came
+through the merge with their attribute data untouched, so **every diagonal
+staircase in the game was being read as fast water or an unused behaviour**: 76
+metatiles across 19 tilesets, including `playersroom`, `building`, `lighthouse`,
+`radio_tower`, `department_store`, `underground`, `silphco`, `rockethideout`,
+`inside_ship` and `pagoda_tower`. These are the ordinary indoor staircases of
+Johto and Kanto, on maps the player uses constantly.
+
+The good news is that **no code needed porting**. Expansion already implements
+the whole feature natively and better — `MetatileBehavior_IsDirectionalStairWarp`,
+`IsDirectionalStairWarpMetatileBehavior`, `DoStairWarp`, `Task_StairWarp`,
+`Task_ExitStairs`, `gExitStairsMovementDisabled`, the `COLLISION_STAIR_WARP`
+path in the player avatar, and the walk-in/walk-out slide animation are all
+present and wired. CrystalDust's versions of those functions (in
+`field_screen_effect.c`, `field_control_avatar.c`, `overworld.c`,
+`field_player_avatar.c` and `main_menu.c`) were therefore deliberately not
+ported — porting them would have duplicated working engine code, and the
+standing rule to let CrystalDust win applies to *content*, not to an engine
+feature expansion already does.
+
+Constraint decisions:
+
+- **The fix is a data remap, applied in place** to the 19 CrystalDust-origin
+  tilesets: `0x2C→0xEB`, `0x2D→0xEC`, `0x2E→0xED`, `0x2F→0xEE`. East maps to
+  Right and West to Left, one-for-one, with no reinterpretation.
+- **FRLG-origin tilesets were deliberately left alone.** Ten `*_frlg` tilesets
+  also use `0x2C`/`0x2D`, but those are expansion's own imports in expansion's
+  numbering, where the values really do mean water. They were excluded by
+  requiring the tileset to exist in CrystalDust's tree.
+- **This is safe because CrystalDust has no fast-water behaviour at all** — its
+  `metatile_behaviors.h` defines neither `MB_FAST_WATER` nor
+  `MB_CYCLING_ROAD_WATER`, so in a CrystalDust tileset `0x2C`–`0x2F` can only
+  ever have meant a staircase.
+- **`SLOW_MOVEMENT_ON_STAIRS` is left `FALSE`**, expansion's default.
+- Not verifiable headlessly; walking a staircase needs a human.
+
+Build: exit 0, ROM 29,072,740 B (unchanged — data-only).
