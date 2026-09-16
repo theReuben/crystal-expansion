@@ -3072,3 +3072,53 @@ Constraint decisions:
 - Not verifiable headlessly; walking a staircase needs a human.
 
 Build: exit 0, ROM 29,072,740 B (unchanged — data-only).
+
+## D87 — Every other metatile-behaviour collision, including signposts
+
+D86 was not an isolated case, so the whole of CrystalDust's behaviour numbering
+was reconciled against expansion's, value by value, using CrystalDust's own
+tileset attribute data as ground truth. Most differences are the same slot under
+a different name (`MB_UNUSED_CAVE`/`MB_CAVE`, `MB_SEMI_DEEP_WATER`/
+`MB_INTERIOR_DEEP_WATER`, the Pacifidlog logs, the Route 120 bridges) and needed
+nothing. Seven were genuine collisions, all now remapped in the tileset data:
+
+| CrystalDust | meaning | our value | metatiles | tilesets |
+|---|---|---|---|---|
+| `0x7E` | `MB_SIGNPOST` | `0x1D` | 83 | 40 |
+| `0x81` | `MB_POKEMON_CENTER_SIGN` | `0x1E` | 15 | 8 |
+| `0x82` | `MB_POKEMART_SIGN` | `0x1F` | 16 | 9 |
+| `0xAE` | `MB_CYCLING_ROAD_PULL_DOWN` | `0xC8` | 38 | 1 |
+| `0xAF` | `MB_CYCLING_ROAD_PULL_DOWN_GRASS` | `0xC9` | 1 | 1 |
+| `0xEB` | `MB_DECOR_POSTER` | `0xDC` | 13 | 1 |
+| `0xEC` | `MB_DECOR_CONSOLE` | `0xDD` | 5 | 1 |
+
+The signpost row is the significant one: **83 signposts across 40 tilesets**, in
+essentially every town and gym in the game, were reading as
+`MB_UNUSED_BRIDGE`. Signs did not behave as signs.
+
+Constraint decisions:
+
+- **The remap is keyed off CrystalDust's original files, offset by offset**, not
+  off a blind value sweep of ours. Each metatile is only rewritten if our byte
+  still holds CrystalDust's original value. That matters because D86 had already
+  moved staircases into `0xEB`/`0xEC`'s neighbourhood; keying off the originals
+  makes the two passes commute. 15 offsets in `playersroom` were skipped
+  because an earlier phase had already corrected them by hand.
+- **`0xEB`/`0xEC` had to move anyway**, independently of D86: CrystalDust's
+  poster and games-console decor behaviours sit exactly where expansion puts two
+  of its stair warps. Both meanings now have their own slot.
+- **Two mismatches are knowingly left as they are, because nothing places
+  them.** `0x23` (CrystalDust: unused; ours: `MB_STRENGTH_BUTTON`) appears on 35
+  `halloffame` metatiles, and `0x54`–`0x58` (CrystalDust: unused; ours: the four
+  spin tiles and `MB_STOP_SPINNING`) on 14 metatiles across five Kanto indoor
+  tilesets. A spin tile underfoot would trap the player, so this was checked
+  rather than assumed: every layout's blockdata was scanned against its two
+  tilesets' attributes and **not one of these metatiles is placed on any map in
+  the game**. They are dead tileset entries. Recorded here so that anyone adding
+  a map with them knows to fix the attribute first.
+- **FRLG-origin tilesets were again excluded**, verified by re-scanning
+  afterwards: the only remaining `0xAE` uses are four `*_frlg` tilesets, where
+  the value legitimately means `MB_NEATLY_LINED_UP_TOOLS`.
+- Not verifiable headlessly; reading a sign needs a human.
+
+Build: exit 0, ROM 29,072,740 B (unchanged — data-only).
