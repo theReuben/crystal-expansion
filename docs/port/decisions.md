@@ -3201,3 +3201,48 @@ Pokémon Communication Center unlock and Pokémon Contests. Battle Frontier
 Test suite at the gate: 32 FAILED / 14 KNOWN_FAILING / 521 TO_DO /
 9 EXPECT_FAILING / 4615 PASSED / 5191 TOTAL — identical to the baseline.
 ROM 29,072,740 B (86.64%).
+
+## Phase 7 — expansion features
+
+### D89: the 32 "FAILED" battle tests were one runaway `StringCopy`
+
+The 32 failures carried over from the Phase 0 baseline were not 32 defects.
+They were 32 *crashes* on a single test runner, all cascading from one event,
+plus the framework's own `EXPECTED_FAIL` self-tests (which report as "FAIL" by
+design). Upstream pokeemerald-expansion 1.17.0 builds clean here — 0 failures,
+5769 tests — so the defect was ours.
+
+The single culprit is `test/battle/front_anim.c` "Front anims work", the only
+test that ends a *wild* battle against a *shiny* opponent. That combination is
+the sole path into `TryPutBreakingNewsOnAir()`, whose second statement is
+`StringCopy(show->breakingNews.playerName, gSaveBlock2Ptr->playerName)`.
+
+In test builds the save blocks are never initialised, so `playerName` is all
+zero bytes and contains no `EOS`. `StringCopy` therefore never terminates at the
+name: it walks forward through EWRAM until it happens to find an `0xFF`, writing
+as it goes. Destination trails source by about 0xBF0 bytes, so by the time the
+source reaches `gHeap` the destination has already zeroed the heap's first
+blocks — head magic, sizes, `next`/`prev`, everything. The next `Free()`
+(from `FreeBattleResources` during battle teardown) trips
+`AGB_ASSERT(block->magic == MALLOC_SYSTEM_ID)`, the assertion kills the ROM, and
+every subsequent test on that runner is reported as a crash.
+
+**Why upstream survives and we don't:** the runaway is data-dependent. It stops
+at the first `0xFF` byte after `playerName`. CrystalDust's additions rearranged
+`SaveBlock2`, leaving a long zero run where upstream has an early `0xFF`, so the
+copy overshoots into the heap here and does not there. The bug is latent
+upstream; our save-block layout is what exposes it.
+
+**Fix:** `test/test_runner.c` terminates `gSaveBlock2Ptr->playerName` next to the
+per-test `InitHeap`. Test-build only; the real game always has a terminated
+name, so no game code changed.
+
+With the fix in, the whole suite completes on every runner: 0 FAILED /
+16 KNOWN_FAILING / 586 TO_DO / 9 EXPECT_FAILING / 5158 PASSED / 5769 TOTAL —
+the same total upstream reports, i.e. no test is being lost any more.
+
+Diagnosis notes worth keeping: `Test_MgbaPrintf` has no `%x` handler, and a `%x`
+silently corrupts the rest of the format string — use `%d`/`%p`/`%s`. And an
+`AGB_ASSERT` failure presents as an "Illegal opcode" plus a ROM restart, which
+reads exactly like a jump to NULL; the assertion line in the log is the real
+first event, not the reset.

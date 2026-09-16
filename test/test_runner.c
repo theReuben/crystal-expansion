@@ -312,6 +312,11 @@ top:
         else
             gTestRunnerState.timeoutSeconds = UINT_MAX;
         InitHeap(gHeap, HEAP_SIZE);
+        // Crystal Expansion (D89): the save blocks are never initialised in
+        // test builds, so playerName holds no EOS. Anything that StringCopy()s
+        // it -- TryPutBreakingNewsOnAir(), reached whenever a shiny wild mon is
+        // defeated -- then runs away through EWRAM and zeroes the heap.
+        gSaveBlock2Ptr->playerName[0] = EOS;
         ResetTasks();
         EnableInterrupts(INTR_FLAG_TIMER2);
         REG_TM2CNT_L = UINT16_MAX - (274 * 60); // Approx. 1 second.
