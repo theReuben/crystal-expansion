@@ -1,6 +1,7 @@
 #include "global.h"
 #include "battle.h"
 #include "battle_anim.h"
+#include "bug_catching_contest.h"
 #include "battle_anim_scripts.h"
 #include "battle_arena.h"
 #include "battle_environment.h"
@@ -853,6 +854,19 @@ void HandleAction_SafariZoneBallThrow(void)
     gNumSafariBalls--;
     gLastUsedItem = ITEM_SAFARI_BALL;
     gBattlescriptCurrInstr = BattleScript_SafariBallThrow;
+    gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
+}
+
+// Crystal Expansion (D82): the contest's Park Balls come out of their own
+// counter, not the bag, exactly as the Safari Zone's do.
+void HandleAction_ParkBallThrow(void)
+{
+    gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
+    gBattle_BG0_X = 0;
+    gBattle_BG0_Y = 0;
+    gNumParkBalls--;
+    gLastUsedItem = ITEM_PARK_BALL;
+    gBattlescriptCurrInstr = BattleScript_ParkBallThrow;
     gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
 }
 

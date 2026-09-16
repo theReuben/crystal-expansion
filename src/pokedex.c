@@ -1,5 +1,6 @@
 #include "global.h"
 #include "battle_main.h"
+#include "bug_catching_contest.h"
 #include "battle_script_commands.h"
 #include "bg.h"
 #include "data.h"
@@ -4087,10 +4088,21 @@ void Task_HandleCaughtMonPageInput(u8 taskId)
 {
     if (JOY_NEW(A_BUTTON | B_BUTTON))
     {
-        BeginNormalPaletteFade(PALETTES_BG, 0, 0, 16, RGB_BLACK);
-        gSprites[gTasks[taskId].tMonSpriteId].callback = SpriteCB_SlideCaughtMonToCenter;
-        gTasks[taskId].func = Task_ExitCaughtMonPage;
-        HandleCaughtMonPageTypeIcons_HGSS();
+        // Crystal Expansion (D82): during the Bug Catching Contest the caught
+        // page is closed flat, without the slide-and-fade, so the battle can
+        // move straight on to the swap prompt.
+        if (gBugCatchingContestStatus != BUG_CATCHING_CONTEST_STATUS_OFF)
+        {
+            FreeWindowAndBgBuffers();
+            DestroyTask(taskId);
+        }
+        else
+        {
+            BeginNormalPaletteFade(PALETTES_BG, 0, 0, 16, RGB_BLACK);
+            gSprites[gTasks[taskId].tMonSpriteId].callback = SpriteCB_SlideCaughtMonToCenter;
+            gTasks[taskId].func = Task_ExitCaughtMonPage;
+            HandleCaughtMonPageTypeIcons_HGSS();
+        }
     }
     else if (TryHandleCaughtMonPageFlicker_HGSS(taskId))
     {

@@ -257,8 +257,8 @@ enum BattleScriptOpcode
     B_SCR_OP_UNUSED_38,
     B_SCR_OP_UNUSED_39,
     B_SCR_OP_UNUSED_40,
-    B_SCR_OP_UNUSED_41,
-    B_SCR_OP_UNUSED_42,
+    B_SCR_OP_SETCAUGHTBUGCONTESTMON, // Crystal Expansion (D82): was B_SCR_OP_UNUSED_41
+    B_SCR_OP_SWAPBUGCONTESTMON,      // Crystal Expansion (D82): was B_SCR_OP_UNUSED_42
     B_SCR_OP_CALLNATIVE,
 };
 

@@ -8,5 +8,6 @@
 #define FLDPSN_NO_WHITEOUT        0
 #define FLDPSN_WHITEOUT           1
 #define FLDPSN_FRONTIER_WHITEOUT  2
+#define FLDPSN_BUGCONTEST_WHITEOUT 3 // Crystal Expansion (D82)
 
 #endif //GUARD_CONSTANTS_FIELD_POISON_H

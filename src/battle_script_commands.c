@@ -3,6 +3,7 @@
 #include "battle_hold_effects.h"
 #include "battle_message.h"
 #include "battle_anim.h"
+#include "bug_catching_contest.h"
 #include "battle_anim_scripts.h"
 #include "battle_ai_record.h"
 #include "battle_ai_util.h"
@@ -347,6 +348,8 @@ static bool32 CanAbilityShieldActivateForBattler(enum BattlerId battler);
 static void PlayAnimation(enum BattlerId battler, u8 animId, const u16 *argPtr, const u8 *nextInstr);
 static u32 GetPossibleNextTarget(u32 currTarget);
 
+static void Cmd_setcaughtbugcontestmon(void); // Crystal Expansion (D82)
+static void Cmd_swapbugcontestmon(void);      // Crystal Expansion (D82)
 static void Cmd_attackcanceler(void);
 static void Cmd_printattackstring(void);
 static void Cmd_printselectionstringfromtable(void);
@@ -808,8 +811,8 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_UNUSED_38]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_39]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_40]                             = Cmd_dummy,
-    [B_SCR_OP_UNUSED_41]                             = Cmd_dummy,
-    [B_SCR_OP_UNUSED_42]                             = Cmd_dummy,
+    [B_SCR_OP_SETCAUGHTBUGCONTESTMON]                = Cmd_setcaughtbugcontestmon,
+    [B_SCR_OP_SWAPBUGCONTESTMON]                     = Cmd_swapbugcontestmon,
     [B_SCR_OP_CALLNATIVE]                            = Cmd_callnative,
 };
 
@@ -9044,6 +9047,45 @@ static void Cmd_trybattlerstatchange(void)
         ClearStatChangeValues();
 
     gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+// Crystal Expansion (D82): the two Bug-Catching Contest ball commands. The first
+// records the catch without giving the mon to the player; the second is the
+// "you already have one -- keep this one instead?" screen.
+static void Cmd_setcaughtbugcontestmon(void)
+{
+    u32 battler = gBattlerAttacker ^ BIT_SIDE;
+
+    SetCaughtBugCatchingContestMon(&gEnemyParty[gBattlerPartyIndexes[battler]]);
+    gBattleResults.caughtMonSpecies = GetMonData(&gEnemyParty[gBattlerPartyIndexes[battler]], MON_DATA_SPECIES, NULL);
+    GetMonData(&gEnemyParty[gBattlerPartyIndexes[battler]], MON_DATA_NICKNAME, gBattleResults.caughtMonNick);
+    gBattleResults.caughtMonBall = GetMonData(&gEnemyParty[gBattlerPartyIndexes[battler]], MON_DATA_POKEBALL, NULL);
+    gBattlescriptCurrInstr++;
+}
+
+static void Cmd_swapbugcontestmon(void)
+{
+    switch (gBattleCommunication[MULTIUSE_STATE])
+    {
+    case 0:
+        gBattleCommunication[MULTIUSE_STATE]++;
+        BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
+        break;
+    case 1:
+        if (!gPaletteFade.active)
+        {
+            InitBattleBgsVideo();
+            gBattle_BG3_X = 0x100;
+            FreeAllWindowBuffers();
+            DoSwapBugContestMonScreen(&gEnemyParty[gBattlerPartyIndexes[gBattlerAttacker ^ BIT_SIDE]], BattleMainCB2);
+            gBattleCommunication[MULTIUSE_STATE]++;
+        }
+        break;
+    case 2:
+        if (gMain.callback2 == BattleMainCB2 && !gPaletteFade.active)
+            gBattlescriptCurrInstr++;
+        break;
+    }
 }
 
 static void Cmd_dummy(void)

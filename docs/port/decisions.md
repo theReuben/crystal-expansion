@@ -2906,3 +2906,56 @@ Ported from CrystalDust:
   but seeing a blue line of dialogue needs a human to talk to an NPC.
 
 Build: exit 0, ROM 29,070,500 B (86.64%), +640 B for the table.
+
+## D82 — The Bug Catching Contest is wired back into the engine
+
+`src/bug_catching_contest.c` came through the merge whole (170 references, the
+whole contest state machine, the NPC roster, the results screen, the swap
+prompt), but a per-file reference audit against CrystalDust found **fifteen
+files that reference it there and zero times here** — the core was ported and
+every single integration hook was lost. The contest was dead code: nothing
+started a contest battle, nothing drew the Ball menu, nothing ran the clock,
+nothing handled a white-out in the park, nothing placed the contestants.
+
+Restored: `src/start_menu.c` (the Retire menu), `src/battle_setup.c`
+(`DoBugCatchingContestBattle`), `src/field_control_avatar.c` (the timer check,
+ahead of anything that could start a script), `src/overworld.c` (contestant
+placement in National Park, the gatehouse music, contest teardown on
+Fly/Teleport/Dig), `src/field_poison.c` + `data/scripts/field_poison.inc` (the
+contest white-out path), `src/battle_main.c`, `src/battle_util.c`,
+`src/battle_script_commands.c`, `src/battle_controller_player.c`,
+`src/battle_message.c`, `src/battle_bg.c`, `src/pokedex.c`, and the constants
+and macro headers behind them.
+
+Constraint decisions, none of them silent:
+
+- **`BATTLE_TYPE_BUG_CATCHING_CONTEST` is bit 14, not CrystalDust's bit 12.**
+  Bit 12 is `BATTLE_TYPE_RAID` in expansion. Bit 14 was expansion's unused
+  `BATTLE_TYPE_14`, so nothing is displaced. It is also added to
+  `BATTLE_TYPE_RECORDED_INVALID`, matching CrystalDust's illegal-types list.
+- **`B_ACTION_PARK_BALL` reuses expansion's unused `B_ACTION_UNK_15`**, so no
+  existing action id renumbers.
+- **Two unused battle-script opcodes are repurposed**: `B_SCR_OP_UNUSED_41` and
+  `_42` become `setcaughtbugcontestmon` and `swapbugcontestmon`. Opcode numbers
+  are unchanged, so no script data shifts.
+- **The contest start menu offers POKÉNAV, not CrystalDust's POKéGEAR.** This
+  tree has no Pokégear menu action; the surrounding start menu is expansion's.
+- **`B_BUG_CONTEST_MON` (CrystalDust's FD 35 buffer) is deliberately not
+  ported.** It is unused in CrystalDust itself and its control code collides
+  with expansion's `B_ATK_TRAINER_NAME` (see D57 in `charmap.txt`).
+- **`GAME_STAT_POKEMON_CAPTURES` is still incremented for a contest catch**,
+  unlike CrystalDust, because the counter lives in shared capture code that
+  expansion has restructured; a contest catch is a real catch here. Cosmetic,
+  affects only the trainer-card statistic.
+- **The contest battle window type is new (`B_WIN_TYPE_BUG_CATCHING_CONTEST`,
+  3)**, a copy of the standard templates with the action menu one tile wider
+  and one tile left (for "Ball×N") and its base block moved from 0x0190 to
+  0x0180 so the wider window does not run into the action prompt.
+- **`B_TRANSITION_WAVE` needs no change.** CrystalDust's TODO flags a bug there;
+  that is expansion's own untouched transition code and does not apply.
+- **None of it is verifiable headlessly.** The ROM boots clean and the test
+  suite is unchanged (32/14/521/9/4615/5191, identical to the baseline), but the
+  contest is entirely menu- and script-driven, and mgba-perf cannot inject
+  input. A human play-test of National Park is required.
+
+Build: exit 0, ROM 29,072,164 B (86.64%).

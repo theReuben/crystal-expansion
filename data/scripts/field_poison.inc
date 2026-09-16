@@ -3,6 +3,8 @@ EventScript_FieldPoison::
 	special TryFieldPoisonWhiteOut
 	goto_if_eq VAR_RESULT, FLDPSN_WHITEOUT, EventScript_FieldWhiteOut
 	goto_if_eq VAR_RESULT, FLDPSN_FRONTIER_WHITEOUT, EventScript_FrontierFieldWhiteOut
+	@ Crystal Expansion (D82)
+	goto_if_eq VAR_RESULT, FLDPSN_BUGCONTEST_WHITEOUT, EventScript_BugContest_WhiteOut
 	releaseall
 	end
 

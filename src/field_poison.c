@@ -2,6 +2,7 @@
 #include "battle.h"
 #include "battle_pike.h"
 #include "battle_pyramid.h"
+#include "bug_catching_contest.h"
 #include "event_data.h"
 #include "event_object_movement.h"
 #include "field_message_box.h"
@@ -92,6 +93,13 @@ static void Task_TryFieldPoisonWhiteOut(u8 taskId)
     case 2:
         if (AllMonsFainted())
         {
+            // Crystal Expansion (D82): the contest sends you back to the
+            // gatehouse rather than to a Pokemon Center.
+            if (InBugCatchingContest())
+            {
+                gSpecialVar_Result = FLDPSN_BUGCONTEST_WHITEOUT;
+            }
+            else
             // Battle facilities have their own white out script to handle the challenge loss
 #ifdef BUGFIX
             if (CurrentBattlePyramidLocation() || InBattlePike() || InTrainerHillChallenge())

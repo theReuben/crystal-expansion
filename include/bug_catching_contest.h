@@ -3,10 +3,8 @@
 
 #include "main.h"
 #include "constants/map_groups.h"
+#include "constants/bug_catching_contest.h"
 
-#define BUG_CATCHING_CONTEST_STATUS_OFF        0
-#define BUG_CATCHING_CONTEST_STATUS_NOT_CAUGHT 1
-#define BUG_CATCHING_CONTEST_STATUS_CAUGHT     2
 
 #define MAP_BUG_CATCHING_CONTEST MAP_NATIONAL_PARK_BUG_CATCHING_CONTEST
 

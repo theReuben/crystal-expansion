@@ -453,6 +453,7 @@ static void (*const sTurnActionsFuncsTable[])(void) =
     [B_ACTION_FINISHED]               = HandleAction_ActionFinished,
     [B_ACTION_NOTHING_FAINTED]        = HandleAction_NothingIsFainted,
     [B_ACTION_THROW_BALL]             = HandleAction_ThrowBall,
+    [B_ACTION_PARK_BALL]              = HandleAction_ParkBallThrow, // Crystal Expansion (D82)
 };
 
 static void (*const sEndTurnFuncsTable[])(void) =
@@ -466,6 +467,7 @@ static void (*const sEndTurnFuncsTable[])(void) =
     [B_OUTCOME_MON_FLED]          = HandleEndTurn_MonFled,
     [B_OUTCOME_CAUGHT]            = HandleEndTurn_FinishBattle,
     [B_OUTCOME_NO_SAFARI_BALLS]   = HandleEndTurn_FinishBattle,
+    [B_OUTCOME_NO_PARK_BALLS]     = HandleEndTurn_FinishBattle, // Crystal Expansion (D82)
     [B_OUTCOME_FORFEITED]         = HandleEndTurn_FinishBattle,
     [B_OUTCOME_MON_TELEPORTED]    = HandleEndTurn_FinishBattle,
 };

@@ -65,6 +65,7 @@ bool32 TryRunFromBattle(enum BattlerId battler);
 void HandleAction_Run(void);
 void HandleAction_WatchesCarefully(void);
 void HandleAction_SafariZoneBallThrow(void);
+void HandleAction_ParkBallThrow(void); // Crystal Expansion (D82)
 void HandleAction_ThrowPokeblock(void);
 void HandleAction_GoNear(void);
 void HandleAction_SafariZoneRun(void);

@@ -3,6 +3,7 @@
 #include "battle_pike.h"
 #include "battle_pyramid.h"
 #include "battle_pyramid_bag.h"
+#include "bug_catching_contest.h"
 #include "bg.h"
 #include "debug.h"
 #include "event_data.h"
@@ -70,6 +71,7 @@ enum
     MENU_ACTION_PYRAMID_BAG,
     MENU_ACTION_DEBUG,
     MENU_ACTION_DEXNAV,
+    MENU_ACTION_RETIRE_BUG_CATCHING_CONTEST, // Crystal Expansion (D82)
 };
 
 // Save status
@@ -86,6 +88,7 @@ COMMON_DATA bool8 (*gMenuCallback)(void) = NULL;
 
 // EWRAM
 EWRAM_DATA static u8 sSafariBallsWindowId = 0;
+EWRAM_DATA static u8 sBugCatchingContestWindowId = 0; // Crystal Expansion (D82)
 EWRAM_DATA static u8 sBattlePyramidFloorWindowId = 0;
 EWRAM_DATA static u8 sStartMenuCursorPos = 0;
 EWRAM_DATA static u8 sNumStartMenuActions = 0;
@@ -107,6 +110,7 @@ static bool8 StartMenuSaveCallback(void);
 static bool8 StartMenuOptionCallback(void);
 static bool8 StartMenuExitCallback(void);
 static bool8 StartMenuSafariZoneRetireCallback(void);
+static bool8 StartMenuRetireBugCatchingContestCallback(void); // Crystal Expansion (D82)
 static bool8 StartMenuLinkModePlayerNameCallback(void);
 static bool8 StartMenuBattlePyramidRetireCallback(void);
 static bool8 StartMenuBattlePyramidBagCallback(void);
@@ -154,6 +158,28 @@ static const struct WindowTemplate sWindowTemplate_SafariBalls = {
     .height = 4,
     .paletteNum = 15,
     .baseBlock = 0x8
+};
+
+// Crystal Expansion (D82): the contest's start-menu status window, wide when it
+// has a species and level to show and narrow when nothing has been caught yet.
+static const struct WindowTemplate sBugCatchingContestWindowTemplate = {
+    .bg = 0,
+    .tilemapLeft = 1,
+    .tilemapTop = 1,
+    .width = 15,
+    .height = 6,
+    .paletteNum = 15,
+    .baseBlock = 8,
+};
+
+static const struct WindowTemplate sBugCatchingContestNoneCaughtWindowTemplate = {
+    .bg = 0,
+    .tilemapLeft = 1,
+    .tilemapTop = 1,
+    .width = 12,
+    .height = 4,
+    .paletteNum = 15,
+    .baseBlock = 8,
 };
 
 static const u8 *const sPyramidFloorNames[FRONTIER_STAGES_PER_CHALLENGE + 1] =
@@ -207,6 +233,7 @@ static const struct MenuAction sStartMenuItems[] =
     [MENU_ACTION_PYRAMID_BAG]     = {gText_MenuBag,     {.u8_void = StartMenuBattlePyramidBagCallback}},
     [MENU_ACTION_DEBUG]           = {sText_MenuDebug,   {.u8_void = StartMenuDebugCallback}},
     [MENU_ACTION_DEXNAV]          = {gText_MenuDexNav,  {.u8_void = StartMenuDexNavCallback}},
+    [MENU_ACTION_RETIRE_BUG_CATCHING_CONTEST] = {gText_MenuRetire, {.u8_void = StartMenuRetireBugCatchingContestCallback}},
 };
 
 static const struct BgTemplate sBgTemplates_LinkBattleSave[] =
@@ -252,12 +279,14 @@ static void AddStartMenuAction(u8 action);
 static void BuildNormalStartMenu(void);
 static void BuildDebugStartMenu(void);
 static void BuildSafariZoneStartMenu(void);
+static void BuildBugCatchingContestStartMenu(void); // Crystal Expansion (D82)
 static void BuildLinkModeStartMenu(void);
 static void BuildUnionRoomStartMenu(void);
 static void BuildBattlePikeStartMenu(void);
 static void BuildBattlePyramidStartMenu(void);
 static void BuildMultiPartnerRoomStartMenu(void);
 static void ShowSafariBallsWindow(void);
+static void ShowBugCatchingContestWindow(void); // Crystal Expansion (D82)
 static void ShowPyramidFloorWindow(void);
 static void RemoveExtraStartMenuWindows(void);
 static bool32 PrintStartMenuActions(s8 *pIndex, u32 count);
@@ -296,6 +325,10 @@ static void BuildStartMenuActions(void)
     else if (GetSafariZoneFlag() == TRUE)
     {
         BuildSafariZoneStartMenu();
+    }
+    else if (InBugCatchingContest()) // Crystal Expansion (D82)
+    {
+        BuildBugCatchingContestStartMenu();
     }
     else if (InBattlePike())
     {
@@ -366,6 +399,19 @@ static void BuildSafariZoneStartMenu(void)
     AddStartMenuAction(MENU_ACTION_POKEDEX);
     AddStartMenuAction(MENU_ACTION_POKEMON);
     AddStartMenuAction(MENU_ACTION_BAG);
+    AddStartMenuAction(MENU_ACTION_PLAYER);
+    AddStartMenuAction(MENU_ACTION_OPTION);
+    AddStartMenuAction(MENU_ACTION_EXIT);
+}
+
+// Crystal Expansion (D82): no Save and no Bag during the contest -- you get
+// Park Balls only, and Retire in place of saving.
+static void BuildBugCatchingContestStartMenu(void)
+{
+    AddStartMenuAction(MENU_ACTION_RETIRE_BUG_CATCHING_CONTEST);
+    AddStartMenuAction(MENU_ACTION_POKEDEX);
+    AddStartMenuAction(MENU_ACTION_POKEMON);
+    AddStartMenuAction(MENU_ACTION_POKENAV);
     AddStartMenuAction(MENU_ACTION_PLAYER);
     AddStartMenuAction(MENU_ACTION_OPTION);
     AddStartMenuAction(MENU_ACTION_EXIT);
@@ -451,6 +497,34 @@ static void ShowSafariBallsWindow(void)
     CopyWindowToVram(sSafariBallsWindowId, COPYWIN_GFX);
 }
 
+static void ShowBugCatchingContestWindow(void)
+{
+    const struct WindowTemplate *template;
+
+    if (CaughtBugCatchingContestMon())
+    {
+        u16 species = GetMonData(&gCaughtBugCatchingContestMon, MON_DATA_SPECIES);
+        StringCopy(gStringVar1, GetSpeciesName(species));
+        ConvertIntToDecimalStringN(gStringVar2, GetMonData(&gCaughtBugCatchingContestMon, MON_DATA_LEVEL), STR_CONV_MODE_LEFT_ALIGN, 3);
+        ConvertIntToDecimalStringN(gStringVar3, gNumParkBalls, STR_CONV_MODE_LEFT_ALIGN, 2);
+        StringExpandPlaceholders(gStringVar4, gText_BugCatchingContestStatus);
+        template = &sBugCatchingContestWindowTemplate;
+    }
+    else
+    {
+        StringCopy(gStringVar1, gText_None);
+        ConvertIntToDecimalStringN(gStringVar1, gNumParkBalls, STR_CONV_MODE_LEFT_ALIGN, 2);
+        StringExpandPlaceholders(gStringVar4, gText_BugCatchingContestNoneCaught);
+        template = &sBugCatchingContestNoneCaughtWindowTemplate;
+    }
+
+    sBugCatchingContestWindowId = AddWindow(template);
+    PutWindowTilemap(sBugCatchingContestWindowId);
+    DrawStdWindowFrame(sBugCatchingContestWindowId, FALSE);
+    AddTextPrinterParameterized5(sBugCatchingContestWindowId, FONT_NORMAL, gStringVar4, 0, 1, TEXT_SKIP_DRAW, NULL, 1, 2);
+    CopyWindowToVram(sBugCatchingContestWindowId, COPYWIN_GFX);
+}
+
 static void ShowPyramidFloorWindow(void)
 {
     if (gSaveBlock2Ptr->frontier.curChallengeBattleNum == FRONTIER_STAGES_PER_CHALLENGE)
@@ -473,6 +547,12 @@ static void RemoveExtraStartMenuWindows(void)
         ClearStdWindowAndFrameToTransparent(sSafariBallsWindowId, FALSE);
         CopyWindowToVram(sSafariBallsWindowId, COPYWIN_GFX);
         RemoveWindow(sSafariBallsWindowId);
+    }
+    if (InBugCatchingContest()) // Crystal Expansion (D82)
+    {
+        ClearStdWindowAndFrameToTransparent(sBugCatchingContestWindowId, FALSE);
+        CopyWindowToVram(sBugCatchingContestWindowId, COPYWIN_GFX);
+        RemoveWindow(sBugCatchingContestWindowId);
     }
     if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
     {
@@ -534,6 +614,8 @@ static bool32 InitStartMenuStep(void)
     case 3:
         if (GetSafariZoneFlag())
             ShowSafariBallsWindow();
+        if (InBugCatchingContest()) // Crystal Expansion (D82)
+            ShowBugCatchingContestWindow();
         if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
             ShowPyramidFloorWindow();
         sInitStartMenuData[0]++;
@@ -657,7 +739,8 @@ static bool8 HandleStartMenuInput(void)
             && gMenuCallback != StartMenuExitCallback
             && gMenuCallback != StartMenuDebugCallback
             && gMenuCallback != StartMenuSafariZoneRetireCallback
-            && gMenuCallback != StartMenuBattlePyramidRetireCallback)
+            && gMenuCallback != StartMenuBattlePyramidRetireCallback
+            && gMenuCallback != StartMenuRetireBugCatchingContestCallback) // Crystal Expansion (D82)
         {
            FadeScreen(FADE_TO_BLACK, 0);
         }
@@ -819,6 +902,15 @@ static void HideStartMenuDebug(void)
     PlaySE(SE_SELECT);
     ClearStdWindowAndFrame(GetStartMenuWindowId(), TRUE);
     RemoveStartMenuWindow();
+}
+
+static bool8 StartMenuRetireBugCatchingContestCallback(void)
+{
+    RemoveExtraStartMenuWindows();
+    HideStartMenuWindow();
+    BugCatchingContestQuitPrompt();
+
+    return TRUE;
 }
 
 static bool8 StartMenuLinkModePlayerNameCallback(void)

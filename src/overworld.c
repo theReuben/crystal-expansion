@@ -3,6 +3,7 @@
 #include "day_night.h"
 #include "battle_pyramid.h"
 #include "battle_setup.h"
+#include "bug_catching_contest.h"
 #include "battle_util.h"
 #include "berry.h"
 #include "bg.h"
@@ -409,6 +410,7 @@ void Overworld_ResetStateAfterFly(void)
     VarSet(VAR_MAP_SCENE_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE, 0);
     FlagClear(FLAG_SYS_USE_STRENGTH);
     FlagClear(FLAG_SYS_USE_FLASH);
+    TryEndBugCatchingContest(); // Crystal Expansion (D82)
 }
 
 void Overworld_ResetStateAfterTeleport(void)
@@ -420,6 +422,7 @@ void Overworld_ResetStateAfterTeleport(void)
     VarSet(VAR_MAP_SCENE_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE, 0);
     FlagClear(FLAG_SYS_USE_STRENGTH);
     FlagClear(FLAG_SYS_USE_FLASH);
+    TryEndBugCatchingContest(); // Crystal Expansion (D82)
     RunScriptImmediately(EventScript_ResetMrBriney);
 }
 
@@ -432,6 +435,7 @@ void Overworld_ResetStateAfterDigEscRope(void)
     VarSet(VAR_MAP_SCENE_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE, 0);
     FlagClear(FLAG_SYS_USE_STRENGTH);
     FlagClear(FLAG_SYS_USE_FLASH);
+    TryEndBugCatchingContest(); // Crystal Expansion (D82)
 }
 
 #if B_RESET_FLAGS_VARS_AFTER_WHITEOUT == TRUE
@@ -941,6 +945,11 @@ static void LoadMapFromWarp(bool32 a1)
             LoadTrainerHillObjectEventTemplates();
         else
             LoadObjEventTemplatesFromHeader();
+
+        // Crystal Expansion (D82): the contest replaces National Park's normal
+        // NPCs with the twenty contestants while it is running.
+        if (gMapHeader.mapLayoutId == LAYOUT_NATIONAL_PARK && VarGet(VAR_BUG_CATCHING_CONTEST_STATE) == 1)
+            PlaceBugCatchingContestObjectEvents();
     }
 
     isOutdoors = IsMapTypeOutdoors(gMapHeader.mapType);
@@ -1159,9 +1168,29 @@ static u16 GetNightMusicFromTrack(u16 track)
     return track;
 }
 
+// Crystal Expansion (D82): maps whose music changes with a flag rather than with
+// the time of day -- the contest gatehouses while a contest is on, and the
+// Goldenrod Pokemon Center once the Pokecom Center opens.
+static const u16 sMusicOverrides[][3] =
+{
+    { MAP_GOLDENROD_CITY_POKEMON_CENTER_1F,  FLAG_POKECOM_CENTER_ENABLED,  MUS_POKECOM_CENTER },
+    { MAP_ROUTE35_NATIONAL_PARK_GATEHOUSE,   FLAG_IN_BUG_CATCHING_CONTEST, MUS_BUG_CONTEST_PREP },
+    { MAP_ROUTE36_NATIONAL_PARK_GATEHOUSE,   FLAG_IN_BUG_CATCHING_CONTEST, MUS_BUG_CONTEST_PREP },
+};
+
 u16 GetLocationMusic(struct WarpData *warp)
 {
+    u32 i;
     const struct MapHeader *mapHeader = Overworld_GetMapHeaderByGroupAndId(warp->mapGroup, warp->mapNum);
+
+    for (i = 0; i < ARRAY_COUNT(sMusicOverrides); i++)
+    {
+        if (warp->mapGroup == (sMusicOverrides[i][0] >> 8)
+         && warp->mapNum == (sMusicOverrides[i][0] & 0xFF)
+         && FlagGet(sMusicOverrides[i][1]))
+            return sMusicOverrides[i][2];
+    }
+
     if (mapHeader->nightMusic != MUS_NONE && GetTimeOfDay() == TIME_NIGHT)
         return mapHeader->nightMusic;
     
@@ -1171,6 +1200,11 @@ u16 GetLocationMusic(struct WarpData *warp)
 u16 GetCurrLocationDefaultMusic(void)
 {
     u16 music;
+
+    // Crystal Expansion (D82): Rocket's music plays over the whole Radio Tower
+    // while they hold it, whatever each floor's header says.
+    if (gMapHeader.regionMapSectionId == MAPSEC_RADIO_TOWER && FlagGet(FLAG_ROCKETS_IN_RADIO_TOWER))
+        return MUS_ROCKET_TAKEOVER;
 
     // Play the desert music only when the sandstorm is active on Route 111.
     if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_ROUTE111)

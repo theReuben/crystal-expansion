@@ -5,6 +5,7 @@
 #include "constants/battle_stat_change.h"
 #include "constants/battle_anim.h"
 #include "constants/battle_string_ids.h"
+#include "constants/bug_catching_contest.h"
 #include "constants/moves.h"
 #include "constants/songs.h"
 #include "constants/game_stat.h"
@@ -182,6 +183,12 @@ BattleScript_SafariBallThrow::
 	updatestatusicon BS_ATTACKER
 	handleballthrow
 
+@ Crystal Expansion (D82)
+BattleScript_ParkBallThrow::
+	printstring STRINGID_PLAYERUSEDITEM
+	updatestatusicon BS_ATTACKER
+	handleballthrow
+
 BattleScript_SuccessBallThrow::
 	setbyte sMON_CAUGHT, TRUE
 	incrementgamestat GAME_STAT_POKEMON_CAPTURES
@@ -192,11 +199,25 @@ BattleScript_SuccessBallThrow::
 	sethword gBattle_BG2_X, 0
 BattleScript_TryPrintCaughtMonInfo:
 	jumpifbattletype BATTLE_TYPE_RECORDED, BattleScript_GiveCaughtMonEnd
-	trysetcaughtmondexflags BattleScript_TryNicknameCaughtMon
+	trysetcaughtmondexflags BattleScript_CheckBugCatchingContest
 	printstring STRINGID_PKMNDATAADDEDTODEX
 	waitstate
 	setbyte gBattleCommunication, 0
 	displaydexinfo
+@ Crystal Expansion (D82): a contest catch is not kept -- it is recorded as your
+@ entry, or offered as a swap if you already have one. Either way the mon is
+@ never nicknamed and never joins the party.
+BattleScript_CheckBugCatchingContest::
+	jumpifword CMP_NO_COMMON_BITS, gBattleTypeFlags, BATTLE_TYPE_BUG_CATCHING_CONTEST, BattleScript_TryNicknameCaughtMon
+	jumpifbyte CMP_EQUAL, gBugCatchingContestStatus, BUG_CATCHING_CONTEST_STATUS_CAUGHT, BattleScript_SwapBugContestMon
+	setcaughtbugcontestmon
+	goto BattleScript_SuccessBallThrowEnd
+
+BattleScript_SwapBugContestMon::
+	setbyte gBattleCommunication, 0
+	swapbugcontestmon
+	goto BattleScript_SuccessBallThrowEnd
+
 BattleScript_TryNicknameCaughtMon::
 	printstring STRINGID_GIVENICKNAMECAPTURED
 	waitstate
@@ -224,11 +245,18 @@ BattleScript_ShakeBallThrow::
 	waitanimation
 	waitmessage B_WAIT_TIME_LONG
 	handlefailedvictorycatch
-	jumpifword CMP_NO_COMMON_BITS, gBattleTypeFlags, BATTLE_TYPE_SAFARI, BattleScript_ShakeBallThrowEnd
+	jumpifword CMP_NO_COMMON_BITS, gBattleTypeFlags, BATTLE_TYPE_SAFARI, BattleScript_ShakeBallThrow_CheckParkBalls
 	jumpifbyte CMP_NOT_EQUAL, gNumSafariBalls, 0, BattleScript_ShakeBallThrowEnd
 	printstring STRINGID_OUTOFSAFARIBALLS
 	waitmessage B_WAIT_TIME_LONG
 	setbyte gBattleOutcome, B_OUTCOME_NO_SAFARI_BALLS
+@ Crystal Expansion (D82)
+BattleScript_ShakeBallThrow_CheckParkBalls::
+	jumpifword CMP_NO_COMMON_BITS, gBattleTypeFlags, BATTLE_TYPE_BUG_CATCHING_CONTEST, BattleScript_ShakeBallThrowEnd
+	jumpifbyte CMP_NOT_EQUAL, gNumParkBalls, 0, BattleScript_ShakeBallThrowEnd
+	printstring STRINGID_OUTOFPARKBALLS
+	waitmessage B_WAIT_TIME_LONG
+	setbyte gBattleOutcome, B_OUTCOME_NO_PARK_BALLS
 BattleScript_ShakeBallThrowEnd::
 	finishaction
 

@@ -112,7 +112,7 @@ enum BattleSide
 #define BATTLE_TYPE_EREADER_TRAINER    (1 << 11)
 #define BATTLE_TYPE_RAID               (1 << 12)
 #define BATTLE_TYPE_LEGENDARY          (1 << 13)
-#define BATTLE_TYPE_14                 (1 << 14)
+#define BATTLE_TYPE_BUG_CATCHING_CONTEST (1 << 14) // CrystalDust (D82). Was the unused BATTLE_TYPE_14; CrystalDust used bit 12, which is BATTLE_TYPE_RAID here.
 #define BATTLE_TYPE_TWO_OPPONENTS      (1 << 15)
 #define BATTLE_TYPE_DOME               (1 << 16)
 #define BATTLE_TYPE_PALACE             (1 << 17)
@@ -135,7 +135,7 @@ enum BattleSide
 #define BATTLE_TYPE_FRONTIER_NO_PYRAMID     (BATTLE_TYPE_BATTLE_TOWER | BATTLE_TYPE_DOME | BATTLE_TYPE_PALACE | BATTLE_TYPE_ARENA | BATTLE_TYPE_FACTORY | BATTLE_TYPE_PIKE)
 #define BATTLE_TYPE_RECORDED_INVALID        ((BATTLE_TYPE_LINK | BATTLE_TYPE_SAFARI | BATTLE_TYPE_FIRST_BATTLE                  \
                                              | BATTLE_TYPE_CATCH_TUTORIAL | BATTLE_TYPE_ROAMER | BATTLE_TYPE_EREADER_TRAINER    \
-                                             | BATTLE_TYPE_LEGENDARY                                                            \
+                                             | BATTLE_TYPE_LEGENDARY | BATTLE_TYPE_BUG_CATCHING_CONTEST /* D82 */            \
                                              | BATTLE_TYPE_RECORDED | BATTLE_TYPE_TRAINER_HILL | BATTLE_TYPE_SECRET_BASE))
 
 #define WILD_DOUBLE_BATTLE                  ((gBattleTypeFlags & BATTLE_TYPE_DOUBLE && !(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_TRAINER))))
@@ -571,6 +571,7 @@ enum BattleEnvironments
 #define B_WIN_TYPE_NORMAL         0
 #define B_WIN_TYPE_ARENA          1
 #define B_WIN_TYPE_KANTO_TUTORIAL 2
+#define B_WIN_TYPE_BUG_CATCHING_CONTEST 3 // Crystal Expansion (D82)
 
 // Window Ids for sStandardBattleWindowTemplates / sBattleArenaWindowTemplates
 #define B_WIN_MSG                 0

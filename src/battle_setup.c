@@ -9,6 +9,7 @@
 #include "battle_partner.h"
 #include "battle_tower.h"
 #include "battle_transition.h"
+#include "bug_catching_contest.h"
 #include "event_data.h"
 #include "event_object_movement.h"
 #include "event_scripts.h"
@@ -71,6 +72,7 @@ enum TransitionType
 // this file's functions
 static void DoBattlePikeWildBattle(void);
 static void DoSafariBattle(void);
+static void DoBugCatchingContestBattle(void); // Crystal Expansion (D82)
 static void DoGhostBattle(void);
 static void DoStandardWildBattle(bool32 isDouble);
 static void CB2_EndWildBattle(void);
@@ -368,6 +370,8 @@ void BattleSetup_StartWildBattle(void)
 {
     if (GetSafariZoneFlag())
         DoSafariBattle();
+    else if (InBugCatchingContest()) // Crystal Expansion (D82)
+        DoBugCatchingContestBattle();
     else if (CheckSilphScopeInPokemonTower(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum))
         DoGhostBattle();
     else
@@ -493,6 +497,23 @@ static void DoSafariBattle(void)
     gMain.savedCallback = CB2_EndSafariBattle;
     gBattleTypeFlags = BATTLE_TYPE_SAFARI;
     CreateBattleStartTask(GetWildBattleTransition(), 0);
+}
+
+// Crystal Expansion (D82): the contest's own battle. Park Balls instead of the
+// bag, one catch kept, and the run-out-the-clock callback rather than the plain
+// wild-battle one. It still counts towards the battle stats, as in CrystalDust.
+static void DoBugCatchingContestBattle(void)
+{
+    LockPlayerFieldControls();
+    FreezeObjectEvents();
+    StopPlayerAvatar();
+    gMain.savedCallback = CB2_EndBugCatchingContestBattle;
+    gBattleTypeFlags = BATTLE_TYPE_BUG_CATCHING_CONTEST;
+    CreateBattleStartTask(GetWildBattleTransition(), 0);
+    IncrementGameStat(GAME_STAT_TOTAL_BATTLES);
+    IncrementGameStat(GAME_STAT_WILD_BATTLES);
+    IncrementDailyWildBattles();
+    TryUpdateGymLeaderRematchFromWild();
 }
 
 static void DoGhostBattle(void)

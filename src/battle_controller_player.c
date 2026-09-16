@@ -1,6 +1,7 @@
 #include "global.h"
 #include "battle.h"
 #include "battle_anim.h"
+#include "bug_catching_contest.h"
 #include "battle_arena.h"
 #include "battle_controllers.h"
 #include "battle_dome.h"
@@ -313,7 +314,12 @@ static void HandleInputChooseAction(enum BattlerId battler)
             BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_USE_MOVE, 0);
             break;
         case 1: // Top right
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_USE_ITEM, 0);
+            // Crystal Expansion (D82): the contest gives you Park Balls where
+            // the bag would be. Everything else on the menu is unchanged.
+            if (gBattleTypeFlags & BATTLE_TYPE_BUG_CATCHING_CONTEST)
+                BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_PARK_BALL, 0);
+            else
+                BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_USE_ITEM, 0);
             break;
         case 2: // Bottom left
             BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_SWITCH, 0);
@@ -2007,7 +2013,16 @@ static void PlayerHandleChooseAction(enum BattlerId battler)
 
     gBattlerControllerFuncs[battler] = HandleChooseActionAfterDma3;
     BattleTv_ClearExplosionFaintCause();
-    BattlePutTextOnWindow(gText_BattleMenu, B_WIN_ACTION_MENU);
+    if (gBattleTypeFlags & BATTLE_TYPE_BUG_CATCHING_CONTEST) // Crystal Expansion (D82)
+    {
+        ConvertIntToDecimalStringN(gStringVar1, gNumParkBalls, STR_CONV_MODE_LEFT_ALIGN, 2);
+        StringExpandPlaceholders(gStringVar4, gText_BugCatchingContestMenu);
+        BattlePutTextOnWindow(gStringVar4, B_WIN_ACTION_MENU);
+    }
+    else
+    {
+        BattlePutTextOnWindow(gText_BattleMenu, B_WIN_ACTION_MENU);
+    }
 
     for (i = 0; i < 4; i++)
         ActionSelectionDestroyCursorAt(i);

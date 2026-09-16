@@ -1135,6 +1135,15 @@
 	.4byte \func
 	.endm
 
+	@ Crystal Expansion (D82)
+	.macro setcaughtbugcontestmon
+	.byte B_SCR_OP_SETCAUGHTBUGCONTESTMON
+	.endm
+
+	.macro swapbugcontestmon
+	.byte B_SCR_OP_SWAPBUGCONTESTMON
+	.endm
+
 	.macro savetarget
 	callnative BS_SaveTarget
 	.endm
