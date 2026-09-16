@@ -57,7 +57,7 @@ extern const u8 EventScript_ResetAllMapFlags[];
 extern const u8 EventScript_ResetAllMapFlagsFrlg[];
 
 static void ClearFrontierRecord(void);
-static void WarpToTruck(void);
+static void WarpToPlayersBedroom(void);
 static void ResetMiniGamesRecords(void);
 static void ResetItemFlags(void);
 static void ResetDexNav(void);
@@ -135,7 +135,7 @@ static void ClearFrontierRecord(void)
 
 // CrystalDust starts in the player's bedroom in New Bark Town, not Emerald's
 // moving truck or FRLG's Pallet Town bedroom (D66).
-static void WarpToTruck(void)
+static void WarpToPlayersBedroom(void)
 {
     SetWarpDestination(MAP_GROUP(MAP_NEW_BARK_TOWN_PLAYERS_HOUSE_2F), MAP_NUM(MAP_NEW_BARK_TOWN_PLAYERS_HOUSE_2F), WARP_ID_NONE, -1, -1);
     WarpIntoMap();
@@ -210,7 +210,7 @@ void NewGameInitData(void)
     ResetFanClub();
     ResetLotteryCorner();
     UpdateDailySeed();
-    WarpToTruck();
+    WarpToPlayersBedroom();
     if (IS_FRLG)
         RunScriptImmediately(EventScript_ResetAllMapFlagsFrlg);
     else

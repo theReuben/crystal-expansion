@@ -2696,3 +2696,52 @@ constant is Phase 5 rename debt.
 
 Build: exit 0, ROM 29,134,724 B (86.83%), smoke test clean, `make check` 0 FAILs
 and the same 34 pre-existing runner-5 `malloc.c` crashes as before (D75).
+
+## D77 — a new game now hides the right people, and 130 KB of Hoenn text goes
+
+Three findings, all in the same area: what a brand-new save looks like.
+
+**`EventScript_ResetAllMapFlags` was still Emerald's Hoenn list.** This script
+runs once, from `NewGameInitData`, and decides which object events exist at the
+start of a game. Ours set `FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_POKEBALL_*`,
+the Winstrates, Mr Briney, the Lilycove museum patrons — for maps that no longer
+exist — and never set any of CrystalDust's. That meant Elm's aide, Kurt, the
+rival at Cherrygrove and Azalea, the Ilex Forest cast, Bill, Floria, Sierra, Red
+and both Rocket-takeover sets started a new game in whatever state their flag
+happened to be in, rather than hidden. Replaced wholesale with CrystalDust's
+list. This is another "Phase 1 merge kept one side".
+
+*Constraint decision:* CrystalDust's list also contained `FLAG_UNUSED_0x2F8`.
+In our `flags.h` that number is a live flag (`FLAG_HIDE_LITTLEROOT_TOWN_
+BRENDANS_HOUSE_RIVAL_BEDROOM`), and in CrystalDust setting it was a no-op, so
+the line is dropped rather than carried over onto an unrelated flag.
+
+*Not changed:* `EventScript_ResetAllBerries` still plants Hoenn's berry trees,
+because CrystalDust's copy does too — it never revisited that script. The trees
+have no maps to sit on, so this is inert. `EventScript_ResetAllMapFlagsFrlg`
+also stays; `IS_FRLG` is false, so it is unreachable but still linked.
+
+**`data/text/trainers.inc` was 1145 labels of dead Emerald trainer dialogue.**
+Every Johto trainer's lines live in that trainer's own map `scripts.pory`.
+Scanning the whole tree for references found exactly three live labels in the
+file — the VS Seeker strings — and the assembler emits all of it into the ROM
+regardless. Trimmed to those three. ROM: 29,134,308 B -> 29,067,236 B (86.83% ->
+86.63%).
+
+**Two Phase 5 worries turned out to be nothing.** `data/text/match_call.inc` and
+`data/text/tv.inc` are already CrystalDust's: of 713 shared match-call labels
+exactly one differs from CrystalDust, and only by a comment we added in D47;
+`tv.inc`'s 298 diff lines are all label renames and `{POKE}` vs `POKé` macro
+style. `data/text/pokemon_news.inc` is the same story. Ours does carry 32 extra
+Emerald gym-leader rematch labels (Roxanne, Brawly, Flannery, Norman, Juan);
+they are unreferenced and left alone for now.
+
+`WarpToTruck` is renamed `WarpToPlayersBedroom` (D66 rename debt); it already
+warped to `MAP_NEW_BARK_TOWN_PLAYERS_HOUSE_2F`.
+
+A dead-text scan over the rest of `data/text/` found only small change left —
+`move_tutors.inc`, `berries.inc`, `braille.inc` and `day_care_frlg.inc` are
+fully unreferenced but total about 23 KB between them. Left in place; they are
+cheap and some may come back with Phase 7 features.
+
+Build: exit 0, smoke test clean.
