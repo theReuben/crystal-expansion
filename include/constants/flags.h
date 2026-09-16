@@ -1658,6 +1658,16 @@
 #define NUM_CRYSTAL_FLAGS                           880
 #define CRYSTAL_FLAGS_END                           (CRYSTAL_FLAGS_START + NUM_CRYSTAL_FLAGS - 1)
 
+// ---- Kanto/FRLG flags rescued from the stub block (D74) ----
+// Expansion's FRLG flag list arrived defined as plain 0, which is FLAG_TEMP_1 --
+// a temp flag cleared on every map load. Every one of them aliased that single
+// bit, so CrystalDust's Mahogany Rocket hideout and Erika's TM19, among others,
+// silently forgot their state. The 165 that anything still references get real
+// numbers here; the rest stay at 0 and are listed as dead in D74.
+#define KANTO_FLAGS_START                           (CRYSTAL_FLAGS_END + 1)
+#define NUM_KANTO_FLAGS                             165
+#define KANTO_FLAGS_END                             (KANTO_FLAGS_START + NUM_KANTO_FLAGS - 1)
+
 // ---- CrystalDust flags, freshly allocated in Phase 2 (see D10, D12) ----
 // 867 flags, allocated sequentially from CRYSTAL_FLAGS_START. CrystalDust's
 // own numbering is deliberately NOT reused: it was assigned against vanilla
@@ -2553,7 +2563,7 @@
 #define FLAG_SYS_GBS_ENABLED            (CRYSTAL_FLAGS_START + 875)
 #define FLAG_SYS_ON_RESUME              (CRYSTAL_FLAGS_START + 876)
 
-#define FLAGS_COUNT (CRYSTAL_FLAGS_END + 1)
+#define FLAGS_COUNT (KANTO_FLAGS_END + 1)
 
 // Special Flags (Stored in EWRAM (sSpecialFlags), not in the SaveBlock)
 #define SPECIAL_FLAGS_START                     0x4000
@@ -2580,27 +2590,27 @@
 #define FLAG_HIDE_BULBASAUR_BALL                           0
 #define FLAG_HIDE_SQUIRTLE_BALL                            0
 #define FLAG_HIDE_CHARMANDER_BALL                          0
-#define FLAG_HIDE_OAK_IN_HIS_LAB                           0
-#define FLAG_HIDE_OAK_IN_PALLET_TOWN                       0
-#define FLAG_HIDE_RIVAL_IN_LAB                             0
+#define FLAG_HIDE_OAK_IN_HIS_LAB                           (KANTO_FLAGS_START + 0)
+#define FLAG_HIDE_OAK_IN_PALLET_TOWN                       (KANTO_FLAGS_START + 1)
+#define FLAG_HIDE_RIVAL_IN_LAB                             (KANTO_FLAGS_START + 2)
 #define FLAG_HIDE_PEWTER_CITY_GYM_GUIDE                    0
 #define FLAG_HIDE_DOME_FOSSIL                              0
 #define FLAG_HIDE_HELIX_FOSSIL                             0
 #define FLAG_HIDE_NUGGET_BRIDGE_ROCKET                     0
 #define FLAG_HIDE_BILL_CLEFAIRY                            0
-#define FLAG_HIDE_BILL_HUMAN_SEA_COTTAGE                   0
+#define FLAG_HIDE_BILL_HUMAN_SEA_COTTAGE                   (KANTO_FLAGS_START + 3)
 #define FLAG_HIDE_TOWER_FUJI                               0
-#define FLAG_HIDE_POKEHOUSE_FUJI                           0
-#define FLAG_HIDE_LIFT_KEY                                 0
-#define FLAG_HIDE_SILPH_SCOPE                              0
+#define FLAG_HIDE_POKEHOUSE_FUJI                           (KANTO_FLAGS_START + 4)
+#define FLAG_HIDE_LIFT_KEY                                 (KANTO_FLAGS_START + 5)
+#define FLAG_HIDE_SILPH_SCOPE                              (KANTO_FLAGS_START + 6)
 #define FLAG_HIDE_HIDEOUT_GIOVANNI                         0
 #define FLAG_HIDE_TOWN_MAP                                 0
 #define FLAG_HIDE_POKEDEX                                  0
 #define FLAG_HIDE_CERULEAN_ROCKET                          0
-#define FLAG_HIDE_CERULEAN_RIVAL                           0
-#define FLAG_HIDE_SS_ANNE_RIVAL                            0
+#define FLAG_HIDE_CERULEAN_RIVAL                           (KANTO_FLAGS_START + 7)
+#define FLAG_HIDE_SS_ANNE_RIVAL                            (KANTO_FLAGS_START + 8)
 #define FLAG_HIDE_SAFFRON_ROCKETS                          0
-#define FLAG_HIDE_SAFFRON_CIVILIANS                        0
+#define FLAG_HIDE_SAFFRON_CIVILIANS                        (KANTO_FLAGS_START + 9)
 #define FLAG_HIDE_SEAFOAM_1F_BOULDER_1                     0
 #define FLAG_HIDE_SEAFOAM_1F_BOULDER_2                     0
 #define FLAG_HIDE_SEAFOAM_B1F_BOULDER_1                    0
@@ -2616,7 +2626,7 @@
 #define FLAG_HIDE_SEAFOAM_B4F_BOULDER_1                    0
 #define FLAG_HIDE_SEAFOAM_B4F_BOULDER_2                    0
 #define FLAG_HIDE_SILPH_RIVAL                              0
-#define FLAG_HIDE_ROUTE_22_RIVAL                           0
+#define FLAG_HIDE_ROUTE_22_RIVAL                           (KANTO_FLAGS_START + 10)
 #define FLAG_HIDE_PEWTER_MUSEUM_GUIDE                      0
 #define FLAG_HIDE_TOWER_RIVAL                              0
 #define FLAG_HIDE_MOLTRES                                  0
@@ -2627,7 +2637,7 @@
 #define FLAG_HIDE_EEVEE_BALL                               0
 #define FLAG_HIDE_VICTORY_ROAD_2F_BOULDER                  0
 #define FLAG_HIDE_VICTORY_ROAD_3F_BOULDER                  0
-#define FLAG_HIDE_OAK_IN_CHAMP_ROOM                        0
+#define FLAG_HIDE_OAK_IN_CHAMP_ROOM                        (KANTO_FLAGS_START + 11)
 #define FLAG_HIDE_GAME_CORNER_ROCKET                       0
 #define FLAG_HIDE_CERULEAN_CAVE_GUARD                      0
 #define FLAG_HIDE_ZAPDOS                                   0
@@ -2635,34 +2645,34 @@
 #define FLAG_HIDE_CELADON_ROCKETS                          0
 #define FLAG_HIDE_DOJO_HITMONLEE_BALL                      0
 #define FLAG_HIDE_DOJO_HITMONCHAN_BALL                     0
-#define FLAG_HIDE_CINNABAR_BILL                            0
-#define FLAG_HIDE_UNION_ROOM_PLAYER_1                      0
-#define FLAG_HIDE_UNION_ROOM_PLAYER_2                      0
-#define FLAG_HIDE_UNION_ROOM_PLAYER_3                      0
-#define FLAG_HIDE_UNION_ROOM_PLAYER_4                      0
-#define FLAG_HIDE_UNION_ROOM_PLAYER_5                      0
-#define FLAG_HIDE_UNION_ROOM_PLAYER_6                      0
-#define FLAG_HIDE_UNION_ROOM_PLAYER_7                      0
-#define FLAG_HIDE_UNION_ROOM_PLAYER_8                      0
-#define FLAG_HIDE_CINNABAR_SEAGALLOP                       0
-#define FLAG_HIDE_SAFFRON_FAN_CLUB_BLACKBELT               0
-#define FLAG_HIDE_SAFFRON_FAN_CLUB_ROCKER                  0
-#define FLAG_HIDE_SAFFRON_FAN_CLUB_WOMAN                   0
-#define FLAG_HIDE_SAFFRON_FAN_CLUB_BEAUTY                  0
-#define FLAG_HIDE_MG_DELIVERYMEN                           0
+#define FLAG_HIDE_CINNABAR_BILL                            (KANTO_FLAGS_START + 12)
+#define FLAG_HIDE_UNION_ROOM_PLAYER_1                      (KANTO_FLAGS_START + 13)
+#define FLAG_HIDE_UNION_ROOM_PLAYER_2                      (KANTO_FLAGS_START + 14)
+#define FLAG_HIDE_UNION_ROOM_PLAYER_3                      (KANTO_FLAGS_START + 15)
+#define FLAG_HIDE_UNION_ROOM_PLAYER_4                      (KANTO_FLAGS_START + 16)
+#define FLAG_HIDE_UNION_ROOM_PLAYER_5                      (KANTO_FLAGS_START + 17)
+#define FLAG_HIDE_UNION_ROOM_PLAYER_6                      (KANTO_FLAGS_START + 18)
+#define FLAG_HIDE_UNION_ROOM_PLAYER_7                      (KANTO_FLAGS_START + 19)
+#define FLAG_HIDE_UNION_ROOM_PLAYER_8                      (KANTO_FLAGS_START + 20)
+#define FLAG_HIDE_CINNABAR_SEAGALLOP                       (KANTO_FLAGS_START + 21)
+#define FLAG_HIDE_SAFFRON_FAN_CLUB_BLACKBELT               (KANTO_FLAGS_START + 22)
+#define FLAG_HIDE_SAFFRON_FAN_CLUB_ROCKER                  (KANTO_FLAGS_START + 23)
+#define FLAG_HIDE_SAFFRON_FAN_CLUB_WOMAN                   (KANTO_FLAGS_START + 24)
+#define FLAG_HIDE_SAFFRON_FAN_CLUB_BEAUTY                  (KANTO_FLAGS_START + 25)
+#define FLAG_HIDE_MG_DELIVERYMEN                           (KANTO_FLAGS_START + 26)
 #define FLAG_HIDE_ONE_ISLAND_BILL                          0
 #define FLAG_HIDE_ONE_ISLAND_POKECENTER_BILL               0
 #define FLAG_HIDE_ONE_ISLAND_POKECENTER_CELIO              0
-#define FLAG_HIDE_TWO_ISLAND_GAME_CORNER_BIKER             0
-#define FLAG_HIDE_TWO_ISLAND_GAME_CORNER_LOSTELLE          0
-#define FLAG_HIDE_LOSTELLE_IN_HER_HOME                     0
+#define FLAG_HIDE_TWO_ISLAND_GAME_CORNER_BIKER             (KANTO_FLAGS_START + 27)
+#define FLAG_HIDE_TWO_ISLAND_GAME_CORNER_LOSTELLE          (KANTO_FLAGS_START + 28)
+#define FLAG_HIDE_LOSTELLE_IN_HER_HOME                     (KANTO_FLAGS_START + 29)
 #define FLAG_0x077                                         0
 #define FLAG_0x078                                         0
 #define FLAG_HIDE_THREE_ISLAND_BIKERS                      0
 #define FLAG_HIDE_LOSTELLE_IN_BERRY_FOREST                 0
-#define FLAG_HIDE_TWO_ISLAND_WOMAN                         0
-#define FLAG_HIDE_TWO_ISLAND_BEAUTY                        0
-#define FLAG_HIDE_TWO_ISLAND_SUPER_NERD                    0
+#define FLAG_HIDE_TWO_ISLAND_WOMAN                         (KANTO_FLAGS_START + 30)
+#define FLAG_HIDE_TWO_ISLAND_BEAUTY                        (KANTO_FLAGS_START + 31)
+#define FLAG_HIDE_TWO_ISLAND_SUPER_NERD                    (KANTO_FLAGS_START + 32)
 #define FLAG_HIDE_THREE_ISLAND_ANTIBIKERS                  0
 #define FLAG_0x07F                                         0
 #define FLAG_HIDE_ROUTE_16_SNORLAX                         0
@@ -2677,39 +2687,38 @@
 #define FLAG_HIDE_MT_EMBER_EXTERIOR_ROCKETS                0
 #define FLAG_HIDE_RUBY                                     0
 #define FLAG_HIDE_ICEFALL_CAVE_LORELEI                     0
-#define FLAG_HIDE_LORELEI_IN_HER_HOUSE                     0
+#define FLAG_HIDE_LORELEI_IN_HER_HOUSE                     (KANTO_FLAGS_START + 33)
 #define FLAG_HIDE_ICEFALL_CAVE_ROCKETS                     0
 #define FLAG_HIDE_RUIN_VALLEY_SCIENTIST                    0
 #define FLAG_HIDE_SAPPHIRE                                 0
-#define FLAG_HIDE_DOTTED_HOLE_SCIENTIST                    0
-#define FLAG_HIDE_THREE_ISLAND_LONE_BIKER                  0
-#define FLAG_HIDE_PEWTER_CITY_RUNNING_SHOES_GUY            0
+#define FLAG_HIDE_DOTTED_HOLE_SCIENTIST                    (KANTO_FLAGS_START + 34)
+#define FLAG_HIDE_THREE_ISLAND_LONE_BIKER                  (KANTO_FLAGS_START + 35)
+#define FLAG_HIDE_PEWTER_CITY_RUNNING_SHOES_GUY            (KANTO_FLAGS_START + 36)
 #define FLAG_HIDE_LOST_CAVE_SELPHY                         0
-#define FLAG_HIDE_RESORT_GORGEOUS_SELPHY                   0
-#define FLAG_HIDE_RESORT_GORGEOUS_INSIDE_SELPHY            0
-#define FLAG_HIDE_SELPHYS_BUTLER                           0
-#define FLAG_HIDE_FOUR_ISLAND_RIVAL                        0
+#define FLAG_HIDE_RESORT_GORGEOUS_SELPHY                   (KANTO_FLAGS_START + 37)
+#define FLAG_HIDE_RESORT_GORGEOUS_INSIDE_SELPHY            (KANTO_FLAGS_START + 38)
+#define FLAG_HIDE_SELPHYS_BUTLER                           (KANTO_FLAGS_START + 39)
+#define FLAG_HIDE_FOUR_ISLAND_RIVAL                        (KANTO_FLAGS_START + 40)
 #define FLAG_HIDE_SIX_ISLAND_POKECENTER_RIVAL              0
 #define FLAG_HIDE_BIRTH_ISLAND_METEORITE                   0
-#define FLAG_HIDE_POSTGAME_GOSSIPERS                       0
-#define FLAG_HIDE_FAME_CHECKER_ERIKA_JOURNALS              0
-#define FLAG_HIDE_FAME_CHECKER_KOGA_JOURNAL                0
-#define FLAG_HIDE_FAME_CHECKER_LT_SURGE_JOURNAL            0
-#define FLAG_HIDE_VERMILION_CITY_OAKS_AIDE                 0
-#define FLAG_HIDE_CINNABAR_POKECENTER_BILL                 0
-#define FLAG_HIDE_CREDITS_RIVAL                            0
-#define FLAG_HIDE_CREDITS_OAK                              0
-#define FLAG_HIDE_LORELEI_HOUSE_MEOWTH_DOLL                0
-#define FLAG_HIDE_LORELEI_HOUSE_CHANSEY_DOLL               0
-#define FLAG_HIDE_LORELEIS_HOUSE_NIDORAN_F_DOLL            0
-#define FLAG_HIDE_LORELEI_HOUSE_JIGGLYPUFF_DOLL            0
-#define FLAG_HIDE_LORELEIS_HOUSE_NIDORAN_M_DOLL            0
-#define FLAG_HIDE_LORELEIS_HOUSE_FEAROW_DOLL               0
-#define FLAG_HIDE_LORELEIS_HOUSE_PIDGEOT_DOLL              0
-#define FLAG_HIDE_LORELEIS_HOUSE_LAPRAS_DOLL               0
+#define FLAG_HIDE_POSTGAME_GOSSIPERS                       (KANTO_FLAGS_START + 41)
+#define FLAG_HIDE_FAME_CHECKER_ERIKA_JOURNALS              (KANTO_FLAGS_START + 42)
+#define FLAG_HIDE_FAME_CHECKER_KOGA_JOURNAL                (KANTO_FLAGS_START + 43)
+#define FLAG_HIDE_FAME_CHECKER_LT_SURGE_JOURNAL            (KANTO_FLAGS_START + 44)
+#define FLAG_HIDE_VERMILION_CITY_OAKS_AIDE                 (KANTO_FLAGS_START + 45)
+#define FLAG_HIDE_CINNABAR_POKECENTER_BILL                 (KANTO_FLAGS_START + 46)
+#define FLAG_HIDE_CREDITS_RIVAL                            (KANTO_FLAGS_START + 47)
+#define FLAG_HIDE_CREDITS_OAK                              (KANTO_FLAGS_START + 48)
+#define FLAG_HIDE_LORELEI_HOUSE_MEOWTH_DOLL                (KANTO_FLAGS_START + 49)
+#define FLAG_HIDE_LORELEI_HOUSE_CHANSEY_DOLL               (KANTO_FLAGS_START + 50)
+#define FLAG_HIDE_LORELEIS_HOUSE_NIDORAN_F_DOLL            (KANTO_FLAGS_START + 51)
+#define FLAG_HIDE_LORELEI_HOUSE_JIGGLYPUFF_DOLL            (KANTO_FLAGS_START + 52)
+#define FLAG_HIDE_LORELEIS_HOUSE_NIDORAN_M_DOLL            (KANTO_FLAGS_START + 53)
+#define FLAG_HIDE_LORELEIS_HOUSE_FEAROW_DOLL               (KANTO_FLAGS_START + 54)
+#define FLAG_HIDE_LORELEIS_HOUSE_PIDGEOT_DOLL              (KANTO_FLAGS_START + 55)
+#define FLAG_HIDE_LORELEIS_HOUSE_LAPRAS_DOLL               (KANTO_FLAGS_START + 56)
 #define FLAG_HIDE_MISC_KANTO_ROCKETS                       0
-#define FLAG_HIDE_SAFFRON_CITY_POKECENTER_SABRINA_JOURNALS 0
-
+#define FLAG_HIDE_SAFFRON_CITY_POKECENTER_SABRINA_JOURNALS (KANTO_FLAGS_START + 57)
 #define FLAG_HIDE_ROUTE2_ETHER                                  0
 #define FLAG_HIDE_ROUTE2_PARALYZE_HEAL                          0
 #define FLAG_HIDE_VIRIDIAN_FOREST_POKE_BALL                     0
@@ -2772,7 +2781,7 @@
 #define FLAG_HIDE_SILPH_CO_4F_FULL_HEAL                         0
 #define FLAG_HIDE_SILPH_CO_5F_PROTEIN                           0
 #define FLAG_HIDE_SILPH_CO_5F_TM01                              0
-#define FLAG_HIDE_SILPH_CO_5F_CARD_KEY                          0
+#define FLAG_HIDE_SILPH_CO_5F_CARD_KEY                     (KANTO_FLAGS_START + 58)
 #define FLAG_HIDE_SILPH_CO_6F_HP_UP                             0
 #define FLAG_HIDE_SILPH_CO_6F_X_SPECIAL                         0
 #define FLAG_HIDE_SILPH_CO_7F_CALCIUM                           0
@@ -2900,9 +2909,9 @@
 #define FLAG_0x23E                                       0
 #define FLAG_GOT_TM28_FROM_ROCKET                        0
 #define FLAG_GOT_OLD_ROD                                 0
-#define FLAG_GOT_BIKE_VOUCHER                            0
+#define FLAG_GOT_BIKE_VOUCHER                              (KANTO_FLAGS_START + 59)
 #define FLAG_0x242                                       0
-#define FLAG_GOT_COIN_CASE                               0
+#define FLAG_GOT_COIN_CASE                                 (KANTO_FLAGS_START + 60)
 #define FLAG_GOT_GOOD_ROD                                0
 #define FLAG_GOT_TM29_FROM_MR_PSYCHIC                    0
 #define FLAG_GOT_LAPRAS_FROM_SILPH                       0
@@ -2923,7 +2932,7 @@
 #define FLAG_GOT_SUPER_ROD                               0
 #define FLAG_GOT_EXP_SHARE_FROM_OAKS_AIDE                0
 #define FLAG_DID_MARC_TRADE                              0
-#define FLAG_BEAT_RIVAL_IN_OAKS_LAB                      0
+#define FLAG_BEAT_RIVAL_IN_OAKS_LAB                        (KANTO_FLAGS_START + 61)
 #define FLAG_GOT_TM06_FROM_KOGA                          0
 #define FLAG_0x25A                                       0
 #define FLAG_GOT_TM27                                    0
@@ -2942,12 +2951,12 @@
 #define FLAG_CINNABAR_GYM_QUIZ_4                         0
 #define FLAG_CINNABAR_GYM_QUIZ_5                         0
 #define FLAG_CINNABAR_GYM_QUIZ_6                         0
-#define FLAG_POKEMON_MANSION_SWITCH_STATE                0
-#define FLAG_OPENED_ROCKET_HIDEOUT                       0
+#define FLAG_POKEMON_MANSION_SWITCH_STATE                  (KANTO_FLAGS_START + 62)
+#define FLAG_OPENED_ROCKET_HIDEOUT                         (KANTO_FLAGS_START + 63)
 #define FLAG_GOT_10_COINS_FROM_GAMBLER                   0
 #define FLAG_GOT_20_COINS_FROM_GAMBLER                   0
 #define FLAG_GOT_20_COINS_FROM_GAMBLER_2                 0
-#define FLAG_GOT_BICYCLE                                 0
+#define FLAG_GOT_BICYCLE                                   (KANTO_FLAGS_START + 64)
 #define FLAG_GOT_DOME_FOSSIL                             0
 #define FLAG_GOT_HELIX_FOSSIL                            0
 #define FLAG_DID_ESPHERE_TRADE                           0
@@ -2956,32 +2965,32 @@
 #define FLAG_0x277                                       0
 #define FLAG_GOT_HITMON_FROM_DOJO                        0
 #define FLAG_0x279                                       0
-#define FLAG_SILPH_2F_DOOR_1                             0
-#define FLAG_SILPH_2F_DOOR_2                             0
-#define FLAG_SILPH_3F_DOOR_1                             0
-#define FLAG_SILPH_3F_DOOR_2                             0
-#define FLAG_SILPH_4F_DOOR_1                             0
-#define FLAG_SILPH_4F_DOOR_2                             0
-#define FLAG_SILPH_5F_DOOR_1                             0
-#define FLAG_SILPH_5F_DOOR_2                             0
-#define FLAG_SILPH_5F_DOOR_3                             0
-#define FLAG_SILPH_6F_DOOR                               0
-#define FLAG_SILPH_7F_DOOR_1                             0
-#define FLAG_SILPH_7F_DOOR_2                             0
-#define FLAG_SILPH_7F_DOOR_3                             0
-#define FLAG_SILPH_8F_DOOR                               0
-#define FLAG_SILPH_9F_DOOR_1                             0
-#define FLAG_SILPH_9F_DOOR_2                             0
-#define FLAG_SILPH_9F_DOOR_3                             0
-#define FLAG_SILPH_9F_DOOR_4                             0
-#define FLAG_SILPH_10F_DOOR                              0
-#define FLAG_SILPH_11F_DOOR                              0
+#define FLAG_SILPH_2F_DOOR_1                               (KANTO_FLAGS_START + 65)
+#define FLAG_SILPH_2F_DOOR_2                               (KANTO_FLAGS_START + 66)
+#define FLAG_SILPH_3F_DOOR_1                               (KANTO_FLAGS_START + 67)
+#define FLAG_SILPH_3F_DOOR_2                               (KANTO_FLAGS_START + 68)
+#define FLAG_SILPH_4F_DOOR_1                               (KANTO_FLAGS_START + 69)
+#define FLAG_SILPH_4F_DOOR_2                               (KANTO_FLAGS_START + 70)
+#define FLAG_SILPH_5F_DOOR_1                               (KANTO_FLAGS_START + 71)
+#define FLAG_SILPH_5F_DOOR_2                               (KANTO_FLAGS_START + 72)
+#define FLAG_SILPH_5F_DOOR_3                               (KANTO_FLAGS_START + 73)
+#define FLAG_SILPH_6F_DOOR                                 (KANTO_FLAGS_START + 74)
+#define FLAG_SILPH_7F_DOOR_1                               (KANTO_FLAGS_START + 75)
+#define FLAG_SILPH_7F_DOOR_2                               (KANTO_FLAGS_START + 76)
+#define FLAG_SILPH_7F_DOOR_3                               (KANTO_FLAGS_START + 77)
+#define FLAG_SILPH_8F_DOOR                                 (KANTO_FLAGS_START + 78)
+#define FLAG_SILPH_9F_DOOR_1                               (KANTO_FLAGS_START + 79)
+#define FLAG_SILPH_9F_DOOR_2                               (KANTO_FLAGS_START + 80)
+#define FLAG_SILPH_9F_DOOR_3                               (KANTO_FLAGS_START + 81)
+#define FLAG_SILPH_9F_DOOR_4                               (KANTO_FLAGS_START + 82)
+#define FLAG_SILPH_10F_DOOR                                (KANTO_FLAGS_START + 83)
+#define FLAG_SILPH_11F_DOOR                                (KANTO_FLAGS_START + 84)
 #define FLAG_0x28E                                       0
 #define FLAG_0x28F                                       0
-#define FLAG_MET_STICKER_MAN                             0
-#define FLAG_PALLET_LADY_NOT_BLOCKING_SIGN               0
+#define FLAG_MET_STICKER_MAN                               (KANTO_FLAGS_START + 85)
+#define FLAG_PALLET_LADY_NOT_BLOCKING_SIGN                 (KANTO_FLAGS_START + 86)
 #define FLAG_GOT_VS_SEEKER                               0
-#define FLAG_GOT_TM19_FROM_ERIKA                         0
+#define FLAG_GOT_TM19_FROM_ERIKA                           (KANTO_FLAGS_START + 87)
 #define FLAG_GOT_TM33_FROM_THIRSTY_GIRL                  0
 #define FLAG_GOT_TM20_FROM_THIRSTY_GIRL                  0
 #define FLAG_GOT_TM16_FROM_THIRSTY_GIRL                  0
@@ -3001,27 +3010,27 @@
 #define FLAG_0x2A4                                       0
 #define FLAG_CAN_USE_ROCKET_HIDEOUT_LIFT                 0
 #define FLAG_GOT_TEA                                     0
-#define FLAG_GOT_POWDER_JAR                              0
+#define FLAG_GOT_POWDER_JAR                                (KANTO_FLAGS_START + 88)
 #define FLAG_FOUGHT_MEWTWO                               0
 #define FLAG_FOUGHT_MOLTRES                              0
 #define FLAG_FOUGHT_ARTICUNO                             0
 #define FLAG_FOUGHT_ZAPDOS                               0
-#define FLAG_TUTOR_DOUBLE_EDGE                           0
-#define FLAG_TUTOR_THUNDER_WAVE                          0
-#define FLAG_TUTOR_ROCK_SLIDE                            0
-#define FLAG_TUTOR_EXPLOSION                             0
-#define FLAG_TUTOR_MEGA_PUNCH                            0
-#define FLAG_TUTOR_MEGA_KICK                             0
-#define FLAG_TUTOR_DREAM_EATER                           0
-#define FLAG_TUTOR_SOFT_BOILED                           0
-#define FLAG_TUTOR_SUBSTITUTE                            0
-#define FLAG_TUTOR_SWORDS_DANCE                          0
-#define FLAG_TUTOR_SEISMIC_TOSS                          0
-#define FLAG_TUTOR_COUNTER                               0
-#define FLAG_TUTOR_METRONOME                             0
-#define FLAG_TUTOR_MIMIC                                 0
-#define FLAG_TUTOR_BODY_SLAM                             0
-#define FLAG_VISITED_OAKS_LAB                            0
+#define FLAG_TUTOR_DOUBLE_EDGE                             (KANTO_FLAGS_START + 89)
+#define FLAG_TUTOR_THUNDER_WAVE                            (KANTO_FLAGS_START + 90)
+#define FLAG_TUTOR_ROCK_SLIDE                              (KANTO_FLAGS_START + 91)
+#define FLAG_TUTOR_EXPLOSION                               (KANTO_FLAGS_START + 92)
+#define FLAG_TUTOR_MEGA_PUNCH                              (KANTO_FLAGS_START + 93)
+#define FLAG_TUTOR_MEGA_KICK                               (KANTO_FLAGS_START + 94)
+#define FLAG_TUTOR_DREAM_EATER                             (KANTO_FLAGS_START + 95)
+#define FLAG_TUTOR_SOFT_BOILED                             (KANTO_FLAGS_START + 96)
+#define FLAG_TUTOR_SUBSTITUTE                              (KANTO_FLAGS_START + 97)
+#define FLAG_TUTOR_SWORDS_DANCE                            (KANTO_FLAGS_START + 98)
+#define FLAG_TUTOR_SEISMIC_TOSS                            (KANTO_FLAGS_START + 99)
+#define FLAG_TUTOR_COUNTER                                 (KANTO_FLAGS_START + 100)
+#define FLAG_TUTOR_METRONOME                               (KANTO_FLAGS_START + 101)
+#define FLAG_TUTOR_MIMIC                                   (KANTO_FLAGS_START + 102)
+#define FLAG_TUTOR_BODY_SLAM                               (KANTO_FLAGS_START + 103)
+#define FLAG_VISITED_OAKS_LAB                              (KANTO_FLAGS_START + 104)
 #define FLAG_FOUGHT_POWER_PLANT_ELECTRODE_1              0
 #define FLAG_FOUGHT_POWER_PLANT_ELECTRODE_2              0
 #define FLAG_STOPPED_SEAFOAM_B3F_CURRENT                 0
@@ -3036,12 +3045,12 @@
 #define FLAG_NO_ROOM_FOR_TOGEPI_EGG                      0
 #define FLAG_RECOVERED_SAPPHIRE                          0
 #define FLAG_GOT_RUBY                                    0
-#define FLAG_TUTOR_FRENZY_PLANT                          0
-#define FLAG_TUTOR_BLAST_BURN                            0
-#define FLAG_TUTOR_HYDRO_CANNON                          0
-#define FLAG_LEARNED_ALL_MOVES_AT_CAPE_BRINK             0
+#define FLAG_TUTOR_FRENZY_PLANT                            (KANTO_FLAGS_START + 105)
+#define FLAG_TUTOR_BLAST_BURN                              (KANTO_FLAGS_START + 106)
+#define FLAG_TUTOR_HYDRO_CANNON                            (KANTO_FLAGS_START + 107)
+#define FLAG_LEARNED_ALL_MOVES_AT_CAPE_BRINK               (KANTO_FLAGS_START + 108)
 #define FLAG_GOT_NUGGET_FROM_DUNSPARCE_TUNNEL            0
-#define FLAG_USED_CUT_ON_RUIN_VALLEY_BRAILLE             0
+#define FLAG_USED_CUT_ON_RUIN_VALLEY_BRAILLE               (KANTO_FLAGS_START + 109)
 #define FLAG_FOUGHT_DEOXYS                               0
 #define FLAG_0x2E5                                       0
 #define FLAG_0x2E6                                       0
@@ -3056,10 +3065,10 @@
 #define FLAG_GOT_HM06                                    0
 #define FLAG_FOUGHT_LUGIA                                0
 #define FLAG_FOUGHT_HO_OH                                0
-#define FLAG_OAK_SAW_DEX_COMPLETION                      0
-#define FLAG_LUGIA_FLEW_AWAY                             0
-#define FLAG_HO_OH_FLEW_AWAY                             0
-#define FLAG_DEOXYS_FLEW_AWAY                            0
+#define FLAG_OAK_SAW_DEX_COMPLETION                        (KANTO_FLAGS_START + 110)
+#define FLAG_LUGIA_FLEW_AWAY                               (KANTO_FLAGS_START + 111)
+#define FLAG_HO_OH_FLEW_AWAY                               (KANTO_FLAGS_START + 112)
+#define FLAG_DEOXYS_FLEW_AWAY                              (KANTO_FLAGS_START + 113)
 #define FLAG_TALKED_TO_TEA_LADY_AFTER_HOF                0
 #define FLAG_TALKED_TO_OAKS_AIDE_IN_VERMILION            0
 #define FLAG_GOT_EVERSTONE_FROM_OAKS_AIDE                0
@@ -3259,7 +3268,7 @@
 #define FLAG_HIDDEN_ITEM_VIRIDIAN_CITY_GYM_MACHO_BRACE                     0
 #define FLAG_HIDDEN_ITEM_SSANNE_EXTERIOR_LAVA_COOKIE                       0
 
-#define FLAG_DEFEATED_BROCK           0
+#define FLAG_DEFEATED_BROCK                                (KANTO_FLAGS_START + 114)
 #define FLAG_DEFEATED_MISTY           0
 #define FLAG_DEFEATED_LT_SURGE        0
 #define FLAG_DEFEATED_ERIKA           0
@@ -3267,17 +3276,16 @@
 #define FLAG_DEFEATED_SABRINA         0
 #define FLAG_DEFEATED_BLAINE          0
 #define FLAG_DEFEATED_LEADER_GIOVANNI 0
-#define FLAG_DEFEATED_LORELEI         0
-#define FLAG_DEFEATED_BRUNO           0
-#define FLAG_DEFEATED_AGATHA          0
-#define FLAG_DEFEATED_LANCE           0
-#define FLAG_DEFEATED_CHAMP           0
-
+#define FLAG_DEFEATED_LORELEI                              (KANTO_FLAGS_START + 115)
+#define FLAG_DEFEATED_BRUNO                                (KANTO_FLAGS_START + 116)
+#define FLAG_DEFEATED_AGATHA                               (KANTO_FLAGS_START + 117)
+#define FLAG_DEFEATED_LANCE                                (KANTO_FLAGS_START + 118)
+#define FLAG_DEFEATED_CHAMP                                (KANTO_FLAGS_START + 119)
 #define FLAG_0x82A                                                  0
 #define FLAG_0x82B                                                  0
-#define FLAG_SYS_SET_TRAINER_CARD_PROFILE                           0
+#define FLAG_SYS_SET_TRAINER_CARD_PROFILE                  (KANTO_FLAGS_START + 120)
 #define FLAG_0x82E                                                  0
-#define FLAG_SYS_ON_CYCLING_ROAD                                    0
+#define FLAG_SYS_ON_CYCLING_ROAD                           (KANTO_FLAGS_START + 121)
 #define FLAG_0x831                                                  0
 #define FLAG_0x832                                                  0
 #define FLAG_0x833                                                  0
@@ -3287,62 +3295,61 @@
 #define FLAG_0x83A                                                  0
 #define FLAG_SYS_SAW_HELP_SYSTEM_INTRO                              0
 #define FLAG_0x83D                                                  0
-#define FLAG_OPENED_START_MENU                                      0
+#define FLAG_OPENED_START_MENU                             (KANTO_FLAGS_START + 122)
 #define FLAG_SYS_PC_STORAGE_DISABLED                                0
 #define FLAG_SYS_SEVII_MAP_123                                      0
 #define FLAG_SYS_SEVII_MAP_4567                                     0
 #define FLAG_SYS_GOT_BERRY_POUCH                                    0
-#define FLAG_SYS_UNLOCKED_TANOBY_RUINS                              0
-
+#define FLAG_SYS_UNLOCKED_TANOBY_RUINS                     (KANTO_FLAGS_START + 123)
 // World Map Flags
-#define FLAG_WORLD_MAP_PALLET_TOWN                                  0
-#define FLAG_WORLD_MAP_VIRIDIAN_CITY                                0
-#define FLAG_WORLD_MAP_PEWTER_CITY                                  0
-#define FLAG_WORLD_MAP_CERULEAN_CITY                                0
-#define FLAG_WORLD_MAP_LAVENDER_TOWN                                0
-#define FLAG_WORLD_MAP_VERMILION_CITY                               0
-#define FLAG_WORLD_MAP_CELADON_CITY                                 0
-#define FLAG_WORLD_MAP_FUCHSIA_CITY                                 0
-#define FLAG_WORLD_MAP_CINNABAR_ISLAND                              0
-#define FLAG_WORLD_MAP_INDIGO_PLATEAU_EXTERIOR                      0
-#define FLAG_WORLD_MAP_SAFFRON_CITY                                 0
-#define FLAG_WORLD_MAP_ONE_ISLAND                                   0
-#define FLAG_WORLD_MAP_TWO_ISLAND                                   0
-#define FLAG_WORLD_MAP_THREE_ISLAND                                 0
-#define FLAG_WORLD_MAP_FOUR_ISLAND                                  0
-#define FLAG_WORLD_MAP_FIVE_ISLAND                                  0
-#define FLAG_WORLD_MAP_SEVEN_ISLAND                                 0
-#define FLAG_WORLD_MAP_SIX_ISLAND                                   0
-#define FLAG_WORLD_MAP_ROUTE4_POKEMON_CENTER_1F                     0
-#define FLAG_WORLD_MAP_ROUTE10_POKEMON_CENTER_1F                    0
-#define FLAG_WORLD_MAP_VIRIDIAN_FOREST                              0
-#define FLAG_WORLD_MAP_MT_MOON_1F                                   0
+#define FLAG_WORLD_MAP_PALLET_TOWN                         (KANTO_FLAGS_START + 124)
+#define FLAG_WORLD_MAP_VIRIDIAN_CITY                       (KANTO_FLAGS_START + 125)
+#define FLAG_WORLD_MAP_PEWTER_CITY                         (KANTO_FLAGS_START + 126)
+#define FLAG_WORLD_MAP_CERULEAN_CITY                       (KANTO_FLAGS_START + 127)
+#define FLAG_WORLD_MAP_LAVENDER_TOWN                       (KANTO_FLAGS_START + 128)
+#define FLAG_WORLD_MAP_VERMILION_CITY                      (KANTO_FLAGS_START + 129)
+#define FLAG_WORLD_MAP_CELADON_CITY                        (KANTO_FLAGS_START + 130)
+#define FLAG_WORLD_MAP_FUCHSIA_CITY                        (KANTO_FLAGS_START + 131)
+#define FLAG_WORLD_MAP_CINNABAR_ISLAND                     (KANTO_FLAGS_START + 132)
+#define FLAG_WORLD_MAP_INDIGO_PLATEAU_EXTERIOR             (KANTO_FLAGS_START + 133)
+#define FLAG_WORLD_MAP_SAFFRON_CITY                        (KANTO_FLAGS_START + 134)
+#define FLAG_WORLD_MAP_ONE_ISLAND                          (KANTO_FLAGS_START + 135)
+#define FLAG_WORLD_MAP_TWO_ISLAND                          (KANTO_FLAGS_START + 136)
+#define FLAG_WORLD_MAP_THREE_ISLAND                        (KANTO_FLAGS_START + 137)
+#define FLAG_WORLD_MAP_FOUR_ISLAND                         (KANTO_FLAGS_START + 138)
+#define FLAG_WORLD_MAP_FIVE_ISLAND                         (KANTO_FLAGS_START + 139)
+#define FLAG_WORLD_MAP_SEVEN_ISLAND                        (KANTO_FLAGS_START + 140)
+#define FLAG_WORLD_MAP_SIX_ISLAND                          (KANTO_FLAGS_START + 141)
+#define FLAG_WORLD_MAP_ROUTE4_POKEMON_CENTER_1F            (KANTO_FLAGS_START + 142)
+#define FLAG_WORLD_MAP_ROUTE10_POKEMON_CENTER_1F           (KANTO_FLAGS_START + 143)
+#define FLAG_WORLD_MAP_VIRIDIAN_FOREST                     (KANTO_FLAGS_START + 144)
+#define FLAG_WORLD_MAP_MT_MOON_1F                          (KANTO_FLAGS_START + 145)
 #define FLAG_WORLD_MAP_SSANNE_EXTERIOR                              0
 #define FLAG_WORLD_MAP_UNDERGROUND_PATH_NORTH_SOUTH_TUNNEL          0
 #define FLAG_WORLD_MAP_UNDERGROUND_PATH_EAST_WEST_TUNNEL            0
-#define FLAG_WORLD_MAP_DIGLETTS_CAVE_B1F                            0
-#define FLAG_WORLD_MAP_VICTORY_ROAD_1F                              0
-#define FLAG_WORLD_MAP_ROCKET_HIDEOUT_B1F                           0
-#define FLAG_WORLD_MAP_SILPH_CO_1F                                  0
-#define FLAG_WORLD_MAP_POKEMON_MANSION_1F                           0
-#define FLAG_WORLD_MAP_SAFARI_ZONE_CENTER                           0
+#define FLAG_WORLD_MAP_DIGLETTS_CAVE_B1F                   (KANTO_FLAGS_START + 146)
+#define FLAG_WORLD_MAP_VICTORY_ROAD_1F                     (KANTO_FLAGS_START + 147)
+#define FLAG_WORLD_MAP_ROCKET_HIDEOUT_B1F                  (KANTO_FLAGS_START + 148)
+#define FLAG_WORLD_MAP_SILPH_CO_1F                         (KANTO_FLAGS_START + 149)
+#define FLAG_WORLD_MAP_POKEMON_MANSION_1F                  (KANTO_FLAGS_START + 150)
+#define FLAG_WORLD_MAP_SAFARI_ZONE_CENTER                  (KANTO_FLAGS_START + 151)
 #define FLAG_WORLD_MAP_POKEMON_LEAGUE_LORELEIS_ROOM                 0
-#define FLAG_WORLD_MAP_ROCK_TUNNEL_1F                               0
-#define FLAG_WORLD_MAP_SEAFOAM_ISLANDS_1F                           0
-#define FLAG_WORLD_MAP_POKEMON_TOWER_1F                             0
-#define FLAG_WORLD_MAP_CERULEAN_CAVE_1F                             0
-#define FLAG_WORLD_MAP_POWER_PLANT                                  0
+#define FLAG_WORLD_MAP_ROCK_TUNNEL_1F                      (KANTO_FLAGS_START + 152)
+#define FLAG_WORLD_MAP_SEAFOAM_ISLANDS_1F                  (KANTO_FLAGS_START + 153)
+#define FLAG_WORLD_MAP_POKEMON_TOWER_1F                    (KANTO_FLAGS_START + 154)
+#define FLAG_WORLD_MAP_CERULEAN_CAVE_1F                    (KANTO_FLAGS_START + 155)
+#define FLAG_WORLD_MAP_POWER_PLANT                         (KANTO_FLAGS_START + 156)
 #define FLAG_WORLD_MAP_NAVEL_ROCK_EXTERIOR                          0
-#define FLAG_WORLD_MAP_MT_EMBER_EXTERIOR                            0
-#define FLAG_WORLD_MAP_THREE_ISLAND_BERRY_FOREST                    0
-#define FLAG_WORLD_MAP_FOUR_ISLAND_ICEFALL_CAVE_ENTRANCE            0
+#define FLAG_WORLD_MAP_MT_EMBER_EXTERIOR                   (KANTO_FLAGS_START + 157)
+#define FLAG_WORLD_MAP_THREE_ISLAND_BERRY_FOREST           (KANTO_FLAGS_START + 158)
+#define FLAG_WORLD_MAP_FOUR_ISLAND_ICEFALL_CAVE_ENTRANCE   (KANTO_FLAGS_START + 159)
 #define FLAG_WORLD_MAP_FIVE_ISLAND_ROCKET_WAREHOUSE                 0
 #define FLAG_WORLD_MAP_TRAINER_TOWER_LOBBY                          0
-#define FLAG_WORLD_MAP_SIX_ISLAND_DOTTED_HOLE_1F                    0
-#define FLAG_WORLD_MAP_FIVE_ISLAND_LOST_CAVE_ENTRANCE               0
-#define FLAG_WORLD_MAP_SIX_ISLAND_PATTERN_BUSH                      0
-#define FLAG_WORLD_MAP_SIX_ISLAND_ALTERING_CAVE                     0
-#define FLAG_WORLD_MAP_SEVEN_ISLAND_TANOBY_RUINS_MONEAN_CHAMBER     0
+#define FLAG_WORLD_MAP_SIX_ISLAND_DOTTED_HOLE_1F           (KANTO_FLAGS_START + 160)
+#define FLAG_WORLD_MAP_FIVE_ISLAND_LOST_CAVE_ENTRANCE      (KANTO_FLAGS_START + 161)
+#define FLAG_WORLD_MAP_SIX_ISLAND_PATTERN_BUSH             (KANTO_FLAGS_START + 162)
+#define FLAG_WORLD_MAP_SIX_ISLAND_ALTERING_CAVE            (KANTO_FLAGS_START + 163)
+#define FLAG_WORLD_MAP_SEVEN_ISLAND_TANOBY_RUINS_MONEAN_CHAMBER (KANTO_FLAGS_START + 164)
 #define FLAG_WORLD_MAP_THREE_ISLAND_DUNSPARCE_TUNNEL                0
 #define FLAG_WORLD_MAP_SEVEN_ISLAND_SEVAULT_CANYON_TANOBY_KEY       0
 #define FLAG_WORLD_MAP_BIRTH_ISLAND_EXTERIOR                        0

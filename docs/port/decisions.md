@@ -2531,3 +2531,49 @@ location method was dead, and with it the Gen 4 way of getting them.
 **Constraint decision:** Johto has no in-game Moss Rock or Ice Rock object, so
 these are whole-area conditions rather than a specific overworld landmark. If
 Phase 7 adds the rocks as objects, tighten the condition back to a single map.
+
+## D74 — 713 flags were all defined as zero
+
+**Phase 4.** A new and much larger instance of the Phase 1 pattern, found by
+scanning `include/constants/flags.h` for colliding values rather than by
+chasing map constants.
+
+The `// FRLG flags` block in `flags.h` held **713 `#define FLAG_X 0`** lines.
+Zero is not a spare flag — it is `TEMP_FLAGS_START`, i.e. `FLAG_TEMP_1`, aliased
+as `FLAG_TEMP_SKIP_GABBY_INTERVIEW`. Temp flags are **cleared on every map
+load**. So every one of those 713 names read and wrote the same single bit, and
+that bit was wiped each time the player walked through a door.
+
+**165 of them are actually referenced** by code or scripts in this tree, and
+several are live CrystalDust content, not FRLG leftovers:
+
+- `FLAG_OPENED_ROCKET_HIDEOUT` — used five times in
+  `data/maps/MahoganyTown_Shop/scripts.pory`. The Rocket hideout under the
+  Mahogany souvenir shop would have re-sealed itself on every map change.
+- `FLAG_GOT_TM19_FROM_ERIKA` — `data/maps/CeladonCity_Gym/scripts.pory`. Erika's
+  TM was infinitely farmable.
+- `FLAG_OPENED_START_MENU` (`src/field_control_avatar.c`),
+  `FLAG_SYS_ON_CYCLING_ROAD` and `FLAG_SYS_UNLOCKED_TANOBY_RUINS`
+  (`data/event_scripts.s`), the eight `FLAG_HIDE_UNION_ROOM_PLAYER_n`, the four
+  Saffron fan-club flags, 40 `FLAG_WORLD_MAP_*` used by `region_map.c` and
+  `map_preview_screen.c`, the 18 FRLG move-tutor flags, the 21 Silph Co door
+  flags and the Pokémon Mansion switch state.
+
+All 165 now get real numbers from a new `KANTO_FLAGS_START` block placed after
+`CRYSTAL_FLAGS_END`, with `FLAGS_COUNT` extended to match. Cost: 21 bytes of
+SaveBlock1, which fits the remaining budget described in D12 — the build's
+`SaveBlock1FreeSpace` static assert still passes.
+
+**Constraint decision:** the other **548 stub flags stay at 0**. Nothing in the
+tree references them; they belong to Sevii (cut, D35), the FRLG Silph Co and
+Lorelei's-house interiors, and FRLG hidden-item lists for maps that do not
+exist. Giving them save bits would spend the rest of the flag budget on content
+that was deliberately cut. They are recorded here rather than deleted, so that
+if Phase 7 revives any of it the aliasing is a known hazard, not a fresh
+surprise.
+
+Also fixed while verifying: `src/debug/sound_check_menu.c` referenced
+`gCryTable2`, which expansion renamed to `gCryTable_Reverse`. The normal build
+never linked it; the **test build did, and `make check` failed to link because
+of it**. That was the only thing standing between this port and its first run of
+the expansion test suite.
