@@ -3,6 +3,7 @@
 #include "clock.h"
 #include "dewford_trend.h"
 #include "event_data.h"
+#include "fruit_tree.h"
 #include "field_specials.h"
 #include "field_weather.h"
 #include "lottery_corner.h"
@@ -50,6 +51,7 @@ void UpdateDailySeed(void)
 void DoDailyEvents(u32 daysSince)
 {
     ClearDailyFlags();
+    SetFruitTreeMetatiles(TRUE); // Crystal Expansion (D83)
     UpdateDailySeed();
     UpdateMassOutbreakDaysLeft(daysSince);
     UpdateDewfordTrendPerDay(daysSince);

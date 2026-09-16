@@ -2,6 +2,7 @@
 #include "battle_pyramid.h"
 #include "bg.h"
 #include "fieldmap.h"
+#include "fruit_tree.h"
 #include "day_night.h" // CrystalDust palette overrides (D53)
 #include "fldeff.h"
 #include "fldeff_misc.h"
@@ -137,6 +138,7 @@ void InitMap(void)
 {
     InitMapLayoutData(&gMapHeader);
     SetOccupiedSecretBaseEntranceMetatiles(gMapHeader.events);
+    SetFruitTreeMetatiles(FALSE); // Crystal Expansion (D83)
     RunOnLoadMapScript();
 }
 
@@ -145,6 +147,7 @@ void InitMapFromSavedGame(void)
     InitMapLayoutData(&gMapHeader);
     InitSecretBaseAppearance(FALSE);
     SetOccupiedSecretBaseEntranceMetatiles(gMapHeader.events);
+    SetFruitTreeMetatiles(FALSE); // Crystal Expansion (D83)
     LoadSavedMapView();
     RunOnLoadMapScript();
     UpdateTVScreensOnMap(gBackupMapLayout.width, gBackupMapLayout.height);
@@ -247,6 +250,10 @@ static void FillConnection(s32 x, s32 y, const struct MapHeader *connectedMapHea
         dest += gBackupMapLayout.width;
         src += mapWidth;
     }
+
+    // Crystal Expansion (D83): a fruit tree on a connected map has to be drawn
+    // too, or it pops in only once the player crosses the border.
+    SetFruitTreeMetatilesOnConnectedMap(x, y, connectedMapHeader, x2, y2, width, height);
 }
 
 static void FillSouthConnection(const struct MapHeader *mapHeader, const struct MapHeader *connectedMapHeader, s32 offset)

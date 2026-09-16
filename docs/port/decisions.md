@@ -2959,3 +2959,26 @@ Constraint decisions, none of them silent:
   input. A human play-test of National Park is required.
 
 Build: exit 0, ROM 29,072,164 B (86.64%).
+
+## D83 — Johto's fruit trees are drawn again
+
+The same audit that found D82 flagged `fruit_tree.h`: CrystalDust includes it
+from three files, this tree from one (`day_night.c`, which does not even call
+into it). `src/fruit_tree.c` was ported whole and 23 maps carry
+`BG_EVENT_FRUIT_TREE` bg events, but nothing ever called
+`SetFruitTreeMetatiles`, so every Johto berry/Apricorn tree drew as whatever
+metatile the layout happened to hold and never changed when picked or regrown.
+
+Restored CrystalDust's three call sites: `InitMap` and `InitMapFromSavedGame`
+in `src/fieldmap.c` (draw without redrawing, the map is not up yet),
+`FillConnection` (so a tree on a connected map is correct before the player
+crosses the border), and `UpdatePerDay` in `src/clock.c` next to
+`ClearDailyFlags` (regrowth, with a live redraw).
+
+No constraint decisions were needed — every call site transferred unchanged.
+`GetFruitTreeItem` and `SetFruitTreeMetatileTakenFromId` were already registered
+in `data/specials.inc`, so the picking scripts were waiting on this. Needs a
+human play-test: the tree art and the day-rollover regrowth cannot be checked
+headlessly.
+
+Build: exit 0, ROM 29,072,324 B (86.64%).
