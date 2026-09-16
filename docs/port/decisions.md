@@ -2811,3 +2811,48 @@ and before the player was Champion, exactly as their TODO says. Rewritten as a
 single "hide unless both hold".
 
 Build: exit 0, ROM 29,067,236 B (86.63%), smoke test clean.
+
+## D80 — the player was still Brendan and May
+
+Found while porting CrystalDust's per-NPC text colours: `PLAYER_AVATAR_GFX_MALE_
+NORMAL` resolved to `OBJ_EVENT_GFX_BRENDAN_NORMAL`, and
+`gObjectEventGraphicsInfo_BrendanNormal` drew `graphics/object_events/pics/
+people/brendan/walking.png`. Gold and Kris existed only as NPC graphics — the
+one place they appeared was the Copycat's house in Saffron. So after choosing
+Gold or Kris in the new intro (D76), the player walked out of New Bark Town as
+Brendan or May.
+
+Every one of CrystalDust's player sheets was already sitting in
+`graphics/object_events/pics/people/gold/` and `kris/` — walking, running,
+mach bike, acro bike, surfing, underwater, field move, fishing, watering,
+decorating. Only the wiring was missing.
+
+The fix follows what CrystalDust itself does: keep expansion's `Brendan*` /
+`May*` graphics-info and pic-table names — every avatar table, map JSON and
+script in the tree points at `OBJ_EVENT_GFX_BRENDAN_*` — and repoint the art and
+the palette tags (`OBJ_EVENT_PAL_TAG_GOLD` / `_KRIS`) underneath them. Nine
+infos each for Gold and Kris.
+
+One sheet needed more than a repoint: **field move**. Gold's and Kris's are five
+16x32 frames where Brendan's and May's are 32x32, so those two infos get new
+`gObjectEventPic_{Gold,Kris}FieldMove` symbols, new pic tables, and a 16x32
+OAM/subsprite shape — matching CrystalDust's `gObjectEventGraphicsInfo_
+GoldFieldMove`.
+
+### Constraint decisions
+
+- **`Rival*` and `Link*` infos share the same pic tables**, so they now draw
+  Gold's and Kris's art too. For the rival infos that is dead content (the Hoenn
+  rival's maps are gone; Johto's rival is Silver, with his own sprite). For
+  `LinkBrendan` / `LinkMay` in the Union Room it is arguably more correct.
+- **Underwater keeps `OBJ_EVENT_PAL_TAG_PLAYER_UNDERWATER`**, as both games do.
+- **Acro bike:** CrystalDust has no acro bike art at all — Johto has no acro
+  bike — but `gold/acro_bike.png` and `kris/acro_bike.png` are in the tree with
+  the same dimensions as Brendan's, so they are wired up rather than left on
+  Brendan's.
+- **This cannot be verified headlessly.** `mgba-perf` has no input injection, so
+  the ROM boots clean but nobody has seen the sprite move. It wants the same
+  human play-test as D76, and in particular a check that Gold's bike, surf and
+  fishing sheets really do share Gold's palette — CrystalDust assumes they do.
+
+Build: exit 0, ROM 29,069,860 B (86.63%), smoke test clean.

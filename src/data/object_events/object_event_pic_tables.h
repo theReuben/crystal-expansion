@@ -2804,6 +2804,22 @@ static const struct SpriteFrameImage sPicTable_KimonoGirl[] = {
     overworld_frame(gObjectEventPic_KimonoGirl, 2, 4, 2),
 };
 
+static const struct SpriteFrameImage sPicTable_GoldFieldMove[] = {
+    overworld_frame(gObjectEventPic_GoldFieldMove, 2, 4, 0),
+    overworld_frame(gObjectEventPic_GoldFieldMove, 2, 4, 1),
+    overworld_frame(gObjectEventPic_GoldFieldMove, 2, 4, 2),
+    overworld_frame(gObjectEventPic_GoldFieldMove, 2, 4, 3),
+    overworld_frame(gObjectEventPic_GoldFieldMove, 2, 4, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_KrisFieldMove[] = {
+    overworld_frame(gObjectEventPic_KrisFieldMove, 2, 4, 0),
+    overworld_frame(gObjectEventPic_KrisFieldMove, 2, 4, 1),
+    overworld_frame(gObjectEventPic_KrisFieldMove, 2, 4, 2),
+    overworld_frame(gObjectEventPic_KrisFieldMove, 2, 4, 3),
+    overworld_frame(gObjectEventPic_KrisFieldMove, 2, 4, 4),
+};
+
 static const struct SpriteFrameImage sPicTable_KrisNormal[] = {
     overworld_frame(gObjectEventPic_KrisNormal, 2, 4, 0),
     overworld_frame(gObjectEventPic_KrisNormal, 2, 4, 1),
