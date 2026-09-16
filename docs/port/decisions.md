@@ -3006,3 +3006,25 @@ nothing wrote them and nothing read them.
   project has its own version line and a reason to break save compatibility.
 
 Build: exit 0, ROM 29,072,676 B (86.64%).
+
+## D85 — The player's room is furnished on a new game
+
+`SetDefaultRoomDecor` is the third hook the `new_game.c` audit turned up, and
+unlike D84 it was missing outright rather than merely uncalled: the function did
+not exist in this tree at all. Everything it touches survived —
+`VAR_ROOM_BED`/`VAR_ROOM_TABLE`/`VAR_ROOM_POSTER`, the `RoomDecor` bitfield in
+`SaveBlock1`, `constants/room_decor.h`, and
+`data/maps/NewBarkTown_PlayersHouse_2F/scripts.pory`, which already reads the
+vars to draw the room. With nothing setting them, a new game started with all
+three at zero: no bed, no desk, no poster in the player's bedroom, on the very
+first map of the game.
+
+Re-created verbatim from CrystalDust and called from `NewGameInitData` in
+CrystalDust's position, after `SetBuildNumber`. No constraint decisions; every
+constant and field transferred unchanged.
+
+Note this is the *starting* decor only. CrystalDust's decorating menu in the
+bedroom PC is unimplemented upstream too (it is on their TODO), so the player
+still cannot change it. That remains a genuine gap, now recorded.
+
+Build: exit 0, ROM 29,072,740 B (86.64%).

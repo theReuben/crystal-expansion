@@ -20,6 +20,7 @@
 #include "easy_chat.h"
 #include "event_data.h"
 #include "game_build.h"
+#include "constants/room_decor.h"
 #include "money.h"
 #include "trainer_hill.h"
 #include "trainer_tower.h"
@@ -158,6 +159,19 @@ void ResetMenuAndMonGlobals(void)
     ResetPokeblockScrollPositions();
 }
 
+// Crystal Expansion (D85): the player's room starts furnished, and those three
+// pieces are already owned, exactly as CrystalDust sets them up for a new game.
+static void SetDefaultRoomDecor(void)
+{
+    VarSet(VAR_ROOM_BED, BED_FEATHERY);
+    VarSet(VAR_ROOM_TABLE, DESK_DEFAULT);
+    VarSet(VAR_ROOM_POSTER, POSTER_MAP);
+
+    gSaveBlock1Ptr->roomDecorInventory.featheryBed = TRUE;
+    gSaveBlock1Ptr->roomDecorInventory.townMap = TRUE;
+    gSaveBlock1Ptr->roomDecorInventory.defaultDesk = TRUE;
+}
+
 void NewGameInitData(void)
 {
 #if IS_FRLG
@@ -231,6 +245,7 @@ void NewGameInitData(void)
     ResetTrainerTowerResults();
     ResetContestLinkResults();
     SetBuildNumber(); // Crystal Expansion (D84): stamp the save with its build
+    SetDefaultRoomDecor(); // Crystal Expansion (D85)
     SetCurrentDifficultyLevel(DIFFICULTY_NORMAL);
     ResetItemFlags();
     ResetDexNav();
