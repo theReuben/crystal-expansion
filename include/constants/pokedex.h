@@ -1817,7 +1817,7 @@ enum KantoDexOrder
 
 enum
 {
-    DEX_MODE_HOENN,
+    DEX_MODE_JOHTO, // the regional mode; it has walked Johto's order since D24, renamed in D78
     DEX_MODE_NATIONAL
 };
 

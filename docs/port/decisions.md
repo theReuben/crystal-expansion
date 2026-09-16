@@ -2745,3 +2745,38 @@ fully unreferenced but total about 23 KB between them. Left in place; they are
 cheap and some may come back with Phase 7 features.
 
 Build: exit 0, smoke test clean.
+
+## D78 — Phase 5 closes: the rename debt, and what the sweep actually found
+
+**The text sweep found much less than expected.** Scanning every `.inc` and
+`.pory` under `data/` for Hoenn place names turned up 129 hits, and almost all
+of them are in files that are already CrystalDust's byte for byte
+(`match_call.inc`, `tv.inc`, `pokemon_news.inc`) — CrystalDust simply never
+rewrote the unreachable Emerald lines in them, so neither do we. The same holds
+for `src/strings.c`: `gText_HOFDexRating`, `gText_BirchInTrouble`,
+`gText_CheckMapOfHoenn` and `gText_ProfBirchMatchCallName` are identical in
+CrystalDust's own `strings.c`. Where they are used at all it is from code paths
+Johto never enters (`starter_choose.c`'s Birch bag, `STRINGID_DONTLEAVEBIRCH`'s
+first-battle escape message).
+
+Renames done: `DEX_MODE_HOENN` -> `DEX_MODE_JOHTO` (21 sites),
+`sLilycoveDeptStore_DefaultFloorChoice` -> `sDeptStoreDefaultFloorChoice` (it
+reads Goldenrod's dept store now), `WarpToTruck` -> `WarpToPlayersBedroom`
+(D77).
+
+### Constraint decision: the trainer card is still Emerald's, with Johto badges
+
+Renaming `gHoennTrainerCard*` to `gJohtoTrainerCard*` collided — because
+`src/graphics.c` **already** has a `gJohtoTrainerCard*` block, pointing at
+CrystalDust's card art (`card_cd`, `bg_cd`, `front_cd`, `back_cd`,
+`front_link_cd`, `0star_cd`). Nothing references it. `src/trainer_card.c` draws
+Emerald's card and only the badge strip was swapped for Johto's in D59.
+
+So **CrystalDust's trainer card design is in the tree but not on screen.** The
+rename is reverted: `gHoennTrainerCard*` is an accurate name for Emerald's card
+art, and the CrystalDust block keeps the Johto name it already had. Wiring it
+up means porting CrystalDust's card-style selector — the same
+`CARD_TYPE_CRYSTALDUST` / `VERSION_CRYSTAL_DUST` work already parked in D59 —
+and is a Phase 7 item, not a rename.
+
+Build: exit 0, ROM 29,067,236 B (86.63%), smoke test clean.

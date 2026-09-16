@@ -98,7 +98,7 @@ static EWRAM_DATA u32 sBikeCyclingTimer = 0;
 static EWRAM_DATA u8 sSlidingDoorNextFrameCounter = 0;
 static EWRAM_DATA u8 sSlidingDoorFrame = 0;
 static EWRAM_DATA u8 sTutorMoveAndElevatorWindowId = 0;
-static EWRAM_DATA u16 sLilycoveDeptStore_DefaultFloorChoice = 0;
+static EWRAM_DATA u16 sDeptStoreDefaultFloorChoice = 0;
 static EWRAM_DATA struct ListMenuItem *sScrollableMultichoice_ListMenuItem = NULL;
 
 static EWRAM_DATA u16 sFrontierExchangeCorner_NeverRead = 0;
@@ -1887,37 +1887,37 @@ void SetDeptStoreFloor(void)
 
 u16 GetDeptStoreDefaultFloorChoice(void)
 {
-    sLilycoveDeptStore_DefaultFloorChoice = 0;
+    sDeptStoreDefaultFloorChoice = 0;
 
     if (gSaveBlock1Ptr->dynamicWarp.mapGroup == MAP_GROUP(MAP_GOLDENROD_CITY_DEPT_STORE_1F))
     {
         switch (gSaveBlock1Ptr->dynamicWarp.mapNum)
         {
         case MAP_NUM(MAP_GOLDENROD_CITY_DEPT_STORE_6F):
-            sLilycoveDeptStore_DefaultFloorChoice = 0;
+            sDeptStoreDefaultFloorChoice = 0;
             break;
         case MAP_NUM(MAP_GOLDENROD_CITY_DEPT_STORE_5F):
-            sLilycoveDeptStore_DefaultFloorChoice = 1;
+            sDeptStoreDefaultFloorChoice = 1;
             break;
         case MAP_NUM(MAP_GOLDENROD_CITY_DEPT_STORE_4F):
-            sLilycoveDeptStore_DefaultFloorChoice = 2;
+            sDeptStoreDefaultFloorChoice = 2;
             break;
         case MAP_NUM(MAP_GOLDENROD_CITY_DEPT_STORE_3F):
-            sLilycoveDeptStore_DefaultFloorChoice = 3;
+            sDeptStoreDefaultFloorChoice = 3;
             break;
         case MAP_NUM(MAP_GOLDENROD_CITY_DEPT_STORE_2F):
-            sLilycoveDeptStore_DefaultFloorChoice = 4;
+            sDeptStoreDefaultFloorChoice = 4;
             break;
         case MAP_NUM(MAP_GOLDENROD_CITY_DEPT_STORE_1F):
-            sLilycoveDeptStore_DefaultFloorChoice = 5;
+            sDeptStoreDefaultFloorChoice = 5;
             break;
         case MAP_NUM(MAP_GOLDENROD_CITY_DEPT_STORE_B1F):
-            sLilycoveDeptStore_DefaultFloorChoice = 6;
+            sDeptStoreDefaultFloorChoice = 6;
             break;
         }
     }
 
-    return sLilycoveDeptStore_DefaultFloorChoice;
+    return sDeptStoreDefaultFloorChoice;
 }
 
 // Task data for Task_MoveElevator
