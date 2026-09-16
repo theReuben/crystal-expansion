@@ -332,6 +332,21 @@
 #define VAR_TEXT_COLOR                         0x4131
 #define VAR_TEXT_COLOR_BACKUP                  0x4132
 
+// ---- FRLG orphan vars rescued from vars_frlg.h (D75) ----
+// vars.h includes vars_frlg.h and then redefines most of it, but 93 FRLG names
+// were left on FRLG numbering, where they alias unrelated Emerald vars. Two of
+// those aliases land on live code, so they get real homes here.
+
+// Was VAR_PREV_TEXT_COLOR 0x8013 == VAR_MON_BOX_POS, so Std_ReceivedItem copied
+// the PC storage cursor into the text colour on every item the player receives.
+#undef VAR_PREV_TEXT_COLOR
+#define VAR_PREV_TEXT_COLOR                    VAR_TEXT_COLOR_BACKUP
+
+// Was 0x4025 == VAR_MIRAGE_RND_L, which clock.c rewrites once a day. Daisy's
+// massage is Goldenrod content we intend to wire up, so give it its own var.
+#undef VAR_MASSAGE_COOLDOWN_STEP_COUNTER
+#define VAR_MASSAGE_COOLDOWN_STEP_COUNTER      0x4133
+
 // Crystal Expansion: grown from 0x40FF (256 vars, of which only 4 were free)
 // to 0x413F (320) to fit CrystalDust's 52 additional vars plus 12 spare.
 // Address space is not the constraint -- the next allocated range is

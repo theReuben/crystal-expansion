@@ -2577,3 +2577,59 @@ Also fixed while verifying: `src/debug/sound_check_menu.c` referenced
 never linked it; the **test build did, and `make check` failed to link because
 of it**. That was the only thing standing between this port and its first run of
 the expansion test suite.
+
+## D75 — the same scan applied to the var pool, and the first green test suite
+
+D74 found 713 flags stubbed to `0`. Running the identical collision scan over
+`include/constants/vars.h` / `include/constants/vars_frlg.h` turns up a smaller
+but similar problem. `vars.h` includes `vars_frlg.h` and then redefines most of
+it, but **93 FRLG var names are never redefined**, so they keep FRLG numbering
+and land on top of unrelated Emerald vars. 26 of the 93 are still referenced.
+
+Two of those aliases touch live code and are fixed here:
+
+| FRLG name | aliased | why it mattered |
+| --- | --- | --- |
+| `VAR_PREV_TEXT_COLOR` (0x8013) | `VAR_MON_BOX_POS` | `Std_ReceivedItem` calls `EventScript_RestorePrevTextColor`, so **every item the player receives** copied the PC storage cursor into the text colour var. Now aliased to `VAR_TEXT_COLOR_BACKUP`, which is what Emerald reserved for it. Note `ScrCmd_textcolor` is a no-op outside FRLG, so the whole colour path is inert either way — this removes a bogus read, not a visible bug. |
+| `VAR_MASSAGE_COOLDOWN_STEP_COUNTER` (0x4025) | `VAR_MIRAGE_RND_L` | `clock.c` rewrites the mirage seed once a day. Daisy's massage is Goldenrod content we intend to wire up in Phase 6, so it gets its own var at 0x4133 (0x4134–0x4137 remain free). |
+
+**Constraint decision — the other 24 referenced orphans keep their aliases.**
+Every one is dead-vs-dead or dead-vs-live-where-the-dead-side-never-runs:
+the `VAR_MAP_SCENE_*` set (Kanto/Sevii scenes, referenced only from
+`debug.inc`, `seagallop.inc`, `hall_of_fame_frlg.inc`, `cable_club_frlg.inc`,
+`route23.inc`, `trainer_tower.c`, `trainer_fan_club.c`) sits on Hoenn
+`*_STATE` vars whose maps are gone; the trainer-card brag states sit on
+Hoenn lottery/cruise vars; `VAR_ELEVATOR_FLOOR`, the three
+`VAR_RESORT_GORGEOUS_*` and `VAR_HERACROSS_SIZE_RECORD` likewise. This is a
+hazard register, not a clean bill of health: **if Phase 7 revives any Sevii,
+Trainer Tower or Kanto-scene content, these must be given real numbers first**,
+exactly as with D74's 548 dead flags.
+
+### The expansion test suite now runs green
+
+First full `./tools/build.sh -j8 check` of the project. It found six real
+failures, all ours, all fixed:
+
+- **`test/save.c`** expected vanilla SaveBlock sizes. Ours are *smaller*
+  (13676 / 2648 vs 15568 / 3884) despite D12/D13's grown flag and var pools,
+  because the Hoenn-only blocks left with the maps. Expectations updated with a
+  comment rather than deleted, so a future accidental shift still trips.
+- **`test/mass_outbreak.c`** (×3) used `MAP_OLDALE_TOWN`, now a stub constant
+  with no map behind it, so `MAP_NUM`/`MAP_GROUP` resolved to nothing. Switched
+  to `MAP_ROUTE32`, a real map and a real swarm site (D71).
+- **Item descriptions** — 15 CrystalDust key items carried FRLG's two-wide
+  description lines, which overflow Emerald's 102px bag window. Rewritten to
+  Emerald's three-narrow-line shape (Squirtbottle, Secret Potion, Red Scale,
+  Machine Part, Clear Bell, Rainbow Wing, Silver Wing, GS Ball, Mystery Egg,
+  Pass, Lost Item, Blue Card, Egg Ticket, Slowpoke Tail, GB Player). Wording
+  changed, meaning preserved.
+- **Map name popup** — `GOLDENROD CITY ROOFTOP` is 86px in an 80px window.
+  Emerald handles Celadon by special-casing the name, but Goldenrod's dept
+  store 1F shares a layout with an ordinary building, so it can't be detected
+  the same way. The popup suffix is now `ROOF` instead of `ROOFTOP`, which
+  fixes every rooftop at once; the elevator floor list still says ROOFTOP.
+
+**Known issue, pre-existing and not from this work:** 32 battle tests on test
+runner 5 die with `malloc.c` heap assertions, starting at "Confirm behavioural
+match with other -ate abilities". Identical before and after these changes.
+Parked for Phase 7.

@@ -14347,8 +14347,9 @@ const struct ItemInfo gItemsInfo[] =
         .name = ITEM_NAME("Squirtbottle"),
         .price = 0,
         .description = COMPOUND_STRING(
-            "A bottle used for watering plants.\n"
-            "It is shaped like a SQUIRTLE."),
+            "A bottle shaped\n"
+            "like a SQUIRTLE.\n"
+            "Used for watering."),
         .importance = 2,
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_FIELD,
@@ -14362,9 +14363,9 @@ const struct ItemInfo gItemsInfo[] =
         .name = ITEM_NAME("Secret Potion"),
         .price = 0,
         .description = COMPOUND_STRING(
-            "A fantastic medicine dispensed by\n"
-            "the pharmacy in CIANWOOD. It fully\n"
-            "heals a POKéMON of any ailment."),
+            "Medicine from the\n"
+            "CIANWOOD pharmacy.\n"
+            "Cures all ills."),
         .importance = 2,
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_BAG_MENU,
@@ -14378,8 +14379,10 @@ const struct ItemInfo gItemsInfo[] =
         .name = ITEM_NAME("Red Scale"),
         .price = 0,
         .description = COMPOUND_STRING(
-            "A scale from the red GYARADOS.\n"
-            "It glows red like a flame."),
+            "A scale from a red\n"
+            "GYARADOS. It glows\n"
+            "red like a flame."
+        ),
         .importance = 2,
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_BAG_MENU,
@@ -14393,8 +14396,10 @@ const struct ItemInfo gItemsInfo[] =
         .name = ITEM_NAME("Machine Part"),
         .price = 0,
         .description = COMPOUND_STRING(
-            "An important machine part for the\n"
-            "POWER PLANT that was stolen."),
+            "An important part\n"
+            "stolen from the\n"
+            "POWER PLANT."
+        ),
         .importance = 2,
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_BAG_MENU,
@@ -14408,8 +14413,10 @@ const struct ItemInfo gItemsInfo[] =
         .name = ITEM_NAME("Clear Bell"),
         .price = 0,
         .description = COMPOUND_STRING(
-            "A very old-fashioned bell that\n"
-            "makes a gentle ringing sound."),
+            "A very old bell\n"
+            "that makes a soft\n"
+            "ringing sound."
+        ),
         .importance = 2,
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_BAG_MENU,
@@ -14423,8 +14430,10 @@ const struct ItemInfo gItemsInfo[] =
         .name = ITEM_NAME("Rainbow Wing"),
         .price = 0,
         .description = COMPOUND_STRING(
-            "A mystical feather of rainbow\n"
-            "colors that sparkles."),
+            "A mystical feather\n"
+            "of rainbow colors\n"
+            "that sparkles."
+        ),
         .importance = 2,
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_BAG_MENU,
@@ -14438,8 +14447,10 @@ const struct ItemInfo gItemsInfo[] =
         .name = ITEM_NAME("Silver Wing"),
         .price = 0,
         .description = COMPOUND_STRING(
-            "A strange, silver-colored feather\n"
-            "that sparkles."),
+            "A strange, silver\n"
+            "feather that\n"
+            "sparkles."
+        ),
         .importance = 2,
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_BAG_MENU,
@@ -14453,9 +14464,10 @@ const struct ItemInfo gItemsInfo[] =
         .name = ITEM_NAME("GS Ball"),
         .price = 0,
         .description = COMPOUND_STRING(
-            "A mysterious POKé BALL that is\n"
-            "impossible to open. KURT in\n"
-            "AZALEA TOWN may want to see this."),
+            "An odd POKé BALL\n"
+            "that won't open.\n"
+            "KURT may want it."
+        ),
         .importance = 2,
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_BAG_MENU,
@@ -14469,9 +14481,10 @@ const struct ItemInfo gItemsInfo[] =
         .name = ITEM_NAME("Mystery Egg"),
         .price = 0,
         .description = COMPOUND_STRING(
-            "A mysterious EGG obtained from\n"
-            "MR. POKéMON.\n"
-            "What's in the EGG is unknown."),
+            "A curious EGG from\n"
+            "MR. POKéMON. Its\n"
+            "contents unknown."
+        ),
         .importance = 2,
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_BAG_MENU,
@@ -14485,9 +14498,10 @@ const struct ItemInfo gItemsInfo[] =
         .name = ITEM_NAME("Pass"),
         .price = 0,
         .description = COMPOUND_STRING(
-            "A pass required for riding the\n"
-            "MAGNET TRAIN. Its holder may\n"
-            "ride as often as they'd like."),
+            "A pass for riding\n"
+            "the MAGNET TRAIN\n"
+            "as often as liked."
+        ),
         .importance = 2,
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_BAG_MENU,
@@ -14501,8 +14515,10 @@ const struct ItemInfo gItemsInfo[] =
         .name = ITEM_NAME("Lost Item"),
         .price = 0,
         .description = COMPOUND_STRING(
-            "The POKé DOLL lost by the\n"
-            "COPYCAT."),
+            "A POKé DOLL lost\n"
+            "by the COPYCAT in\n"
+            "SAFFRON CITY."
+        ),
         .importance = 2,
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_BAG_MENU,
@@ -14516,8 +14532,10 @@ const struct ItemInfo gItemsInfo[] =
         .name = ITEM_NAME("Blue Card"),
         .price = 0,
         .description = COMPOUND_STRING(
-            "A card to save points for the\n"
-            "BUENA'S PASSWORD radio show."),
+            "A card that saves\n"
+            "points from BUENA'S\n"
+            "PASSWORD show."
+        ),
         .importance = 2,
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_BAG_MENU,
@@ -14531,9 +14549,10 @@ const struct ItemInfo gItemsInfo[] =
         .name = ITEM_NAME("Egg Ticket"),
         .price = 0,
         .description = COMPOUND_STRING(
-            "A ticket for use at the\n"
-            "TRADE CORNER in GOLDENROD\n"
-            "CITY's POKéCOM CENTER."),
+            "A ticket for the\n"
+            "TRADE CORNER in\n"
+            "GOLDENROD CITY."
+        ),
         .importance = 2,
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_BAG_MENU,
@@ -14547,8 +14566,10 @@ const struct ItemInfo gItemsInfo[] =
         .name = ITEM_NAME("Slowpoke Tail"),
         .price = 9800,
         .description = COMPOUND_STRING(
-            "A very tasty tail of something.\n"
-            "It can be sold at a high price."),
+            "A very tasty tail.\n"
+            "It can be sold for\n"
+            "a high price."
+        ),
         .importance = 0,
         .pocket = POCKET_ITEMS,
         .type = ITEM_USE_BAG_MENU,
@@ -14562,9 +14583,10 @@ const struct ItemInfo gItemsInfo[] =
         .name = ITEM_NAME("GB Player"),
         .price = 0,
         .description = COMPOUND_STRING(
-            "A music player from long ago.\n"
-            "It allows you to listen to nostalgic\n"
-            "songs at the flick of a switch."),
+            "An old music player\n"
+            "for listening to\n"
+            "nostalgic songs."
+        ),
         .importance = 2,
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_BAG_MENU,

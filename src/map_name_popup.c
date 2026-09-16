@@ -510,7 +510,11 @@ static void MapNamePopupAppendFloorNum(u8 *map_name, s8 floorNum)
     *dest++ = CHAR_SPACE;
     if (floorNum == FLOOR_ROOFTOP)
     {
-        StringCopy(dest, gText_Rooftop);
+        // Crystal Expansion (D75): "GOLDENROD CITY ROOFTOP" is 86px in the
+        // popup's 80px window. Emerald shortens Celadon's name instead, but
+        // Goldenrod's dept store 1F shares a layout so it can't be detected the
+        // same way; shortening the suffix fixes every rooftop at once.
+        StringCopy(dest, COMPOUND_STRING("ROOF"));
         return;
     }
     if (floorNum < 0)
