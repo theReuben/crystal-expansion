@@ -19,6 +19,7 @@
 #include "mystery_event_menu.h"
 #include "naming_screen.h"
 #include "oak_speech.h"
+#include "oak_speech_crystal.h"
 #include "option_menu.h"
 #include "overworld.h"
 #include "palette.h"
@@ -1091,7 +1092,8 @@ static void Task_HandleMainMenuAPressed(u8 taskId)
 
             gPlttBufferUnfaded[0] = RGB_BLACK;
             gPlttBufferFaded[0] = RGB_BLACK;
-            gTasks[taskId].func = Task_NewGameBirchSpeech_Init;
+            // CrystalDust opens with the clock-set prompt and Oak, not Birch (D76).
+            StartNewGameSceneCrystal(taskId);
             break;
         case ACTION_CONTINUE:
             gPlttBufferUnfaded[0] = RGB_BLACK;

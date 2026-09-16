@@ -2633,3 +2633,66 @@ failures, all ours, all fixed:
 runner 5 die with `malloc.c` heap assertions, starting at "Confirm behavioural
 match with other -ate abilities". Identical before and after these changes.
 Parked for Phase 7.
+
+## D76 — the new game opens with Oak, not Birch
+
+`src/main_menu.c`'s `ACTION_NEW_GAME` still ran `Task_NewGameBirchSpeech_Init`:
+a new save began in Hoenn, with Prof. Birch, a Lotad and a Torchic. That is the
+single largest piece of CrystalDust content the merge had left behind.
+
+CrystalDust does not have a separate intro file — its intro lives inside its own
+fork of `src/main_menu.c`. Expansion, meanwhile, factored FireRed's intro out
+into `src/oak_speech.c` behind `IS_FRLG`. This port follows expansion's shape:
+the intro is now `src/oak_speech_crystal.c` / `include/oak_speech_crystal.h`,
+and `main_menu.c` keeps expansion's menu, handing off with a single call to
+`StartNewGameSceneCrystal(taskId)`.
+
+What the scene does, in CrystalDust's order: the clock-set prompt ("... you woke
+me up"), then Oak's welcome, the Wooper demonstration, the boy/girl choice
+(Gold / Kris) and the naming screen. Text came across verbatim as
+`data/text/oak_speech.inc`, included from `data/event_scripts.s`.
+
+API drift fixed while porting, CrystalDust name on the left:
+
+| CrystalDust | expansion |
+| --- | --- |
+| `CreatePicSprite2(species, otId, ...)` | `CreateMonPicSprite_Affine(species, isShiny, personality, MON_PIC_AFFINE_FRONT, ...)` |
+| `AddTextPrinterForMessage_IgnoreTextColor(1)` | `AddTextPrinterForMessage(TRUE)` |
+| `PrintTextArray(...)` | `PrintMenuTable(...)` |
+| `CopyWindowToVram(w, 2)` / `(w, 3)` | `COPYWIN_GFX` / `COPYWIN_FULL` (same values) |
+| `LoadMessageBoxGfx(0, 0xFC, 0xF0)` | `OAK_INTRO_DLG_BASE_TILE_NUM`, `BG_PLTT_ID(15)` (same values) |
+| `LoadPalette(pal, 0x40, n)` | `BG_PLTT_ID(4)` (same value) |
+
+Four helpers that `main_menu.c` keeps `static` (`CB2_MainMenu`,
+`VBlankCB_MainMenu`, `LoadMainMenuWindowFrameTiles`, `DrawMainMenuWindowBorder`)
+have local copies here rather than being exported, so `main_menu.c` is untouched
+apart from the one hand-off line.
+
+### Constraint decisions
+
+- **The Birch speech is now unreachable but not deleted.** ~1000 lines of
+  `src/main_menu.c` and all of `data/text/birch_speech.inc` still build into the
+  ROM and still cost space. Removing them is a separate change (see the Phase 5
+  text sweep); nothing calls them.
+- **Expansion's FireRed intro (`src/oak_speech.c`) also stays**, still gated by
+  `IS_FRLG`, so `graphics/oak_speech/` now holds *both* games' intro assets side
+  by side. The filenames do not collide; CrystalDust's are `bg0`, `gold`,
+  `kris`, `oak`, `map.bin`, `platform`.
+- **Sixteen forward declarations and `SpriteCB_MovePlayerDownWhileShrinking`
+  were dropped**, because they are declared-but-never-defined or
+  defined-but-never-referenced in CrystalDust itself — leftovers from the Birch
+  speech it was forked from. Behaviour matches CrystalDust exactly; no feature
+  is lost with them.
+- **The scene has not been run.** `mgba-perf` has no input injection (its flags
+  are `-b -c -C -d -g -l -t -p -s`, `-F/-N/-T/-P/-S`), so a menu-driven path
+  like this cannot be exercised headlessly. The 900-frame smoke test only proves
+  the ROM boots to the title. **This needs a human play-test**: new game →
+  clock set → Oak → gender choice → naming screen → New Bark Town.
+
+Also in this gate: `src/pokedex.c`'s regional dex header said "HOENN region's
+POKéDEX". The mode itself has walked the Johto order since D24/D58 — only the
+label was wrong. `DEX_MODE_HOENN` keeps its expansion name; renaming the
+constant is Phase 5 rename debt.
+
+Build: exit 0, ROM 29,134,724 B (86.83%), smoke test clean, `make check` 0 FAILs
+and the same 34 pre-existing runner-5 `malloc.c` crashes as before (D75).
