@@ -2339,3 +2339,41 @@ section; the old name was actively misleading. Two files touched.
 The Sevii entries in `sFlyLocations` are left in place but unreachable (D35).
 
 Build exit=0, ROM 29,126,468 B (86.80%).
+
+## D68 — Hoenn's weather-trio music no longer fires on Johto maps
+
+**Found:** stub-Hoenn-anchor sweep, `src/overworld.c`.
+
+`ShouldLegendaryMusicPlayAtLocation` tested `warp->mapGroup == 0` and then
+switched on bare `MAP_NUM(...)` of Hoenn constants. Those constants are stubs
+now, and `MAP_NUM` takes the low byte — which lands squarely on real Johto and
+Kanto maps in group 0:
+
+| Hoenn stub | low byte | actually matches |
+|---|---|---|
+| `MAP_LILYCOVE_CITY` | 5 | Ecruteak City |
+| `MAP_MOSSDEEP_CITY` | 6 | Olivine City |
+| `MAP_SOOTOPOLIS_CITY` | 7 | Cianwood City |
+| `MAP_EVER_GRANDE_CITY` | 8 | Mahogany Town |
+| `MAP_ROUTE124`–`MAP_ROUTE131` | 39–46 | Cinnabar, Saffron, Routes 1–6 |
+
+So once `FLAG_SYS_WEATHER_CTRL` was set, `MUS_ABNORMAL_WEATHER` would have
+replaced the normal music in half of Johto and Kanto. This is the first stub-anchor
+case that misfires rather than silently doing nothing — worth calling out as a
+new sub-variant of the Phase 1 pattern.
+
+**Done:** deleted `ShouldLegendaryMusicPlayAtLocation`,
+`NoMusicInSootopolisWithLegendaries`, `IsInfiltratedSpaceCenter` and
+`IsInfiltratedWeatherInstitute` along with their four calls in `GetLocationMusic`.
+CrystalDust stubs all four to `return FALSE` and comments the calls out; deleting
+them is the same behaviour without the dead weight. Map-header music and D7's
+night-music lookup are untouched.
+
+**Not changed, and why:** the other Hoenn anchors left in `overworld.c`
+(`MetatileBehavior_IsSurfableInSeafoamIslands`, the Route 111 sandstorm check, the
+Mauville and Sootopolis warp checks, the Route 130 Mirage Island check) all
+compare `mapGroup` against the stub's *group* byte before looking at `mapNum`.
+Group 112/113/117/118 match no real map, so they are inert rather than wrong.
+They are left alone rather than churned.
+
+Build exit=0, ROM 29,126,372 B (86.80%).
