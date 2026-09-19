@@ -1,7 +1,11 @@
+# Crystal Expansion (D92): the ROM is pokecrystal.gba and the cartridge is
+# titled POKEMON CRYS. GAME_VERSION and GAME_CODE stay Emerald's -- the first
+# is load-bearing all through the source, and the second keeps save files and
+# emulator detection working.
 GAME_VERSION ?= EMERALD
-TITLE        ?= POKEMON EMER
+TITLE        ?= POKEMON CRYS
 GAME_CODE    ?= BPEE
-BUILD_NAME   ?= emerald
+BUILD_NAME   ?= crystal
 MAP_VERSION  ?= emerald
 
 ifeq (firered, $(or $(BUILD), $(MAKECMDGOALS)))

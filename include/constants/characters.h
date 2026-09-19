@@ -270,6 +270,12 @@
 #define PLACEHOLDER_ID_KYOGRE        0xC
 #define PLACEHOLDER_ID_GROUDON       0xD
 #define PLACEHOLDER_ID_REGION        0xE
+// CrystalDust's own placeholders (D91). They had been aliased onto
+// ARCHIE/MAXIE/KYOGRE by the Phase 1 charmap merge, so {POKEMON} printed
+// "ARCHIE". These ids are past every byte the battle strings use.
+#define PLACEHOLDER_ID_POKEMON       0xF
+#define PLACEHOLDER_ID_POKE          0x10
+#define PLACEHOLDER_ID_POKEDEX       0x11
 
 // battle placeholders are located in battle_message.h
 

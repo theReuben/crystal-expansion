@@ -521,6 +521,21 @@ static const u8 *ExpandPlaceholder_Region(void)
         return gText_Hoenn;
 }
 
+static const u8 *ExpandPlaceholder_Pokemon(void)
+{
+    return gText_ExpandedPlaceholder_Pokemon;
+}
+
+static const u8 *ExpandPlaceholder_Poke(void)
+{
+    return gText_ExpandedPlaceholder_Poke;
+}
+
+static const u8 *ExpandPlaceholder_Pokedex(void)
+{
+    return gText_ExpandedPlaceholder_Pokedex;
+}
+
 const u8 *GetExpandedPlaceholder(u32 id)
 {
     typedef const u8 *(*ExpandPlaceholderFunc)(void);
@@ -542,6 +557,9 @@ const u8 *GetExpandedPlaceholder(u32 id)
         [PLACEHOLDER_ID_KYOGRE]       = ExpandPlaceholder_Kyogre,
         [PLACEHOLDER_ID_GROUDON]      = ExpandPlaceholder_Groudon,
         [PLACEHOLDER_ID_REGION]       = ExpandPlaceholder_Region,
+        [PLACEHOLDER_ID_POKEMON]      = ExpandPlaceholder_Pokemon,
+        [PLACEHOLDER_ID_POKE]         = ExpandPlaceholder_Poke,
+        [PLACEHOLDER_ID_POKEDEX]      = ExpandPlaceholder_Pokedex,
     };
 
     if (id >= ARRAY_COUNT(funcs))

@@ -3289,3 +3289,39 @@ Constraint decisions, none of them silent:
 
 Not verifiable by build: whether the card actually *looks* right. It joins the human
 play-test list with D76/D80–D87.
+
+### D91: `{POKEMON}` printed "ARCHIE" — the last live charmap alias
+
+Reported from a play-test. CrystalDust's text uses three placeholders of its own,
+`{POKEMON}`, `{POKE}` and `{POKEDEX}`, which expand to POKéMON / POKé / POKéDEX. The
+Phase 1 charmap merge (D2) gave them the byte values `FD 0A`, `FD 0B`, `FD 0C` — which
+in expansion's charmap already mean ARCHIE, MAXIE and KYOGRE — and recorded them as
+"deliberate aliases". They were not harmless aliases: the placeholder byte is what
+`StringExpandPlaceholders()` switches on, so every one of CrystalDust's 2,684 `{POKEMON}`
+strings printed the word ARCHIE, 157 `{POKE}` printed MAXIE, and 62 `{POKEDEX}` printed
+KYOGRE.
+
+The strings themselves were never missing: `gText_ExpandedPlaceholder_Pokemon/Poke/Pokedex`
+have been in `src/strings.c` since D9. Only the wiring was absent.
+
+Fix: `PLACEHOLDER_ID_POKEMON/POKE/POKEDEX` = 0xF/0x10/0x11, the three bytes immediately
+after `PLACEHOLDER_ID_REGION`, with matching expander functions and charmap entries
+`FD 0F`/`FD 10`/`FD 11`. Contiguity matters — `GetExpandedPlaceholder()` indexes a
+designated-initialiser table, so a gap would be a NULL entry to jump through. Those byte
+values are also used by the battle-string namespace (`B_ATK_NAME_WITH_PREFIX` and
+friends), but the two are expanded by different functions and no battle string in the tree
+uses `{POKEMON}`, `{POKE}` or `{POKEDEX}`, so the namespaces do not meet.
+
+Verification: the built ROM holds 3,050 `FD 0F` sequences where it previously held none.
+
+This is the fourth defect of the "Phase 1 merge kept one side" family to surface after a
+gate closed, and the first found by a human playing rather than by a build or a test. It
+is worth assuming there are more of its kind in D2's alias list.
+
+### D92: the ROM is `pokecrystal.gba`
+
+`BUILD_NAME` is `crystal` and the cartridge title is `POKEMON CRYS`. `GAME_VERSION` stays
+`EMERALD` — it is load-bearing throughout the source, and D90 already documents why the
+game identifies as Emerald internally — and `GAME_CODE` stays `BPEE` so save files and
+emulator per-game detection keep working. The object directory moves to `build/crystal`,
+so the first build after this change is a full one.

@@ -1143,9 +1143,9 @@ EMOJI_BIGANGER = F9 FE
 @ surviving expansion name are deliberate aliases, listed in
 @ docs/port/decisions.md under D2.
 @ ============================================================
-POKEMON = FD 0A
-POKE = FD 0B
-POKEDEX = FD 0C
+POKEMON = FD 0F
+POKE = FD 10
+POKEDEX = FD 11
 B_ACTIVE_NAME_WITH_PREFIX = FD 12
 B_SCR_ACTIVE_NAME_WITH_PREFIX = FD 13
 B_SCR_ACTIVE_ABILITY = FD 1A
