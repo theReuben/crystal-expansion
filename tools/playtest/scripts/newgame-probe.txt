@@ -1,0 +1,22 @@
+# Probe: how far does mashing A/START get us into a new game?
+wait 600
+press START 8 60
+shot p00
+press A 8 60
+shot p01
+press A 8 60
+shot p02
+press A 8 60
+shot p03
+press A 8 60
+shot p04
+press A 8 60
+shot p05
+press A 8 60
+shot p06
+press A 8 60
+shot p07
+press A 8 60
+shot p08
+press A 8 60
+shot p09

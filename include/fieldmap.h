@@ -5,9 +5,13 @@
 #define NUM_METATILES_IN_PRIMARY_FRLG 640
 #define NUM_PALS_IN_PRIMARY_FRLG 7
 
-#define NUM_TILES_IN_PRIMARY 512
-#define NUM_METATILES_IN_PRIMARY 512
-#define NUM_PALS_IN_PRIMARY 6
+// D94: CrystalDust splits primary/secondary the way FRLG does -- 640 tiles,
+// 640 metatiles, 7 palettes -- and every layout in this repo is CrystalDust's.
+// Emerald's 512/512/6 left each secondary tileset indexed 128 metatiles early,
+// so maps drew the wrong blocks and read the wrong behaviours.
+#define NUM_TILES_IN_PRIMARY 640
+#define NUM_METATILES_IN_PRIMARY 640
+#define NUM_PALS_IN_PRIMARY 7
 
 #define NUM_METATILES_TOTAL 1024
 #define NUM_TILES_TOTAL 1024

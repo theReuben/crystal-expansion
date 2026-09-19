@@ -3325,3 +3325,58 @@ is worth assuming there are more of its kind in D2's alias list.
 game identifies as Emerald internally — and `GAME_CODE` stays `BPEE` so save files and
 emulator per-game detection keep working. The object directory moves to `build/crystal`,
 so the first build after this change is a full one.
+
+### D93: the new game ran Emerald's moving-truck sequence
+
+Found by the headless harness (below), reproducing the play-test report of wrong
+tiles in the player's house.
+
+`CB2_NewGame()` set `gFieldCallback = ExecuteTruckSequence` for everything that
+isn't FRLG. In Johto there is no truck: the sequence overwrote three metatiles
+of the bedroom at (4,1)-(4,3) with `METATILE_InsideOfTruck_*`, cleared the faded
+palette buffer, and called `LockPlayerFieldControls()` -- and `Task_HandleTruckSequence`
+only unlocks along the truck's own path, so field controls stayed locked
+forever. A new game began with the player unable to move or open the menu.
+
+CrystalDust's own `CB2_NewGame` uses `FieldCB_WarpExitFadeFromBlack`. Ours now
+does the same, unconditionally.
+
+Another "Phase 1 merge kept one side": the Emerald branch of this function
+survived and CrystalDust's did not.
+
+### D94: primary tilesets were split at 512 instead of 640
+
+The reported "high number of tiles are the wrong tile", and the reason the
+player could surf on dry land and meet level-20 Tentacruel.
+
+CrystalDust uses the FRLG-style split -- 640 tiles, 640 metatiles and 7 palettes
+in the primary tileset -- and all 419 of its layouts, tilesets and `map.bin`
+files are built for it. The merge kept Emerald's `NUM_TILES_IN_PRIMARY 512`,
+`NUM_METATILES_IN_PRIMARY 512`, `NUM_PALS_IN_PRIMARY 6`. Every metatile id at or
+above 512 was therefore treated as a secondary-tileset id 128 blocks too early,
+so maps drew the wrong blocks *and* read the wrong entry from
+`metatile_attributes.bin` -- which is where the bogus surf behaviour came from.
+
+Fixed by taking CrystalDust's constants in `include/fieldmap.h`. The expansion's
+per-layout `isFrlg` flag was the wrong lever: it also switches metatile
+attributes to FRLG's 4-byte format, and CrystalDust's attribute files are
+Emerald's 2-byte format. Every layout in the repo is CrystalDust's, so a global
+change is both correct and safe.
+
+### D95: a headless play-test harness
+
+`tools/playtest/` builds a small C program against the local libmgba 0.10.5. It
+boots `pokecrystal.gba` with no window, runs a script of waits, button presses,
+screenshots and memory reads, and prints every read. `tools/playtest/playtest.py`
+resolves symbol names against `pokecrystal.elf` (which carries the file-local
+statics the linker map omits), expands `player`/`where` into the right reads,
+names metatile behaviours from `metatile_behaviors.h`, and converts the frames
+to PNG.
+
+    tools/playtest/build.sh
+    tools/playtest/playtest.py tools/playtest/scripts/newbark.txt --out /tmp/shots
+
+`scripts/newgame.txt` plays a new game from boot to the bedroom; `newbark.txt`
+continues to the house's ground floor. Both D93 and D94 were found with it
+within an hour, having survived every gate of the test suite -- the suite runs
+code, this runs the game.

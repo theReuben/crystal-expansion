@@ -1,0 +1,12 @@
+# From a fresh save to standing outside in New Bark Town.
+include newgame.txt
+walk RIGHT 4
+walk UP 4
+walk LEFT 2      # the 2F staircase warps when entered from the right
+wait 150
+player
+shot house1f
+walk DOWN 4
+wait 150
+player
+shot outside

@@ -1,0 +1,54 @@
+# Probe 2: continue past the intro into the overworld.
+wait 600
+press START 8 60
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+shot q03
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+shot q07
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+shot q11
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+shot q15
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+shot q19
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+shot q23
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+shot q27
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+shot q31
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+shot q35
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+shot q39
+where

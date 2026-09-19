@@ -1907,10 +1907,10 @@ void CB2_NewGame(void)
     PlayTimeCounter_Start();
     ScriptContext_Init();
     UnlockPlayerFieldControls();
-    if (IS_FRLG)
-        gFieldCallback = FieldCB_WarpExitFadeFromBlack;
-    else
-        gFieldCallback = ExecuteTruckSequence;
+    // D93: Johto has no moving truck. Emerald's truck sequence overwrote three
+    // metatiles of the bedroom, blanked the palettes and left field controls
+    // locked, because its task only unlocks along the truck's own path.
+    gFieldCallback = FieldCB_WarpExitFadeFromBlack;
     gFieldCallback2 = NULL;
     DoMapLoadLoop(&gMain.state);
     SetFieldVBlankCallback();

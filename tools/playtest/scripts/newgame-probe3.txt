@@ -1,0 +1,70 @@
+# Probe 3: answer the clock prompt YES and push on to the overworld.
+wait 600
+press START 8 60
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+shot r00
+press UP 8 20
+press A 8 40
+shot r01
+press A 8 40
+press A 8 40
+press A 8 40
+shot s02
+press A 8 40
+press A 8 40
+press A 8 40
+shot s05
+press A 8 40
+press A 8 40
+press A 8 40
+shot s08
+press A 8 40
+press A 8 40
+press A 8 40
+shot s11
+press A 8 40
+press A 8 40
+press A 8 40
+shot s14
+press A 8 40
+press A 8 40
+press A 8 40
+shot s17
+press A 8 40
+press A 8 40
+press A 8 40
+shot s20
+press A 8 40
+press A 8 40
+press A 8 40
+shot s23
+press A 8 40
+press A 8 40
+press A 8 40
+shot s26
+press A 8 40
+press A 8 40
+press A 8 40
+shot s29
+where

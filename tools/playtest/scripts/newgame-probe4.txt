@@ -1,0 +1,117 @@
+wait 600
+press START 8 60
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press UP 8 20
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+press A 8 40
+shot t00
+press A 8 40
+shot t01
+press A 8 40
+shot t02
+press A 8 40
+shot t03
+press A 8 40
+shot t04
+press A 8 40
+shot t05
+press A 8 40
+shot t06
+press A 8 40
+shot t07
+press A 8 40
+shot t08
+press A 8 40
+shot t09
+press A 8 40
+shot t10
+press A 8 40
+shot t11
+press A 8 40
+shot t12
+press A 8 40
+shot t13
+press A 8 40
+shot t14
+press A 8 40
+shot t15
+press A 8 40
+shot t16
+press A 8 40
+shot t17
+press A 8 40
+shot t18
+press A 8 40
+shot t19
+press A 8 40
+shot t20
+press A 8 40
+shot t21
+press A 8 40
+shot t22
+press A 8 40
+shot t23
+press A 8 40
+shot t24
+press A 8 40
+shot t25
+press A 8 40
+shot t26
+press A 8 40
+shot t27
+press A 8 40
+shot t28
+press A 8 40
+shot t29
+where
