@@ -3451,3 +3451,38 @@ overflow is reading a neighbouring tileset's blocks rather than crashing, but it
 is a real content defect and the likely cause is the Kanto secondary tilesets
 being included from `data/tilesets/secondary/*_frlg/` while CrystalDust's own,
 larger, versions sit unused beside them.
+
+## D99 — the Kanto tilesets came from FRLG, not from CrystalDust
+
+`src/data/tilesets/metatiles.h` and `graphics.h` pointed 25 Kanto tileset
+symbols at `data/tilesets/secondary/*_frlg/`, expansion's FreeRed/Green
+imports, while CrystalDust's own versions of the same tilesets sat unused
+beside them. CrystalDust's `data/tilesets/metatiles.inc` references no
+`*_frlg` directory at all — this is another instance of the Phase 1 merge
+keeping expansion's side of a shared file.
+
+Two things were wrong as a result:
+
+* **The tilesets were too small.** CrystalDust's maps are drawn against its
+  own, larger metatile sets (Cerulean City 216 metatiles vs FRLG's 134,
+  Fuchsia City 270 vs 180), so 30 layouts referenced metatile ids past the
+  end of the tileset — the Kanto cities and routes, the Goldenrod and
+  Celadon department stores, Silph Co 1F, Diglett's Cave, Cianwood
+  Pharmacy, the Silver Cave rooms and Goldenrod Flat2 3F.
+* **The attributes were in the wrong format.** The `*_frlg` directories
+  carry FRLG's 4-byte-per-metatile attributes, and the engine reads
+  `metatileAttributes` as `u16`, so every Kanto metatile took the behaviour
+  of the metatile two slots before it — wrong collision, wrong encounter
+  type, wrong door.
+
+Fix: repoint all 25 symbols (tiles, palettes, metatiles and attributes
+together) to CrystalDust's directories. The palette overrides already
+pointed there, so the two halves now agree. The static audit's Kanto
+overflows drop from 30 to 0, and a 158-map sweep of Kanto flags only the
+five maps already understood (camera at a map edge). ROM 87.38% -> 87.39%.
+
+The 39 remaining `*_frlg` tilesets are referenced by no layout and are
+candidates for deletion (see the orphan list); CrystalDust's own
+`powerplant` directory is itself in the 4-byte attribute format, which is
+an upstream quirk, not a regression from this change — noted for the human
+play-test list.
