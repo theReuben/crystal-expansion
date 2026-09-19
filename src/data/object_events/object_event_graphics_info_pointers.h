@@ -419,6 +419,8 @@ extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Meowth;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Seel;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Voltorb;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Slowpoke;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_SlowpokeTailless;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Janine;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Slowbro;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Machop;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Wigglytuff;
@@ -728,7 +730,11 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
     [OBJ_EVENT_GFX_OW_MON] =                   &gObjectEventGraphicsInfo_Follower,
     [OBJ_EVENT_GFX_LIGHT_SPRITE] =             &gObjectEventGraphicsInfo_BallLight,
     [OBJ_EVENT_GFX_APRICORN_TREE] =            &gObjectEventGraphicsInfo_ApricornTree,
-#if IS_FRLG
+// D97: CrystalDust's maps use the FRLG-derived NPC, Pokemon and Kanto
+// gym-leader overworld sprites throughout Johto as well as Kanto, so this
+// block cannot be gated on IS_FRLG the way expansion gates it: with the
+// gate in place every one of those graphics ids indexed a NULL entry and
+// the game jumped into nothing as soon as such an NPC spawned.
     [OBJ_EVENT_GFX_RED_NORMAL] =               &gObjectEventGraphicsInfo_RedNormal,
     [OBJ_EVENT_GFX_RED_BIKE] =                 &gObjectEventGraphicsInfo_RedBike,
     [OBJ_EVENT_GFX_RED_SURF] =                 &gObjectEventGraphicsInfo_RedSurf,
@@ -875,7 +881,6 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
     [OBJ_EVENT_GFX_DEOXYS_A]                 = &gObjectEventGraphicsInfo_DeoxysA,
     [OBJ_EVENT_GFX_DEOXYS_N]                 = &gObjectEventGraphicsInfo_DeoxysN,
     [OBJ_EVENT_GFX_SS_ANNE]                  = &gObjectEventGraphicsInfo_SSAnne,
-#endif // IS_FRLG
     // CrystalDust overworld sprites, restored in Phase 2 (D43).
     [OBJ_EVENT_GFX_ABRA] = &gObjectEventGraphicsInfo_Abra,
     [OBJ_EVENT_GFX_AMPHAROS] = &gObjectEventGraphicsInfo_Ampharos,

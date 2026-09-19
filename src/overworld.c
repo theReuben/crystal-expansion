@@ -1646,10 +1646,39 @@ static void DoCB1_Overworld(u16 newKeys, u16 heldKeys)
         ObjectEventSetHeldMovement(&gObjectEvents[GetFollowerNPCObjectId()], GetFaceDirectionAnimNum(gObjectEvents[GetFollowerNPCObjectId()].facingDirection));
 }
 
+#if DEBUG_OVERWORLD_MENU == TRUE
+// D96: a door for the headless play-test harness (tools/playtest). It writes a
+// map into gPlaytestWarp and the overworld warps there on the next frame, so a
+// sweep of every map does not have to walk to each one. Debug builds only.
+//   [0] trigger, [1] group, [2] num, [3] warp id (0xFFFF: use [4],[5] instead)
+EWRAM_DATA u16 gPlaytestWarp[6] = {0};
+
+static void TryPlaytestWarp(void)
+{
+    // Warping mid-load or mid-fade corrupts the heap, so wait for an idle field.
+    // Only warp from an idle field: mid-fade corrupts the heap, and cutting a
+    // script short mid-message leaves its window allocated for the next map's
+    // script to free a second time.
+    if (gPlaytestWarp[0] == 0 || gPaletteFade.active || ScriptContext_IsEnabled())
+        return;
+    gPlaytestWarp[0] = 0;
+    if (gPlaytestWarp[3] == 0xFFFF)
+        SetWarpDestination(gPlaytestWarp[1], gPlaytestWarp[2], WARP_ID_NONE, gPlaytestWarp[4], gPlaytestWarp[5]);
+    else
+        SetWarpDestinationToMapWarp(gPlaytestWarp[1], gPlaytestWarp[2], gPlaytestWarp[3]);
+    DoWarp();
+}
+#endif
+
 void CB1_Overworld(void)
 {
     if (gMain.callback2 == CB2_Overworld)
+    {
+#if DEBUG_OVERWORLD_MENU == TRUE
+        TryPlaytestWarp();
+#endif
         DoCB1_Overworld(gMain.newKeys, gMain.heldKeys);
+    }
 }
 
 #define TINT_NIGHT Q_8_8(0.456) | Q_8_8(0.456) << 8 | Q_8_8(0.615) << 16

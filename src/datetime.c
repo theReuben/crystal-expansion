@@ -105,11 +105,20 @@ void ConvertRtcToDateTime(struct DateTime *result, struct SiiRtcInfo *rtc)
     result->year = gGen3Epoch.year + rtc->year;
 }
 
+// D98: struct Time is signed and gLocalTime goes negative whenever the
+// in-game clock is set behind the RTC -- which Crystal's own clock prompt
+// lets the player do. The Add* helpers take u32, so a single negative day
+// became four billion iterations of DateTime_AddDays and the game hung for
+// good; every map with a day-of-week event (the weekday siblings' routes,
+// the Goldenrod underground, the Game Corner) froze on entry. Treat a clock
+// that runs backwards as the epoch instead.
+#define CLAMP_ELAPSED(x) ((x) > 0 ? (u32)(x) : 0)
+
 void ConvertTimeToDateTime(struct DateTime *result, struct Time *timeSinceEpoch)
 {
     result = memcpy(result, &gGen3Epoch, sizeof(struct DateTime));
-    DateTime_AddSeconds(result, timeSinceEpoch->seconds);
-    DateTime_AddMinutes(result, timeSinceEpoch->minutes);
-    DateTime_AddHours(result, timeSinceEpoch->hours);
-    DateTime_AddDays(result, timeSinceEpoch->days);
+    DateTime_AddSeconds(result, CLAMP_ELAPSED(timeSinceEpoch->seconds));
+    DateTime_AddMinutes(result, CLAMP_ELAPSED(timeSinceEpoch->minutes));
+    DateTime_AddHours(result, CLAMP_ELAPSED(timeSinceEpoch->hours));
+    DateTime_AddDays(result, CLAMP_ELAPSED(timeSinceEpoch->days));
 }

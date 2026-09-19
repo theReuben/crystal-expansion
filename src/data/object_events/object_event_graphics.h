@@ -466,7 +466,11 @@ const u32 gObjectEventPic_ApricornTree[] = INCGFX_U32("graphics/object_events/pi
 
 const u32 gFieldEffectObjectPic_ShinySparkle[] = INCGFX_U32("graphics/field_effects/pics/shiny_sparkle.png", ".4bpp", "-mwidth 2 -mheight 4");
 
-#if IS_FRLG
+// D97: CrystalDust's maps use the FRLG-derived NPC, Pokemon and Kanto
+// gym-leader overworld sprites throughout Johto as well as Kanto, so this
+// block cannot be gated on IS_FRLG the way expansion gates it: with the
+// gate in place every one of those graphics ids indexed a NULL entry and
+// the game jumped into nothing as soon as such an NPC spawned.
 
 const u16 gObjectEventPic_RedNormal[] = INCGFX_U16("graphics/object_events/pics/people/red/red_normal.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u16 gObjectEventPic_RedBike[] = INCGFX_U16("graphics/object_events/pics/people/red/red_bike.png", ".4bpp", "-mwidth 4 -mheight 4");
@@ -636,7 +640,6 @@ const u16 gObjectEventPic_JigglypuffOld[] = INCGFX_U16("graphics/object_events/p
 const u16 gObjectEventPic_PidgeyOld[] = INCGFX_U16("graphics/object_events/pics/pokemon_old/pidgey.png", ".4bpp", "-mwidth 2 -mheight 2");
 const u16 gObjectEventPic_ClefairyOld[] = INCGFX_U16("graphics/object_events/pics/pokemon_old/clefairy.png", ".4bpp", "-mwidth 2 -mheight 2");
 
-#endif // IS_FRLG
 
 // ---- CrystalDust overworld sprites, restored in Phase 2 (D43). The PNGs came
 // across in Phase 1; only the C tables were lost. ----

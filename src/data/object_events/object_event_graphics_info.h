@@ -4472,7 +4472,11 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_ApricornTree = {
     .images = sPicTable_ApricornTree,
 };
 
-#if IS_FRLG
+// D97: CrystalDust's maps use the FRLG-derived NPC, Pokemon and Kanto
+// gym-leader overworld sprites throughout Johto as well as Kanto, so this
+// block cannot be gated on IS_FRLG the way expansion gates it: with the
+// gate in place every one of those graphics ids indexed a NULL entry and
+// the game jumped into nothing as soon as such an NPC spawned.
 
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_RedNormal = {
     .tileTag = TAG_NONE,
@@ -7269,7 +7273,6 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_SSAnne = {
     .affineAnims = gDummySpriteAffineAnimTable,
 };
 
-#endif // IS_FRLG
 
 // ---- CrystalDust overworld sprites, restored in Phase 2 (D43). The PNGs came
 // across in Phase 1; only the C tables were lost. ----

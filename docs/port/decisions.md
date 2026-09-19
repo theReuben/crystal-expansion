@@ -3380,3 +3380,74 @@ to PNG.
 continues to the house's ground floor. Both D93 and D94 were found with it
 within an hour, having survived every gate of the test suite -- the suite runs
 code, this runs the game.
+
+### D96: a debug-only warp hook, so the harness can reach every map
+
+Walking to each of the 565 maps is not practical, so `CB1_Overworld` gained a
+hook, compiled only when `DEBUG_OVERWORLD_MENU` is on (i.e. never in a release
+build). Writing a map group, map number and a pair of coordinates into
+`gPlaytestWarp` warps there on the next frame.
+
+The hook only fires from an idle field: warping mid-fade corrupts the heap, and
+cutting a script short mid-message leaves its text window allocated for the next
+map's script to free a second time. `tools/playtest/sweep.py` drives it, picking
+a walkable non-warp tile near the middle of each map from `map.bin`'s collision
+bits, and restoring a savestate of the opening before each map so that one
+cutscene cannot derail the rest of the run.
+
+### D97: half the overworld sprite set was behind `#if IS_FRLG`
+
+The first full sweep found 45 maps that reset the console a couple of seconds
+after the player arrived -- Cerulean City, every Pokémon Center, most Marts,
+several gyms -- and the crash was always `TrySpawnObjectEventTemplate` calling
+`LoadSheetGraphicsInfo` through a NULL graphics info.
+
+Expansion gates its FRLG-derived object event graphics -- the Kanto NPCs, the
+gym leaders, the overworld Pokémon -- on `IS_FRLG`, in four files: the pics, the
+pic tables, the graphics infos and the info pointer table. CrystalDust uses
+those sprites everywhere, in Johto as much as in Kanto: 51 distinct graphics ids
+used by this repo's maps resolved to NULL, `OBJ_EVENT_GFX_COOLTRAINER_M` alone
+on 64 object events. Whenever the player walked close enough for one to spawn,
+the game jumped into nothing.
+
+The gates are gone, and `gObjectEventGraphicsInfo_Janine` and
+`..._SlowpokeTailless` gained the forward declarations they had never needed
+while the block was dead. ROM went from 86.64% to 87.38% of the 32MB cart --
+about 740 KB of sprites, the cost of the Kanto half of the game having NPCs.
+
+The Z-prefixed doll and trophy ids (443-469) are still unmapped; they are secret
+base decorations, which this port does not reach.
+
+### D98: a clock set behind the RTC hung the game for good
+
+Nineteen more maps never finished loading: Route 29, 32, 36, 37 and 40,
+Blackthorn City, Lake of Rage, the Goldenrod underground, the Game Corner,
+Dept. Store 5F, several gatehouses. The program counter sat in
+`DateTime_AddDays`, called from `GetDayOfWeek` -- and those are exactly the maps
+with a day-of-week event.
+
+`struct Time` is signed and `gLocalTime` goes negative whenever the in-game
+clock is set behind the RTC, which Crystal's own clock prompt allows. The
+`DateTime_Add*` helpers take `u32`, so -6 days became four billion iterations of
+a loop with a division in it: not a crash, a permanent hang, inside the
+blocking `DoMapLoadLoop`, so the screen stayed black forever.
+
+`ConvertTimeToDateTime` now clamps a backwards clock to the epoch. A wrong date
+is a cosmetic problem; a hang is not.
+
+### Sweep results
+
+With D97 and D98 fixed, the remaining flags are all understood: unlit caves
+(correct -- they want Flash), maps smaller than the screen (correct -- the black
+is past the map edge), the 24 secret bases and the Battle Frontier (parked
+content, Q3), and `UnionRoom`/`LilycoveCity_ContestLobby` (link and Hoenn
+leftovers). `tools/playtest/sweep.py` now discounts both expected-black cases so
+that a flag means something.
+
+Still open from the static audit (`tools/playtest/audit_tilesets.py`): 30
+layouts whose `map.bin` references a metatile past the end of its tilesets, in
+the Kanto cities and routes and the department stores. Those maps render, so the
+overflow is reading a neighbouring tileset's blocks rather than crashing, but it
+is a real content defect and the likely cause is the Kanto secondary tilesets
+being included from `data/tilesets/secondary/*_frlg/` while CrystalDust's own,
+larger, versions sit unused beside them.

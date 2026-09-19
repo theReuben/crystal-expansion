@@ -25,7 +25,8 @@ HARNESS = os.path.join(ROOT, "tools", "playtest", "playtest")
 # struct SaveBlock1: pos at +0, location (WarpData) at +4.
 SB1_MAPGROUP, SB1_MAPNUM, SB1_X, SB1_Y = 4, 5, 8, 10
 
-ADDR_CMDS = {"read8", "read16", "read32", "dump", "deref", "sym"}
+ADDR_CMDS = {"read8", "read16", "read32", "write8", "write16", "write32",
+             "dump", "deref", "sym"}
 
 
 def load_behaviors():
@@ -82,8 +83,18 @@ def resolve(token, syms):
 
 
 def expand(path, syms, outdir):
+    return expand_lines(read_lines(path), syms, outdir)
+
+
+def expand_text(text, syms, outdir, basedir=None):
+    """Same as expand(), for a script held in memory."""
+    return expand_lines(resolve_includes(text.splitlines(True), basedir or ROOT),
+                        syms, outdir)
+
+
+def expand_lines(lines, syms, outdir):
     out = []
-    for raw in read_lines(path):
+    for raw in lines:
         line = raw.split("#")[0].strip()
         if not line:
             continue
@@ -121,13 +132,18 @@ def expand(path, syms, outdir):
 
 def read_lines(path, depth=0):
     """`include <file>` pulls in another script, relative to this one."""
+    yield from resolve_includes(open(path), os.path.dirname(os.path.abspath(path)), depth)
+
+
+def resolve_includes(lines, basedir, depth=0):
     if depth > 8:
         sys.exit("playtest: include nesting too deep")
-    for raw in open(path):
+    for raw in lines:
         parts = raw.split("#")[0].split()
         if parts and parts[0] == "include":
-            inc = os.path.join(os.path.dirname(os.path.abspath(path)), parts[1])
-            yield from read_lines(inc, depth + 1)
+            inc = os.path.join(basedir, parts[1])
+            yield from resolve_includes(open(inc), os.path.dirname(os.path.abspath(inc)),
+                                        depth + 1)
         else:
             yield raw
 

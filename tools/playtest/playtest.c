@@ -8,7 +8,9 @@
 
 #include <mgba/core/core.h>
 #include <mgba/core/log.h>
+#include <mgba/core/serialize.h>
 #include <mgba-util/vfs.h>
+#include <mgba/internal/arm/arm.h>
 
 #include <ctype.h>
 #include <stdio.h>
@@ -27,11 +29,34 @@ static unsigned long frameCount;
 // worth seeing, so everything else is dropped unless PLAYTEST_VERBOSE is set.
 static bool sVerboseLog;
 
+// The core, so a crash report can name the code that jumped into the weeds.
+static struct mCore* sCore;
+static int sCrashReports;
+static unsigned long sCrashFrom = 100;   // PLAYTEST_CRASH_FROM: skip early noise
+
 static void QuietLog(struct mLogger* logger, int category, enum mLogLevel level, const char* format, va_list args)
 {
 	UNUSED(logger);
 	UNUSED(level);
 	bool isGame = !strcmp(mLogCategoryId(category), "gba.debug");
+	// mGBA only complains about a fetch from nowhere; the interesting part is
+	// which function did it, so print the ARM registers the first few times.
+	if (!isGame && sCore && sCrashReports < 12 && frameCount > sCrashFrom &&
+	    (!strncmp(format, "Bad ", 4) || !strncmp(format, "Jump", 4))) {
+		struct ARMCore* cpu = sCore->cpu;
+		printf("crash: ");
+		vprintf(format, args);
+		printf("\n  pc=%08X lr=%08X sp=%08X r0=%08X r1=%08X frame=%lu\n",
+			cpu->gprs[15], cpu->gprs[14], cpu->gprs[13], cpu->gprs[0], cpu->gprs[1], frameCount);
+		for (int i = 0; i < 24; ++i) {
+			uint32_t w = sCore->busRead32(sCore, (cpu->gprs[13] & ~3) + i * 4);
+			if (w >= 0x08000000 && w < 0x0A000000) {
+				printf("  stack[%d] = %08X\n", i, w);
+			}
+		}
+		++sCrashReports;
+		fflush(stdout);
+	}
 	if (!isGame && !sVerboseLog) {
 		return;
 	}
@@ -122,7 +147,9 @@ static void Usage(void)
 		"  press <KEYS> [frames=8] [gap=8]\n"
 		"  walk <DIR> <steps>          16 frames down, 4 up, per step\n"
 		"  shot <file.ppm>\n"
+		"  savestate|loadstate <file>\n"
 		"  read8|read16|read32 <addr> [label]\n"
+		"  write8|write16|write32 <addr> <value>\n"
 		"  dump <addr> <len> [label]\n"
 		"  deref <addr> <offset> <len> [label]   read32 a pointer, then dump\n"
 		"  echo <text>\n");
@@ -142,6 +169,9 @@ int main(int argc, char** argv)
 	}
 
 	sVerboseLog = getenv("PLAYTEST_VERBOSE") != NULL;
+	if (getenv("PLAYTEST_CRASH_FROM")) {
+		sCrashFrom = strtoul(getenv("PLAYTEST_CRASH_FROM"), NULL, 0);
+	}
 	mLogSetDefaultLogger(&sLogger);
 	core = mCoreFind(romPath);
 	if (!core) {
@@ -149,6 +179,7 @@ int main(int argc, char** argv)
 		return 1;
 	}
 	core->init(core);
+	sCore = core;
 	if (!mCoreLoadFile(core, romPath)) {
 		fprintf(stderr, "playtest: cannot load %s\n", romPath);
 		return 1;
@@ -191,6 +222,23 @@ int main(int argc, char** argv)
 				heldKeys = prev;
 				RunFrames(4);
 			}
+		} else if (!strcmp(cmd, "savestate") || !strcmp(cmd, "loadstate")) {
+			// A sweep can restore a known-good point instead of replaying the
+			// whole opening after every map that traps it in a cutscene.
+			bool saving = cmd[0] == 's';
+			struct VFile* vf = VFileOpen(a, saving ? O_WRONLY | O_CREAT | O_TRUNC : O_RDONLY);
+			if (!vf) {
+				fprintf(stderr, "playtest: cannot open state %s\n", a);
+				return 1;
+			}
+			bool ok = saving ? mCoreSaveStateNamed(core, vf, SAVESTATE_ALL)
+				: mCoreLoadStateNamed(core, vf, SAVESTATE_ALL);
+			vf->close(vf);
+			if (!ok) {
+				fprintf(stderr, "playtest: %s failed\n", cmd);
+				return 1;
+			}
+			printf("%s %s\n", cmd, a);
 		} else if (!strcmp(cmd, "shot")) {
 			Screenshot(a);
 		} else if (!strncmp(cmd, "read", 4)) {
@@ -200,6 +248,16 @@ int main(int argc, char** argv)
 				: !strcmp(cmd, "read16") ? core->busRead16(core, addr)
 				: core->busRead32(core, addr);
 			printf("read %s 0x%08X = %u (0x%X)\n", label, addr, v, v);
+		} else if (!strncmp(cmd, "write", 5)) {
+			uint32_t addr = strtoul(a, NULL, 0), val = strtoul(b, NULL, 0);
+			if (!strcmp(cmd, "write8")) {
+				core->busWrite8(core, addr, val);
+			} else if (!strcmp(cmd, "write16")) {
+				core->busWrite16(core, addr, val);
+			} else {
+				core->busWrite32(core, addr, val);
+			}
+			printf("write %s 0x%08X = %u\n", cmd + 5, addr, val);
 		} else if (!strcmp(cmd, "dump")) {
 			Dump(strtoul(a, NULL, 0), strtoul(b, NULL, 0), n > 3 ? c : a);
 		} else if (!strcmp(cmd, "deref")) {
@@ -218,6 +276,15 @@ int main(int argc, char** argv)
 			}
 			uint32_t idx = core->busRead8(core, idxAddr);
 			Dump(base + idx * stride + off, len, m > 5 ? e : "indexed");
+		} else if (!strcmp(cmd, "pc")) {
+			// Sample the program counter over a few frames. A game that has
+			// hung never leaves its loop, so the samples name the culprit.
+			struct ARMCore* cpu = core->cpu;
+			int samples = n > 1 ? (int)strtoul(a, NULL, 0) : 4;
+			for (int i = 0; i < samples; ++i) {
+				printf("pc = %08X lr = %08X\n", cpu->gprs[15], cpu->gprs[14]);
+				RunFrames(1);
+			}
 		} else if (!strcmp(cmd, "echo")) {
 			printf("echo %s\n", line + (strstr(line, "echo") - line) + 5);
 		} else {
