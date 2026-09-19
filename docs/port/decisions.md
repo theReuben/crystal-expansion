@@ -3486,3 +3486,15 @@ candidates for deletion (see the orphan list); CrystalDust's own
 `powerplant` directory is itself in the 4-byte attribute format, which is
 an upstream quirk, not a regression from this change — noted for the human
 play-test list.
+
+### Deferred: deleting the 39 dead FRLG tilesets
+
+After D99 no layout references any `*_frlg` tileset, and their tiles,
+palettes, metatiles and attributes measure 307,868 bytes of ROM (0.9% of
+the cartridge), plus their animation data. They are not deleted yet
+because `src/field_door.c` still carries FRLG door animation entries that
+point at them, `src/field_specials.c` references
+`gTileset_GenericBuilding1` inside a dead `IS_FRLG` branch, and
+`src/tileset_anims.c` has an `InitTilesetAnim_` callback per tileset. That
+is a wider edit than the ROM headroom currently justifies (87.4% of 32 MB).
+Revisit if the ROM approaches the limit; nothing else depends on it.
