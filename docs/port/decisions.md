@@ -3583,3 +3583,49 @@ sub-macros or through `.ifb` branches).
 "Leaving script while a warp is in progress"), so both were a red error screen
 in any build with assertions on. Added `waitstate` to the `.pory` source and the
 generated `.inc` in both.
+
+## D104 — the pre-play-test gates: a release build, and a save that can be loaded
+
+Everything before this point was verified on a debug build, from a run that
+started at power-on. Two things a human play-test depends on had therefore
+never been exercised at all.
+
+**The release build.** `RELEASE=1` turns off the debug overworld menu — and with
+it the D96 warp hook — and switches on LTO. It builds clean, boots through the
+CrystalDust title, and plays the whole opening to the ground floor exactly as
+the debug ROM does. ROM is 28,790,724 bytes, 85.80% of the cart: the release
+figure is lower than the debug one because the debug menus and their strings are
+gone. `gmake check` is green at the same time: 5158 passing, 0 failing.
+
+A note for whoever builds next: use `gmake`. macOS's own `/usr/bin/make` is GNU
+Make 3.81 and does not fail on this repo — it grinds, 40 minutes of implicit-rule
+search at 100% CPU before the first object file.
+
+**Saving.** `playtest.c` opened the ROM with no save file on purpose, so that
+runs could not become order-dependent, and it had no way to power-cycle. The
+consequence is that in seven phases nobody had ever loaded a save. Added a
+`reset` command — `core->reset`, which keeps the flash memory the game wrote —
+and with it the sequence that matters: save from the start menu, reset, CONTINUE.
+The main menu offers CONTINUE with the right name, badges and time, and the load
+puts the player back in the house where they saved. It works; it is now known to
+work.
+
+While the script was passing through, two earlier fixes were confirmed on screen
+rather than in memory: the starter prompt shows Chikorita with its question
+intact (D102), and the first patch of grass on Route 29 gives a Lv2 Hoothoot
+from Johto's table with a working battle.
+
+### The last live 4-byte tileset
+
+D99 noted that CrystalDust's own `powerplant` directory carries FRLG's
+4-byte-per-metatile attributes while the engine reads `metatileAttributes` as
+`u16`, and left it for the play-test list. It is the only such directory still
+referenced by a layout — the other 63 are the dead `*_frlg` orphans — so it is
+fixed here instead: converted to Emerald's 2-byte format,
+`(v & 0x1FF) | (((v >> 29) & 3) << 12)`, behaviour and layer type kept, FRLG's
+separate terrain and encounter fields dropped because Emerald encodes both in
+the behaviour. Without it every metatile in the Power Plant took the behaviour
+of the metatile two slots before it.
+
+The static audit's remaining 39 problems are all in secret bases, the Battle
+Frontier and Hoenn — parked content, no reachable map among them.

@@ -198,6 +198,7 @@ static void Usage(void)
 		"  pbit <ptraddr> <byteoff> <bit> <read|set|clear> [label]\n"
 		"  shot <file.ppm>\n"
 		"  savestate|loadstate <file>\n"
+		"  reset                       power-cycle, keeping battery save RAM\n"
 		"  read8|read16|read32 <addr> [label]\n"
 		"  write8|write16|write32 <addr> <value>\n"
 		"  dump <addr> <len> [label]\n"
@@ -289,6 +290,12 @@ int main(int argc, char** argv)
 				return 1;
 			}
 			printf("%s %s\n", cmd, a);
+		} else if (!strcmp(cmd, "reset")) {
+			// Power-cycle the console: the only way to test that an in-game
+			// SAVE can actually be loaded again from the title screen.
+			core->reset(core);
+			heldKeys = 0;
+			printf("reset\n");
 		} else if (!strcmp(cmd, "shot")) {
 			Screenshot(a);
 		} else if (!strncmp(cmd, "read", 4)) {
