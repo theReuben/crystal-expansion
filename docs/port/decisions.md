@@ -3690,3 +3690,43 @@ that can break the same way: `graphics/pokedex` (18 tilemaps),
 `graphics/pokemon_storage` (5), `graphics/battle_interface` (13) and
 `graphics/text_window` (3). Each needs the same check — whose code reads it —
 before a human play-test trusts those screens.
+
+## D106 — the message box was CrystalDust's art read by expansion's code
+
+Following D105's list of directories to check, `graphics/text_window` gives the
+same pattern, and this one is arithmetic rather than judgement.
+
+`src/text_window.c` is byte-identical to expansion's, and expansion's line 101
+reads:
+
+    LoadBgTiles(GetWindowAttribute(windowId, WINDOW_BG), gMessageBox_Gfx, 0x1C0, destOffset);
+
+`0x1C0` is 448 bytes: fourteen 4bpp tiles, which is exactly expansion's
+`graphics/text_window/message_box.png` at 56x16. CrystalDust's own line reads
+`0x280` — 640 bytes, twenty tiles, its 40x32 box. The merge kept CrystalDust's
+PNG, so the game was loading the first fourteen tiles of a twenty-tile sheet
+laid out for a different frame: the corners and edges came from the wrong
+places.
+
+Restored expansion's `message_box.png`. This also settles it in favour of the
+wide Emerald textbox, which is the decision already on record from Phase 5.
+Verified on screen: talking to Mum now draws a clean wide box with correct
+corners.
+
+### Checked and left alone
+
+`graphics/battle_interface`'s thirteen files are CrystalDust's, and the
+healthbox PNGs have different dimensions from expansion's — 64x128 where
+expansion has 128x64. That one is safe: `src/graphics.c` converts them with
+`-mwidth 8 -mheight 8`, which walks the image in 64x64 metatiles, so a 64x128
+image and a 128x64 image produce the same tile order and the same byte count.
+They are restyled art of the right shape.
+
+`graphics/text_window/1.png` (24x24 both sides) and `text_pal2.pal` are frame
+styling with no size mismatch, and stay CrystalDust's.
+
+Still unchecked: `graphics/pokedex` (18 files, several with real dimension
+changes — `menu.png` is 128x144 against expansion's 128x128) and
+`graphics/pokemon_storage` (5). Both consumers are merged files rather than
+either side's, so neither can be judged by the byte-count trick used here; they
+need to be opened and looked at.
