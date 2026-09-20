@@ -1,0 +1,132 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>D107 &mdash; evidence for the second round of human-testing observations</title>
+<style>
+ body{font:15px/1.6 -apple-system,Segoe UI,sans-serif;max-width:56rem;margin:2rem auto;padding:0 1.2rem;color:#222}
+ h1{font-size:1.6rem;margin-bottom:.2rem} h2{margin-top:2.6rem;border-bottom:1px solid #ddd;padding-bottom:.3rem}
+ .quote{background:#f6f6f6;border-left:3px solid #999;padding:.5rem .9rem;margin:.8rem 0;font-style:italic}
+ img{image-rendering:pixelated;border:1px solid #ccc;max-width:100%;vertical-align:top}
+ .pair img{width:48%}
+ code{background:#f2f2f2;padding:.1rem .3rem;border-radius:3px}
+ pre{background:#f7f7f7;border:1px solid #e2e2e2;padding:.7rem;overflow-x:auto;font-size:13px}
+ table{border-collapse:collapse;font-size:13px} td,th{border:1px solid #ddd;padding:.2rem .5rem;text-align:left}
+ .bad{color:#b00} .good{color:#070} .status{font-weight:600;color:#070}
+ .cause{color:#555;font-size:.93em}
+</style>
+
+<h1>D107 &mdash; the second round of human-testing observations</h1>
+<p class=cause>All six lines from <code>observations.txt</code>, each with the cause, the change and a capture from
+the playtest harness against the rebuilt ROM. Captures are raw mGBA frames, nearest-neighbour upscaled.</p>
+
+<h2>1. Start screen shows the Emerald title</h2>
+<div class=quote>start screen not rendering properly, and showing the emerald start screen, should be showing suicune</div>
+<p><b>Cause.</b> <code>src/title_screen.c</code> had been taken whole from expansion, so the ROM still built
+Emerald's Rayquaza title even though CrystalDust's title art was sitting in <code>graphics/title_screen/</code>.
+<code>pokemon_logo.gbapal</code> was expansion's too, despite <code>pokemon_logo.png</code> being CrystalDust's.</p>
+<p><b>Change.</b> Ported CrystalDust's 619-line title screen onto this tree's asset pipeline
+(<code>INCBIN_U32(".4bpp.lz")</code> &rarr; <code>INCGFX_U32(".png", ".4bpp.smol")</code>,
+<code>LZ77UnCompVram</code> &rarr; <code>DecompressDataWithHeaderVram</code>, GBS song start per D32).
+Restored the four CrystalDust palettes and rebuilt <code>gTitleScreenBgPalettes</code> in <code>src/graphics.c</code>
+from logo + emblem + press-start &mdash; 448 + 32 + 32 = 512 bytes, exactly the 0x200 the loader asks for.</p>
+<p><span class=status>Fixed.</span></p>
+<img src="01-title.png" alt="CrystalDust title screen">
+
+<h2>2. The down arrow on text boxes</h2>
+<div class=quote>the down arrow on text boxes for next text aren't rendering properly</div>
+<p><b>Cause.</b> <code>graphics/fonts/down_arrow.png</code> was CrystalDust's 128&times;16 sheet, but
+<code>src/text.c</code> is byte-identical to expansion's and reads it as an 8&times;48 strip, blitting
+8&times;16 rects at the y-offsets <code>sDownArrowYCoords[] = { 0, 1, 2, 1 }</code>. CrystalDust's own
+<code>gflib/text.c</code> indexes the same art by <em>x</em> (<code>{ 0x0, 0x10, 0x20, 0x10 }</code>).
+Code from one upstream, art from the other.</p>
+<p><b>Change.</b> Restored expansion's 8&times;48 <code>down_arrow.png</code>.</p>
+<p><b>Evidence.</b> The arrow is drawn at the print cursor, not in the window corner. Sampling the frame every
+4 frames while a full page waits for input shows a 7&times;9 region at (176,140) appearing, bobbing one pixel
+and clearing, on the 8-frame cadence <code>TextPrinterDrawDownArrow</code> sets. Zoom below is 12&times;.</p>
+<p><span class=status>Fixed.</span></p>
+<div class=pair><img src="02-arrow-frame.png" alt="dialogue waiting for input"><img src="02-arrow-zoom.png" alt="down arrow, 12x"></div>
+
+<h2>3. The town map shows Hoenn</h2>
+<div class=quote>the town map in the bedroom shows the hoenn map</div>
+<p><b>Cause.</b> Two faults stacked. <code>src/field_region_map.c</code> was expansion's Hoenn wall map rather
+than CrystalDust's; and the four <code>graphics/region_map/mapsec_layout_*.bin</code> files still held
+CrystalDust's raw mapsec numbering, which is Johto-first (<code>MAPSEC_NEW_BARK_TOWN = 0x00</code>). Our
+<code>region_map_sections.h</code> is auto-generated and Hoenn-first, so Johto ids 0..n read out as Hoenn towns.</p>
+<p><b>Change.</b> Rewrote <code>field_region_map.c</code> as a port of CrystalDust's onto the <code>CDMap_*</code>
+API (D33), and remapped all four layout bins by matching <code>#define MAPSEC_*</code> names. 96 of the 98 ids in
+use matched exactly; the two that did not, <code>ROUTE_3_FLYDUP</code> and <code>ROUTE_10_FLYDUP</code>, were
+folded onto <code>ROUTE_3</code> and <code>ROUTE_10</code>.</p>
+<p><b>Evidence.</b> Decoding <code>mapsec_layout_johto_primary.bin</code> against our own header, before and
+after &mdash; first cell at which each new section appears:</p>
+<table><tr><th>cell (x,y)</th><th>before</th><th>after</th></tr>
+<tr><td>14,1</td><td class=bad>FIERY_PATH</td><td class=good>LAKE_OF_RAGE</td></tr>
+<tr><td>14,2</td><td class=bad>ROUTE_115</td><td class=good>ROUTE_43</td></tr>
+<tr><td>4,3</td><td class=bad>ROUTE_111</td><td class=good>ROUTE_39</td></tr>
+<tr><td>5,3</td><td class=bad>ROUTE_110</td><td class=good>ROUTE_38</td></tr>
+<tr><td>9,3</td><td class=bad>SLATEPORT_CITY</td><td class=good>ECRUTEAK_CITY</td></tr>
+<tr><td>10,3</td><td class=bad>ROUTE_114</td><td class=good>ROUTE_42</td></tr>
+<tr><td>14,3</td><td class=bad>FALLARBOR_TOWN</td><td class=good>MAHOGANY_TOWN</td></tr>
+<tr><td>15,3</td><td class=bad>ROUTE_116</td><td class=good>ROUTE_44</td></tr>
+<tr><td>19,3</td><td class=bad>LILYCOVE_CITY</td><td class=good>BLACKTHORN_CITY</td></tr>
+<tr><td>9,4</td><td class=bad>ROUTE_109</td><td class=good>ROUTE_37</td></tr>
+<tr><td>19,4</td><td class=bad>ROUTE_117</td><td class=good>ROUTE_45</td></tr>
+<tr><td>7,5</td><td class=bad>ROUTE_108</td><td class=good>ROUTE_36</td></tr>
+<tr><td>11,5</td><td class=bad>PETALBURG_CITY</td><td class=good>VIOLET_CITY</td></tr>
+<tr><td>12,5</td><td class=bad>ROUTE_103</td><td class=good>ROUTE_31</td></tr>
+</table>
+<p><span class=status>Fixed.</span> Verified in-game earlier in the round: the map draws Johto, the JOHTO
+region label, the secondary-layer dots, the player icon and the &#10010;MOVE help bar, and names the tile under
+the cursor CHERRYGROVE CITY where it previously said OLDALE TOWN.</p>
+
+<h2>4. The naming screen shows the Emerald overworld sprite</h2>
+<div class=quote>the overworld sprite in name selection shows the emerald overworld sprite</div>
+<p><b>Cause.</b> <code>src/naming_screen.c</code> is expansion's. Its
+<code>NamingScreen_CreatePlayerIcon</code> calls <code>GetRivalAvatarGraphicsIdByStateIdAndGender</code> &mdash;
+the <em>rival's</em> avatar, which in this tree is still Emerald's Brendan/May. CrystalDust calls
+<code>GetPlayerAvatarGraphicsIdByStateIdAndGender</code>. The rival naming screen was worse still: expansion
+builds a bespoke sprite sheet from <code>graphics/naming_screen/rival.png</code> over
+<code>OBJ_EVENT_GFX_RED_NORMAL</code>.</p>
+<p><b>Change.</b> Player icon now asks for the player's avatar; rival icon now draws
+<code>OBJ_EVENT_GFX_RIVAL</code> (Silver) as a plain object-event sprite, as CrystalDust does. Removed the
+now-dead <code>sRival_Gfx</code>/<code>sRival_Pal</code>/<code>sAnims_Rival</code>.</p>
+<p><span class=status>Fixed.</span> Gold now stands in the name-entry box.</p>
+<img src="04-naming.png" alt="naming screen showing Gold">
+
+<h2>5. A halo under every sprite's feet</h2>
+<div class=quote>all sprites have a halo under their feet</div>
+<p><b>Cause.</b> RHH expansion ships <code>OW_OBJECT_VANILLA_SHADOWS FALSE</code>, which gives every object
+event a second sprite for a shadow. That shadow is drawn with <code>ST_OAM_OBJ_BLEND</code>, and in this tree
+the day/night code owns <code>BLDCNT</code>, so the blend never applies and the shadow renders as a solid
+white blob. CrystalDust draws no shadow under a standing object at all.</p>
+<p><b>Change.</b> <code>include/config/overworld.h</code>: <code>OW_OBJECT_VANILLA_SHADOWS TRUE</code>, so a
+shadow is drawn only while an object is mid-jump. This also hands back one OAM slot per object.</p>
+<p><span class=status>Fixed.</span> Zoom is 4&times; on the player, standing.</p>
+<div class=pair><img src="05-overworld.png" alt="Cherrygrove City"><img src="05-player-zoom.png" alt="player, 4x, no halo"></div>
+
+<h2>6. The water tiles are not animated</h2>
+<div class=quote>the water tiles are not animated</div>
+<p><b>Cause.</b> Same class again, inside one function.
+<code>src/tileset_anims.c</code> had CrystalDust's <code>TilesetAnim_General</code> driver and CrystalDust's
+art &mdash; 16&times;184 frames, 46 tiles &mdash; but expansion's <code>QueueAnimTiles_General_Water</code>:</p>
+<pre>-    AppendTilesetAnimToBuffer(gTilesetAnims_General_Water[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(432)), 30 * TILE_SIZE_4BPP);
++    AppendTilesetAnimToBuffer(gTilesetAnims_General_Water[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(416)), 0x600);</pre>
+<p>It wrote 30 tiles starting at tile 432. CrystalDust's water occupies tiles 416&ndash;461, so the copy missed
+the water entirely and landed on its neighbours; the water itself never changed. The neighbouring
+<code>WaterFast</code> (464), <code>Whirlpool</code> (488) and <code>Flower</code> (508) queues had survived
+the merge with CrystalDust's offsets intact, which is why only the still water looked frozen.</p>
+<p><b>Evidence.</b> Two captures 8 frames apart at the Cherrygrove shoreline. 36,400 pixels differ between
+them; before the change the same pair was pixel-identical across 32 frames.</p>
+<p><span class=status>Fixed.</span></p>
+<div class=pair><img src="06-water-a.png" alt="water, frame t+8"><img src="06-water-b.png" alt="water, frame t+16"></div>
+
+<h2>Recorded, not on the list</h2>
+<ul>
+ <li>Expansion's Rayquaza title screen is now dead code: <code>gTitleScreenEmeraldVersionGfx</code>,
+     <code>gTitleScreenEmeraldVersionPal</code> and <code>gTitleScreenCloudsTilemap</code> are unreferenced.
+     <code>gTitleScreenAlphaBlend[64]</code> was kept, because <code>src/intro.c</code> still uses it.</li>
+ <li><code>src/intro.c</code> is still expansion's Emerald intro; CrystalDust's has not been ported.</li>
+ <li><code>graphics/naming_screen/rival.png</code> and <code>rival.pal</code> are now unreferenced.</li>
+ <li>Dialogue text colour varies by speaker (Elm's renders blue, Mum's red, signs black). Not reported, not
+     yet investigated.</li>
+ <li><code>graphics/pokedex</code> and <code>graphics/pokemon_storage</code> still have not been checked for
+     the same art-vs-code mismatch (carried over from D106).</li>
+</ul>

@@ -678,10 +678,15 @@ static void QueueAnimTiles_General_Flower(u16 timer)
     AppendTilesetAnimToBuffer(gTilesetAnims_General_Flower[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(508)), 4 * TILE_SIZE_4BPP);
 }
 
+// D107: CrystalDust's water, not expansion's. The frames here are CrystalDust's
+// 16x184 sheets -- 46 tiles, loaded over tiles 416..461 -- and the merge had
+// kept expansion's 30-tiles-at-432 copy, which missed the water tiles entirely
+// and left them frozen. 0x600 is CrystalDust's own size; it runs 64 bytes past
+// the end of each frame, as upstream does.
 static void QueueAnimTiles_General_Water(u16 timer)
 {
     u8 i = timer % ARRAY_COUNT(gTilesetAnims_General_Water);
-    AppendTilesetAnimToBuffer(gTilesetAnims_General_Water[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(432)), 30 * TILE_SIZE_4BPP);
+    AppendTilesetAnimToBuffer(gTilesetAnims_General_Water[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(416)), 0x600);
 }
 
 

@@ -105,7 +105,11 @@
 #define OW_ENABLE_DNS                   TRUE    // If set to TRUE, the overworld will be tinted depending on time of day.
 
 // Object Event Shadows
-#define OW_OBJECT_VANILLA_SHADOWS      FALSE    // When FALSE, every object in the overworld has a shadow. WARNING: This means every object will take up two sprites instead of one. When TRUE, an object's shadow is only shown when jumping.
+// D107: TRUE, so a shadow is drawn only when an object jumps. Crystal draws no
+// shadow under a standing object, and expansion's always-on shadows came out
+// as white blobs here anyway -- they are drawn with ST_OAM_OBJ_BLEND, and the
+// day/night code owns BLDCNT in this tree, so the blend never applied.
+#define OW_OBJECT_VANILLA_SHADOWS      TRUE     // When FALSE, every object in the overworld has a shadow. WARNING: This means every object will take up two sprites instead of one. When TRUE, an object's shadow is only shown when jumping.
 
 // Overworld flags
 // To use the following features in scripting, replace the 0s with the flag ID you're assigning it to.

@@ -188,8 +188,6 @@ EWRAM_DATA static struct NamingScreenData *sNamingScreen = NULL;
 static const u8 sPCIconOff_Gfx[] = INCGFX_U8("graphics/naming_screen/pc_icon_off.png", ".4bpp");
 static const u8 sPCIconOn_Gfx[] = INCGFX_U8("graphics/naming_screen/pc_icon_on.png", ".4bpp");
 static const u16 sKeyboard_Pal[] = INCGFX_U16("graphics/naming_screen/keyboard.pal", ".gbapal");
-static const u16 sRival_Gfx[] = INCGFX_U16("graphics/naming_screen/rival.png", ".4bpp");
-static const u16 sRival_Pal[] = INCGFX_U16("graphics/naming_screen/rival.pal", ".gbapal");
 
 static const u8 *const sTransferredToPCMessages[] =
 {
@@ -1399,13 +1397,16 @@ static void NamingScreen_NoIcon(void)
 
 }
 
+// D107: the player's own sprite, as CrystalDust does it. Expansion asks for the
+// *rival's* avatar here, which in this tree is still Emerald's May/Brendan --
+// the overworld sprite that showed up on the name-entry screen.
 static void NamingScreen_CreatePlayerIcon(void)
 {
-    u16 rivalGfxId;
+    u16 playerGfxId;
     u8 spriteId;
 
-    rivalGfxId = GetRivalAvatarGraphicsIdByStateIdAndGender(PLAYER_AVATAR_STATE_NORMAL, (enum Gender)sNamingScreen->monSpecies);
-    spriteId = CreateObjectGraphicsSprite(rivalGfxId, SpriteCallbackDummy, 56, 37, 0);
+    playerGfxId = GetPlayerAvatarGraphicsIdByStateIdAndGender(PLAYER_AVATAR_STATE_NORMAL, (enum Gender)sNamingScreen->monSpecies);
+    spriteId = CreateObjectGraphicsSprite(playerGfxId, SpriteCallbackDummy, 56, 37, 0);
     gSprites[spriteId].oam.priority = 3;
     StartSpriteAnim(&gSprites[spriteId], ANIM_STD_GO_SOUTH);
 }
@@ -1444,41 +1445,16 @@ static void NamingScreen_CreateCodeIcon(void)
     gSprites[spriteId].oam.priority = 3;
 }
 
-static const union AnimCmd sAnim_Rival[] =
-{
-    ANIMCMD_FRAME( 0, 10),
-    ANIMCMD_FRAME(24, 10),
-    ANIMCMD_FRAME( 0, 10),
-    ANIMCMD_FRAME(32, 10),
-    ANIMCMD_JUMP(0)
-};
 
-static const union AnimCmd *const sAnims_Rival[] =
-{
-    sAnim_Rival
-};
-
+// D107: Silver, not Emerald's rival. CrystalDust draws a plain object-event
+// sprite here; the hand-built sheet below it belonged to expansion's rival.
 static void NamingScreen_CreateRivalIcon(void)
 {
-    const struct SpriteSheet sheet = {
-        sRival_Gfx, 0x900, GFXTAG_RIVAL
-    };
-    const struct SpritePalette palette = {
-        sRival_Pal, PALTAG_RIVAL
-    };
-    struct SpriteTemplate template;
-    const struct SubspriteTable * tables_p;
     u8 spriteId;
 
-    CopyObjectGraphicsInfoToSpriteTemplate(OBJ_EVENT_GFX_RED_NORMAL, SpriteCallbackDummy, &template, &tables_p);
-
-    template.tileTag = sheet.tag;
-    template.paletteTag = palette.tag;
-    template.anims = sAnims_Rival;
-    LoadSpriteSheet(&sheet);
-    LoadSpritePalette(&palette);
-    spriteId = CreateSprite(&template, 56, 37, 0);
+    spriteId = CreateObjectGraphicsSprite(OBJ_EVENT_GFX_RIVAL, SpriteCallbackDummy, 56, 37, 0);
     gSprites[spriteId].oam.priority = 3;
+    StartSpriteAnim(&gSprites[spriteId], ANIM_STD_GO_SOUTH);
 }
 
 //--------------------------------------------------

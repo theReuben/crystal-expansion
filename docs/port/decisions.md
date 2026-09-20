@@ -3730,3 +3730,89 @@ changes — `menu.png` is 128x144 against expansion's 128x128) and
 `graphics/pokemon_storage` (5). Both consumers are merged files rather than
 either side's, so neither can be judged by the byte-count trick used here; they
 need to be opened and looked at.
+
+## D107 — the second round of human-testing observations
+
+Six items from `observations.txt`. Five of the six are the same failure: a file
+taken whole from one upstream, paired with the other upstream's assets. The
+sixth (the shadows) is an expansion feature that does not survive contact with
+this tree's day/night code.
+
+**1. Title screen.** `src/title_screen.c` was expansion's, so the ROM built
+Emerald's Rayquaza title over CrystalDust's art. Ported CrystalDust's title
+screen onto this tree's pipeline: `INCBIN_U32(".4bpp.lz")` → `INCGFX_U32(".png",
+".4bpp.smol")`, `LZ77UnCompVram` → `DecompressDataWithHeaderVram`,
+`m4aSongNumStart` → `m4aSongNumStartGbs` (D32). Restored the four CrystalDust
+palettes — `pokemon_logo.gbapal` had been expansion's even though
+`pokemon_logo.png` was CrystalDust's — and rebuilt `gTitleScreenBgPalettes` in
+`src/graphics.c` from logo + emblem + press-start, 448 + 32 + 32 = 0x200.
+CrystalDust's sound-test combo is dropped: there is no `CB2_StartSoundCheckMenu`
+in this tree.
+
+*Dropped, deliberately:* expansion's Rayquaza title screen.
+`gTitleScreenEmeraldVersionGfx`, `gTitleScreenEmeraldVersionPal` and
+`gTitleScreenCloudsTilemap` are now unreferenced. `gTitleScreenAlphaBlend[64]`
+was kept — `src/intro.c` still uses it. CrystalDust's intro is *not* ported;
+`src/intro.c` is still expansion's Emerald intro.
+
+**2. Down arrow.** `graphics/fonts/down_arrow.png` was CrystalDust's 128×16
+sheet; `src/text.c` is byte-identical to expansion's and reads an 8×48 strip
+(`sDownArrowYCoords[] = { 0, 1, 2, 1 }`, blitting 8×16). CrystalDust's
+`gflib/text.c` indexes the same art by x. Restored expansion's 8×48 art.
+`graphics/fonts/keypad_icons.png` is also CrystalDust's but is 128×32 either
+way, so it was left alone.
+
+**3. Town map.** Two faults. `src/field_region_map.c` was expansion's Hoenn wall
+map; rewrote it as a port of CrystalDust's onto the `CDMap_*` API (D33), with
+`Alloc()` for `malloc()`. And all four
+`graphics/region_map/mapsec_layout_*.bin` still held CrystalDust's Johto-first
+mapsec numbering (`MAPSEC_NEW_BARK_TOWN = 0x00`) against our auto-generated
+Hoenn-first header, so the map named Johto tiles after Hoenn towns. Remapped all
+four by matching `#define MAPSEC_*` names: 96 of 98 ids in use matched exactly,
+and `ROUTE_3_FLYDUP`/`ROUTE_10_FLYDUP` were folded onto `ROUTE_3`/`ROUTE_10`.
+
+Note for later: nothing in `data/` calls `FieldShowRegionMap`. `EventScript_RegionMap`
+exists in `data/event_scripts.s` but no map's `bg_events` reference it, so the
+wall map is currently unreachable. Worth wiring up when the Pokémon Centers are
+revisited.
+
+**4. Naming screen.** `src/naming_screen.c` is expansion's, and its
+`NamingScreen_CreatePlayerIcon` asks for the *rival's* avatar
+(`GetRivalAvatarGraphicsIdByStateIdAndGender`) — Emerald's Brendan/May. Now
+`GetPlayerAvatarGraphicsIdByStateIdAndGender`, as CrystalDust does.
+`NamingScreen_CreateRivalIcon` built a bespoke sheet over
+`OBJ_EVENT_GFX_RED_NORMAL`; it now draws `OBJ_EVENT_GFX_RIVAL` as a plain
+object-event sprite. `sRival_Gfx`, `sRival_Pal` and `sAnims_Rival` removed;
+`graphics/naming_screen/rival.png` and `rival.pal` are now unreferenced.
+
+**5. Shadows.** Expansion ships `OW_OBJECT_VANILLA_SHADOWS FALSE`, giving every
+object event a second sprite for a shadow drawn with `ST_OAM_OBJ_BLEND`. The
+day/night code owns `BLDCNT` here, so the blend never applies and the shadow
+renders as a white blob — the "halo" under every sprite. Set to `TRUE`, so a
+shadow is drawn only mid-jump. Matches CrystalDust, and hands back an OAM slot
+per object.
+
+*Dropped, deliberately:* expansion's always-on object shadows. Turning them back
+on would need `REG_OFFSET_BLDALPHA` set up in `src/field_effect_helpers.c`
+(the `BLDALPHA_BLEND(8, 12)` line there is commented out) without fighting the
+day/night blend.
+
+**6. Water animation.** `src/tileset_anims.c` had CrystalDust's
+`TilesetAnim_General` driver and CrystalDust's art (16×184 frames, 46 tiles at
+tiles 416–461), but expansion's `QueueAnimTiles_General_Water`, which writes 30
+tiles at tile 432. The copy missed the water entirely and landed on its
+neighbours. Restored CrystalDust's `TILE_OFFSET_4BPP(416)`/`0x600`. The
+neighbouring `WaterFast` (464), `Whirlpool` (488) and `Flower` (508) queues had
+survived the merge intact, which is why only the still water looked frozen.
+
+**Harness.** `tools/playtest/scripts/newgame.txt` was retuned: CrystalDust's
+title combs in for about three seconds before it accepts input, and the clock
+prompt defaults to NO, so every A is now paired with an UP — harmless on a text
+box, picks YES on a yes/no prompt.
+
+Evidence: `docs/port/evidence/D107/index.html`.
+
+**Still unchecked:** `graphics/pokedex` (18 files; `menu.png` is 128×144 against
+expansion's 128×128, loaded with an `0x2000` cap) and `graphics/pokemon_storage`,
+both carried over from D106. Also noticed but not reported and not investigated:
+dialogue text colour varies by speaker (Elm blue, Mum red, signs black).
