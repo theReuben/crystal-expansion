@@ -55,3 +55,17 @@ gText_CoinCaseIsFull::
 gText_NothingToPutThemIn::
 	.string "Too bad!\n"
 	.string "There's nothing to put them in…$"
+
+@ D108: CrystalDust's fruit trees. The bg-event arm that reaches these was
+@ lost in the merge, so the three texts came with it.
+gText_FruitBearingTree::
+	.string "It's a fruit-bearing tree.\p"
+	.string "Hey!\n"
+	.string "It's {STR_VAR_2}!$"
+
+gText_FruitBearingTreeNothingHere::
+	.string "It's a fruit-bearing tree.\p"
+	.string "Looks like there's nothing here…$"
+
+gText_FruitBearingTreeBagFull::
+	.string "But the BAG is full…$"

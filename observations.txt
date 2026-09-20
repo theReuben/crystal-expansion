@@ -1,0 +1,2 @@
+some npcs are coloured as negatives
+the intro screen oak text box still not rendering properly

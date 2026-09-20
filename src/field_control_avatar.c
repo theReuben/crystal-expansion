@@ -479,6 +479,12 @@ static const u8 *GetInteractedBackgroundEventScript(struct MapPosition *position
                 return SecretBase_EventScript_CheckEntrance;
         }
         return NULL;
+    // D108: CrystalDust's fruit trees. Without this arm the tree's *id* fell
+    // through to "return bgEvent->bgUnion.script" below and was executed as a
+    // script pointer, which crashed the game on the first apricorn tree.
+    case BG_EVENT_FRUIT_TREE:
+        gSpecialVar_0x8004 = bgEvent->bgUnion.berryTreeId;
+        return EventScript_FruitTree;
     }
 
     return bgEvent->bgUnion.script;

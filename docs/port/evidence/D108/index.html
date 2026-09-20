@@ -1,0 +1,119 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>D108 &mdash; third round of human-testing observations</title>
+<style>
+ body{font:15px/1.6 -apple-system,Segoe UI,sans-serif;max-width:56rem;margin:2rem auto;padding:0 1.2rem;color:#222}
+ h1{font-size:1.6rem;margin-bottom:.2rem} h2{margin-top:2.6rem;border-bottom:1px solid #ddd;padding-bottom:.3rem}
+ .quote{background:#f6f6f6;border-left:3px solid #999;padding:.5rem .9rem;margin:.8rem 0;font-style:italic}
+ img{image-rendering:pixelated;border:1px solid #ccc;max-width:100%;vertical-align:top}
+ .pair img{width:48%}
+ code{background:#f2f2f2;padding:.1rem .3rem;border-radius:3px}
+ pre{background:#f7f7f7;border:1px solid #e2e2e2;padding:.7rem;overflow-x:auto;font-size:13px}
+ table{border-collapse:collapse;font-size:13px} td,th{border:1px solid #ddd;padding:.2rem .5rem;text-align:left}
+ .bad{color:#b00} .good{color:#070} .status{font-weight:600;color:#070}
+ .cause{color:#555;font-size:.93em}
+</style>
+
+<h1>D108 &mdash; the third round of human-testing observations</h1>
+<p class=cause>Six lines from <code>observations.txt</code>. Four are fixed and evidenced below;
+two &mdash; the negative-coloured NPCs and the intro text box &mdash; are still open and their lines
+have been left in the file. Captures are raw mGBA frames from
+<code>tools/playtest/playtest.py</code> against the rebuilt ROM, nearest-neighbour upscaled.</p>
+
+<h2>1. Some NPCs are coloured as negatives</h2>
+<div class=quote>some npcs are coloured as negatives</div>
+<p><b>Status: not fixed.</b> No NPC reproducing this was found in the maps reachable from a
+fresh save (New Bark Town, Professor Elm's lab, Route 30). What the audit did turn up is a
+list of object events that pair one side's art with the other side's palette &mdash; the merge kept
+expansion's Hoenn sprite sheets while <code>npc_1.pal</code>&hellip;<code>npc_4.pal</code> are
+CrystalDust's. That is the shape a "negative" would take, but it needs the specific NPC to
+confirm. <em>Which map and which NPC would settle it in one capture.</em></p>
+
+<h2>2. The Pok&eacute; Ball overworld sprites</h2>
+<div class=quote>the pokeball overworld sprites are still not coloured correctly</div>
+<p><b>Cause.</b> <code>gObjectEventGraphicsInfo_ItemBall</code> was lost in the merge while
+<code>graphics/object_events/pics/misc/item_ball.png</code> survived &mdash; the
+table-lost-but-assets-kept variant. <code>OBJ_EVENT_GFX_ITEM_BALL</code> therefore pointed at
+expansion's <code>gObjectEventGraphicsInfo_PokeBall</code>: an 80&times;32 five-frame
+<em>follower</em> ball drawn 16&times;32 with <code>OBJ_EVENT_PAL_TAG_NPC_3</code>. NPC&nbsp;3
+in this tree is CrystalDust's palette, not expansion's, so the ball came out in whatever
+colours CrystalDust happens to keep at those indices.</p>
+<p><b>Change.</b> Restored the info struct (16&times;16, one frame,
+<code>OBJ_EVENT_PAL_TAG_NPC_4</code>, <code>PALSLOT_NPC_4</code>, <code>sAnimTable_Inanimate</code>),
+its pic table and its <code>INCGFX_U32</code>, and pointed
+<code>OBJ_EVENT_GFX_ITEM_BALL</code> back at it. <code>OBJ_EVENT_GFX_POKE_BALL</code> keeps
+expansion's follower ball, which is what that entry is for.</p>
+<p><span class=status>Fixed.</span> Left: the old pairing rendered offline (follower sheet
+under npc_3). Middle: the restored pairing (item ball under npc_4). Right: in game, the item
+ball on Route&nbsp;30 at night.</p>
+<div class=pair><img src="02-ball-before.png" alt="follower ball under npc_3" style="width:20%">
+<img src="02-ball-after.png" alt="item ball under npc_4" style="width:20%">
+<img src="02-ball-ingame.png" alt="item ball on Route 30" style="width:40%"></div>
+
+<h2>3. Crash on interacting with an apricorn tree</h2>
+<div class=quote>game crashes on interacting with apricorn tree</div>
+<p><b>Cause.</b> <code>src/field_control_avatar.c</code> is expansion's copy, and expansion has
+no <code>BG_EVENT_FRUIT_TREE</code>. Every supporting piece of CrystalDust's fruit trees was
+already here &mdash; <code>src/fruit_tree.c</code>, the
+<code>GetFruitTreeItem</code>/<code>SetFruitTreeMetatileTakenFromId</code> specials, D83's
+metatile wiring, the <code>fruit_tree</code> bg events in the map JSON &mdash; but the one
+<code>case</code> that dispatches them was not. A fruit-tree bg event fell through to the
+switch's <code>return bgEvent-&gt;bgUnion.script;</code>, so the small integer tree id was
+executed as a script pointer.</p>
+<pre>case BG_EVENT_FRUIT_TREE:
+    gSpecialVar_0x8004 = bgEvent-&gt;bgUnion.berryTreeId;
+    return EventScript_FruitTree;</pre>
+<p><b>Change.</b> Added that arm, ported CrystalDust's <code>EventScript_FruitTree</code> block
+into <code>data/scripts/obtain_item.inc</code>, its three strings into
+<code>data/text/obtain_item.inc</code>, and the extern into <code>include/event_scripts.h</code>.</p>
+<p><span class=status>Fixed.</span> Route&nbsp;30, facing the tree at (7,&nbsp;45): the script
+runs instead of crashing.</p>
+<div class=pair><img src="03-route30.png" alt="Route 30 approaching the tree">
+<img src="03-fruit-tree.png" alt="It's a fruit-bearing tree"></div>
+
+<h2>4. The battle back sprite is Emerald's</h2>
+<div class=quote>back sprite in battle is the emerald male character sprite</div>
+<p><b>Cause.</b> <code>GetPlayerTrainerPic</code> in <code>src/trainer.c</code> is expansion's.
+<code>GAME_VERSION</code> is <code>VERSION_EMERALD</code> in this tree, so every ordinary battle
+took <code>GetEmeraldTrainerPic</code> and got Brendan or May. CrystalDust's Gold and Kris back
+pics were never referenced by the trainer-pic table at all.</p>
+<p><b>Change.</b> Added <code>gTrainerBackPic_Gold</code>/<code>_Kris</code> and their palettes
+to <code>src/data/graphics/trainers.h</code>, gave them CrystalDust's five-frame throw
+(<code>sBackAnims_Johto</code>), filled in <code>TRAINER_PIC_GOLD</code> and
+<code>TRAINER_PIC_KRIS</code>, and pointed the <code>VERSION_EMERALD</code> branch at a new
+<code>GetJohtoTrainerPic</code>.</p>
+<p><b>Deliberate drop.</b> <code>GetEmeraldTrainerPic</code> is deleted, not kept unused &mdash; the
+build treats an unused static as an error. Brendan and May are no longer reachable as player
+back pics on the Emerald branch. They remain in the table for linked saves.</p>
+<p><span class=status>Fixed (built, not yet seen in a battle).</span> The harness cannot reach a
+wild encounter from a fresh save &mdash; the player has no party until Elm hands over a starter,
+so this is the sheet that is now wired in, not a capture of it in use. Frame&nbsp;0 of Gold and
+Kris, beside the Brendan sheet that was showing.</p>
+<div class=pair><img src="04-gold-back.png" alt="Gold back pic" style="width:31%">
+<img src="04-kris-back.png" alt="Kris back pic" style="width:31%">
+<img src="04-brendan-back.png" alt="Brendan back pic, what was showing" style="width:31%"></div>
+
+<h2>5. The intro text box</h2>
+<div class=quote>the intro screen oak text box still not rendering properly</div>
+<p><b>Status: not fixed.</b> Narrowed, though. The ordinary field box is <em>correct</em>: in
+Professor Elm's lab the row above the window reads tiles
+<code>0x201, 0x203, 0x204&times;26, 0x205, 0x206</code> at palette&nbsp;15, which is exactly
+<code>WindowFunc_DrawDialogueFrame</code> over <code>gMessageBox_Gfx</code> at
+<code>DLG_WINDOW_BASE_TILE_NUM</code>, and it renders as a clean rounded box (see the Route&nbsp;30
+capture above). The intro's box, drawn by <code>src/main_menu.c</code> at
+<code>BIRCH_DLG_BASE_TILE_NUM</code> (<code>0xFC</code>), comes out as
+<code>0xFC, 0xFD, 0xFE&times;26, 0xFF, 0x100</code> &mdash; the same five-piece
+<em>shape</em> but consecutive tile numbers, which no frame function in
+<code>src/menu.c</code> produces. So the intro is drawing from a different tile base than the
+one <code>LoadMessageBoxGfx</code> loaded. The remaining work is to find what re-points it.</p>
+
+<h2>6. Frame style does not follow the option</h2>
+<div class=quote>frame style works in main game but does not reflect what's selected in options</div>
+<p><b>Cause.</b> <code>src/option_menu.c</code> is expansion's: it loads the window border once
+at init and never again, so moving the FRAME cursor changed the number on screen while the
+menu's own border stayed on the saved style. CrystalDust reloads both from the input handler.</p>
+<p><b>Change.</b> The <code>MENUITEM_FRAMETYPE</code> arm now reloads tiles and palette at the
+same offsets init uses (<code>0x120</code> bytes to <code>0x1A2</code>,
+<code>BG_PLTT_ID(7)</code>) whenever the selection changes.</p>
+<p><span class=status>Fixed.</span> TYPE&nbsp;1 and TYPE&nbsp;6, same visit to the menu.</p>
+<div class=pair><img src="06-frame-type1.png" alt="FRAME TYPE 1"><img src="06-frame-type6.png" alt="FRAME TYPE 6"></div>

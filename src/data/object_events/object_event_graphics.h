@@ -359,6 +359,11 @@ const u32 gObjectEventPic_Greta[] = INCGFX_U32("graphics/object_events/pics/peop
 const u32 gObjectEventPic_Noland[] = INCGFX_U32("graphics/object_events/pics/people/frontier_brains/noland.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u32 gObjectEventPic_Lucy[] = INCGFX_U32("graphics/object_events/pics/people/frontier_brains/lucy.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u32 gObjectEventPic_Brandon[] = INCGFX_U32("graphics/object_events/pics/people/frontier_brains/brandon.png", ".4bpp", "-mwidth 2 -mheight 4");
+// D108: CrystalDust's item ball. The merge kept the art but lost the table
+// entry, and OBJ_EVENT_GFX_ITEM_BALL fell back to expansion's follower ball --
+// a 16x32 five-frame sheet drawn with CrystalDust's npc_3 palette.
+const u32 gObjectEventPic_ItemBall[] = INCGFX_U32("graphics/object_events/pics/misc/item_ball.png", ".4bpp");
+
 const u32 gObjectEventPic_PokeBall[] = INCGFX_U32("graphics/object_events/pics/misc/ball_poke.png", ".4bpp", "-mwidth 2 -mheight 4");
 
 const u32 gObjectEventPic_DeoxysOld[] = INCGFX_U32("graphics/object_events/pics/pokemon_old/deoxys.png", ".4bpp", "-mwidth 4 -mheight 4");

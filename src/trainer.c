@@ -1,6 +1,14 @@
 #include "global.h"
 #include "constants/trainers.h"
 
+// D108: the player is Gold or Kris, not Brendan or May. GAME_VERSION is
+// VERSION_EMERALD here, so this is the branch every ordinary battle takes;
+// the Hoenn and Kanto pics below are only reachable through a linked save.
+static enum TrainerPicID GetJohtoTrainerPic(enum Gender gender)
+{
+    return gender == MALE ? TRAINER_PIC_GOLD : TRAINER_PIC_KRIS;
+}
+
 static enum TrainerPicID GetEmeraldTrainerPic(enum Gender gender)
 {
     return gender == MALE ? TRAINER_PIC_BRENDAN : TRAINER_PIC_MAY;
@@ -27,6 +35,6 @@ enum TrainerPicID GetPlayerTrainerPic(enum Gender gender, enum GameVersion versi
             return GetKantoTrainerPic(gender);
         case VERSION_EMERALD:
         default:
-            return GetEmeraldTrainerPic(gender);
+            return GetJohtoTrainerPic(gender);
     }
 }

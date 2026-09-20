@@ -472,6 +472,9 @@ const u16 gTrainerPalette_PainterFrlg[] = INCGFX_U16("graphics/trainers/palettes
 static const u8 gTrainerBackPic_None[] = INCGFX_U8("graphics/trainers/back_pics/none.png", ".4bpp");
 const u8 gTrainerBackPic_Brendan[] = INCGFX_U8("graphics/trainers/back_pics/brendan.png", ".4bpp");
 const u8 gTrainerBackPic_May[] = INCGFX_U8("graphics/trainers/back_pics/may.png", ".4bpp");
+// CrystalDust's player back pics (D108). Five 64x64 frames each, like Red's.
+const u8 gTrainerBackPic_Gold[] = INCGFX_U8("graphics/trainers/back_pics/gold_back_pic.png", ".4bpp");
+const u8 gTrainerBackPic_Kris[] = INCGFX_U8("graphics/trainers/back_pics/kris_back_pic.png", ".4bpp");
 const u8 gTrainerBackPic_Red[] = INCGFX_U8("graphics/trainers/back_pics/red.png", ".4bpp");
 const u8 gTrainerBackPic_Leaf[] = INCGFX_U8("graphics/trainers/back_pics/leaf.png", ".4bpp");
 const u8 gTrainerBackPic_RubySapphireBrendan[] = INCGFX_U8("graphics/trainers/back_pics/brendan_rs.png", ".4bpp");
@@ -481,6 +484,8 @@ const u8 gTrainerBackPic_Steven[] = INCGFX_U8("graphics/trainers/back_pics/steve
 const u8 gTrainerBackPic_Pokedude[] = INCGFX_U8("graphics/trainers/back_pics/pokedude.png", ".4bpp");
 const u8 gTrainerBackPic_OldMan[] = INCGFX_U8("graphics/trainers/back_pics/old_man.png", ".4bpp");
 
+const u16 gTrainerBackPicPalette_Gold[] = INCGFX_U16("graphics/trainers/back_pics/gold_back_pic.png", ".gbapal");
+const u16 gTrainerBackPicPalette_Kris[] = INCGFX_U16("graphics/trainers/back_pics/kris_back_pic.png", ".gbapal");
 const u16 gTrainerBackPicPalette_Red[] = INCGFX_U16("graphics/trainers/back_pics/red.png", ".gbapal");
 const u16 gTrainerBackPicPalette_Leaf[] = INCGFX_U16("graphics/trainers/back_pics/leaf.png", ".gbapal");
 const u16 gTrainerBackPicPalette_Pokedude[] = INCGFX_U16("graphics/trainers/back_pics/pokedude.png", ".gbapal");
@@ -545,6 +550,24 @@ static const union AnimCmd *const sBackAnims_Hoenn[] =
     sAnim_GeneralFrame3,
     sAnimCmd_Hoenn,
     sAnimCmd_Point_HGSS,
+};
+
+// CrystalDust's Gold/Kris throw (D108).
+static const union AnimCmd sAnimCmd_Johto[] =
+{
+    ANIMCMD_FRAME(1, 20),
+    ANIMCMD_FRAME(2, 6),
+    ANIMCMD_FRAME(3, 6),
+    ANIMCMD_FRAME(4, 24),
+    ANIMCMD_FRAME(0, 1),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd *const sBackAnims_Johto[] =
+{
+    sAnim_GeneralFrame0,
+    sAnimCmd_Johto,
+    sAnimCmd_Point_HGSS_Red_Leaf,
 };
 
 static const union AnimCmd *const sBackAnims_Kanto[] =
@@ -1418,10 +1441,12 @@ const struct TrainerPicInfo gTrainerPicInfo[TRAINER_PIC_COUNT] =
     [TRAINER_PIC_GOLD] =
     {
         .frontPic = TRAINER_FRONT_PIC(gTrainerFrontPic_GscGold, gTrainerPalette_GscGold),
+        .backPic = TRAINER_BACK_PIC(5, gTrainerBackPic_Gold, gTrainerBackPicPalette_Gold, sBackAnims_Johto),
     },
     [TRAINER_PIC_KRIS] =
     {
         .frontPic = TRAINER_FRONT_PIC(gTrainerFrontPic_GscKris, gTrainerPalette_GscKris),
+        .backPic = TRAINER_BACK_PIC(5, gTrainerBackPic_Kris, gTrainerBackPicPalette_Kris, sBackAnims_Johto),
     },
     [TRAINER_PIC_JUGGLER] =
     {

@@ -3816,3 +3816,78 @@ Evidence: `docs/port/evidence/D107/index.html`.
 expansion's 128×128, loaded with an `0x2000` cap) and `graphics/pokemon_storage`,
 both carried over from D106. Also noticed but not reported and not investigated:
 dialogue text colour varies by speaker (Elm blue, Mum red, signs black).
+
+## D108 — third round human-testing observations
+
+Six more lines in `observations.txt`. Four fixed, two left open and still in the
+file. Evidence: `docs/port/evidence/D108/index.html`.
+
+**1. "some npcs are coloured as negatives" — not fixed.** Not reproduced. New
+Bark Town, Elm's lab and Route 30 all look right. An audit of object events whose
+art comes from one upstream and whose palette tag resolves to the other's `.pal`
+turns up mostly Hoenn sprites (out of scope), plus `ApricornTree` (expansion art,
+CrystalDust `npc_3`) and `RivalBrendan*`/`RivalMay*` (CrystalDust art, expansion
+palettes). Any of those could be the reported NPC; none of them is obviously
+inverted on screen. Needs the map and the NPC from the tester.
+
+**2. Poké Ball overworld sprite.** Table-lost-but-assets-kept, again.
+`graphics/object_events/pics/misc/item_ball.png` survived the merge but
+`gObjectEventPic_ItemBall`, `sPicTable_ItemBall` and
+`gObjectEventGraphicsInfo_ItemBall` did not, so `OBJ_EVENT_GFX_ITEM_BALL`
+resolved to expansion's `gObjectEventGraphicsInfo_PokeBall` — the *follower*
+ball, a five-frame 80×32 sheet drawn 16×32 under `OBJ_EVENT_PAL_TAG_NPC_3`,
+which in this tree is CrystalDust's palette file. Restored all three pieces
+(16×16, one frame, inanimate, `OBJ_EVENT_PAL_TAG_NPC_4` / `PALSLOT_NPC_4`, to
+match CrystalDust's literal slot 5) and repointed the enum.
+`OBJ_EVENT_GFX_POKE_BALL` still points at expansion's follower ball; that entry
+exists for the follower feature and is correct as it stands.
+
+**3. Apricorn tree crash.** `src/field_control_avatar.c` is expansion's copy and
+expansion has no `BG_EVENT_FRUIT_TREE` arm. Everything else CrystalDust's fruit
+trees need was already here — `src/fruit_tree.c`, the `GetFruitTreeItem` and
+`SetFruitTreeMetatileTakenFromId` specials, D83's metatile work, the
+`fruit_tree` bg events in the map JSON — but with no `case` to catch them the
+event fell through to `return bgEvent->bgUnion.script;` and the tree *id*, a
+small integer, was executed as a script pointer. Added the arm, ported
+`EventScript_FruitTree` into `data/scripts/obtain_item.inc`, its three strings
+into `data/text/obtain_item.inc`, and the extern into `include/event_scripts.h`.
+
+**4. Battle back sprite was Brendan's.** `GetPlayerTrainerPic` is expansion's and
+`GAME_VERSION` is `VERSION_EMERALD`, so every ordinary battle went through
+`GetEmeraldTrainerPic`. CrystalDust's Gold and Kris back pics were in the repo
+but unreferenced. Added them and their palettes to `src/data/graphics/trainers.h`
+with CrystalDust's five-frame throw animation (`sAnimCmd_Johto`/`sBackAnims_Johto`),
+filled in `TRAINER_PIC_GOLD` and `TRAINER_PIC_KRIS`, and pointed the
+`VERSION_EMERALD` branch at a new `GetJohtoTrainerPic`.
+
+*Deliberate drop:* `GetEmeraldTrainerPic` is **deleted**, not left unused — an
+unused static is a build error here. Brendan and May are therefore no longer
+reachable as *player* back pics; the pics themselves stay in the table for the
+linked-save paths. Consistent with the no-Hoenn scope, but recorded because it is
+a removal, not a redirection.
+
+*Not verified in battle.* The harness cannot reach a wild encounter from a fresh
+save — `afterintro.txt` leaves the player in the 2F bedroom with no party, so
+`mash UP` in Route 30 grass does nothing. The evidence page shows the sheets that
+are now wired in, and says so.
+
+**5. "intro screen oak text box still not rendering properly" — not fixed, but
+narrowed.** The *field* box is provably correct: in Elm's lab the frame row reads
+`0x201, 0x203, 0x204×26, 0x205, 0x206` at palette 15, exactly what
+`WindowFunc_DrawDialogueFrame` writes over `gMessageBox_Gfx` at
+`DLG_WINDOW_BASE_TILE_NUM`, and it looks right on screen. So D106's fix holds and
+this is not a general message-box defect. The main-menu speech path
+(`src/main_menu.c`, `BIRCH_DLG_BASE_TILE_NUM` `0xFC`) produces
+`0xFC, 0xFD, 0xFE×26, 0xFF, 0x100` on the same row — the right five-piece shape
+but *consecutive* tile numbers and no flip bits, which matches no frame function
+in `src/menu.c`. Ruled out: the art (ROM bytes == `message_box.png.4bpp`),
+palette 15 (VRAM == `message_box.png.gbapal` exactly), and the window geometry
+(`sNewGameBirchSpeechTextWindows[0]` is identical to the field window's and both
+are vanilla). What remains is whatever re-points the tile base between
+`LoadMessageBoxGfx(0, 0xFC, ...)` and the draw.
+
+**6. Frame style not reflected in options.** `src/option_menu.c` is expansion's,
+which loads the window border once at init. Changing FRAME TYPE therefore moved
+the number but left the menu's own border on the saved style. CrystalDust reloads
+tiles and palette from the input handler; added the same, at the offsets init
+uses (`0x120` bytes to `0x1A2`, `BG_PLTT_ID(7)`).

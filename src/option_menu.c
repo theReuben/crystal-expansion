@@ -350,7 +350,15 @@ static void Task_OptionMenuProcessInput(u8 taskId)
             gTasks[taskId].tWindowFrameType = FrameType_ProcessInput(gTasks[taskId].tWindowFrameType);
 
             if (previousOption != gTasks[taskId].tWindowFrameType)
+            {
                 FrameType_DrawChoices(gTasks[taskId].tWindowFrameType);
+                // D108: show the frame you just picked. Expansion loads the
+                // border once at init and never again, so the number changed
+                // while the menu's own border stayed on the saved style.
+                // CrystalDust reloads both here; same offsets as states 3 and 4.
+                LoadBgTiles(1, GetWindowFrameTilesPal(gTasks[taskId].tWindowFrameType)->tiles, 0x120, 0x1A2);
+                LoadPalette(GetWindowFrameTilesPal(gTasks[taskId].tWindowFrameType)->pal, BG_PLTT_ID(7), PLTT_SIZE_4BPP);
+            }
             break;
         default:
             return;
