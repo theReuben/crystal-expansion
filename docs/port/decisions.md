@@ -3629,3 +3629,64 @@ of the metatile two slots before it.
 
 The static audit's remaining 39 problems are all in secret bases, the Battle
 Frontier and Hoenn — parked content, no reachable map among them.
+
+## D105 — the summary screen drew two layouts at once, and the harness had been lying about colour
+
+Two findings from the first look at the menus, one in the game and one in the
+tool that had been reporting on it.
+
+### The harness swapped red and blue in every screenshot it ever took
+
+`Screenshot()` read mGBA's frame buffer as `0xAABBGGRR` reversed — it wrote
+B, G, R. mGBA's desktop build puts red in the low byte (`M_COLOR_RED` is
+`0x000000FF` in `mgba/core/interface.h`), so every PNG this harness has
+produced since D95 has had its red and blue channels exchanged.
+
+Nothing in D93–D104 rested on colour — the tileset work was about which block
+was drawn, not what hue it came out — but it made every screenshot look wrong
+in a way that invited wrong conclusions: brown Hoothoot rendered blue, wooden
+floors rendered blue, and a red Poké Ball rendered blue. The fix is one line.
+Confirmed against palette RAM: the Hoothoot in a Route 29 battle now matches
+`graphics/pokemon/hoothoot/normal.pal` byte for byte.
+
+### The summary screen: expansion's code, CrystalDust's art
+
+`src/pokemon_summary_screen.c` is byte-identical to expansion's — CrystalDust's
+own 3763-line version was dropped whole in the Phase 1 merge, and its
+`gSummaryScreen*Tilemap` symbols survive in `src/graphics.c` referenced by
+nothing but `include/graphics.h`. The *assets* under `graphics/summary_screen/`,
+however, were CrystalDust's: `tiles.png`, `page_info.bin`, `page_info_egg.bin`,
+`page_skills.bin`, `markings.pal` and `move_select.png` are files both projects
+ship under the same name, and the merge kept CrystalDust's.
+
+So expansion's window templates were drawn on top of CrystalDust's page art at
+CrystalDust's coordinates, over a background whose palette was never loaded:
+two sets of labels overlapping on magenta. The screen was unreadable.
+
+Fixed by restoring expansion's six files. Both pages now render correctly.
+This is the thirteenth confirmed "Phase 1 merge kept one side", and the first
+where the side kept was CrystalDust's rather than expansion's.
+
+**Recorded, not dropped:** CrystalDust's Crystal-styled summary screen is gone,
+and was already gone before this change — the code that drew it did not survive
+Phase 1. Restoring it means porting 3763 lines against an engine whose summary
+screen has since grown IV/EV display, the contest pages and teachable moves.
+That is a feature port, not a merge fix, and it is out of scope here.
+
+### Not a defect: the bag's striped background
+
+The Bag draws magenta and blue stripes, which looks broken. It is not: the
+tiles, the tilemap and the palette in VRAM all match `graphics/bag/menu.png`,
+`menu.bin` and `menu_male.pal` exactly, and all three are byte-identical to
+vanilla pokeemerald's. Indices 12 and 13 are the trainer's stripe colours —
+blue and purple for the male palette, two pinks for the female one. Stock
+Emerald art, kept.
+
+### Still to look at
+
+The same "shared filename, kept the other side's copy" pattern covers other UI
+directories, and the ones where the art is coupled to a layout are the ones
+that can break the same way: `graphics/pokedex` (18 tilemaps),
+`graphics/pokemon_storage` (5), `graphics/battle_interface` (13) and
+`graphics/text_window` (3). Each needs the same check — whose code reads it —
+before a human play-test trusts those screens.

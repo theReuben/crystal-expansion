@@ -165,8 +165,10 @@ static void Screenshot(const char* path)
 	fprintf(f, "P6\n%d %d\n255\n", SCREEN_W, SCREEN_H);
 	for (int i = 0; i < SCREEN_W * SCREEN_H; i++) {
 		color_t c = frameBuffer[i];
-		// mGBA's desktop build is 8888; mColorFrom555 is not in play here.
-		uint8_t rgb[3] = { (c >> 16) & 0xFF, (c >> 8) & 0xFF, c & 0xFF };
+		// mGBA's desktop build is 8888 with red in the low byte
+		// (M_COLOR_RED is 0x000000FF in mgba/core/interface.h), so the
+		// channels come out of the frame buffer in R, G, B order already.
+		uint8_t rgb[3] = { c & 0xFF, (c >> 8) & 0xFF, (c >> 16) & 0xFF };
 		fwrite(rgb, 1, 3, f);
 	}
 	fclose(f);
