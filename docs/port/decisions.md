@@ -3498,3 +3498,88 @@ point at them, `src/field_specials.c` references
 `src/tileset_anims.c` has an `InitTilesetAnim_` callback per tileset. That
 is a wider edit than the ROM headroom currently justifies (87.4% of 32 MB).
 Revisit if the ROM approaches the limit; nothing else depends on it.
+
+## D100 — a progression harness, and the three ways its first answers were wrong
+
+The map sweep (D93) proves a map draws. It says nothing about whether the map's
+cutscene still fires, and a cutscene is exactly what a three-way merge breaks:
+an object event that moved, a flag that was renumbered, a script command whose
+macro and implementation disagree.
+
+`tools/playtest/progression.py` reads every `map_script_2 VAR, value, Label`
+out of the on-frame tables in `data/maps/*/scripts.inc` — 98 of them — and for
+each one restores a shared after-intro save, sets the trigger variable, warps
+the player onto the map, answers dialogue until the script ends, then reads
+back the flags and variables that the script's own source says it sets. The
+expectation is derived from the script rather than written by hand, so it
+cannot rot: `effects()` follows `call`, `goto` and the `goto_if_*` branches.
+
+Three things it got wrong at first, all of them worth recording because each
+made the harness agree with a broken game:
+
+- **`CONTEXT_WAITING` is not "finished".** The first version watched
+  `sGlobalScriptContextStatus != CONTEXT_RUNNING`, but a script sits in
+  `CONTEXT_WAITING` for the whole of every `msgbox` and every `waitmovement`.
+  Every beat therefore "passed" at its first line of dialogue. Only
+  `CONTEXT_SHUTDOWN` means ended.
+- **Settling before watching hides short scripts.** Waiting 150 frames for the
+  warp to land let a cutscene run and finish unobserved, which reads exactly
+  like a cutscene that never fired. The harness now watches for the map from
+  the frame the warp is requested.
+- **A script with no waits in it is never seen running at all.** It executes to
+  completion inside one `ScriptContext_RunScript` call, so "never seen running"
+  is only evidence of a problem when nothing changed either.
+
+What it cannot judge is listed in `tools/playtest/beats.py` with a reason each,
+so nothing is dropped silently: 61 Battle Frontier / Battle Tent / Trainer Hill
+/ Hoenn contest beats (parked or cut), the Dragon's Den quiz (mashing A answers
+question five wrong and the elder asks again for ever, which is the script
+working), the bug-contest award ceremony (needs contest results that only a
+real contest produces), and two scenes whose own transition script switches the
+trigger off for a save that has not earned them (Dragon's Den Clair, Mt Moon
+rival). Those stay on the human play-test list.
+
+Temporary variables cannot be read back after a script that warps: the next map
+load clears them, so a beat whose only expectation is a `VAR_TEMP_*` set before
+a `warp` is judged on finishing, not on the variable.
+
+## D101 — every overworld phone call was dead
+
+`pokegearcall` sets a phone call up on its own script context and the calling
+script then sits in `waitstate` until it ends. Only `src/pokegear.c` ticked that
+context — the Pokégear UI's own loop — so a call raised from the overworld was
+set up and never run, and the script that asked for it waited for ever. Mom's
+call on Route 31, the first scripted call in the game, froze the player on their
+second map.
+
+CrystalDust's `OverworldBasic()` calls `PhoneScriptContext_RunScript()` before
+`ScriptContext_RunScript()`; the merge kept expansion's side of that function
+and the line went with it. Restored, with the include it needs. This is the
+same failure as D97 and D99 and is now the twelfth confirmed instance.
+
+Found by the progression harness: Route31's beat was the one that stalled in
+`CONTEXT_WAITING` with an empty screen.
+
+## D102 — `showmonpic` emitted four bytes and read five
+
+CrystalDust added a fourth argument to `showmonpic` (shiny) and expansion's
+macro does not have it. The merge took expansion's macro and CrystalDust's
+command implementation, so every `showmonpic` in the game wrote a four-byte
+argument list that `ScrCmd_showmonpic` read five bytes out of. The script
+stream then resumed one byte short: the starter-choice script showed the wrong
+species' picture and ended in the middle of Elm's question, leaving the player
+locked in a lab with no Pokémon and no dialogue.
+
+Added `.byte \shiny` to the macro. A sweep comparing every macro's emitted byte
+count against its command's `ScriptRead*` calls found no other genuine
+mismatch (the rest resolve through the `map`, `warp_arg` and `stringvar`
+sub-macros or through `.ifb` branches).
+
+## D103 — two scripts left the script context during a warp
+
+`EcruteakCity_Gym`'s "the gym leader is out" escort and
+`NewBarkTown_PlayersHouse_2F`'s room randomiser both end `warp` / `release` /
+`end` with no `waitstate`. Expansion asserts on that (`src/script.c:112`,
+"Leaving script while a warp is in progress"), so both were a red error screen
+in any build with assertions on. Added `waitstate` to the `.pory` source and the
+generated `.inc` in both.

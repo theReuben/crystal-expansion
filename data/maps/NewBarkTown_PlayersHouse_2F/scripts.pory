@@ -409,5 +409,6 @@ script NewBarkTown_PlayersHouse_2F_CreateRandomRoom{
 
 	release
 	warp(MAP_NEW_BARK_TOWN_PLAYERS_HOUSE_2F, 0xFF, 5, 4)
+	waitstate
 	end
 }

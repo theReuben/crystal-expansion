@@ -20,6 +20,7 @@ script EcruteakCity_Gym_Mapscript_OldMan{
         waitmovement(0)
         setvar(VAR_TEMP_0, 1)
         warp(MAP_ECRUTEAK_CITY, 8, 0, 0)
+        waitstate
         release
         end
     }

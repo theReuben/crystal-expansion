@@ -8,14 +8,22 @@ commands, runs tools/playtest/playtest, and converts the screenshots to PNG.
     tools/playtest/playtest.py scripts/newbark.txt --out /tmp/shots
 
 Script syntax is the harness's own (see playtest.c --help) plus:
-    where            print the player's map group/num and x/y
-    sym <name>       print a symbol's address
+    where                 print the player's map group/num and x/y
+    player                position, elevation and the behaviour underfoot
+    sym <name>            print a symbol's address
+    flag <FLAG_X>         read a save-block flag by name
+    setflag/clearflag <FLAG_X>
+    var <VAR_X> / setvar <VAR_X> <value>
+    advance [maxframes]   answer dialogue until the running script ends
+    untilmap <group> <num> [maxframes]
+    waitfade [maxframes]
 Addresses may be written `symbol`, `symbol+0x10`, or a literal.
 """
 
 import argparse
 import os
 import re
+import shutil
 import subprocess
 import sys
 
@@ -24,6 +32,11 @@ HARNESS = os.path.join(ROOT, "tools", "playtest", "playtest")
 
 # struct SaveBlock1: pos at +0, location (WarpData) at +4.
 SB1_MAPGROUP, SB1_MAPNUM, SB1_X, SB1_Y = 4, 5, 8, 10
+
+# enum in src/script.c. A script sits in CONTEXT_WAITING for the whole of every
+# msgbox and every waitmovement, so only CONTEXT_SHUTDOWN means it has ended.
+CONTEXT_RUNNING = 0
+CONTEXT_SHUTDOWN = 2
 
 ADDR_CMDS = {"read8", "read16", "read32", "write8", "write16", "write32",
              "dump", "deref", "sym"}
@@ -49,6 +62,87 @@ def load_behaviors():
 
 
 BEHAVIORS = load_behaviors()
+
+
+CONST_CACHE = os.path.join(ROOT, "tools", "playtest", ".constants")
+
+
+def load_constants():
+    """FLAG_* and VAR_* name -> number.
+
+    The headers define nearly every entry relative to the one before it and
+    reach into the trainer and rematch ids to do it, so rather than reimplement
+    the preprocessor the names are handed to the host compiler and it prints
+    what it makes of them. Cached, because the headers rarely move.
+    """
+    heads = [os.path.join(ROOT, "include", "constants", h)
+             for h in ("flags.h", "vars.h")]
+    newest = max(os.path.getmtime(h) for h in heads)
+    if os.path.exists(CONST_CACHE) and os.path.getmtime(CONST_CACHE) > newest:
+        return {n: int(v) for n, v in
+                (l.split() for l in open(CONST_CACHE) if l.strip())}
+
+    names = set()
+    for head, prefix in zip(heads, ("FLAG_", "VAR_")):
+        names |= set(re.findall(r"^#define\s+(%s\w+)" % prefix,
+                                open(head).read(), re.M))
+    src = ['#include "constants/flags.h"', '#include "constants/vars.h"',
+           "#include <stdio.h>", "int main(void){"]
+    src += ['printf("%%s %%d\\n","%s",(int)(%s));' % (n, n) for n in sorted(names)]
+    src += ["return 0;}"]
+    tmp = CONST_CACHE + ".c"
+    open(tmp, "w").write("\n".join(src) + "\n")
+    exe = CONST_CACHE + ".bin"
+    cc = subprocess.run(["cc", "-w", "-I", os.path.join(ROOT, "include"),
+                         "-o", exe, tmp], capture_output=True, text=True)
+    if cc.returncode:
+        sys.stderr.write(cc.stderr)
+        return {}
+    out = subprocess.run([exe], capture_output=True, text=True).stdout
+    open(CONST_CACHE, "w").write(out)
+    for path in (tmp, exe):
+        os.remove(path)
+    return {n: int(v) for n, v in (l.split() for l in out.splitlines() if l.strip())}
+
+
+CONSTANTS = load_constants()
+FLAGS = {k: v for k, v in CONSTANTS.items() if k.startswith("FLAG_")}
+VARS = {k: v for k, v in CONSTANTS.items() if k.startswith("VAR_")}
+
+
+def objdump():
+    for cand in (os.path.join(os.environ.get("DEVKITARM", ""), "bin",
+                              "arm-none-eabi-objdump"),
+                 "/opt/devkitpro/devkitARM/bin/arm-none-eabi-objdump",
+                 "arm-none-eabi-objdump"):
+        if os.path.exists(cand) or shutil.which(cand):
+            return cand
+    return None
+
+
+def save_layout(elf):
+    """(flags byte offset, var index bias) inside SaveBlock1.
+
+    struct SaveBlock1's offsets shift with the expansion's FREE_* build
+    options, and the comments in global.h are stale, so they are read out of
+    the ROM: FlagGet and GetVarPointer both carry the offset they use in their
+    constant pool, and those are the numbers the game itself believes.
+    """
+    od = objdump()
+    if not od:
+        return 0x1248, -0x35E5
+    def words(fn):
+        out = subprocess.run([od, "-d", "--disassemble=" + fn, elf],
+                             text=True, capture_output=True).stdout
+        return [int(w, 16) for w in re.findall(r"\.word\s+0x([0-9a-f]{8})", out)]
+    flags = [w for w in words("FlagGet") if 0 < w < 0x10000]
+    bias = [w - (1 << 32) for w in words("GetVarPointer")
+            if 0xFFFF0000 < w < 0xFFFFFFFF and w != 0xFFFF8000]
+    return (flags[0] if flags else 0x1248,
+            bias[0] if bias else -0x35E5)
+
+
+FLAG_OFFSET, VAR_BIAS = save_layout(os.path.join(ROOT, "pokecrystal.elf"))
 
 
 def load_symbols(map_path):
@@ -110,6 +204,64 @@ def expand_lines(lines, syms, outdir):
                 out.append("indexed %s 24 %s %X %d %s" % (base, idx, off, size // 8, label))
             out.append("deref %s %d %d %s" % (resolve("gSaveBlock1Ptr", syms),
                                               SB1_MAPGROUP, 2, "mapwhere"))
+            continue
+        if cmd in ("flag", "setflag", "clearflag"):
+            # The save block's flag bitfield, addressed by FLAG_ name. Setting
+            # a flag is how a story beat is handed the prerequisites of the
+            # beats before it without replaying them.
+            name = parts[1]
+            if name not in FLAGS:
+                sys.exit("playtest: unknown flag '%s'" % name)
+            idx = FLAGS[name]
+            if idx >= 0x4000:
+                sys.exit("playtest: %s is a special flag, not in the save block" % name)
+            what = {"flag": "read", "setflag": "set", "clearflag": "clear"}[cmd]
+            out.append("pbit %s 0x%X %d %s %s" % (resolve("gSaveBlock1Ptr", syms),
+                                                  FLAG_OFFSET + idx // 8, idx % 8,
+                                                  what, name))
+            continue
+        if cmd in ("var", "setvar"):
+            name = parts[1]
+            if name not in VARS:
+                sys.exit("playtest: unknown var '%s'" % name)
+            off = (VARS[name] + VAR_BIAS) * 2
+            if cmd == "var":
+                out.append("pread %s 0x%X 2 %s" % (resolve("gSaveBlock1Ptr", syms), off, name))
+            else:
+                out.append("pwrite %s 0x%X 2 %s" % (resolve("gSaveBlock1Ptr", syms),
+                                                  off, parts[2]))
+            continue
+        if cmd == "advance":
+            # Answer dialogue until the script that is running finishes. A beat
+            # that never finishes is the interesting result, so the timeout is
+            # reported rather than ignored.
+            limit = parts[1] if len(parts) > 1 else "12000"
+            status = resolve("sGlobalScriptContextStatus", syms)
+            out.append("mash A 12")
+            # Wait for the script to start before waiting for it to end. The
+            # context is stopped both before a cutscene begins and after it
+            # finishes, so without this a beat that never fires at all reads
+            # exactly like one that ran instantly.
+            out.append("until abs %s 0 1 ne %d 300 scriptstart" % (status, CONTEXT_SHUTDOWN))
+            out.append("until abs %s 0 1 eq %d %s script" % (
+                status, CONTEXT_SHUTDOWN, limit))
+            out.append("mash NONE")
+            out.append("wait 20")
+            continue
+        if cmd == "untilmap":
+            # Wait for a warp to land. mapGroup and mapNum are adjacent bytes,
+            # so one 16-bit compare covers both.
+            group, num = int(parts[1], 0), int(parts[2], 0)
+            limit = parts[3] if len(parts) > 3 else "900"
+            out.append("until ptr %s 0x%X 2 eq 0x%X %s" % (resolve("gSaveBlock1Ptr", syms),
+                                                           SB1_MAPGROUP, group | (num << 8),
+                                                           limit + " warp"))
+            continue
+        if cmd == "waitfade":
+            limit = parts[1] if len(parts) > 1 else "600"
+            # gPaletteFade.active is the top bit of the bitfield word at +12.
+            out.append("until abs %s 0 4 lt 0x80000000 %s fade" %
+                       (resolve("gPaletteFade+12", syms), limit))
             continue
         if cmd == "where":
             for off, label, size in ((SB1_MAPGROUP, "mapGroup", 8), (SB1_MAPNUM, "mapNum", 8),

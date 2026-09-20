@@ -1,5 +1,6 @@
 #include "global.h"
 #include "overworld.h"
+#include "phone_script.h"
 #include "day_night.h"
 #include "battle_pyramid.h"
 #include "battle_setup.h"
@@ -1846,6 +1847,10 @@ u8 UpdateSpritePaletteWithTime(u8 paletteNum)
 
 static void OverworldBasic(void)
 {
+    // Overworld phone calls run on their own script context, and this is the
+    // only place the field ticks it; without it `pokegearcall` sets the call
+    // up and the script that asked for it waits for ever.
+    PhoneScriptContext_RunScript();
     ScriptContext_RunScript();
     RunTasks();
     AnimateSprites();

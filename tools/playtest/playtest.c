@@ -100,13 +100,58 @@ static uint32_t ParseKeys(const char* spec)
 	return mask;
 }
 
+// A key tapped on and off for as long as the emulator runs. Progression
+// scripts spend most of their time answering dialogue, and a hundred literal
+// `press A` lines is both unreadable and a guess at how long the text takes.
+static uint32_t mashKeys;
+static unsigned long mashPeriod = 16;
+
 static void RunFrames(unsigned long frames)
 {
 	for (unsigned long i = 0; i < frames; i++) {
-		core->setKeys(core, heldKeys);
+		uint32_t keys = heldKeys;
+		if (mashKeys && frameCount % mashPeriod < mashPeriod / 2) {
+			keys |= mashKeys;
+		}
+		core->setKeys(core, keys);
 		core->runFrame(core);
 		frameCount++;
 	}
+}
+
+// Read a value of 1, 2 or 4 bytes, either at an address or at an offset from a
+// pointer held at one. Everything the game keeps about the player's progress
+// hangs off gSaveBlock1Ptr, so the pointer form is the common one.
+static uint32_t ReadValue(bool viaPtr, uint32_t addr, uint32_t off, uint32_t size)
+{
+	uint32_t at = (viaPtr ? core->busRead32(core, addr) : addr) + off;
+	switch (size) {
+	case 1: return core->busRead8(core, at);
+	case 2: return core->busRead16(core, at);
+	default: return core->busRead32(core, at);
+	}
+}
+
+static void WriteValue(bool viaPtr, uint32_t addr, uint32_t off, uint32_t size, uint32_t val)
+{
+	uint32_t at = (viaPtr ? core->busRead32(core, addr) : addr) + off;
+	switch (size) {
+	case 1: core->busWrite8(core, at, val); break;
+	case 2: core->busWrite16(core, at, val); break;
+	default: core->busWrite32(core, at, val); break;
+	}
+}
+
+static bool Compare(uint32_t v, const char* op, uint32_t want)
+{
+	if (!strcmp(op, "eq")) return v == want;
+	if (!strcmp(op, "ne")) return v != want;
+	if (!strcmp(op, "lt")) return v < want;
+	if (!strcmp(op, "le")) return v <= want;
+	if (!strcmp(op, "gt")) return v > want;
+	if (!strcmp(op, "ge")) return v >= want;
+	fprintf(stderr, "playtest: unknown comparison '%s'\n", op);
+	exit(1);
 }
 
 // PPM, not PNG: no image library to link, and the callers convert.
@@ -146,6 +191,11 @@ static void Usage(void)
 		"  hold <KEYS|NONE>            keys stay down until changed\n"
 		"  press <KEYS> [frames=8] [gap=8]\n"
 		"  walk <DIR> <steps>          16 frames down, 4 up, per step\n"
+		"  mash <KEYS|NONE> [period=16]  tap a key for as long as frames run\n"
+		"  until abs|ptr <addr> <off> <size> <eq|ne|lt|le|gt|ge> <val> <max> [tag]\n"
+		"  pread <ptraddr> <off> <size> [label]\n"
+		"  pwrite <ptraddr> <off> <size> <value>\n"
+		"  pbit <ptraddr> <byteoff> <bit> <read|set|clear> [label]\n"
 		"  shot <file.ppm>\n"
 		"  savestate|loadstate <file>\n"
 		"  read8|read16|read32 <addr> [label]\n"
@@ -276,6 +326,76 @@ int main(int argc, char** argv)
 			}
 			uint32_t idx = core->busRead8(core, idxAddr);
 			Dump(base + idx * stride + off, len, m > 5 ? e : "indexed");
+		} else if (!strcmp(cmd, "mash")) {
+			mashKeys = ParseKeys(a);
+			if (n > 2) {
+				mashPeriod = strtoul(b, NULL, 0);
+				if (mashPeriod < 2) {
+					mashPeriod = 2;
+				}
+			}
+		} else if (!strcmp(cmd, "until")) {
+			// until abs|ptr <addr> <off> <size> <op> <value> <maxframes>
+			// Run until the game says it has got where it was told to go, and
+			// say so when it never does -- a story beat that silently fails to
+			// set its flag is exactly the defect this harness is for.
+			char where[8], op[8], sa[32], so[32], ss[32], sw[32], sm[32];
+			char tag[32] = "";
+			int m = sscanf(line, "%*s %7s %31s %31s %31s %7s %31s %31s %31s",
+				where, sa, so, ss, op, sw, sm, tag);
+			uint32_t addr = strtoul(sa, NULL, 0), off = strtoul(so, NULL, 0);
+			uint32_t size = strtoul(ss, NULL, 0), want = strtoul(sw, NULL, 0);
+			uint32_t max = strtoul(sm, NULL, 0);
+			if (m < 7) {
+				fprintf(stderr, "playtest: bad until\n");
+				return 1;
+			}
+			bool viaPtr = !strcmp(where, "ptr");
+			unsigned long start = frameCount, waited = 0;
+			bool ok = false;
+			while (waited < max) {
+				if (Compare(ReadValue(viaPtr, addr, off, size), op, want)) {
+					ok = true;
+					break;
+				}
+				RunFrames(1);
+				waited++;
+			}
+			printf("until %s %s frames=%lu value=%u\n", tag[0] ? tag : "-",
+				ok ? "ok" : "TIMEOUT", frameCount - start,
+				ReadValue(viaPtr, addr, off, size));
+		} else if (!strcmp(cmd, "pread") || !strcmp(cmd, "pwrite")) {
+			// pread <ptraddr> <off> <size> [label] / pwrite <..> <value>
+			uint32_t addr = strtoul(a, NULL, 0), off = strtoul(b, NULL, 0);
+			uint32_t size = strtoul(c, NULL, 0);
+			if (cmd[1] == 'w') {
+				WriteValue(true, addr, off, size, strtoul(d, NULL, 0));
+				printf("pwrite 0x%08X+%u = %lu\n", addr, off, strtoul(d, NULL, 0));
+			} else {
+				uint32_t v = ReadValue(true, addr, off, size);
+				printf("pread %s = %u (0x%X)\n", n > 4 ? d : a, v, v);
+			}
+		} else if (!strcmp(cmd, "pbit")) {
+			// pbit <ptraddr> <byteoff> <bit> read|set|clear [label]
+			// Flags are a bitfield hanging off the save block; setting one is
+			// how a beat is given the prerequisites of the beats before it.
+			char what[8], label[64] = "flag", sa[32], so[32], sb[32];
+			int m = sscanf(line, "%*s %31s %31s %31s %7s %63s", sa, so, sb, what, label);
+			uint32_t addr = strtoul(sa, NULL, 0), off = strtoul(so, NULL, 0);
+			uint32_t bit = strtoul(sb, NULL, 0);
+			if (m < 4) {
+				fprintf(stderr, "playtest: bad pbit\n");
+				return 1;
+			}
+			uint32_t at = core->busRead32(core, addr) + off;
+			uint8_t byte = core->busRead8(core, at);
+			if (!strcmp(what, "read")) {
+				printf("pbit %s = %u\n", label, (byte >> bit) & 1);
+			} else {
+				byte = !strcmp(what, "set") ? (byte | (1 << bit)) : (byte & ~(1 << bit));
+				core->busWrite8(core, at, byte);
+				printf("pbit %s %s\n", label, what);
+			}
 		} else if (!strcmp(cmd, "pc")) {
 			// Sample the program counter over a few frames. A game that has
 			// hung never leaves its loop, so the samples name the culprit.

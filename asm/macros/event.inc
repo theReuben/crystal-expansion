@@ -1015,6 +1015,7 @@
 	.2byte \species
 	.byte \x
 	.byte \y
+	.byte \shiny
 	.endm
 
 	@ Hides the box displayed by showmonpic.
