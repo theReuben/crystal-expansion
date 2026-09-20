@@ -3891,3 +3891,153 @@ which loads the window border once at init. Changing FRAME TYPE therefore moved
 the number but left the menu's own border on the saved style. CrystalDust reloads
 tiles and palette from the input handler; added the same, at the offsets init
 uses (`0x120` bytes to `0x1A2`, `BG_PLTT_ID(7)`).
+
+## D109 — fourth round human-testing observations
+
+Seven lines in `observations.txt`. Four fixed, three left open and still in the
+file. Evidence: `docs/port/evidence/D109/index.html`.
+
+**1. "some npcs are coloured as negatives" — still open, but reproduced.** The
+scientist in Elm's lab renders with the right skin and hair and the wrong
+clothes: navy, orange and pale blue across the shoulder row. Skin and hair live
+in the low palette indices that every NPC palette shares; clothes live in the
+high indices where they differ. So the sprite is drawn against the wrong loaded
+palette, not the wrong art.
+
+Two dead ends, recorded so the next pass skips them.
+`graphics/object_events/palettes/npc_white.pal` and `npc_4.pal` are
+byte-identical in this tree and both match `scientist.png`'s own embedded
+palette exactly, so `gObjectEventGraphicsInfo_Scientist` naming
+`OBJ_EVENT_PAL_TAG_NPC_WHITE` where CrystalDust names `OBJ_EVENT_PAL_TAG_NPC_4`
+cannot by itself be the fault. And `.paletteSlot` is vestigial in expansion —
+palettes are allocated dynamically by tag, and the only remaining uses of the
+`PALSLOT_*` constants in `src/event_object_movement.c` are the reflection and
+tag-to-slot tables — so `PALSLOT_NPC_4` in that struct is not doing damage
+either. A dump of OBJ palette RAM inside the lab (`dump 0x05000200 0x200`)
+found npc_white loaded and intact in slot 4. What is left is to read the
+scientist sprite's `oam.paletteNum` at runtime and find who assigned it.
+
+Capture note for whoever picks this up: Professor Elm's opening cutscene cannot
+be escaped from a fresh save, so every frame of the assistant is half behind the
+message box. Set the story flags first.
+
+**2. Intro Oak text box frame — still open.** Carried unchanged from D108. The
+intro path emits `0xFC 0xFD 0xFE×26 0xFF 0x100` as its frame tile run, matching
+no frame function in `src/menu.c`. Not touched this round.
+
+**3. Dialogue box ignores FRAME TYPE — still open, and it is a design call.**
+Neither upstream ties the overworld message box to `optionsWindowFrameType`.
+Emerald's battle box reads the option; its field box does not. CrystalDust's
+field box is a fixed Gen 2 frame. "Changes in battle, not in dialogue" is
+therefore faithful to both parents, and D107's fix to the *options menu's own*
+border did not change that. Making the field box follow the option is a feature
+request, and it first needs a decision on whether CrystalDust's frame art gets
+the same nine-way set the Emerald frames have.
+
+**4. Followers on by default.** `OW_FOLLOWERS_ENABLED` in
+`include/config/overworld.h` set to `TRUE`. Gen 2 introduced the walking
+partner and HG/SS — the games this port is dressed as — put the party lead on
+screen, so followers off by default reads as missing content rather than as a
+setting. `OW_FOLLOWERS_BOBBING`, `OW_FOLLOWERS_POKEBALLS` and
+`OW_FOLLOWERS_SCRIPT_MOVEMENT` were already `TRUE` and were left alone.
+Confirmed in game. Cost: ROM 29,336,816 B (87.43 %), EWRAM 85.30 %, IWRAM
+86.98 %.
+
+**5. Apricorn tree gave an Oran Berry.** Gen 2 mixed berry trees and apricorn
+trees on the same sprite and CrystalDust's `sFruitTrees[]` keeps that — six
+trees bear apricorns, the rest bear berries — while the tree the player walks up
+to is drawn as an apricorn tree either way. Per the explicit call in the
+observation, Gen 4 behaviour wins: every entry in `sFruitTrees[]` now bears an
+apricorn. The six that already did keep theirs; the rest take the apricorn whose
+colour matches the berry they replaced, so the fruit on screen does not change
+colour — Oran/Rawst → Blue, Pecha/Persim → Pink, Cheri/Leppa → Red, Chesto →
+Green, Aspear → Yellow. Verified on Route 30: the tree at (14, 5),
+`FRUIT_TREE_ROUTE_30_2`, formerly Pecha, now yields a Pink Apricorn.
+
+**6. Wrong tiles on the Pokémon Center door animation.** Three faults in
+`src/field_door.c`, all the same Phase 1 story: expansion's table survived and
+CrystalDust's did not.
+
+- *Geometry.* Five rows still claimed `DOOR_SIZE_1x2` while the art shipped with
+  them is 16×48, i.e. three 1×1 frames: `METATILE_General_Door`,
+  `METATILE_General_Door_PokeCenter`, `METATILE_General_Door_Gym`,
+  `METATILE_BattleFrontier_Door_Elevator` and
+  `METATILE_BattleFrontierOutsideEast_Door_BattleTower`. The animation read two
+  tile rows where it should read one and painted the second over the metatile
+  above the door, which is why the opening swallowed the Poké Ball sign on the
+  Center's facade. Changed to `DOOR_SIZE_1x1`.
+- *Palettes.* `sDoorAnimPalettes_General`, `_PokeCenter` and `_Gym` held
+  Emerald's slot numbers against CrystalDust's General tileset art — the
+  teal-and-grey smear in the before capture. Changed to CrystalDust's 2, 7, 7.
+- *Missing doors.* CrystalDust's 24 Johto and Kanto rows were not in
+  `sDoorAnimGraphicsTable[]` at all, so New Bark, Elm's lab, Violet, Azalea,
+  Goldenrod and its department store and elevators, the Radio Tower lifts,
+  Ecruteak, Olivine and its lighthouse, the Goldenrod Underground, Pallet Town
+  and Fuchsia had no door animation whatsoever. All 24 restored, with 22
+  `sDoorAnimTiles_*` and 21 `sDoorAnimPalettes_*` arrays.
+
+The eight Johto tilesets those rows key off — `gTileset_NewBark`, `_Violet`,
+`_Azalea`, `_Goldenrod`, `_RadioTower`, `_EcruteakCity`, `_OlivineCity`,
+`_Underground` — were defined in `src/data/tilesets/headers.h` but never
+declared in `include/tilesets.h`, the orphaned-header variant, so
+`field_door.c` could not name them. Declarations added.
+
+Three restored rows needed fresh symbol names because CrystalDust's names
+collide with symbols that live inside `#if IS_FRLG` in this file and this is not
+an FRLG build: `sDoorAnimTiles_GoldenrodDeptStoreElevator`,
+`sDoorAnimPalettes_GoldenrodDeptStoreElevator` and
+`sDoorAnimPalettes_KantoFuchsia`.
+
+**7. "game crashed on healing in pkmn center" — not a crash.** The game keeps
+running, the nurse finishes her animation, the party heals and the player can
+walk away. What stops is text: from the moment the heal completes, every message
+box in the save comes up empty, which is what a crash looks like from the
+outside.
+
+A new instance of the merge's uninitialised-buffer class — a buffer whose
+initialiser moved behind a guard. `src/union_room.c` declared
+
+    static EWRAM_DATA u8 sUnionRoomPlayerName[12] = {};
+
+Emerald zero-filled it and relied on `InitUnionRoom()` to write the `EOS` before
+anything read it. CrystalDust's nurse (D48) only calls `InitUnionRoom()` when a
+wireless adapter is connected (`CableClub_OnResumeFunc`, guarded by
+`IsWirelessAdapterConnected()`), so on a normal single-player save the buffer
+was still twelve zero bytes — not a terminated string — when the nurse ran
+`specialvar VAR_RESULT, BufferUnionRoomPlayerName` after healing. It reaches
+that line because `ShouldCheckForUnionRoom()` returns TRUE
+(`OW_UNION_DISABLE_CHECK` is `FALSE`, `OW_FLAG_MOVE_UNION_ROOM_CHECK` is 0) and
+`PlayerNotAtTrainerHillEntrance()` returns TRUE outside Trainer Hill, so
+`EventScript_PkmnCenterNurse_CheckTrainerHillAndUnionRoom` falls through to the
+second `specialvar`.
+
+`StringCopy` then ran off the end of the buffer hunting for an `EOS` and wrote
+the overrun into `gStringVar1` (0x02035F3C), whose 256 bytes are followed in
+EWRAM by `sFirstTextPrinter` (0x0203603C), `gTextFlags` (0x02036040),
+`gDisableTextPrinters` (0x02036044) and `gFonts` (0x02036048). `gFonts` ended up
+NULL and `AddTextPrinter` bailed out of every later message. Traced live, opcode
+38 being `ScrCmd_specialvar`:
+
+    game: HPP enter gFonts=08D5A68C cnt=1
+    game: HPP exit  gFonts=08D5A68C
+    game: SCR cmd 38 nulled gFonts
+    game: FMB A gF=00000000
+    game: ATP no gFonts
+
+Fix: start the buffer terminated (`EWRAM_INIT u8 sUnionRoomPlayerName[12] = {
+EOS };`), re-terminate the last byte on each read, and skip the `StringCopy`
+when the first byte is `EOS`.
+
+Ruled out before the trace landed, and not worth revisiting: the movement action
+tables, `sAnimTable_Nurse` and `ANIM_NURSE_BOW`,
+`MovementAction_NurseJoyBowDown_Step0`, `FreezeObjectEvent`, the heal field
+effect itself, text speed and instant render, text-printer heap exhaustion,
+`DeactivateAllTextPrinters`, the nurse `.inc`,
+`TrySpawnNamebox`/`PrepareNamebox`, `ContextNpcGetTextColor` and
+`HealPlayerParty`.
+
+**Harness note.** `tools/playtest/playtest.c` has no `walk`-like semantics for
+`hold`: `hold KEYS` latches the keys and runs no frames at all. `hold UP 5`
+therefore does nothing but latch, and a script of `hold`/`shot` pairs produces N
+byte-identical screenshots. Use `walk DIR N` (16 frames down, 4 up, per step) or
+`hold` followed by explicit `wait`.

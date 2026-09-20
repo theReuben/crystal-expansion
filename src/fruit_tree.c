@@ -13,38 +13,45 @@
 // Fruit tree IDs are 1-indexed so field_control_avatar code doesn't have a fit
 // with a "NULL script pointer" (AKA zero in the ID field)
 
+// Crystal Expansion (D109): every fruit tree bears an apricorn, not a berry.
+// Gen 2 mixed berries and apricorns on the same trees; Gen 4 (HG/SS) made them
+// all apricorn trees, which is the quality-of-life behaviour we want -- picking
+// a "berry" off an apricorn tree reads as a bug. The six trees CrystalDust
+// already gave apricorns keep theirs; the rest take the apricorn whose colour
+// matches the berry they used to bear (oran/rawst blue, pecha/persim pink,
+// cheri/leppa red, chesto green, aspear yellow).
 static const u16 sFruitTrees[] = 
 {
-    [FRUIT_TREE_ROUTE_29 - 1]       = ITEM_ORAN_BERRY,
-    [FRUIT_TREE_ROUTE_30_1 - 1]     = ITEM_ORAN_BERRY,
-    [FRUIT_TREE_ROUTE_30_2 - 1]     = ITEM_PECHA_BERRY,
-    [FRUIT_TREE_ROUTE_31 - 1]       = ITEM_PERSIM_BERRY,
-    [FRUIT_TREE_VIOLET_CITY - 1]    = ITEM_CHERI_BERRY,
-    [FRUIT_TREE_ROUTE_33 - 1]       = ITEM_PECHA_BERRY,
+    [FRUIT_TREE_ROUTE_29 - 1]       = ITEM_BLU_APRICORN,
+    [FRUIT_TREE_ROUTE_30_1 - 1]     = ITEM_BLU_APRICORN,
+    [FRUIT_TREE_ROUTE_30_2 - 1]     = ITEM_PNK_APRICORN,
+    [FRUIT_TREE_ROUTE_31 - 1]       = ITEM_PNK_APRICORN,
+    [FRUIT_TREE_VIOLET_CITY - 1]    = ITEM_RED_APRICORN,
+    [FRUIT_TREE_ROUTE_33 - 1]       = ITEM_PNK_APRICORN,
     [FRUIT_TREE_AZALEA_TOWN - 1]    = ITEM_WHT_APRICORN,
-    [FRUIT_TREE_ROUTE_35 - 1]       = ITEM_LEPPA_BERRY,
-    [FRUIT_TREE_ROUTE_36 - 1]       = ITEM_RAWST_BERRY,
-    [FRUIT_TREE_ROUTE_46_1 - 1]     = ITEM_ORAN_BERRY,
-    [FRUIT_TREE_ROUTE_46_2 - 1]     = ITEM_CHERI_BERRY,
+    [FRUIT_TREE_ROUTE_35 - 1]       = ITEM_RED_APRICORN,
+    [FRUIT_TREE_ROUTE_36 - 1]       = ITEM_BLU_APRICORN,
+    [FRUIT_TREE_ROUTE_46_1 - 1]     = ITEM_BLU_APRICORN,
+    [FRUIT_TREE_ROUTE_46_2 - 1]     = ITEM_RED_APRICORN,
     [FRUIT_TREE_ROUTE_37_1 - 1]     = ITEM_RED_APRICORN,   // Westernmost tree
     [FRUIT_TREE_ROUTE_37_2 - 1]     = ITEM_BLK_APRICORN,   // Middle tree
     [FRUIT_TREE_ROUTE_37_3 - 1]     = ITEM_BLU_APRICORN,   // Easternmost tree
-    [FRUIT_TREE_ROUTE_38 - 1]       = ITEM_ORAN_BERRY,
-    [FRUIT_TREE_ROUTE_39 - 1]       = ITEM_CHESTO_BERRY,
+    [FRUIT_TREE_ROUTE_38 - 1]       = ITEM_BLU_APRICORN,
+    [FRUIT_TREE_ROUTE_39 - 1]       = ITEM_GRN_APRICORN,
     [FRUIT_TREE_ROUTE_42_1 - 1]     = ITEM_PNK_APRICORN,   // Westernmost tree
     [FRUIT_TREE_ROUTE_42_2 - 1]     = ITEM_GRN_APRICORN,   // Middle tree
     [FRUIT_TREE_ROUTE_42_3 - 1]     = ITEM_YLW_APRICORN,   // Easternmost tree
-    [FRUIT_TREE_ROUTE_43 - 1]       = ITEM_PERSIM_BERRY,
-    [FRUIT_TREE_ROUTE_44 - 1]       = ITEM_ASPEAR_BERRY,
-    [FRUIT_TREE_ROUTE_45 - 1]       = ITEM_LEPPA_BERRY,
-    [FRUIT_TREE_PEWTER_CITY_1 - 1]  = ITEM_CHESTO_BERRY,   // Westernmost tree
-    [FRUIT_TREE_PEWTER_CITY_2 - 1]  = ITEM_RAWST_BERRY,    // Easternmost tree
-    [FRUIT_TREE_FUCHSIA_CITY - 1]   = ITEM_ASPEAR_BERRY,
-    [FRUIT_TREE_ROUTE_1 - 1]        = ITEM_PERSIM_BERRY,
-    [FRUIT_TREE_ROUTE_2 - 1]        = ITEM_PECHA_BERRY,
-    [FRUIT_TREE_ROUTE_8 - 1]        = ITEM_CHERI_BERRY,
-    [FRUIT_TREE_ROUTE_11 - 1]       = ITEM_ORAN_BERRY,
-    [FRUIT_TREE_ROUTE_26 - 1]       = ITEM_RAWST_BERRY,
+    [FRUIT_TREE_ROUTE_43 - 1]       = ITEM_PNK_APRICORN,
+    [FRUIT_TREE_ROUTE_44 - 1]       = ITEM_YLW_APRICORN,
+    [FRUIT_TREE_ROUTE_45 - 1]       = ITEM_RED_APRICORN,
+    [FRUIT_TREE_PEWTER_CITY_1 - 1]  = ITEM_GRN_APRICORN,   // Westernmost tree
+    [FRUIT_TREE_PEWTER_CITY_2 - 1]  = ITEM_BLU_APRICORN,    // Easternmost tree
+    [FRUIT_TREE_FUCHSIA_CITY - 1]   = ITEM_YLW_APRICORN,
+    [FRUIT_TREE_ROUTE_1 - 1]        = ITEM_PNK_APRICORN,
+    [FRUIT_TREE_ROUTE_2 - 1]        = ITEM_PNK_APRICORN,
+    [FRUIT_TREE_ROUTE_8 - 1]        = ITEM_RED_APRICORN,
+    [FRUIT_TREE_ROUTE_11 - 1]       = ITEM_BLU_APRICORN,
+    [FRUIT_TREE_ROUTE_26 - 1]       = ITEM_BLU_APRICORN,
 };
 
 void GetFruitTreeItem(void)

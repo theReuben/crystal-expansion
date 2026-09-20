@@ -194,7 +194,19 @@ enum {
     PLIST_CONTACTED,
 };
 
-static EWRAM_DATA u8 sUnionRoomPlayerName[12] = {};
+// Crystal Expansion (D109): this buffer must start out as a terminated string.
+// Emerald zero-filled it and relied on InitUnionRoom() to write the EOS before
+// anything read it; CrystalDust's nurse (D48) only calls InitUnionRoom() when a
+// wireless adapter is connected, so on a normal single-player save the buffer
+// was still twelve zero bytes -- not a string -- when the Pokemon Center nurse
+// ran "specialvar VAR_RESULT, BufferUnionRoomPlayerName" after healing. The
+// StringCopy below then read past the buffer hunting for an EOS and wrote the
+// overrun into gStringVar1, whose 256 bytes are followed in EWRAM by
+// sFirstTextPrinter, gTextFlags, gDisableTextPrinters and gFonts. gFonts ended
+// up NULL, AddTextPrinter bailed out of every later message, and the dialogue
+// box came up permanently blank -- which is what "crashed on healing" looked
+// like. Start it terminated, and re-terminate defensively on each read.
+static EWRAM_INIT u8 sUnionRoomPlayerName[12] = { EOS };
 EWRAM_DATA u8 gPlayerCurrActivity = 0;
 static EWRAM_DATA u8 sPlayerActivityGroupSize = 0;
 static EWRAM_DATA union
@@ -3377,6 +3389,8 @@ bool16 BufferUnionRoomPlayerName(void)
 {
     if (!ShouldCheckForUnionRoom())
         return FALSE;
+
+    sUnionRoomPlayerName[ARRAY_COUNT(sUnionRoomPlayerName) - 1] = EOS;
 
     if (sUnionRoomPlayerName[0] != EOS)
     {

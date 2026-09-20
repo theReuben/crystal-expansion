@@ -61,4 +61,16 @@ extern const struct Tileset gTileset_SSAnne;
 extern const struct Tileset gTileset_SeaCottage;
 extern const struct Tileset gTileset_TrainerTower;
 
+// Crystal Expansion (D109): the Johto tilesets that carry animated doors. They
+// are defined in src/data/tilesets/headers.h but were never declared here, so
+// field_door.c could not name them.
+extern const struct Tileset gTileset_NewBark;
+extern const struct Tileset gTileset_Violet;
+extern const struct Tileset gTileset_Azalea;
+extern const struct Tileset gTileset_Goldenrod;
+extern const struct Tileset gTileset_RadioTower;
+extern const struct Tileset gTileset_EcruteakCity;
+extern const struct Tileset gTileset_OlivineCity;
+extern const struct Tileset gTileset_Underground;
+
 #endif //GUARD_tilesets_H

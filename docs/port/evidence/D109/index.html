@@ -1,0 +1,211 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>D109 &mdash; fourth round of human-testing observations</title>
+<style>
+ body{font:15px/1.6 -apple-system,Segoe UI,sans-serif;max-width:56rem;margin:2rem auto;padding:0 1.2rem;color:#222}
+ h1{font-size:1.6rem;margin-bottom:.2rem} h2{margin-top:2.6rem;border-bottom:1px solid #ddd;padding-bottom:.3rem}
+ .quote{background:#f6f6f6;border-left:3px solid #999;padding:.5rem .9rem;margin:.8rem 0;font-style:italic}
+ img{image-rendering:pixelated;border:1px solid #ccc;max-width:100%;vertical-align:top}
+ .pair img{width:48%}
+ code{background:#f2f2f2;padding:.1rem .3rem;border-radius:3px}
+ pre{background:#f7f7f7;border:1px solid #e2e2e2;padding:.7rem;overflow-x:auto;font-size:13px}
+ table{border-collapse:collapse;font-size:13px} td,th{border:1px solid #ddd;padding:.2rem .5rem;text-align:left}
+ .bad{color:#b00} .good{color:#070} .status{font-weight:600;color:#070} .open{font-weight:600;color:#b00}
+ .cause{color:#555;font-size:.93em}
+ figcaption{font-size:.85em;color:#555;margin-top:.2rem}
+ figure{display:inline-block;margin:0 .6rem .6rem 0}
+</style>
+
+<h1>D109 &mdash; the fourth round of human-testing observations</h1>
+
+<p class=cause>Seven lines from <code>observations.txt</code>. Four are fixed and evidenced below
+and their lines have been removed from the file; three &mdash; the negative-coloured NPCs, the
+intro text box frame and the frame-type option &mdash; are still open and their lines stay in the
+file. Captures are raw mGBA frames from <code>tools/playtest/playtest.py</code> against the rebuilt
+ROM; close-ups are nearest-neighbour upscales of those same frames.</p>
+
+<h2>1. Some NPCs are coloured as negatives</h2>
+<div class=quote>some npcs are coloured as negatives, such as the assistant in elm's lab</div>
+<p><span class=open>Still open.</span> Reproduced this round: the lab scientist's head renders in
+the right colours while the shoulder row comes out in navy, orange and pale blue &mdash; the
+clothing indices, not the skin and hair indices. That is the signature of an NPC palette whose
+upper half belongs to a different sprite sheet, i.e. the art-from-one-side /
+palette-from-the-other variant of the Phase&nbsp;1 merge loss.</p>
+<p>Two things were ruled out along the way, and both are worth recording so the next pass does not
+redo them. <code>graphics/object_events/palettes/npc_white.pal</code> and <code>npc_4.pal</code>
+are <em>byte-identical</em> in this tree and both match <code>scientist.png</code>'s own embedded
+palette exactly, so <code>gObjectEventGraphicsInfo_Scientist</code>'s choice of
+<code>OBJ_EVENT_PAL_TAG_NPC_WHITE</code> over <code>OBJ_EVENT_PAL_TAG_NPC_4</code> cannot by itself
+be the fault. And <code>.paletteSlot</code> is vestigial in expansion &mdash; palettes are
+allocated dynamically by tag &mdash; so the <code>PALSLOT_NPC_4</code> in that struct is not doing
+the damage either. A dump of OBJ palette RAM inside the lab found npc_white loaded, intact, in
+slot&nbsp;4. The sprite is therefore being drawn against some <em>other</em> loaded slot, and the
+remaining work is to read the scientist sprite's <code>oam.paletteNum</code> at runtime and find
+out who put it there.</p>
+<p class=cause>Capture note: Professor Elm's opening cutscene is not escapable from a fresh save,
+so every frame of the assistant is partly behind the message box. Getting a clean full-body frame
+needs the story flags set first.</p>
+
+<h2>2. The intro Oak text box frame</h2>
+<div class=quote>the intro screen oak text box frame still not rendering properly</div>
+<p><span class=open>Still open</span>, carried from D108. The intro path emits
+<code>0xFC 0xFD 0xFE&times;26 0xFF 0x100</code> as its frame tile run, which matches no frame
+function in <code>src/menu.c</code>. Not touched this round.</p>
+
+<h2>3. The dialogue box ignores the FRAME option</h2>
+<div class=quote>text box frame seems fixed at a green frame, does not change to reflect frame
+choice in options during dialogue, but does during battle</div>
+<p><span class=open>Still open &mdash; and it is a design call, not a defect.</span> Neither
+upstream ties the overworld message box to <code>optionsWindowFrameType</code>: Emerald's battle
+box reads the option, its field box does not, and CrystalDust's field box is a fixed Gen&nbsp;2
+frame. So "does during battle, does not during dialogue" is faithful to both parents. Making the
+field box follow the option is a feature, and wants a decision on whether CrystalDust's frame art
+gets the same nine-way set the Emerald frames have before it is worth building.</p>
+
+<h2>4. Follower Pok&eacute;mon should be on by default</h2>
+<div class=quote>gen 2 had follower pokemon, shouldn't follower pokemon be on by default?</div>
+<p><b>Change.</b> <code>OW_FOLLOWERS_ENABLED</code> in <code>include/config/overworld.h</code>
+flipped to <code>TRUE</code>. Gen&nbsp;2 is the generation that introduced a walking partner, and
+HG/SS &mdash; the games this port is dressed as &mdash; put the party lead on screen, so followers
+off by default reads as missing content rather than as a setting. The neighbouring
+<code>OW_FOLLOWERS_BOBBING</code>, <code>OW_FOLLOWERS_POKEBALLS</code> and
+<code>OW_FOLLOWERS_SCRIPT_MOVEMENT</code> were already <code>TRUE</code> and were left alone.</p>
+<p><b>Cost.</b> ROM 29,336,816 B (87.43&nbsp;% of 32&nbsp;MiB), EWRAM 85.30&nbsp;%, IWRAM
+86.98&nbsp;%.</p>
+<p><span class=status>Fixed.</span> Bulbasaur, handed over by the debug menu, walking behind the
+player on Route&nbsp;30 and outside the Cherrygrove Pok&eacute;mon Center.</p>
+<div class=pair>
+<figure><img src="04-follower.png" alt="follower behind the player in Cherrygrove" style="width:60%"><figcaption>Cherrygrove City, full frame</figcaption></figure>
+<figure><img src="04-follower-zoom.png" alt="close-up of the Bulbasaur follower" style="width:30%"><figcaption>close-up</figcaption></figure>
+</div>
+
+<h2>5. An apricorn tree gave an Oran Berry</h2>
+<div class=quote>apricorn tree gave an oran berry instead of an apricorn, this is likely due to gen
+4 vs gen 2, let's go with the gen 4 that this should be an apricorn not a berry as it's a quality
+of life change</div>
+<p><b>Cause.</b> Gen&nbsp;2 mixed berry trees and apricorn trees on the same sprite, and
+CrystalDust's <code>sFruitTrees[]</code> keeps that: six trees bear apricorns and the rest bear
+berries. The tree the player walks up to is drawn as an apricorn tree either way, so a berry
+falling out of one reads as a bug rather than as faithfulness.</p>
+<p><b>Change.</b> Per the explicit call in the observation, every entry in
+<code>sFruitTrees[]</code> now bears an apricorn. The six trees that already gave apricorns keep
+theirs; the rest take the apricorn whose colour matches the berry they used to bear, so the
+in-world colour of the fruit does not change:</p>
+<table>
+<tr><th>was</th><th>now</th><th>why</th></tr>
+<tr><td>Oran, Rawst</td><td>Blue Apricorn</td><td>blue fruit</td></tr>
+<tr><td>Pecha, Persim</td><td>Pink Apricorn</td><td>pink fruit</td></tr>
+<tr><td>Cheri, Leppa</td><td>Red Apricorn</td><td>red fruit</td></tr>
+<tr><td>Chesto</td><td>Green Apricorn</td><td>green fruit</td></tr>
+<tr><td>Aspear</td><td>Yellow Apricorn</td><td>yellow fruit</td></tr>
+</table>
+<p><span class=status>Fixed.</span> The Route&nbsp;30 tree at (14,&nbsp;5) &mdash;
+<code>FRUIT_TREE_ROUTE_30_2</code>, formerly a Pecha Berry &mdash; now yields a Pink Apricorn.</p>
+<p><img src="05-apricorn.png" alt="Route 30 tree yielding a Pink Apricorn" style="width:70%"></p>
+
+<h2>6. Wrong tiles on the Pok&eacute;mon Center door animation</h2>
+<div class=quote>wrong tiles on pokemon centre door opening animation</div>
+<p><b>Cause.</b> Three separate faults in <code>src/field_door.c</code>, all of them the same
+Phase&nbsp;1 story &mdash; expansion's table survived intact and CrystalDust's did not.</p>
+<ol>
+<li><b>Geometry.</b> Five rows still claimed <code>DOOR_SIZE_1x2</code>
+(<code>METATILE_General_Door</code>, <code>_Door_PokeCenter</code>, <code>_Door_Gym</code>,
+<code>METATILE_BattleFrontier_Door_Elevator</code>,
+<code>METATILE_BattleFrontierOutsideEast_Door_BattleTower</code>) while the art that shipped with
+them is 16&times;48, i.e. three 1&times;1 frames. The animation therefore read two tile rows where
+it should read one and painted the second row over the metatile above the door &mdash; which is
+why the opening swallowed the Pok&eacute; Ball sign on the Center's facade. Changed to
+<code>DOOR_SIZE_1x1</code>.</li>
+<li><b>Palettes.</b> <code>sDoorAnimPalettes_General</code>, <code>_PokeCenter</code> and
+<code>_Gym</code> still held Emerald's slot numbers against CrystalDust's General tileset, giving
+the teal-and-grey smear in the before shots. Changed to CrystalDust's: 2, 7 and 7.</li>
+<li><b>Missing doors.</b> CrystalDust's twenty-four Johto and Kanto door rows were not in
+<code>sDoorAnimGraphicsTable[]</code> at all, so New Bark, Elm's lab, Violet, Azalea, Goldenrod and
+its department store and elevators, the Radio Tower lifts, Ecruteak, Olivine and its lighthouse,
+the Goldenrod Underground, Pallet Town and Fuchsia had no door animation whatsoever. All
+twenty-four are restored, with their twenty-two tile arrays and twenty-one palette arrays. The
+eight Johto tilesets they key off (<code>gTileset_NewBark</code> &hellip;
+<code>gTileset_Underground</code>) were defined in
+<code>src/data/tilesets/headers.h</code> but never declared in <code>include/tilesets.h</code>
+&mdash; the orphaned-header variant &mdash; so <code>field_door.c</code> could not name them; the
+declarations are added.</li>
+</ol>
+<p class=cause>Three of the restored rows had to be given fresh symbol names &mdash;
+<code>sDoorAnimTiles_GoldenrodDeptStoreElevator</code>,
+<code>sDoorAnimPalettes_GoldenrodDeptStoreElevator</code> and
+<code>sDoorAnimPalettes_KantoFuchsia</code> &mdash; because the names CrystalDust used collide with
+symbols that live inside <code>#if IS_FRLG</code> in this file, and this is not an FRLG build.</p>
+<p><span class=status>Fixed.</span> Same script, same frame numbers, two ROMs: left is the tree
+with <code>src/field_door.c</code> and <code>include/tilesets.h</code> reverted, right is the
+fixed build. Cherrygrove City Pok&eacute;mon Center, walking north into the door.</p>
+<div class=pair>
+<figure><img src="06-door-before-b-zoom.png" alt="door opening drawn one tile too high" style="width:45%"><figcaption class=bad>before &mdash; the opening eats the Pok&eacute; Ball sign and the roof line</figcaption></figure>
+<figure><img src="06-door-after-b-zoom.png" alt="door opening one tile high" style="width:45%"><figcaption class=good>after &mdash; one tile, sign intact</figcaption></figure>
+</div>
+<div class=pair>
+<figure><img src="06-door-before-a-zoom.png" alt="mid-animation, before" style="width:45%"><figcaption class=bad>before, mid-animation</figcaption></figure>
+<figure><img src="06-door-after-a-zoom.png" alt="mid-animation, after" style="width:45%"><figcaption class=good>after, mid-animation</figcaption></figure>
+</div>
+<div class=pair>
+<figure><img src="06-door-before-b.png" alt="before, full frame" style="width:48%"><figcaption class=bad>before, full frame</figcaption></figure>
+<figure><img src="06-door-after-b.png" alt="after, full frame" style="width:48%"><figcaption class=good>after, full frame</figcaption></figure>
+</div>
+
+<h2>7. The game crashed on healing in a Pok&eacute;mon Center</h2>
+<div class=quote>game crashed on healing in pkmn center</div>
+<p><b>It is not a crash.</b> The game keeps running, the nurse finishes her animation, the party is
+healed and the player can walk away. What stops is <em>text</em>: from the moment the heal
+completes, every message box in the save comes up empty.</p>
+<p><b>Cause.</b> A new instance of the merge's uninitialised-buffer class &mdash; a buffer whose
+initialiser moved behind a guard.</p>
+<pre>static EWRAM_DATA u8 sUnionRoomPlayerName[12] = {};</pre>
+<p>Emerald zero-filled that buffer and relied on <code>InitUnionRoom()</code> to write the
+<code>EOS</code> before anything read it. CrystalDust's nurse (D48) only calls
+<code>InitUnionRoom()</code> when a wireless adapter is connected, so on a normal single-player
+save the buffer was still twelve zero bytes &mdash; not a terminated string &mdash; when the nurse
+ran <code>specialvar VAR_RESULT, BufferUnionRoomPlayerName</code> after healing. (It gets there
+because <code>ShouldCheckForUnionRoom()</code> returns TRUE &mdash;
+<code>OW_UNION_DISABLE_CHECK</code> is <code>FALSE</code> and
+<code>OW_FLAG_MOVE_UNION_ROOM_CHECK</code> is 0 &mdash; and because
+<code>PlayerNotAtTrainerHillEntrance()</code> returns TRUE outside Trainer Hill, so the script
+falls through to the second <code>specialvar</code>.)</p>
+<p>The <code>StringCopy</code> in <code>BufferUnionRoomPlayerName</code> then ran off the end of
+the buffer hunting for an <code>EOS</code> and wrote the overrun into
+<code>gStringVar1</code>, whose 256 bytes are followed in EWRAM by
+<code>sFirstTextPrinter</code>, <code>gTextFlags</code>, <code>gDisableTextPrinters</code> and
+<code>gFonts</code>:</p>
+<table>
+<tr><th>symbol</th><th>address</th></tr>
+<tr><td><code>gStringVar1</code></td><td>0x02035F3C</td></tr>
+<tr><td><code>sFirstTextPrinter</code></td><td>0x0203603C</td></tr>
+<tr><td><code>gTextFlags</code></td><td>0x02036040</td></tr>
+<tr><td><code>gDisableTextPrinters</code></td><td>0x02036044</td></tr>
+<tr><td><code>gFonts</code></td><td>0x02036048</td></tr>
+</table>
+<p><code>gFonts</code> ended up NULL, <code>AddTextPrinter</code> bailed out of every subsequent
+message, and the dialogue box came up permanently blank. Traced live &mdash; opcode 38 is
+<code>ScrCmd_specialvar</code>:</p>
+<pre>game: HPP enter gFonts=08D5A68C cnt=1
+game: HPP exit  gFonts=08D5A68C
+game: SCR cmd 38 nulled gFonts
+game: FMB A gF=00000000
+game: ATP no gFonts</pre>
+<p>Ruled out before that trace landed: the movement action tables, <code>sAnimTable_Nurse</code>
+and <code>ANIM_NURSE_BOW</code>, <code>MovementAction_NurseJoyBowDown_Step0</code>,
+<code>FreezeObjectEvent</code>, the heal field effect itself, text speed and instant render,
+text-printer heap exhaustion, <code>DeactivateAllTextPrinters</code>, the nurse
+<code>.inc</code>, <code>TrySpawnNamebox</code>/<code>PrepareNamebox</code>,
+<code>ContextNpcGetTextColor</code> and <code>HealPlayerParty</code>.</p>
+<p><b>Change.</b> Start the buffer terminated, and re-terminate defensively on each read:</p>
+<pre>static EWRAM_INIT u8 sUnionRoomPlayerName[12] = { EOS };
+...
+sUnionRoomPlayerName[ARRAY_COUNT(sUnionRoomPlayerName) - 1] = EOS;
+
+if (sUnionRoomPlayerName[0] != EOS)
+{
+    StringCopy(gStringVar1, sUnionRoomPlayerName);</pre>
+<p><span class=status>Fixed.</span> Same script, same frame, before and after.</p>
+<div class=pair>
+<figure><img src="07-heal-before.png" alt="blank dialogue box after healing" style="width:48%"><figcaption class=bad>before &mdash; the box is empty, and stays empty for the rest of the save</figcaption></figure>
+<figure><img src="07-heal-after.png" alt="nurse dialogue after healing" style="width:48%"><figcaption class=good>after &mdash; "Thank you for waiting."</figcaption></figure>
+</div>
