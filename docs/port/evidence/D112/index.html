@@ -1,0 +1,52 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>D112 &mdash; sixth round of human-testing observations</title>
+<style>
+ body{font:15px/1.6 -apple-system,Segoe UI,sans-serif;max-width:56rem;margin:2rem auto;padding:0 1.2rem;color:#222}
+ h1{font-size:1.6rem;margin-bottom:.2rem} h2{margin-top:2.6rem;border-bottom:1px solid #ddd;padding-bottom:.3rem}
+ .quote{background:#f6f6f6;border-left:3px solid #999;padding:.5rem .9rem;margin:.8rem 0;font-style:italic}
+ img{image-rendering:pixelated;border:1px solid #ccc;max-width:100%;vertical-align:top}
+ .pair img{width:48%}
+ code{background:#f2f2f2;padding:.1rem .3rem;border-radius:3px}
+ pre{background:#f7f7f7;border:1px solid #e2e2e2;padding:.7rem;overflow-x:auto;font-size:13px}
+ .status{font-weight:600;color:#070}
+ .cause{color:#555;font-size:.93em}
+ figcaption{font-size:.85em;color:#555;margin-top:.2rem}
+ figure{display:inline-block;margin:0 .6rem .6rem 0}
+</style>
+<h1>D112 &mdash; sixth round of human-testing observations</h1>
+<p>One line in <code>observations.txt</code>. Captures are raw mGBA frames taken by
+<code>tools/playtest/playtest.py</code>. Full reasoning in
+<code>docs/port/decisions.md</code>, section D112.</p>
+
+<h2>1. Closing the town map resets the game <span class="status">fixed</span></h2>
+<div class="quote">pressing B to exit the town map restarts the game</div>
+<p class="cause"><code>CDMap_FreeRegionMapResources</code> ended with
+<code>FREE_AND_SET_NULL(gRegionMap)</code>, but <code>gRegionMap</code> is simply
+whatever pointer the caller handed to <code>CDMap_InitRegionMapData</code> &mdash;
+the region map module never allocated it. The live path,
+<code>ITEM_TOWN_MAP</code> &rarr; <code>FieldShowRegionMap</code> &rarr;
+<code>FieldInitRegionMap</code>, passes a <code>struct CDRegionMap</code> that sits
+<em>inside</em> the handler's own allocation, so <code>Free()</code> was handed a
+pointer eight bytes past a block header and wrote through a garbage link. The
+Pok&eacute;gear map card passes its own block and freed it a second time in
+<code>FreePokegearData</code>. Either way the heap is corrupted and the next
+<code>Free()</code> trips the allocator's own guard, which resets the ROM.</p>
+<pre>game: ASSERTION FAILED  FILE=[src/malloc.c] LINE=[97]  EXP=[block-&gt;magic == MALLOC_SYSTEM_ID]</pre>
+<p>Ownership moves back to the caller:
+<code>CDMap_FreeRegionMapResources</code> now only clears the window bits and sets
+<code>gRegionMap = NULL</code>; <code>UnloadMapCard</code> frees the block that
+<code>LoadCardBgs</code> allocates for the card, and
+<code>FreePokegearData</code> no longer does.</p>
+<p>Four open/close cycles from the bedroom, fourth close:</p>
+<figure><img src="01-close-before.png" alt="before"><figcaption>Before &mdash; the boot screen; the game has reset</figcaption></figure>
+<figure><img src="01-close-after.png" alt="after"><figcaption>After &mdash; back in the bedroom, map 1.1</figcaption></figure>
+<p>The map itself, and the eighth cycle of a longer stress run &mdash; no assertion,
+no reset:</p>
+<div class="pair"><img src="02-mapopen.png" alt="town map"><img src="03-eighth-cycle.png" alt="eighth cycle"></div>
+<p>Reachability audit, for the record: <code>CB2_InitPokegear</code> has no callers,
+so the Pok&eacute;gear UI is unwired; no layout in <code>data/</code> uses
+<code>MB_REGION_MAP</code>, so no wall map is reachable; and no script grants
+<code>ITEM_TOWN_MAP</code>. The tester reached the map through the debug menu,
+which is the only way in at present &mdash; but both call sites were broken, so the
+fix lands before either becomes reachable.</p>

@@ -654,7 +654,15 @@ void CDMap_FreeRegionMapResources(void)
     SetGpuReg(REG_OFFSET_WINOUT, 0);
     ClearGpuRegBits(REG_OFFSET_DISPCNT, DISPCNT_WIN0_ON | DISPCNT_WIN1_ON);
 
-    FREE_AND_SET_NULL(gRegionMap);
+    // Crystal Expansion (D112): this used to Free(gRegionMap). It must not --
+    // gRegionMap is whatever pointer the caller handed to CDMap_InitRegionMapData,
+    // and only the caller knows whether it owns that memory. The Pokegear passes
+    // its own AllocZeroed block and frees it again in FreePokegearData (double
+    // free); src/field_region_map.c passes a struct *inside* its own allocation,
+    // so freeing it handed the allocator a pointer eight bytes past a block
+    // header and corrupted the heap. Ownership stays with the caller; this
+    // function only releases the sprites, windows and GPU state it set up.
+    gRegionMap = NULL;
 }
 
 u8 CDMap_DoRegionMapInputCallback(void)

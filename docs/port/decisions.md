@@ -4254,3 +4254,57 @@ and `NUM_CRYSTAL_FLAGS` grown 880 -> 912 — 4 bytes of `SaveBlock1`, and the
 **Cost.** ROM 29,347,712 bytes, 87.46% of 32 MB; the seven palettes and one pic
 are 352 bytes of art.
 
+## D112 — the town map freed a block it did not own
+
+Sixth round of human testing, one line:
+
+> pressing B to exit the town map restarts the game
+
+It does, and it is not the B button's fault. Closing the map corrupts the heap;
+the reset is the allocator noticing, several frames later, in `src/malloc.c`:
+
+```
+game: ASSERTION FAILED  FILE=[src/malloc.c] LINE=[97]  EXP=[block->magic == MALLOC_SYSTEM_ID]
+```
+
+`CDMap_InitRegionMapData` in `src/pokegear_map.c` takes a `struct CDRegionMap *`
+from its caller and stores it in the file-scope `gRegionMap`. It does not
+allocate it. `CDMap_FreeRegionMapResources` nonetheless ended with
+`FREE_AND_SET_NULL(gRegionMap)` — the module freeing memory it was only lent.
+Both callers are wrong in different ways:
+
+- `src/field_region_map.c` allocates one handler struct and passes the
+  `regionMap` member *inside* it, eight bytes in. `Free()` therefore read a block
+  header from the middle of the caller's data and unlinked a garbage pointer.
+  This is the live path.
+- `src/pokegear.c` passes its own `AllocZeroed` block and then freed it again in
+  `FreePokegearData`. A plain double free.
+
+Ownership goes back to the caller, which is the only party that knows where the
+memory came from. `CDMap_FreeRegionMapResources` now clears the window enable
+bits and sets `gRegionMap = NULL`, releasing only the sprites, windows and GPU
+state it set up itself. `UnloadMapCard` frees the block `LoadCardBgs` allocates —
+that is the right place, because the card allocates a fresh one every time it is
+opened and `FreePokegearData` only ever saw the last of them.
+
+**Why it took four cycles to show.** One open/close leaves a corrupt free list
+that nothing has walked yet. The assertion fires on a later unrelated `Free()`,
+so the repro script drives the whole START → bag → TOWN MAP → B → B cycle four
+times; the fourth close came up on the PRET × RHH boot screen with `where`
+reporting map 0.0. The fixed build survives eight cycles and ends in the bedroom,
+map 1.1.
+
+One wrinkle in reproducing it at all: the "It's the TOWN MAP." field message is
+dismissed with **B**, not A, so the first B press opens the map rather than
+closing it. The script presses A three times, B to dismiss, then B to close.
+
+**Reachability, since it matters for how much of this is dead code.**
+`CB2_InitPokegear` has no callers, so the Pokégear UI is entirely unwired. No
+layout in `data/` uses `MB_REGION_MAP` (value 133 — the enum body starts at line
+5 of `include/constants/metatile_behaviors.h`, so the value is the grep line
+number minus five, a trap I fell into once here), so no wall map is reachable.
+And no script grants `ITEM_TOWN_MAP`. The tester got there through the debug
+menu, which is currently the only way in. Both call sites were broken all the
+same, so the fix lands before either goes live.
+
+Evidence: `docs/port/evidence/D112/index.html`.

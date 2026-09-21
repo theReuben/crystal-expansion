@@ -709,7 +709,6 @@ static void UnloadCard(enum CardType cardId)
 
 static void FreePokegearData(void)
 {
-    FREE_AND_SET_NULL(sPokegearStruct.map);
     FREE_AND_SET_NULL(sPokegearStruct.phoneContactNames);
     FREE_AND_SET_NULL(sPokegearStruct.phoneContactItems);
     FREE_AND_SET_NULL(sPokegearStruct.phoneContactIds);
@@ -1286,6 +1285,10 @@ static void UnloadMapCard(void)
     u8 taskId = FindTaskIdByFunc(Task_MapCard);
 
     CDMap_FreeRegionMapResources();
+    // D112: the map card owns this block -- LoadMapCard AllocZeroed()s a fresh
+    // one every time the card is opened, so it has to go back here rather than
+    // in FreePokegearData, which only ever saw the last one.
+    FREE_AND_SET_NULL(sPokegearStruct.map);
 
     DestroyTask(taskId);
 }
