@@ -4308,3 +4308,78 @@ menu, which is currently the only way in. Both call sites were broken all the
 same, so the fix lands before either goes live.
 
 Evidence: `docs/port/evidence/D112/index.html`.
+
+## D113 — the play-test harness stops counting frames
+
+No tester observation behind this one. It is the harness note D110 ended on:
+`tools/playtest/scripts/newgame.txt` no longer reached the overworld, because
+CrystalDust's intro had grown longer than the script's counted presses assumed
+(D109's follower work the likely cause), so its trailing `press`/`shot` pairs
+landed mid-intro and `afterintro.txt` reported map 0.0. That round was finished
+by warping with `gPlaytestWarp`, which sidesteps the opening entirely — and with
+it every defect that lives in the opening, which is exactly where D110's own
+Oak-frame defect was. Evidence: `docs/port/evidence/D113/index.html`.
+
+**The shape of the bug is that the scripts encoded durations.** `newgame.txt`
+was sixty-odd `press A 8 40` lines and `afterintro.txt` a hundred and fifty
+more, each one a guess at how long a text box takes. Any content change
+invalidates all of them at once, and the failure is silent: the presses run out,
+the remaining commands execute against whatever is on screen, and the run
+reports a map of 0.0 rather than an error. This was the third retune.
+
+**What replaces them.** The harness already had the right primitives —
+`untilmap`, `waitfade`, `advance`, and the `until` they are built on — so the
+work was mostly finding a landmark for the parts of the opening that are not on
+a map yet. `gMain.callback2` is that landmark, and the new `untilcb <CB2_Name>`
+resolves a callback symbol, sets bit 0 for the Thumb entry, and waits for
+`gMain+4` to equal it. The opening is then three waits: `CB2_NewGame`, which the
+Oak speech's last task sets once the player has shrunk into the map;
+`CB2_Overworld`, which is the bedroom; and the fade.
+
+**One new harness command was needed.** The obvious mash for the opening is
+`A+UP`: A takes the title screen, NEW GAME, every text box, the gender menu and
+the clock, while UP is harmless on a text box and picks YES on a yes/no prompt.
+YES matters twice, because both prompts that appear default to NO — the wall
+clock's *Is this the correct time?*, and the Oak speech's *So it's <name>?*,
+whose NO drops into the naming screen. But a yes/no menu handed A and UP on the
+same frame takes the A and keeps the NO, so `mash A+UP` parks on the clock for
+ever; thirty thousand frames, callback2 never leaving `CB2_WallClock`. Hence
+`mashalt`, five lines in `playtest.c`: a second mashed key tapped in the *other*
+half of the mash period, so the two never share a frame. `mash` clears it, so a
+plain `mash NONE` still stops everything.
+
+**`newbark.txt` and `afterintro.txt` follow.** Each warp now waits on
+`untilmap`, then `untilcb CB2_Overworld`, then `waitfade` — the map number
+changes several frames before the fade begins, so `waitfade` alone returns
+immediately and the shot lands on a black screen. Mum's speech, which fires the
+moment the stairs land and locks the player, is answered with `advance`. The
+walks are still counted steps, and should be: a route through a room is a route,
+and no state says "four tiles later". Two of them were wrong and had been
+hidden by the script never getting that far — the front door is the warp at map
+(8,8), seven tiles in from the coordinates `player` prints, and it is an
+`MB_SOUTH_ARROW_WARP`, so standing on it does nothing and the last step has to
+be a step south *through* it. The old script walked down four tiles into the
+middle of the room and shot a picture of the living room called `outside.ppm`.
+
+`afterintro.txt` is now three lines. Its callers, `progression.py` and
+`sweep.py`, snapshot the state it leaves and teleport out of it, so where the
+player stands matters less than that no script is running; it ends outside in
+New Bark rather than on the ground floor.
+
+**One thing the release build needed.** `RELEASE=1` turns LTO on, and LTO
+renames file-local statics to `name.lto_priv.N`, so `advance` — which watches
+the static `sGlobalScriptContextStatus` — died on an unknown symbol against the
+release ROM. `load_symbols` now maps a plain name onto its renamed symbol when
+there is exactly one candidate, so a script does not have to know which build
+it is running against.
+
+**Verification.** `newgame.txt` reaches the bedroom in 3629 frames against the
+old script's 4768, `newbark.txt` reaches New Bark Town, `sweep.py` runs, and
+`progression.py` reports 35 beats run, 0 failed against the state the rewritten
+`afterintro.txt` leaves. All of it runs unchanged against the release ROM.
+
+**And the next round's build.** `gmake RELEASE=1` is green: 28,830,912 bytes
+used, 85.92% of the cart, up 40,188 bytes on D104's figure. D104's other gate,
+the save, is now a script rather than an ad-hoc run —
+`tools/playtest/scripts/saveload.txt` saves from the start menu, `reset`s, and
+takes CONTINUE, landing back in New Bark Town on the release ROM.

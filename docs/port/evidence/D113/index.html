@@ -1,0 +1,83 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>D113 &mdash; the play-test harness off frame counts</title>
+<style>
+ body{font:15px/1.6 -apple-system,Segoe UI,sans-serif;max-width:56rem;margin:2rem auto;padding:0 1.2rem;color:#222}
+ h1{font-size:1.6rem;margin-bottom:.2rem} h2{margin-top:2.6rem;border-bottom:1px solid #ddd;padding-bottom:.3rem}
+ .quote{background:#f6f6f6;border-left:3px solid #999;padding:.5rem .9rem;margin:.8rem 0;font-style:italic}
+ img{image-rendering:pixelated;border:1px solid #ccc;max-width:100%;vertical-align:top}
+ .pair img{width:48%}
+ code{background:#f2f2f2;padding:.1rem .3rem;border-radius:3px}
+ pre{background:#f7f7f7;border:1px solid #e2e2e2;padding:.7rem;overflow-x:auto;font-size:13px}
+ .status{font-weight:600;color:#070}
+ .cause{color:#555;font-size:.93em}
+ figcaption{font-size:.85em;color:#555;margin-top:.2rem}
+ figure{display:inline-block;margin:0 .6rem .6rem 0}
+</style>
+<h1>D113 &mdash; the play-test harness off frame counts</h1>
+<p>No tester observation behind this one: it is the harness note D110 left, that
+<code>scripts/newgame.txt</code> no longer reached the overworld. Captures are raw
+mGBA frames taken by <code>tools/playtest/playtest.py</code>. Full reasoning in
+<code>docs/port/decisions.md</code>, section D113.</p>
+
+<h2>1. The opening outgrew its frame counts <span class="status">fixed</span></h2>
+<p class="cause">The old <code>newgame.txt</code> was a literal list of
+<code>press</code> lines with counted gaps, tuned in D107 to how long the
+CrystalDust title and Oak speech took. D109's follower work stretched the intro,
+the counts ran out before the bedroom, and the trailing <code>shot</code> and
+<code>where</code> pairs fired mid-intro.</p>
+<pre>until CB2_NewGame  TIMEOUT  frames=30000
+mapGroup = 0
+mapNum = 0</pre>
+<figure><img src="01-before-intro.png" alt="the old script's last shot, still in the intro">
+<figcaption>Before: the last shot of the old script, still inside the opening.</figcaption></figure>
+
+<h2>2. A and UP on one frame park the run on the clock</h2>
+<p class="cause">The first rewrite mashed <code>A+UP</code> together, on the
+reasoning that A answers everything and UP picks YES on the two prompts that
+default to NO &mdash; the wall clock's <em>Is this the correct time?</em> and the
+Oak speech's <em>So it's &lt;name&gt;?</em>, whose NO drops into the naming
+screen. A yes/no menu handed both keys on the same frame takes the A and keeps
+the NO, so the clock asks again for ever: thirty thousand frames, callback2 never
+leaving the wall clock.</p>
+<figure><img src="02-shared-frame-stall.png" alt="the wall clock, still up after 3000 frames of A+UP">
+<figcaption>3000 frames of <code>mash A+UP</code>: still the clock.</figcaption></figure>
+<p>Hence <code>mashalt</code>, a second mashed key tapped in the other half of
+the mash period, so A and UP never share a frame.</p>
+
+<h2>3. After: state, not counts</h2>
+<p class="cause"><code>mash A 20</code> / <code>mashalt UP</code> until
+<code>gMain.callback2</code> reaches <code>CB2_NewGame</code>, then
+<code>CB2_Overworld</code>, then the fade. <code>newbark.txt</code> waits on
+<code>untilmap</code> and answers mum with <code>advance</code>;
+<code>afterintro.txt</code>'s hundred and fifty blind <code>press A</code> lines
+are gone.</p>
+<div class="pair">
+<figure><img src="03-after-bedroom.png" alt="the bedroom, map 1.1">
+<figcaption><code>newgame.txt</code>: the bedroom, map 1.1, fade finished.</figcaption></figure>
+<figure><img src="04-after-house1f.png" alt="the ground floor after mum's speech">
+<figcaption><code>newbark.txt</code>: downstairs, mum's speech answered.</figcaption></figure>
+</div>
+<figure><img src="05-after-outside.png" alt="outside in New Bark Town">
+<figcaption>Out of the front door, map 0.0 &mdash; where the old script never got.</figcaption></figure>
+<pre>until CB2_NewGame     ok  frames=3569
+until CB2_Overworld   ok  frames=8
+until fade            ok  frames=22
+map = 1.1
+...
+35 beats run, 0 failed</pre>
+
+<h2>4. The D104 gates on the new release build</h2>
+<p class="cause"><code>gmake RELEASE=1</code> is green at 28,830,912 bytes used,
+85.92% of the cart. D104's save gate is a script now,
+<code>tools/playtest/scripts/saveload.txt</code>: save from the start menu,
+<code>reset</code>, CONTINUE. LTO renames file-local statics to
+<code>name.lto_priv.N</code>, which is why <code>advance</code> used to die on
+an unknown symbol against the release ROM.</p>
+<div class="pair">
+<figure><img src="06-saved.png" alt="the game saved">
+<figcaption>Back on the field with the save written &mdash; the box is already
+dismissed, so the proof is the capture beside it.</figcaption></figure>
+<figure><img src="07-continued.png" alt="back in New Bark Town after CONTINUE">
+<figcaption>After a power-cycle and CONTINUE: back in New Bark Town.</figcaption></figure>
+</div>

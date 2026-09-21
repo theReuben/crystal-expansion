@@ -16,6 +16,7 @@ Script syntax is the harness's own (see playtest.c --help) plus:
     var <VAR_X> / setvar <VAR_X> <value>
     advance [maxframes]   answer dialogue until the running script ends
     untilmap <group> <num> [maxframes]
+    untilcb <CB2_Name> [maxframes]
     waitfade [maxframes]
 Addresses may be written `symbol`, `symbol+0x10`, or a literal.
 """
@@ -161,6 +162,16 @@ def load_symbols(map_path):
             m = pat.match(line)
             if m:
                 syms.setdefault(m.group(2), int(m.group(1), 16))
+    # A release build has LTO on, and LTO renames file-local statics to
+    # `name.lto_priv.N`. Scripts should not have to know which build they are
+    # running against, so the plain name resolves to the renamed symbol when
+    # there is exactly one candidate.
+    lto = {}
+    for name in [n for n in syms if ".lto_priv." in n]:
+        lto.setdefault(name.split(".lto_priv.")[0], []).append(syms[name])
+    for plain, addrs in lto.items():
+        if plain not in syms and len(set(addrs)) == 1:
+            syms[plain] = addrs[0]
     return syms
 
 
@@ -256,6 +267,16 @@ def expand_lines(lines, syms, outdir):
             out.append("until ptr %s 0x%X 2 eq 0x%X %s" % (resolve("gSaveBlock1Ptr", syms),
                                                            SB1_MAPGROUP, group | (num << 8),
                                                            limit + " warp"))
+            continue
+        if cmd == "untilcb":
+            # Wait for gMain.callback2 to become a named callback. This is the
+            # landmark to use anywhere frames cannot be counted -- the intro
+            # runs for as long as it runs. The stored pointer is the Thumb
+            # entry, so it is the symbol with bit 0 set.
+            target = int(resolve(parts[1], syms), 0) | 1
+            limit = parts[2] if len(parts) > 2 else "3600"
+            out.append("until abs %s 0 4 eq 0x%08X %s %s" % (
+                resolve("gMain+4", syms), target, limit, parts[1]))
             continue
         if cmd == "waitfade":
             limit = parts[1] if len(parts) > 1 else "600"

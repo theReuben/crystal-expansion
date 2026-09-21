@@ -104,14 +104,21 @@ static uint32_t ParseKeys(const char* spec)
 // scripts spend most of their time answering dialogue, and a hundred literal
 // `press A` lines is both unreadable and a guess at how long the text takes.
 static uint32_t mashKeys;
+// A second key tapped in the other half of the mash period, so it never shares
+// a frame with the first. The opening needs this: A answers everything, but the
+// two yes/no prompts in it default to NO and want an UP first, and a menu that
+// sees A and UP arrive on one frame takes the A and keeps the NO.
+static uint32_t mashAltKeys;
 static unsigned long mashPeriod = 16;
 
 static void RunFrames(unsigned long frames)
 {
 	for (unsigned long i = 0; i < frames; i++) {
 		uint32_t keys = heldKeys;
-		if (mashKeys && frameCount % mashPeriod < mashPeriod / 2) {
+		if (frameCount % mashPeriod < mashPeriod / 2) {
 			keys |= mashKeys;
+		} else {
+			keys |= mashAltKeys;
 		}
 		core->setKeys(core, keys);
 		core->runFrame(core);
@@ -194,6 +201,8 @@ static void Usage(void)
 		"  press <KEYS> [frames=8] [gap=8]\n"
 		"  walk <DIR> <steps>          16 frames down, 4 up, per step\n"
 		"  mash <KEYS|NONE> [period=16]  tap a key for as long as frames run\n"
+		"  mashalt <KEYS|NONE>         tap a key in the other half of that period\n"
+		"                              (set it after mash; mash clears it)\n"
 		"  until abs|ptr <addr> <off> <size> <eq|ne|lt|le|gt|ge> <val> <max> [tag]\n"
 		"  pread <ptraddr> <off> <size> [label]\n"
 		"  pwrite <ptraddr> <off> <size> <value>\n"
@@ -335,8 +344,13 @@ int main(int argc, char** argv)
 			}
 			uint32_t idx = core->busRead8(core, idxAddr);
 			Dump(base + idx * stride + off, len, m > 5 ? e : "indexed");
+		} else if (!strcmp(cmd, "mashalt")) {
+			mashAltKeys = ParseKeys(a);
 		} else if (!strcmp(cmd, "mash")) {
+			// Setting the main key clears the alternate one, so a plain
+			// `mash NONE` really does stop every tap.
 			mashKeys = ParseKeys(a);
+			mashAltKeys = 0;
 			if (n > 2) {
 				mashPeriod = strtoul(b, NULL, 0);
 				if (mashPeriod < 2) {

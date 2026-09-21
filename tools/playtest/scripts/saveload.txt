@@ -1,0 +1,29 @@
+# The pre-round gate from D104, kept as a script this time: save from the start
+# menu, power-cycle, CONTINUE. It is the one path a human play-test depends on
+# that a run starting from power-on never exercises.
+#
+# Run it against the release ROM, which is what the tester plays:
+#   tools/playtest/playtest.py tools/playtest/scripts/saveload.txt \
+#       --rom pokecrystal-release.gba --map pokecrystal-release.map --out /tmp/sv
+include afterintro.txt
+press START 8 40
+# SAVE is the third item on the start menu: POKeDEX and POKeMON are not in the
+# list yet with no party and no dex, so it reads BAG / <name> / SAVE.
+press DOWN 8 20
+press DOWN 8 20
+press A 8 40
+# "Would you like to save?" and the confirmations after it all default to YES.
+mash A 24
+wait 600
+mash NONE
+shot saved
+# `reset` power-cycles but keeps the flash the game just wrote.
+reset
+# CONTINUE is the top item of the main menu once a save exists.
+mash A 24
+untilcb CB2_Overworld 6000
+mash NONE
+waitfade
+wait 30
+player
+shot loaded

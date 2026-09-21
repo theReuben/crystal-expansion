@@ -1,12 +1,29 @@
 # From a fresh save to standing outside in New Bark Town.
+#
+# D113: the waits after each warp are conditions now, not counted frames. The
+# walks themselves still have to be counted -- they are a route through a room,
+# and no state says "four tiles later" -- but everything between them waits on
+# the map, the fade or the running script.
 include newgame.txt
 walk RIGHT 4
 walk UP 4
 walk LEFT 2      # the 2F staircase warps when entered from the right
-wait 150
+untilmap 1 0
+untilcb CB2_Overworld
+waitfade
+# Mum's speech fires the moment the stairs land and locks the player, so the
+# walk out has to wait for the script to finish rather than for a frame count.
+advance
 player
 shot house1f
-walk DOWN 4
-wait 150
+# The front door is the warp at map (8,8), seven tiles in from the object
+# event coordinates `player` prints. It is an MB_SOUTH_ARROW_WARP, so standing
+# on it is not enough -- the last step has to be a step south through it.
+walk DOWN 6
+walk LEFT 1
+walk DOWN 1
+untilmap 0 0
+untilcb CB2_Overworld
+waitfade
 player
 shot outside

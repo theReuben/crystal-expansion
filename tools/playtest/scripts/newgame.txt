@@ -1,100 +1,35 @@
 # New game, from boot to standing in the overworld.
 #
-# Retuned in D107 for CrystalDust's title screen, which combs in for about
-# three seconds before it accepts input. The presses after it are positional,
-# and the clock prompt defaults to NO, so every A is paired with an UP: UP is
-# harmless on a text box, picks YES on a yes/no prompt, and only nudges the
-# hour or the gender cursor where it does anything at all.
-wait 600
-press START 8 60
-press START 8 60
-press START 8 60
-press START 8 60
-press UP 8 10
-press A 8 40
-press UP 8 10
-press A 8 40
-press UP 8 10
-press A 8 40
-press UP 8 10
-press A 8 40
-press UP 8 10
-press A 8 40
-press UP 8 10
-press A 8 40
-press UP 8 10
-press A 8 40
-press UP 8 10
-press A 8 40
-press UP 8 10
-press A 8 40
-press UP 8 10
-press A 8 40
-press UP 8 10
-press A 8 40
-press UP 8 10
-press A 8 40
-press UP 8 10
-press A 8 40
-press UP 8 10
-press A 8 40
-press UP 8 10
-press A 8 40
-press UP 8 10
-press A 8 40
-press UP 8 10
-press A 8 40
-press UP 8 10
-press A 8 40
-press UP 8 10
-press A 8 40
-press UP 8 10
-press A 8 40
-press UP 8 10
-press A 8 40
-press UP 8 10
-press A 8 40
-press UP 8 10
-press A 8 40
-press UP 8 10
-press A 8 40
-press UP 8 10
-press A 8 40
-press UP 8 10
-press A 8 40
-press UP 8 10
-press A 8 40
-press UP 8 10
-press A 8 40
-press UP 8 10
-press A 8 40
-press UP 8 10
-press A 8 40
-press START 8 60
-press A 8 40
-press A 8 40
-press A 8 40
-press A 8 40
-press A 8 40
-press A 8 40
-press A 8 40
-press A 8 40
-press A 8 40
-press A 8 40
-press A 8 40
-press A 8 40
-press A 8 40
-press A 8 40
-press A 8 40
-press A 8 40
-press A 8 40
-wait 420
+# Retuned in D113 off frame counts and onto the game's own state. The counted
+# version was tuned in D107 for the CrystalDust title screen and broke again in
+# D110: the intro had grown longer than the counts assumed (D109's follower work
+# the likely cause), so the trailing press/shot pairs landed mid-intro and
+# `where` reported map 0.0. Nothing here counts frames through the opening any
+# more, so it does not need retuning the next time the intro changes length.
+#
+# A and UP, alternating, are all the opening needs. A takes the title screen,
+# NEW GAME, every text box, the gender menu and the clock. UP is harmless on a
+# text box, picks YES on a yes/no prompt, and only nudges the hour or a menu
+# cursor where it does anything at all. YES is the answer that keeps the run on
+# rails: both the "So it's <name>?" prompt and the clock prompt default to NO,
+# and NO on the name prompt drops into the naming screen.
+#
+# They alternate rather than share a frame because a yes/no menu handed A and UP
+# together takes the A and keeps the NO, which parks the run on the clock for
+# ever. That is what `mashalt` is for.
+mash A 20
+mashalt UP
+
+# CB2_NewGame is the far side of the whole opening: the Oak speech's last task
+# sets it once the player has shrunk into the map.
+untilcb CB2_NewGame 30000
+mash NONE
+
+# And CB2_Overworld is the bedroom itself, with the fade-in finished.
+untilcb CB2_Overworld 1800
+waitfade
+wait 30
 shot ow00
-where
-press A 8 40
-press A 8 40
-press A 8 40
-press A 8 40
-wait 420   # the fade-in into the bedroom
-shot ow00
-where
+# `where` would read the warp destination, which a new game leaves as -1/-1
+# for "wherever the map says"; `player` reads the live object event.
+player
