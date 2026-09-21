@@ -4041,3 +4041,144 @@ effect itself, text speed and instant render, text-printer heap exhaustion,
 therefore does nothing but latch, and a script of `hold`/`shot` pairs produces N
 byte-identical screenshots. Use `walk DIR N` (16 frames down, 4 up, per step) or
 `hold` followed by explicit `wait`.
+
+## D110 — fifth round human-testing observations
+
+Three lines in `observations.txt`. Two fixed, one fixed in part and the
+remainder written down as a design call for the next round. Evidence:
+`docs/port/evidence/D110/index.html`.
+
+**1. "the intro screen oak text box frame still not rendering properly" —
+fixed.** D109 left this open with the note that the intro emits `0xFC 0xFD
+0xFE×26 0xFF 0x100` as its frame tile run and that no frame function in
+`src/menu.c` matches. The observation was right and the search space was wrong:
+the frame is drawn in `src/oak_speech_crystal.c`, not `src/menu.c`. That file is
+CrystalDust's intro, and it is the one that runs — `src/oak_speech.c` does not.
+
+`NewGameOakSpeech_CreateDialogueWindowBorder` was a hand-written 185-line
+tilemap that painted `OAK_SPEECH_WINDOW_BASE_TILE_NUM + {0,1,2,3,4,5,6,8,9,10,
+11,12,13}` and their `BG_TILE_V_FLIP` counterparts. That layout belongs to
+CrystalDust's twenty-tile message box. D106 replaced `message_box.png` with
+expansion's fourteen-tile sheet, so from D106 onward the intro was indexing art
+that no longer matched it — the same shape of defect D106 itself fixed, one
+caller further on. The tell was the asymmetry: the *clear* path in the same file
+already called expansion's `ClearDialogWindowAndFrame`.
+
+Measured live off BG0's tilemap (screen base `0x0600F800`, rows 14-19) to
+confirm the run before changing anything.
+
+Fix: `NewGameOakSpeech_ShowDialogueWindow` now calls
+`DrawDialogFrameWithCustomTileAndPalette(windowId, copyToVram,
+OAK_INTRO_DLG_BASE_TILE_NUM, 15)` — the field message box's own frame, drawn at
+the base tile the intro loads the art to. The hand-written border function and
+its forward declaration are deleted. `sOakIntroTextWindows[0].width` goes 26 →
+27: with `left = 2`, `WindowFunc_DrawDialogueFrame` paints `left-2 .. left+width`,
+so 27 spans x = 0..29 and matches the field box exactly, and 27×4 = 108 tiles
+fills baseBlock 1..0x6C, abutting window 1's 0x6D with nothing to spare and
+nothing overlapping.
+
+The observation's "during battle" qualifier is not reproduced and, on the code,
+should not be: the battle message box is `gBattleTextboxTiles` /
+`gBattleTextboxTilemap` / `gBattleTextboxPalette`, a prebuilt asset that D106
+never touched, and the battle *menu* windows come from `LoadUserWindowBorderGfx`,
+which follows the FRAME TYPE option. The qualifier looks like residue from the
+deleted frame-type line above it in `observations.txt`. Left in the file for the
+tester to confirm or drop.
+
+**2. "some npcs are coloured as negatives, such as the assistant in elm's lab" —
+fixed.** Open since D109, and D109's diagnosis was wrong. It reported that "a
+dump of OBJ palette RAM inside the lab found npc_white loaded and intact in slot
+4". Slot 4's tag is `OBJ_EVENT_PAL_TAG_NPC_4` (0x1106), and
+`graphics/object_events/palettes/npc_4.pal` is byte-identical to `npc_white.pal`
+— so the bytes looked right while the tag was wrong, and the real question went
+unasked.
+
+Measured, in Elm's lab and in the Cherrygrove mart:
+
+* the aide renders with `oam.paletteNum = 15`;
+* OBJ palette 15 held `0000×6 04E1 1124 1D87 2DEB 3A2E 4691 56F5 6338 6F9B 7FFF`,
+  a ten-step green→white ramp; a byte search for `e1042411871d` across
+  `build/assets` matched exactly one file,
+  `graphics/intro/scene_1/drops.pal.gbapal` — the boot intro's raindrops, never
+  overwritten;
+* `sSpritePaletteTags` held only `1200 1170 1100 1172 1106`, slots 5-15 free, so
+  this is not slot exhaustion;
+* instrumenting `LoadObjectEventPalette` showed
+  `FindObjectEventPaletteIndexByTag(OBJ_EVENT_PAL_TAG_NPC_WHITE)` returning
+  `0xFF`. `0xFF` stored into `oam.paletteNum`, a four-bit bitfield, truncates to
+  **15**. Slot 15 is the last OBJ palette and holds whatever was left there.
+
+The lookup misses because the entry is compiled out. Dumping the built table out
+of the ROM (`sObjectEventSpritePalettes` at `0x084B131C`) showed 79 entries
+ending at `OBJ_EVENT_PAL_TAG_NONE`, with 0x1125-0x1133 absent: twelve palettes
+sat behind `#if IS_FRLG`, which is false for this build.
+
+This is D97 half-applied. D97 ungated the FRLG *pics* (`object_event_graphics.h`)
+and the FRLG *graphics infos* (`object_event_graphics_info.h`) because
+CrystalDust uses those sprites throughout Johto — but left the *palette table* in
+`src/event_object_movement.c` gated. Graphics infos compiled in, their palettes
+compiled out. 128 graphics infos name one of the nine missing tags:
+`OBJ_EVENT_PAL_TAG_NPC_WHITE` (47), `NPC_BLUE` (38), `NPC_PINK` (26),
+`NPC_GREEN` (17), `PLAYER_RED` (10), `PLAYER_GREEN` (5), and one each of
+`SS_ANNE`, `SEAGALLOP` and `METEORITE`. Every one of them was rendering in
+whatever palette slot 15 happened to hold — the "negatives" the tester saw, in
+Elm's lab and everywhere else.
+
+Fix: drop the `#if IS_FRLG` / `#endif` around those twelve rows. 384 bytes of
+palette and 96 bytes of table; ROM 29,346,128 → 29,346,256 B (87.46%).
+
+Verified in the Cherrygrove mart, same script, same frame: the shopper by the
+shelves is a green-and-white smear before and a purple-hatted customer after. On
+Route 29 `sSpritePaletteTags` now carries 0x112C where it previously could not.
+
+**3. "ensure colour of apricorn matches apricorn given by tree" — the item was
+already right; the tree art was wrong, and is now neutral rather than matched.**
+D109's comment in `src/fruit_tree.c` claimed the trees "take the apricorn whose
+colour matches the berry they replaced". The premise was false. There is exactly
+one fruit metatile, `METATILE_General_FruitTreeTop` (0x22D), shared by every tree
+in the game; its fruit comes from tiles 484/485 drawn with palette 0 indices
+9/10/11 of the General primary tileset, which were `(255,197,115) (238,131,106)
+(197,49,65)` — red. Every tree in Johto and Kanto bore a red fruit while handing
+out seven different apricorns.
+
+Per-tree art is not available at that layer. The General primary tileset has two
+free palette entries in the whole file (pal 0 index 7, pal 4 index 2), and a
+primary tileset may only use pals 0-6 (`NUM_PALS_IN_PRIMARY`). Indices 9/10/11
+are fruit-exclusive — only metatiles 0x4 and 0x22D use them at palette 0, both
+fruit-tree tops — so the ramp can be repainted freely, but it is *one* ramp,
+shared by every tree drawn at once. Route 37 and Route 42 each show three trees
+of three different colours.
+
+Taken: repaint the ramp to a neutral apricorn amber, `(255,213,148)
+(246,172,82) (197,106,24)`. The tree now reads as "an apricorn tree" and only the
+item it yields carries a colour, so nothing on screen contradicts what is picked.
+`sFruitTrees[]` keeps all seven colours, which is what Kurt's ball variety needs.
+
+Not taken, and recorded so the choice is not lost:
+
+* *One colour per map plus a runtime palette patch.* Visually exact. Costs the
+  within-map variety on Routes 37 and 42, and a patch of a tileset palette has to
+  survive `TimeMixPalettes` and `UpdateTimeOfDayPaletteFade`, which rewrite those
+  entries on every time-of-day transition. Fragile for the gain.
+* *Draw the fruit as an object event with per-colour OBJ palettes.* Exactly what
+  the observation asks for, and the sprite already exists and is unused —
+  `OBJ_EVENT_GFX_APRICORN_TREE` / `gObjectEventGraphicsInfo_ApricornTree`
+  (16x16, `OBJ_EVENT_PAL_TAG_NPC_3`). It needs thirty maps edited, seven new OBJ
+  palettes, and the pick/regrow path moved off `bgEvents` onto object events. A
+  feature, not a defect fix. This is the one to do if the tester wants the fruit
+  itself to match.
+* *Make every tree give a red apricorn.* Matches the art for free and throws away
+  six of the seven apricorn types. Not recommended.
+
+**Superseded.** The tester chose the object-event route; it is implemented in
+D111. The amber repaint above is kept and is still doing work — it is the base
+layer the sprite sits on, and it is all that shows for a tree standing on a
+*connected* map, where object events do not spawn.
+
+**Harness note.** `tools/playtest/scripts/newgame.txt` no longer reaches the
+overworld: the CrystalDust intro runs longer than it assumes (D109's followers
+work is the likely cause), so its trailing `press`/`shot` pairs land mid-intro
+and `afterintro.txt` reports map 0.0. Sixty more `press A` pairs get there. The
+scripts want retuning onto `untilmap`/`waitfade` rather than frame counts.
+Warping with `gPlaytestWarp` sidesteps it entirely and is what this round used.
+

@@ -1,0 +1,95 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>D110 &mdash; fifth round of human-testing observations</title>
+<style>
+ body{font:15px/1.6 -apple-system,Segoe UI,sans-serif;max-width:56rem;margin:2rem auto;padding:0 1.2rem;color:#222}
+ h1{font-size:1.6rem;margin-bottom:.2rem} h2{margin-top:2.6rem;border-bottom:1px solid #ddd;padding-bottom:.3rem}
+ .quote{background:#f6f6f6;border-left:3px solid #999;padding:.5rem .9rem;margin:.8rem 0;font-style:italic}
+ img{image-rendering:pixelated;border:1px solid #ccc;max-width:100%;vertical-align:top}
+ .pair img{width:48%}
+ code{background:#f2f2f2;padding:.1rem .3rem;border-radius:3px}
+ pre{background:#f7f7f7;border:1px solid #e2e2e2;padding:.7rem;overflow-x:auto;font-size:13px}
+ table{border-collapse:collapse;font-size:13px} td,th{border:1px solid #ddd;padding:.2rem .5rem;text-align:left}
+ .bad{color:#b00} .good{color:#070} .status{font-weight:600;color:#070} .open{font-weight:600;color:#b00}
+ .cause{color:#555;font-size:.93em}
+ figcaption{font-size:.85em;color:#555;margin-top:.2rem}
+ figure{display:inline-block;margin:0 .6rem .6rem 0}
+</style>
+<h1>D110 &mdash; fifth round of human-testing observations</h1>
+<p>Three lines in <code>observations.txt</code>. Two fixed, one fixed in part.
+Captures are raw mGBA frames taken by <code>tools/playtest/playtest.py</code>
+against the rebuilt ROM; close-ups are nearest-neighbour upscales of the same
+frames. Full reasoning in <code>docs/port/decisions.md</code>, section D110.</p>
+
+<h2>1. Intro Oak text box frame <span class="status">fixed</span></h2>
+<div class="quote">the intro screen oak text box frame still not rendering properly</div>
+<p class="cause">CrystalDust's <code>src/oak_speech_crystal.c</code> drew this border
+itself, from a hand-written tilemap indexing a twenty-tile message box. D106
+replaced <code>message_box.png</code> with expansion's fourteen-tile sheet, so the
+tilemap pointed at art that no longer matched. The clear path in the same file
+already used expansion's <code>ClearDialogWindowAndFrame</code> &mdash; that
+asymmetry was the tell. <code>NewGameOakSpeech_ShowDialogueWindow</code> now calls
+<code>DrawDialogFrameWithCustomTileAndPalette</code>, and the window widens 26
+&rarr; 27 to match the field box.</p>
+<figure><img src="01-oakbox-before.png" alt="before"><figcaption>Before &mdash; broken frame tiles down both sides</figcaption></figure>
+<figure><img src="01-oakbox-after.png" alt="after"><figcaption>After &mdash; the field message box frame</figcaption></figure>
+<p><img src="01-oakbox-after-full.png" alt="after, full frame"></p>
+<p>The observation's &ldquo;during battle&rdquo; qualifier is not reproduced. The
+battle message box is <code>gBattleTextboxTiles</code>/<code>Tilemap</code>/<code>Palette</code>,
+a prebuilt asset D106 never touched; the battle menu windows follow FRAME TYPE via
+<code>LoadUserWindowBorderGfx</code>. The line stays in <code>observations.txt</code>
+for the tester to confirm or drop.</p>
+
+<h2>2. NPCs coloured as negatives <span class="status">fixed</span></h2>
+<div class="quote">some npcs are coloured as negatives, such as the assistant in elm's lab</div>
+<p class="cause">Twelve object-event palettes sat behind <code>#if IS_FRLG</code>
+in <code>sObjectEventSpritePalettes[]</code> while the graphics infos that name
+them are compiled in unconditionally &mdash; D97 ungated the pics and the graphics
+infos but not the palette table.
+<code>FindObjectEventPaletteIndexByTag</code> therefore returned <code>0xFF</code>,
+which truncates to <strong>15</strong> in the four-bit <code>oam.paletteNum</code>
+field, and OBJ palette 15 still held the boot intro's raindrop ramp
+(<code>graphics/intro/scene_1/drops.pal</code>).</p>
+<table>
+<tr><th>Missing tag</th><th>Graphics infos affected</th></tr>
+<tr><td><code>OBJ_EVENT_PAL_TAG_NPC_WHITE</code></td><td>47</td></tr>
+<tr><td><code>OBJ_EVENT_PAL_TAG_NPC_BLUE</code></td><td>38</td></tr>
+<tr><td><code>OBJ_EVENT_PAL_TAG_NPC_PINK</code></td><td>26</td></tr>
+<tr><td><code>OBJ_EVENT_PAL_TAG_NPC_GREEN</code></td><td>17</td></tr>
+<tr><td><code>OBJ_EVENT_PAL_TAG_PLAYER_RED</code></td><td>10</td></tr>
+<tr><td><code>OBJ_EVENT_PAL_TAG_PLAYER_GREEN</code></td><td>5</td></tr>
+<tr><td><code>SS_ANNE</code>, <code>SEAGALLOP</code>, <code>METEORITE</code></td><td>1 each</td></tr>
+</table>
+<p>Cherrygrove mart, same script, same frame:</p>
+<div class="pair"><img src="02-mart-before.png" alt="before"><img src="02-mart-after.png" alt="after"></div>
+<figure><img src="02-mart-before-zoom.png" alt="before, close"><figcaption>Before &mdash; slot 15, the raindrop ramp</figcaption></figure>
+<figure><img src="02-mart-after-zoom.png" alt="after, close"><figcaption>After &mdash; <code>npc_white.pal</code></figcaption></figure>
+<pre>sSpritePaletteTags in Elm's lab, before: 1200 1170 1100 1172 1106 FFFF x11
+OBJ palette 15, before:  0000 x6 04E1 1124 1D87 2DEB 3A2E 4691 56F5 6338 6F9B 7FFF
+                         == build/assets/graphics/intro/scene_1/drops.pal.gbapal
+LoadObjectEventPalette(0x112C) -> FindObjectEventPaletteIndexByTag -> 0xFF
+0xFF stored in a 4-bit bitfield -> 15
+
+sSpritePaletteTags on Route 29, after: 1200 1170 1100 1106 112C FFFF x11</pre>
+
+<h2>3. Apricorn colour <span class="open">fixed in part</span></h2>
+<div class="quote">ensure colour of apricorn matches apricorn given by tree</div>
+<p class="cause">The item handed over was already correct. The tree art was not,
+and could not be: there is one fruit metatile
+(<code>METATILE_General_FruitTreeTop</code>, 0x22D) shared by every tree in the
+game, drawn from palette 0 indices 9/10/11 of the General primary tileset &mdash;
+one ramp, shared by every tree on screen at once. Routes 37 and 42 each show three
+trees of three different colours, so no single ramp can match them.</p>
+<p>Taken: repaint the ramp from red to a neutral apricorn amber, so the tree reads
+as &ldquo;an apricorn tree&rdquo; and only the item carries the colour.</p>
+<figure><img src="03-metatile-before.png" alt="before"><figcaption>Before &mdash; (255,197,115) (238,131,106) (197,49,65)</figcaption></figure>
+<figure><img src="03-metatile-after.png" alt="after"><figcaption>After &mdash; (255,213,148) (246,172,82) (197,106,24)</figcaption></figure>
+<p>In game, Route 29, at night (the capture script's clock):</p>
+<div class="pair"><img src="03-tree-before.png" alt="before"><img src="03-tree-after.png" alt="after"></div>
+<div class="pair"><img src="03-fruit-before-zoom.png" alt="before, close"><img src="03-fruit-after-zoom.png" alt="after, close"></div>
+<p>Making the fruit itself match per tree is a feature, not a defect fix, and needs
+either per-map colour unification plus a runtime palette patch that survives
+<code>TimeMixPalettes</code>, or the unused
+<code>OBJ_EVENT_GFX_APRICORN_TREE</code> sprite placed on all thirty maps with
+seven OBJ palettes. Both are written up in D110 for the tester to choose.</p>
+

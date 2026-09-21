@@ -96,7 +96,6 @@ static void Task_NewGameOakSpeech_FadePlayerToWhite(u8);
 static void Task_NewGameOakSpeech_Cleanup(u8);
 static void SpriteCB_Null();
 static void Task_NewGameOakSpeech_ReturnFromNamingScreenShowTextbox(u8);
-static void NewGameOakSpeech_CreateDialogueWindowBorder(u8, u8, u8, u8, u8, u8);
 static void LoadOakIntroBigSprite(u16 which, u16 offset);
 static void Task_NewGameOakSpeech_FadeEverythingButPlayerAndTextbox(u8 taskId);
 static void Task_NewGameOakSpeech_StartShrinkPlayer(u8 taskId);
@@ -148,7 +147,7 @@ static const struct WindowTemplate sOakIntroTextWindows[] =
         .bg = 0,
         .tilemapLeft = 2,
         .tilemapTop = 15,
-        .width = 26,
+        .width = 27,   // D110: was 26 for CrystalDust's two-tile border; Emerald's frame reaches one tile further
         .height = 4,
         .paletteNum = 15,
         .baseBlock = 1
@@ -1380,199 +1379,13 @@ static void NewGameOakSpeech_ClearGenderWindow(u32 windowId, u32 copyToVram)
 
 static void NewGameOakSpeech_ShowDialogueWindow(u32 windowId, u32 copyToVram)
 {
-    CallWindowFunction(windowId, NewGameOakSpeech_CreateDialogueWindowBorder);
-    FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
-    PutWindowTilemap(windowId);
-    if (copyToVram == TRUE)
-        CopyWindowToVram(windowId, COPYWIN_FULL);
-}
-
-#define OAK_SPEECH_WINDOW_BASE_TILE_NUM 0xFC
-
-static void NewGameOakSpeech_CreateDialogueWindowBorder(u8 bg, u8 tilemapLeft, u8 tilemapTop, u8 width, u8 height, u8 pal)
-{
-    FillBgTilemapBufferRect(bg,
-                            OAK_SPEECH_WINDOW_BASE_TILE_NUM,
-                            tilemapLeft - 2,
-                            tilemapTop - 1,
-                            1,
-                            1,
-                            pal);
-    FillBgTilemapBufferRect(bg,
-                            OAK_SPEECH_WINDOW_BASE_TILE_NUM + 1,
-                            tilemapLeft - 1,
-                            tilemapTop - 1,
-                            1,
-                            1,
-                            pal);
-    FillBgTilemapBufferRect(bg,
-                            OAK_SPEECH_WINDOW_BASE_TILE_NUM + 2,
-                            tilemapLeft,
-                            tilemapTop - 1,
-                            width,
-                            1,
-                            pal);
-    FillBgTilemapBufferRect(bg,
-                            OAK_SPEECH_WINDOW_BASE_TILE_NUM + 3,
-                            tilemapLeft + width,
-                            tilemapTop - 1,
-                            1,
-                            1,
-                            pal);
-    FillBgTilemapBufferRect(bg,
-                            OAK_SPEECH_WINDOW_BASE_TILE_NUM + 4,
-                            tilemapLeft + width + 1,
-                            tilemapTop - 1,
-                            1,
-                            1,
-                            pal);
-    FillBgTilemapBufferRect(bg,
-                            OAK_SPEECH_WINDOW_BASE_TILE_NUM + 5,
-                            tilemapLeft - 2,
-                            tilemapTop,
-                            1,
-                            1,
-                            pal);
-    FillBgTilemapBufferRect(bg,
-                            OAK_SPEECH_WINDOW_BASE_TILE_NUM + 6,
-                            tilemapLeft - 1,
-                            tilemapTop,
-                            1,
-                            1,
-                            pal);
-    FillBgTilemapBufferRect(bg,
-                            OAK_SPEECH_WINDOW_BASE_TILE_NUM + 8,
-                            tilemapLeft + width,
-                            tilemapTop,
-                            1,
-                            1,
-                            pal);
-    FillBgTilemapBufferRect(bg,
-                            OAK_SPEECH_WINDOW_BASE_TILE_NUM + 9,
-                            tilemapLeft + width + 1,
-                            tilemapTop,
-                            1,
-                            1,
-                            pal);
-    FillBgTilemapBufferRect(bg,
-                            OAK_SPEECH_WINDOW_BASE_TILE_NUM + 10,
-                            tilemapLeft - 2,
-                            tilemapTop + 1,
-                            1,
-                            1,
-                            pal);
-    FillBgTilemapBufferRect(bg,
-                            OAK_SPEECH_WINDOW_BASE_TILE_NUM + 11,
-                            tilemapLeft - 1,
-                            tilemapTop + 1,
-                            1,
-                            1,
-                            pal);
-    FillBgTilemapBufferRect(bg,
-                            OAK_SPEECH_WINDOW_BASE_TILE_NUM + 12,
-                            tilemapLeft + width,
-                            tilemapTop + 1,
-                            1,
-                            1,
-                            pal);
-    FillBgTilemapBufferRect(bg,
-                            OAK_SPEECH_WINDOW_BASE_TILE_NUM + 13,
-                            tilemapLeft + width + 1,
-                            tilemapTop + 1,
-                            1,
-                            1,
-                            pal);
-    FillBgTilemapBufferRect(bg,
-                            BG_TILE_V_FLIP(OAK_SPEECH_WINDOW_BASE_TILE_NUM + 10),
-                            tilemapLeft - 2,
-                            tilemapTop + 2,
-                            1,
-                            1,
-                            pal);
-    FillBgTilemapBufferRect(bg,
-                            BG_TILE_V_FLIP(OAK_SPEECH_WINDOW_BASE_TILE_NUM + 11),
-                            tilemapLeft - 1,
-                            tilemapTop + 2,
-                            1,
-                            1,
-                            pal);
-    FillBgTilemapBufferRect(bg,
-                            BG_TILE_V_FLIP(OAK_SPEECH_WINDOW_BASE_TILE_NUM + 12),
-                            tilemapLeft + width,
-                            tilemapTop + 2,
-                            1,
-                            1,
-                            pal);
-    FillBgTilemapBufferRect(bg,
-                            BG_TILE_V_FLIP(OAK_SPEECH_WINDOW_BASE_TILE_NUM + 13),
-                            tilemapLeft + width + 1,
-                            tilemapTop + 2,
-                            1,
-                            1,
-                            pal);
-    FillBgTilemapBufferRect(bg,
-                            BG_TILE_V_FLIP(OAK_SPEECH_WINDOW_BASE_TILE_NUM + 5),
-                            tilemapLeft - 2,
-                            tilemapTop + 3,
-                            1,
-                            1,
-                            pal);
-    FillBgTilemapBufferRect(bg,
-                            BG_TILE_V_FLIP(OAK_SPEECH_WINDOW_BASE_TILE_NUM + 6),
-                            tilemapLeft - 1,
-                            tilemapTop + 3,
-                            1,
-                            1,
-                            pal);
-    FillBgTilemapBufferRect(bg,
-                            BG_TILE_V_FLIP(OAK_SPEECH_WINDOW_BASE_TILE_NUM + 8),
-                            tilemapLeft + width,
-                            tilemapTop + 3,
-                            1,
-                            1,
-                            pal);
-    FillBgTilemapBufferRect(bg,
-                            BG_TILE_V_FLIP(OAK_SPEECH_WINDOW_BASE_TILE_NUM + 9),
-                            tilemapLeft + width + 1,
-                            tilemapTop + 3,
-                            1,
-                            1,
-                            pal);
-    FillBgTilemapBufferRect(bg,
-                            BG_TILE_V_FLIP(OAK_SPEECH_WINDOW_BASE_TILE_NUM),
-                            tilemapLeft - 2,
-                            tilemapTop + 4,
-                            1,
-                            1,
-                            pal);
-    FillBgTilemapBufferRect(bg,
-                            BG_TILE_V_FLIP(OAK_SPEECH_WINDOW_BASE_TILE_NUM + 1),
-                            tilemapLeft - 1,
-                            tilemapTop + 4,
-                            1,
-                            1,
-                            pal);
-    FillBgTilemapBufferRect(bg,
-                            BG_TILE_V_FLIP(OAK_SPEECH_WINDOW_BASE_TILE_NUM + 2),
-                            tilemapLeft,
-                            tilemapTop + 4,
-                            width,
-                            1,
-                            pal);
-    FillBgTilemapBufferRect(bg,
-                            BG_TILE_V_FLIP(OAK_SPEECH_WINDOW_BASE_TILE_NUM + 3),
-                            tilemapLeft + width,
-                            tilemapTop + 4,
-                            1,
-                            1,
-                            pal);
-    FillBgTilemapBufferRect(bg,
-                            BG_TILE_V_FLIP(OAK_SPEECH_WINDOW_BASE_TILE_NUM + 4),
-                            tilemapLeft + width + 1,
-                            tilemapTop + 4,
-                            1,
-                            1,
-                            pal);
+    // Crystal Expansion (D110): CrystalDust drew this border itself, from a
+    // twenty-tile message box laid out its own way. D106 replaced
+    // message_box.png with expansion's fourteen-tile sheet, so that hand-
+    // written tilemap was indexing art that no longer matched it. Draw the
+    // same frame the field message box draws, at the base tile the intro
+    // loads it to.
+    DrawDialogFrameWithCustomTileAndPalette(windowId, copyToVram, OAK_INTRO_DLG_BASE_TILE_NUM, 15);
 }
 
 static void Task_NewGameOakSpeech_ReturnFromNamingScreenShowTextbox(u8 taskId)

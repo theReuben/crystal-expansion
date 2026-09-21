@@ -1,3 +1,0 @@
-some npcs are coloured as negatives, such as the assistant in elm's lab
-the intro screen oak text box frame still not rendering properly
-text box frame seems fixed at a green frame, does not change to reflect frame choice in options during dialogue, but does during battle
