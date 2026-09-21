@@ -86,6 +86,36 @@
       "trainer_sight_or_berry_tree_id": "ITEM_X_SPEED",
       "script": "Common_EventScript_FindItem",
       "flag": "FLAG_ITEM_ROUTE_46_X_SPEED"
+    },
+    {
+      "type": "object",
+      "graphics_id": "OBJ_EVENT_GFX_APRICORN_BLU",
+      "in_connection": false,
+      "x": 10,
+      "y": 5,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "0",
+      "flag": "FLAG_FRUIT_TREE_ROUTE_46_1"
+    },
+    {
+      "type": "object",
+      "graphics_id": "OBJ_EVENT_GFX_APRICORN_RED",
+      "in_connection": false,
+      "x": 11,
+      "y": 6,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "0",
+      "flag": "FLAG_FRUIT_TREE_ROUTE_46_2"
     }
   ],
   "warp_events": [

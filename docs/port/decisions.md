@@ -4182,3 +4182,75 @@ and `afterintro.txt` reports map 0.0. Sixty more `press A` pairs get there. The
 scripts want retuning onto `untilmap`/`waitfade` rather than frame counts.
 Warping with `gPlaytestWarp` sidesteps it entirely and is what this round used.
 
+## D111 — the apricorn on the tree is an object event
+
+D110 item 3 closed with three alternatives and a recommendation to leave the
+fruit neutral. The tester picked the object-event route, so the fruit hanging in
+a fruit tree now carries the colour of the apricorn that tree gives. Evidence:
+`docs/port/evidence/D111/index.html`.
+
+**Shape of the fix.** One 16x16 pic, `graphics/object_events/pics/misc/apricorn_fruit.png`,
+lifted straight out of tiles 484/485 of the General primary tileset with the
+fruit ramp remapped from tileset indices 9/10/11 to sprite indices 1/2/3, so the
+sprite lands pixel-for-pixel on top of the fruit already drawn into
+`METATILE_General_FruitTreeTop`. Seven OBJ palettes
+(`graphics/object_events/palettes/apricorn_{red,blu,ylw,grn,pnk,wht,blk}.pal`),
+seven palette tags `OBJ_EVENT_PAL_TAG_APRICORN_*` (0x117B-0x1181), seven
+graphics ids `OBJ_EVENT_GFX_APRICORN_*`, seven graphics infos sharing the one pic
+table. Thirty object events across twenty-three maps, each on the tree-top
+metatile — one tile above the tree's `BG_EVENT_FRUIT_TREE`, which is where
+`src/fruit_tree.c` has always drawn the fruit (`bgEvent.y + 6`, against
+`MAP_OFFSET` 7).
+
+The existing, unused `OBJ_EVENT_GFX_APRICORN_TREE` was *not* reused. It is a
+whole tree, not a fruit, and it has one palette; the whole point here is seven.
+
+**Priority: the fruit was invisible for the first two builds.** The object events
+spawned (`gObjectEvents` showed them active at the right `currentCoords`), their
+palettes loaded (`sSpritePaletteTags` carried 0x117B/0x117C/0x1181 on Route 37),
+and OAM held three 16x16 entries at the right screen positions — and nothing was
+on screen. `sElevationToPriority[]` gives a ground-elevation object
+`oam.priority = 2`, and the overworld's top metatile layer is BG1 at priority 1
+(`sOverworldBgTemplates`). The tree's own fruit tiles are on that top layer, so
+BG1 drew over the sprite exactly where the sprite was. Raising the template
+elevation to 4 did not help: `ObjectEventUpdateElevation` overwrites it from the
+tile underneath, which is elevation 3. `TrySetupObjectEventSprite` now sets
+`fixedPriority`, clears `subspriteTables`, and pins `oam.priority = 1` for the
+apricorn graphics ids. `fixedPriority` makes
+`UpdateObjectEventElevationAndPriority` return before it can undo that. The fruit
+never moves, so nothing else wants its priority.
+
+**Pick and regrow.** The object event's template `flag` is the same
+`FLAG_FRUIT_TREES_START + treeId - 1` the pick script sets and
+`DoTimeBasedEvents` clears, so `TrySpawnObjectEvents` skips a picked tree on
+every later load and spawns it again once it has regrown — no new state. What
+template flags do not do is act on an already-spawned object, so
+`SetFruitTreeMetatileTakenFromId` (which already had the fruit tile's x,y in
+hand) now also calls `GetObjectEventIdByXY` there and removes the apricorn.
+Known gap, accepted: if a tree regrows while the player is standing on the map,
+the metatile comes back but the sprite does not until the next map load. That is
+the same behaviour the metatile-only code had for everything else and it needs a
+time-of-day hook to fix properly.
+
+**The amber metatile stays.** D110 repainted the shared fruit ramp from red to
+neutral amber and that is still load-bearing: it is what the sprite sits on, and
+it is all that shows for a fruit tree standing on a *connected* map, where object
+events do not spawn but `SetFruitTreeMetatilesOnConnectedMap` still draws the
+tile.
+
+**A flag collision, found on the way — this one was live.**
+`FLAG_FRUIT_TREES_START` was `CRYSTAL_FLAGS_START + 849` and the next named flag,
+`FLAG_BUENAS_PASSWORD_SET`, was at 850. The block had room for exactly one tree.
+Trees 2 through 30 were aliasing 29 named flags: picking the second Route 30
+apricorn set Buena's password, the one on Route 31 armed the daily bug-catching
+contest, and so on down the daily-event list. This predates the object-event
+work — it is a plain indexing bug in shipped code, reachable by any player who
+picks a second apricorn. Moved to `CRYSTAL_FLAGS_START + 880` (877 is the highest
+offset otherwise used) with thirty named `FLAG_FRUIT_TREE_*` aliases so the next
+person to append a flag lands in a named hole rather than on top of the trees,
+and `NUM_CRYSTAL_FLAGS` grown 880 -> 912 — 4 bytes of `SaveBlock1`, and the
+`SaveBlock1FreeSpace` assertion in `src/save.c` (D12) still passes.
+
+**Cost.** ROM 29,347,712 bytes, 87.46% of 32 MB; the seven palettes and one pic
+are 352 bytes of art.
+

@@ -457,6 +457,13 @@ extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Giddy;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_UnusedMauvilleOldMan1;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_UnusedMauvilleOldMan2;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_ApricornTree;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_ApricornRed;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_ApricornBlu;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_ApricornYlw;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_ApricornGrn;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_ApricornPnk;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_ApricornWht;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_ApricornBlk;
 
 // CrystalDust's room-decor object graphics, restored in Phase 2 (D48).
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_BigOnixDoll;
@@ -731,6 +738,13 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
     [OBJ_EVENT_GFX_OW_MON] =                   &gObjectEventGraphicsInfo_Follower,
     [OBJ_EVENT_GFX_LIGHT_SPRITE] =             &gObjectEventGraphicsInfo_BallLight,
     [OBJ_EVENT_GFX_APRICORN_TREE] =            &gObjectEventGraphicsInfo_ApricornTree,
+    [OBJ_EVENT_GFX_APRICORN_RED] =             &gObjectEventGraphicsInfo_ApricornRed,
+    [OBJ_EVENT_GFX_APRICORN_BLU] =             &gObjectEventGraphicsInfo_ApricornBlu,
+    [OBJ_EVENT_GFX_APRICORN_YLW] =             &gObjectEventGraphicsInfo_ApricornYlw,
+    [OBJ_EVENT_GFX_APRICORN_GRN] =             &gObjectEventGraphicsInfo_ApricornGrn,
+    [OBJ_EVENT_GFX_APRICORN_PNK] =             &gObjectEventGraphicsInfo_ApricornPnk,
+    [OBJ_EVENT_GFX_APRICORN_WHT] =             &gObjectEventGraphicsInfo_ApricornWht,
+    [OBJ_EVENT_GFX_APRICORN_BLK] =             &gObjectEventGraphicsInfo_ApricornBlk,
 // D97: CrystalDust's maps use the FRLG-derived NPC, Pokemon and Kanto
 // gym-leader overworld sprites throughout Johto as well as Kanto, so this
 // block cannot be gated on IS_FRLG the way expansion gates it: with the

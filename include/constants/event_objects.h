@@ -497,6 +497,16 @@ enum
     OBJ_EVENT_GFX_ZVOLTORB_DOLL,
     OBJ_EVENT_GFX_ZWEEDLE_DOLL,
     OBJ_EVENT_GFX_ZWOOPER_DOLL,
+    // D110: the fruit hanging in a fruit tree, one graphics id per apricorn
+    // colour. Placed one tile above the tree's BG_EVENT_FRUIT_TREE, over the
+    // neutral fruit already drawn into METATILE_General_FruitTreeTop.
+    OBJ_EVENT_GFX_APRICORN_RED,
+    OBJ_EVENT_GFX_APRICORN_BLU,
+    OBJ_EVENT_GFX_APRICORN_YLW,
+    OBJ_EVENT_GFX_APRICORN_GRN,
+    OBJ_EVENT_GFX_APRICORN_PNK,
+    OBJ_EVENT_GFX_APRICORN_WHT,
+    OBJ_EVENT_GFX_APRICORN_BLK,
     NUM_OBJ_EVENT_GFX,
 };
 
@@ -727,6 +737,14 @@ enum
 #define OBJ_EVENT_PAL_TAG_EUSINE                   0x1178
 #define OBJ_EVENT_PAL_TAG_DRAGONITE                0x1179
 #define OBJ_EVENT_PAL_TAG_SS_AQUA                  0x117A
+// D110: one per apricorn colour, so a fruit tree can show the apricorn it gives
+#define OBJ_EVENT_PAL_TAG_APRICORN_RED           0x117B
+#define OBJ_EVENT_PAL_TAG_APRICORN_BLU           0x117C
+#define OBJ_EVENT_PAL_TAG_APRICORN_YLW           0x117D
+#define OBJ_EVENT_PAL_TAG_APRICORN_GRN           0x117E
+#define OBJ_EVENT_PAL_TAG_APRICORN_PNK           0x117F
+#define OBJ_EVENT_PAL_TAG_APRICORN_WHT           0x1180
+#define OBJ_EVENT_PAL_TAG_APRICORN_BLK           0x1181
 #define OBJ_EVENT_PAL_TAG_NONE                    0x11FF
 
 // This + localId is used as the tileTag

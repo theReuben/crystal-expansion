@@ -1,0 +1,74 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>D111 &mdash; the apricorn on the tree is an object event</title>
+<style>
+ body{font:15px/1.6 -apple-system,Segoe UI,sans-serif;max-width:56rem;margin:2rem auto;padding:0 1.2rem;color:#222}
+ h1{font-size:1.6rem;margin-bottom:.2rem} h2{margin-top:2.6rem;border-bottom:1px solid #ddd;padding-bottom:.3rem}
+ .quote{background:#f6f6f6;border-left:3px solid #999;padding:.5rem .9rem;margin:.8rem 0;font-style:italic}
+ img{image-rendering:pixelated;border:1px solid #ccc;max-width:100%;vertical-align:top}
+ .pair img{width:48%}
+ code{background:#f2f2f2;padding:.1rem .3rem;border-radius:3px}
+ pre{background:#f7f7f7;border:1px solid #e2e2e2;padding:.7rem;overflow-x:auto;font-size:13px}
+ table{border-collapse:collapse;font-size:13px} td,th{border:1px solid #ddd;padding:.2rem .5rem;text-align:left}
+ .bad{color:#b00} .good{color:#070} .status{font-weight:600;color:#070} .open{font-weight:600;color:#b00}
+ .cause{color:#555;font-size:.93em}
+ figcaption{font-size:.85em;color:#555;margin-top:.2rem}
+ figure{display:inline-block;margin:0 .6rem .6rem 0}
+</style>
+<h1>D111 &mdash; the apricorn on the tree is an object event</h1>
+<p>Follow-up to D110 item 3. The tester asked for the fruit hanging in the tree to
+match the apricorn the tree gives, which the shared fruit metatile cannot do.
+The fruit is now a 16&times;16 object event with one OBJ palette per apricorn
+colour, drawn on top of the (amber) metatile. Captures are raw mGBA frames from
+<code>tools/playtest/playtest.py</code> against the rebuilt ROM; close-ups are
+nearest-neighbour upscales of the same frames. All shots are night-time, so the
+palettes are darkened by <code>UpdateTimeOfDayPaletteFade</code>. Full reasoning
+in <code>docs/port/decisions.md</code>, section D111.</p>
+
+<h2>1. Route 37 &mdash; red, black and blue on one screen <span class="status">fixed</span></h2>
+<p class="cause">The object events spawned and their palettes loaded from the
+first build, but nothing appeared: an object event on ground elevation gets
+<code>oam.priority = 2</code>, and the fruit tiles of
+<code>METATILE_General_FruitTreeTop</code> live on the map's top layer, BG1, at
+priority 1. The sprite was behind the tree. <code>TrySetupObjectEventSprite</code>
+now pins the apricorn graphics ids to priority 1 with
+<code>fixedPriority</code>.</p>
+<div class="pair">
+<figure><img src="01-route37-before.png"><figcaption>Before: amber metatile only, sprite hidden behind BG1</figcaption></figure>
+<figure><img src="01-route37-after.png"><figcaption>After: blue and black apricorns on the two visible trees</figcaption></figure>
+</div>
+<div class="pair">
+<figure><img src="01-route37-before-zoom.png"><figcaption>Before, 3&times;</figcaption></figure>
+<figure><img src="01-route37-after-zoom.png"><figcaption>After, 3&times;. The sprite lands pixel-for-pixel on the metatile fruit</figcaption></figure>
+</div>
+
+<h2>2. Route 42 &mdash; three trees, three colours <span class="status">fixed</span></h2>
+<p class="cause">The case D110 said a single shared tileset ramp could never
+serve. <code>FRUIT_TREE_ROUTE_42_1/2/3</code> give pink, green and yellow
+apricorns.</p>
+<figure><img src="02-route42.png"><figcaption>Route 42, all three trees in frame</figcaption></figure>
+<figure><img src="02-route42-zoom.png"><figcaption>3&times;: pink, green, yellow, left to right</figcaption></figure>
+
+<h2>3. Route 29 &mdash; picking removes the fruit <span class="status">fixed</span></h2>
+<p class="cause">The object event's template flag is the same
+<code>FLAG_FRUIT_TREES_START + treeId - 1</code> the pick script sets, so the
+fruit stays away on every later load. Nothing re-reads template flags mid-map,
+though, so <code>SetFruitTreeMetatileTakenFromId</code> also removes the live
+object event.</p>
+<div class="pair">
+<figure><img src="03-route29-before.png"><figcaption>Before: blue apricorn, matching <code>ITEM_BLU_APRICORN</code></figcaption></figure>
+<figure><img src="03-route29-after.png"><figcaption>After picking: sprite gone, metatile swapped to no-fruit</figcaption></figure>
+</div>
+<div class="pair">
+<figure><img src="03-route29-before-zoom.png"><figcaption>Before, 3&times;</figcaption></figure>
+<figure><img src="03-route29-after-zoom.png"><figcaption>After, 3&times;</figcaption></figure>
+</div>
+
+<h2>Flag collision found on the way</h2>
+<p class="cause"><code>FLAG_FRUIT_TREES_START</code> was
+<code>CRYSTAL_FLAGS_START + 849</code>, and the block only had room for one flag
+before the next named flag began. Trees 2&ndash;30 were aliasing 29 live flags
+starting at <code>FLAG_BUENAS_PASSWORD_SET</code> &mdash; picking the second
+Route 30 apricorn set Buena's password. Moved to
+<code>CRYSTAL_FLAGS_START + 880</code> with <code>NUM_CRYSTAL_FLAGS</code> grown
+880&nbsp;&rarr;&nbsp;912.</p>

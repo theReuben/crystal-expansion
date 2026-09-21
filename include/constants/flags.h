@@ -1655,7 +1655,7 @@
 // 4-sector budget of 15872, leaving only 304 bytes for both pools combined.
 // 1024 flags cost 128 of those; see vars.h for the other 128. See decision D12.
 #define CRYSTAL_FLAGS_START                         (DAILY_FLAGS_END + 1)
-#define NUM_CRYSTAL_FLAGS                           880
+#define NUM_CRYSTAL_FLAGS                           912
 #define CRYSTAL_FLAGS_END                           (CRYSTAL_FLAGS_START + NUM_CRYSTAL_FLAGS - 1)
 
 // ---- Kanto/FRLG flags rescued from the stub block (D74) ----
@@ -2530,7 +2530,6 @@
 #define FLAG_BADGE16_GET                                                              (CRYSTAL_FLAGS_START + 846)
 #define FLAG_LANDMARK_VIRIDIAN_FOREST                                                 (CRYSTAL_FLAGS_START + 847)
 #define FLAG_LANDMARK_LAVENDER_RADIO_TOWER                                            (CRYSTAL_FLAGS_START + 848)
-#define FLAG_FRUIT_TREES_START                                                        (CRYSTAL_FLAGS_START + 849)
 #define FLAG_BUENAS_PASSWORD_SET                                                      (CRYSTAL_FLAGS_START + 850)
 #define FLAG_DAILY_BUG_CATCHING_CONTEST                                               (CRYSTAL_FLAGS_START + 851)
 #define FLAG_DAILY_KURT_MAKING_BALLS                                                  (CRYSTAL_FLAGS_START + 852)
@@ -2562,6 +2561,49 @@
 #define FLAG_SYS_HAS_EXPN_CARD          (CRYSTAL_FLAGS_START + 874)
 #define FLAG_SYS_GBS_ENABLED            (CRYSTAL_FLAGS_START + 875)
 #define FLAG_SYS_ON_RESUME              (CRYSTAL_FLAGS_START + 876)
+
+// ---- Fruit tree flags (D110) ----
+// One flag per fruit tree, set when its apricorn is picked and cleared again by
+// DoTimeBasedEvents. src/fruit_tree.c indexes them as FLAG_FRUIT_TREES_START +
+// treeId - 1 for the thirty trees, so the base needs thirty consecutive flags to
+// itself. It did not have them: the base was CRYSTAL_FLAGS_START + 849 and
+// CRYSTAL_FLAGS_START + 850 is FLAG_BUENAS_PASSWORD_SET, so trees 2 through 30
+// aliased twenty-nine named flags -- picking the second Route 30 apricorn set
+// Buena's password, and so on down the daily-event block. Moved to the end of
+// the pool, which NUM_CRYSTAL_FLAGS grows by 32 to make room (4 bytes of
+// SaveBlock1). The per-tree names exist so map.json object events can hide
+// themselves on the right flag.
+#define FLAG_FRUIT_TREES_START                                                        (CRYSTAL_FLAGS_START + 880)
+#define FLAG_FRUIT_TREE_ROUTE_29                                                     (FLAG_FRUIT_TREES_START + 0)
+#define FLAG_FRUIT_TREE_ROUTE_30_1                                                   (FLAG_FRUIT_TREES_START + 1)
+#define FLAG_FRUIT_TREE_ROUTE_30_2                                                   (FLAG_FRUIT_TREES_START + 2)
+#define FLAG_FRUIT_TREE_ROUTE_31                                                     (FLAG_FRUIT_TREES_START + 3)
+#define FLAG_FRUIT_TREE_VIOLET_CITY                                                  (FLAG_FRUIT_TREES_START + 4)
+#define FLAG_FRUIT_TREE_ROUTE_33                                                     (FLAG_FRUIT_TREES_START + 5)
+#define FLAG_FRUIT_TREE_AZALEA_TOWN                                                  (FLAG_FRUIT_TREES_START + 6)
+#define FLAG_FRUIT_TREE_ROUTE_35                                                     (FLAG_FRUIT_TREES_START + 7)
+#define FLAG_FRUIT_TREE_ROUTE_36                                                     (FLAG_FRUIT_TREES_START + 8)
+#define FLAG_FRUIT_TREE_ROUTE_46_1                                                   (FLAG_FRUIT_TREES_START + 9)
+#define FLAG_FRUIT_TREE_ROUTE_46_2                                                   (FLAG_FRUIT_TREES_START + 10)
+#define FLAG_FRUIT_TREE_ROUTE_37_1                                                   (FLAG_FRUIT_TREES_START + 11)
+#define FLAG_FRUIT_TREE_ROUTE_37_2                                                   (FLAG_FRUIT_TREES_START + 12)
+#define FLAG_FRUIT_TREE_ROUTE_37_3                                                   (FLAG_FRUIT_TREES_START + 13)
+#define FLAG_FRUIT_TREE_ROUTE_38                                                     (FLAG_FRUIT_TREES_START + 14)
+#define FLAG_FRUIT_TREE_ROUTE_39                                                     (FLAG_FRUIT_TREES_START + 15)
+#define FLAG_FRUIT_TREE_ROUTE_42_1                                                   (FLAG_FRUIT_TREES_START + 16)
+#define FLAG_FRUIT_TREE_ROUTE_42_2                                                   (FLAG_FRUIT_TREES_START + 17)
+#define FLAG_FRUIT_TREE_ROUTE_42_3                                                   (FLAG_FRUIT_TREES_START + 18)
+#define FLAG_FRUIT_TREE_ROUTE_43                                                     (FLAG_FRUIT_TREES_START + 19)
+#define FLAG_FRUIT_TREE_ROUTE_44                                                     (FLAG_FRUIT_TREES_START + 20)
+#define FLAG_FRUIT_TREE_ROUTE_45                                                     (FLAG_FRUIT_TREES_START + 21)
+#define FLAG_FRUIT_TREE_PEWTER_CITY_1                                                (FLAG_FRUIT_TREES_START + 22)
+#define FLAG_FRUIT_TREE_PEWTER_CITY_2                                                (FLAG_FRUIT_TREES_START + 23)
+#define FLAG_FRUIT_TREE_FUCHSIA_CITY                                                 (FLAG_FRUIT_TREES_START + 24)
+#define FLAG_FRUIT_TREE_ROUTE_1                                                      (FLAG_FRUIT_TREES_START + 25)
+#define FLAG_FRUIT_TREE_ROUTE_2                                                      (FLAG_FRUIT_TREES_START + 26)
+#define FLAG_FRUIT_TREE_ROUTE_8                                                      (FLAG_FRUIT_TREES_START + 27)
+#define FLAG_FRUIT_TREE_ROUTE_11                                                     (FLAG_FRUIT_TREES_START + 28)
+#define FLAG_FRUIT_TREE_ROUTE_26                                                     (FLAG_FRUIT_TREES_START + 29)
 
 #define FLAGS_COUNT (KANTO_FLAGS_END + 1)
 

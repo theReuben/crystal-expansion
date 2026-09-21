@@ -599,6 +599,13 @@ static const struct SpritePalette sObjectEventSpritePalettes[] = {
     {gObjectEventPal_Eusine, OBJ_EVENT_PAL_TAG_EUSINE},
     {gObjectEventPal_Dragonite, OBJ_EVENT_PAL_TAG_DRAGONITE},
     {gObjectEventPal_SSAqua, OBJ_EVENT_PAL_TAG_SS_AQUA},
+    {gObjectEventPal_ApricornRed, OBJ_EVENT_PAL_TAG_APRICORN_RED},
+    {gObjectEventPal_ApricornBlu, OBJ_EVENT_PAL_TAG_APRICORN_BLU},
+    {gObjectEventPal_ApricornYlw, OBJ_EVENT_PAL_TAG_APRICORN_YLW},
+    {gObjectEventPal_ApricornGrn, OBJ_EVENT_PAL_TAG_APRICORN_GRN},
+    {gObjectEventPal_ApricornPnk, OBJ_EVENT_PAL_TAG_APRICORN_PNK},
+    {gObjectEventPal_ApricornWht, OBJ_EVENT_PAL_TAG_APRICORN_WHT},
+    {gObjectEventPal_ApricornBlk, OBJ_EVENT_PAL_TAG_APRICORN_BLK},
     {gObjectEventPaletteLight,              OBJ_EVENT_PAL_TAG_LIGHT},
     {gObjectEventPaletteLight2,             OBJ_EVENT_PAL_TAG_LIGHT_2},
     {gObjectEventPaletteEmotes,             OBJ_EVENT_PAL_TAG_EMOTES},
@@ -1899,6 +1906,21 @@ static u8 TrySetupObjectEventSprite(const struct ObjectEventTemplate *objectEven
         StartSpriteAnim(sprite, GetFaceDirectionAnimNum(objectEvent->facingDirection));
 
     SetObjectSubpriorityByElevation(objectEvent->previousElevation, sprite, 1);
+
+    // Crystal Expansion (D110): the apricorn hanging in a fruit tree is an object
+    // event sitting on METATILE_General_FruitTreeTop, and that metatile draws its
+    // leaves on the map's top layer -- BG1, priority 1. An ordinary object event on
+    // ground elevation gets oam priority 2, so the tree would swallow the fruit
+    // whole. Pin the fruit to priority 1 and take it out of the elevation system's
+    // hands; it never moves, so nothing else wants to touch its priority.
+    if (objectEvent->graphicsId >= OBJ_EVENT_GFX_APRICORN_RED && objectEvent->graphicsId <= OBJ_EVENT_GFX_APRICORN_BLK)
+    {
+        objectEvent->fixedPriority = TRUE;
+        sprite->subspriteTables = NULL;
+        sprite->subspriteTableNum = 0;
+        sprite->oam.priority = 1;
+    }
+
     UpdateObjectEventVisibility(objectEvent, sprite);
     return objectEventId;
 }

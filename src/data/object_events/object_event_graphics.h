@@ -469,6 +469,18 @@ const u16 gFieldEffectObjectPalette_CaveDust[] = INCGFX_U16("graphics/field_effe
 
 const u32 gObjectEventPic_ApricornTree[] = INCGFX_U32("graphics/object_events/pics/misc/apricorn_tree.png", ".4bpp", "-mwidth 2 -mheight 2");
 
+// D110: the fruit itself, lifted from tiles 484/485 of the General primary
+// tileset so it lands pixel-for-pixel on METATILE_General_FruitTreeTop, with one
+// palette per apricorn colour.
+const u32 gObjectEventPic_ApricornFruit[] = INCGFX_U32("graphics/object_events/pics/misc/apricorn_fruit.png", ".4bpp", "-mwidth 2 -mheight 2");
+const u16 gObjectEventPal_ApricornRed[] = INCGFX_U16("graphics/object_events/palettes/apricorn_red.pal", ".gbapal");
+const u16 gObjectEventPal_ApricornBlu[] = INCGFX_U16("graphics/object_events/palettes/apricorn_blu.pal", ".gbapal");
+const u16 gObjectEventPal_ApricornYlw[] = INCGFX_U16("graphics/object_events/palettes/apricorn_ylw.pal", ".gbapal");
+const u16 gObjectEventPal_ApricornGrn[] = INCGFX_U16("graphics/object_events/palettes/apricorn_grn.pal", ".gbapal");
+const u16 gObjectEventPal_ApricornPnk[] = INCGFX_U16("graphics/object_events/palettes/apricorn_pnk.pal", ".gbapal");
+const u16 gObjectEventPal_ApricornWht[] = INCGFX_U16("graphics/object_events/palettes/apricorn_wht.pal", ".gbapal");
+const u16 gObjectEventPal_ApricornBlk[] = INCGFX_U16("graphics/object_events/palettes/apricorn_blk.pal", ".gbapal");
+
 const u32 gFieldEffectObjectPic_ShinySparkle[] = INCGFX_U32("graphics/field_effects/pics/shiny_sparkle.png", ".4bpp", "-mwidth 2 -mheight 4");
 
 // D97: CrystalDust's maps use the FRLG-derived NPC, Pokemon and Kanto

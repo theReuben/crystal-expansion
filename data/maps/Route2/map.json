@@ -169,6 +169,21 @@
       "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE",
       "target_local_id": 6,
       "target_map": "MAP_VIRIDIAN_CITY"
+    },
+    {
+      "type": "object",
+      "graphics_id": "OBJ_EVENT_GFX_APRICORN_PNK",
+      "in_connection": false,
+      "x": 12,
+      "y": 52,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "0",
+      "flag": "FLAG_FRUIT_TREE_ROUTE_2"
     }
   ],
   "warp_events": [

@@ -1359,6 +1359,10 @@ static const struct SpriteFrameImage sPicTable_ApricornTree[] = {
     overworld_frame(gObjectEventPic_ApricornTree, 2, 2, 0),
 };
 
+static const struct SpriteFrameImage sPicTable_ApricornFruit[] = {
+    overworld_frame(gObjectEventPic_ApricornFruit, 2, 2, 0),
+};
+
 // D97: CrystalDust's maps use the FRLG-derived NPC, Pokemon and Kanto
 // gym-leader overworld sprites throughout Johto as well as Kanto, so this
 // block cannot be gated on IS_FRLG the way expansion gates it: with the

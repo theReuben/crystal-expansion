@@ -3,9 +3,11 @@
 #include "event_data.h"
 #include "fieldmap.h"
 #include "field_camera.h"
+#include "event_object_movement.h"
 #include "field_player_avatar.h"
 #include "item.h"
 #include "constants/event_bg.h"
+#include "constants/event_objects.h"
 #include "constants/fruit_trees.h"
 #include "constants/items.h"
 #include "constants/metatile_labels.h"
@@ -20,6 +22,23 @@
 // already gave apricorns keep theirs; the rest take the apricorn whose colour
 // matches the berry they used to bear (oran/rawst blue, pecha/persim pink,
 // cheri/leppa red, chesto green, aspear yellow).
+//
+// D110 correction: the comment above used to claim the fruit on the tree changes
+// colour to match. It does not, and cannot as the map art stands. There is one
+// fruit metatile, METATILE_General_FruitTreeTop (0x22D), shared by every tree in
+// the game, and its fruit is drawn from palette 0 indices 9/10/11 of the General
+// primary tileset -- one ramp, shared by every tree on screen at once (Route 37
+// and Route 42 each show three trees of different colours). Rather than have the
+// art advertise a colour it cannot honour, D110 repainted that ramp from red to a
+// neutral apricorn amber, so the tree reads as "an apricorn tree" and only the
+// item it yields carries the colour.
+//
+// D111 then made the fruit itself match: every tree carries an
+// OBJ_EVENT_GFX_APRICORN_<colour> object event on its tree-top metatile, pinned
+// to oam priority 1 so BG1's top layer does not swallow it, gated on the same
+// FLAG_FRUIT_TREES_START + treeId - 1 this file uses. The amber ramp below is
+// still the base the sprite sits on, and is all that shows for a tree on a
+// connected map, where object events do not spawn.
 static const u16 sFruitTrees[] = 
 {
     [FRUIT_TREE_ROUTE_29 - 1]       = ITEM_BLU_APRICORN,
@@ -78,6 +97,23 @@ u16 GetFruitTreeMetatileGrown(u16 treeId)
     return METATILE_General_FruitTreeTop;
 }
 
+// D110: the coloured fruit is an object event sitting on the tree-top metatile,
+// gated on the same FLAG_FRUIT_TREES_START + treeId - 1 the script sets, so it
+// stays away on every later load. It is already spawned when the player picks
+// it, though, and nothing re-reads the template flags until the next map load,
+// so take it off the screen by hand.
+static void RemoveFruitTreeObjectEvent(s16 x, s16 y)
+{
+    u8 objectEventId = GetObjectEventIdByXY(x, y);
+
+    if (objectEventId >= OBJECT_EVENTS_COUNT)
+        return;
+
+    if (gObjectEvents[objectEventId].graphicsId >= OBJ_EVENT_GFX_APRICORN_RED
+     && gObjectEvents[objectEventId].graphicsId <= OBJ_EVENT_GFX_APRICORN_BLK)
+        RemoveObjectEvent(&gObjectEvents[objectEventId]);
+}
+
 void SetFruitTreeMetatileTakenFromId(void)
 {
     u16 bgId;
@@ -93,6 +129,7 @@ void SetFruitTreeMetatileTakenFromId(void)
             s16 y = events->bgEvents[bgId].y + 6;
             MapGridSetMetatileIdAt(x, y, GetFruitTreeMetatileTaken(treeId));
             CurrentMapDrawMetatileAt(x, y);
+            RemoveFruitTreeObjectEvent(x, y);
             break;
         }
     }
