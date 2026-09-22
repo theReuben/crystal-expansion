@@ -474,6 +474,7 @@ const u8 gTrainerBackPic_Brendan[] = INCGFX_U8("graphics/trainers/back_pics/bren
 const u8 gTrainerBackPic_May[] = INCGFX_U8("graphics/trainers/back_pics/may.png", ".4bpp");
 // CrystalDust's player back pics (D108). Five 64x64 frames each, like Red's.
 const u8 gTrainerBackPic_Gold[] = INCGFX_U8("graphics/trainers/back_pics/gold_back_pic.png", ".4bpp");
+const u8 gTrainerBackPic_Dude[] = INCGFX_U8("graphics/trainers/back_pics/dude_back_pic.png", ".4bpp"); // D114
 const u8 gTrainerBackPic_Kris[] = INCGFX_U8("graphics/trainers/back_pics/kris_back_pic.png", ".4bpp");
 const u8 gTrainerBackPic_Red[] = INCGFX_U8("graphics/trainers/back_pics/red.png", ".4bpp");
 const u8 gTrainerBackPic_Leaf[] = INCGFX_U8("graphics/trainers/back_pics/leaf.png", ".4bpp");
@@ -485,6 +486,7 @@ const u8 gTrainerBackPic_Pokedude[] = INCGFX_U8("graphics/trainers/back_pics/pok
 const u8 gTrainerBackPic_OldMan[] = INCGFX_U8("graphics/trainers/back_pics/old_man.png", ".4bpp");
 
 const u16 gTrainerBackPicPalette_Gold[] = INCGFX_U16("graphics/trainers/back_pics/gold_back_pic.png", ".gbapal");
+const u16 gTrainerBackPicPalette_Dude[] = INCGFX_U16("graphics/trainers/back_pics/dude_back_pic.png", ".gbapal"); // D114
 const u16 gTrainerBackPicPalette_Kris[] = INCGFX_U16("graphics/trainers/back_pics/kris_back_pic.png", ".gbapal");
 const u16 gTrainerBackPicPalette_Red[] = INCGFX_U16("graphics/trainers/back_pics/red.png", ".gbapal");
 const u16 gTrainerBackPicPalette_Leaf[] = INCGFX_U16("graphics/trainers/back_pics/leaf.png", ".gbapal");
@@ -561,6 +563,23 @@ static const union AnimCmd sAnimCmd_Johto[] =
     ANIMCMD_FRAME(4, 24),
     ANIMCMD_FRAME(0, 1),
     ANIMCMD_END,
+};
+
+// Crystal Expansion (D114): CrystalDust's catch-tutorial dude throw.
+static const union AnimCmd sAnimCmd_Dude[] =
+{
+    ANIMCMD_FRAME(1, 24),
+    ANIMCMD_FRAME(2, 9),
+    ANIMCMD_FRAME(3, 24),
+    ANIMCMD_FRAME(0, 9),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd *const sBackAnims_Dude[] =
+{
+    sAnim_GeneralFrame0,
+    sAnimCmd_Dude,
+    sAnim_GeneralFrame0,
 };
 
 static const union AnimCmd *const sBackAnims_Johto[] =
@@ -1447,6 +1466,14 @@ const struct TrainerPicInfo gTrainerPicInfo[TRAINER_PIC_COUNT] =
     {
         .frontPic = TRAINER_FRONT_PIC(gTrainerFrontPic_GscKris, gTrainerPalette_GscKris),
         .backPic = TRAINER_BACK_PIC(5, gTrainerBackPic_Kris, gTrainerBackPicPalette_Kris, sBackAnims_Johto),
+    },
+
+    // Crystal Expansion (D114): back-pic-only entry for the catch tutorial. The art
+    // was vendored with the rest of CrystalDust's back pics but never wired up, so
+    // the tutorial fell back on Wally's pic from Emerald.
+    [TRAINER_PIC_DUDE] =
+    {
+        .backPic = TRAINER_BACK_PIC(4, gTrainerBackPic_Dude, gTrainerBackPicPalette_Dude, sBackAnims_Dude),
     },
     [TRAINER_PIC_JUGGLER] =
     {

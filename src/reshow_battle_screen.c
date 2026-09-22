@@ -25,7 +25,8 @@ static void CreateHealthboxSprite(enum BattlerId battler);
 static void ClearBattleBgCntBaseBlocks(void);
 static void CreateCaughtMonSprite(void);
 
-#define CATCH_TUTORIAL_TRAINER_PIC (IS_FRLG ? TRAINER_PIC_OLD_MAN : TRAINER_PIC_WALLY)
+// Crystal Expansion (D114): Johto's tutorial is the dude's, not Wally's.
+#define CATCH_TUTORIAL_TRAINER_PIC (IS_FRLG ? TRAINER_PIC_OLD_MAN : TRAINER_PIC_DUDE)
 
 void ReshowBattleScreenDummy(void)
 {

@@ -1822,12 +1822,16 @@ void UpdateNickInHealthbox(u8 healthboxSpriteId, struct Pokemon *mon)
 
     if (IsOnPlayerSide(gSprites[healthboxSpriteId].data[6]))
     {
-        FillSpriteRectColor(healthboxSpriteId, 16, 5, 55, 11, HEALTHBOX_BG_INDEX);
+        // Crystal Expansion (D114): 56, not 55. The level field's own clear
+        // starts one pixel further right than the name field's ends, and the
+        // column between the two is never cleared by anything, so whatever a
+        // previous mon's name left in it stayed on screen as a stray tick.
+        FillSpriteRectColor(healthboxSpriteId, 16, 5, 56, 11, HEALTHBOX_BG_INDEX);
         AddSpriteTextPrinterParameterized6(healthboxSpriteId, fontId, 16, 3, 0, 0, sHealthBoxTextColor, 0, gDisplayedStringBattle);
     }
     else
     {
-        FillSpriteRectColor(healthboxSpriteId, 8, 5, 55, 11, HEALTHBOX_BG_INDEX);
+        FillSpriteRectColor(healthboxSpriteId, 8, 5, 56, 11, HEALTHBOX_BG_INDEX); // D114, see above
         AddSpriteTextPrinterParameterized6(healthboxSpriteId, fontId, 8, 3, 0, 0, sHealthBoxTextColor, 0, gDisplayedStringBattle);
     }
 

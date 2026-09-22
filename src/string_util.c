@@ -467,10 +467,13 @@ static const u8 *ExpandPlaceholder_KunChan(void)
 
 static const u8 *ExpandPlaceholder_RivalName(void)
 {
-#if IS_FRLG
+    // Crystal Expansion (D114): CrystalDust names its rival the same way FRLG
+    // does -- the officer in Elm's lab runs the naming screen and
+    // SetRivalNickname writes the answer to gSaveBlock1Ptr->rivalName. The
+    // guard around this used to be IS_FRLG, so every {RIVAL} in the Johto
+    // script ignored the stored name and printed Emerald's MAY/BRENDAN.
     if (gSaveBlock1Ptr->rivalName[0] != EOS)
         return gSaveBlock1Ptr->rivalName;
-#endif
 
     if (gSaveBlock2Ptr->playerGender == MALE)
         return (IS_FRLG ? gText_ExpandedPlaceholder_Green : gText_ExpandedPlaceholder_May);

@@ -398,6 +398,11 @@ static const u8 *GetInteractedObjectEventScript(struct MapPosition *position, u8
         break;
     }
 
+    // Crystal Expansion (D114): an apricorn is scenery hanging in a tree; let A pass
+    // through it to whatever is behind, rather than talking to the fruit.
+    if (objectEventId != OBJECT_EVENTS_COUNT && IsApricornFruitObject(&gObjectEvents[objectEventId]))
+        return NULL;
+
     if (objectEventId == OBJECT_EVENTS_COUNT || gObjectEvents[objectEventId].localId == LOCALID_PLAYER)
     {
         if (MetatileBehavior_IsCounter(metatileBehavior) != TRUE)

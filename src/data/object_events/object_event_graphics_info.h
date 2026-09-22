@@ -1065,14 +1065,17 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_CyclingTriathleteF
     .images = sPicTable_CyclingTriathleteF,
 };
 
+// Crystal Expansion (D114): the art here is CrystalDust's pink-haired nurse, but
+// the merge kept expansion's palette tag, which is Emerald's NPC_1 -- so she came
+// out blonde. CrystalDust drew her against NPC_2.
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Nurse = {
     .tileTag = TAG_NONE,
-    .paletteTag = OBJ_EVENT_PAL_TAG_NPC_1,
+    .paletteTag = OBJ_EVENT_PAL_TAG_NPC_2,
     .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
     .size = 256,
     .width = 16,
     .height = 32,
-    .paletteSlot = PALSLOT_NPC_1,
+    .paletteSlot = PALSLOT_NPC_2,
     .shadowSize = SHADOW_SIZE_M,
     .inanimate = FALSE,
     .compressed = FALSE,

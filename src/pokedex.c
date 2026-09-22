@@ -617,7 +617,10 @@ static const struct CompressedSpriteSheet sInterfaceSpriteSheet[] =
 
 static const struct SpritePalette sInterfaceSpritePalette[] =
 {
-    {gPokedexBgHoenn_Pal, TAG_DEX_INTERFACE},
+    // Crystal Expansion (D114): the dex art (graphics/pokedex/menu.png) is
+    // CrystalDust's, but the merge kept Emerald's tilemaps and palettes, so every
+    // screen drew Johto tiles through a Hoenn map. Johto's are vendored already.
+    {gPokedexBgJohto_Pal, TAG_DEX_INTERFACE},
     {0}
 };
 
@@ -1953,7 +1956,8 @@ static bool8 LoadPokedexListPage(u8 page)
         SetBgTilemapBuffer(1, AllocZeroed(BG_SCREEN_SIZE));
         SetBgTilemapBuffer(0, AllocZeroed(BG_SCREEN_SIZE));
         DecompressAndLoadBgGfxUsingHeap(3, gPokedexMenu_Gfx, 0x2000, 0, 0);
-        CopyToBgTilemapBuffer(1, gPokedexList_Tilemap, 0, 0);
+        CopyToBgTilemapBuffer(1, sPokedexView->dexMode == DEX_MODE_JOHTO
+                                 ? gPokedexListJohto_Tilemap : gPokedexListNational_Tilemap, 0, 0); // D114
         CopyToBgTilemapBuffer(3, gPokedexListUnderlay_Tilemap, 0, 0);
         if (page == PAGE_MAIN)
             CopyToBgTilemapBuffer(0, gPokedexStartMenuMain_Tilemap, 0, 0x280);
@@ -2036,7 +2040,7 @@ void LoadPokedexBgPalette(bool8 isSearchResults)
     if (isSearchResults == TRUE)
         LoadPalette(gPokedexSearchResults_Pal + 1, BG_PLTT_ID(0) + 1, PLTT_SIZEOF(6 * 16 - 1));
     else if (!IsNationalPokedexEnabled())
-        LoadPalette(gPokedexBgHoenn_Pal + 1, BG_PLTT_ID(0) + 1, PLTT_SIZEOF(6 * 16 - 1));
+        LoadPalette(gPokedexBgJohto_Pal + 1, BG_PLTT_ID(0) + 1, PLTT_SIZEOF(6 * 16 - 1)); // D114
     else
         LoadPalette(gPokedexBgNational_Pal + 1, BG_PLTT_ID(0) + 1, PLTT_SIZEOF(6 * 16 - 1));
     LoadPalette(GetOverworldTextboxPalettePtr(), BG_PLTT_ID(15), PLTT_SIZE_4BPP);
@@ -4111,11 +4115,11 @@ void Task_HandleCaughtMonPageInput(u8 taskId)
     // Flicker caught screen color
     else if (++gTasks[taskId].tPalTimer & 16)
     {
-        LoadPalette(gPokedexBgHoenn_Pal + 1, BG_PLTT_ID(3) + 1, PLTT_SIZEOF(7));
+        LoadPalette(gPokedexBgJohto_Pal + 1, BG_PLTT_ID(3) + 1, PLTT_SIZEOF(7)); // D114
     }
     else
     {
-        LoadPalette(gPokedexBgHoenn_Pal + 49, BG_PLTT_ID(3) + 1, PLTT_SIZEOF(7));
+        LoadPalette(gPokedexCaughtScreenJohto_Pal + 1, BG_PLTT_ID(3) + 1, PLTT_SIZEOF(7)); // D114
     }
 }
 
@@ -5149,7 +5153,7 @@ static void Task_LoadSearchMenu(u8 taskId)
             DecompressAndLoadBgGfxUsingHeap(3, gPokedexSearchMenu_Gfx, 0x2000, 0, 0);
 
             if (!IsNationalPokedexEnabled())
-                CopyToBgTilemapBuffer(3, gPokedexSearchMenuHoenn_Tilemap, 0, 0);
+                CopyToBgTilemapBuffer(3, gPokedexSearchMenuJohto_Tilemap, 0, 0); // D114
             else
                 CopyToBgTilemapBuffer(3, gPokedexSearchMenuNational_Tilemap, 0, 0);
             LoadPalette(gPokedexSearchMenu_Pal + 1, BG_PLTT_ID(0) + 1, PLTT_SIZEOF(4 * 16 - 1));

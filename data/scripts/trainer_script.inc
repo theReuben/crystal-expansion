@@ -1,14 +1,21 @@
+@ Crystal Expansion (D114): this is CrystalDust's version. Emerald's overwrote
+@ STR_VAR_1 with buffertrainerclassname/buffertrainername keyed off VAR_0x8000,
+@ which Johto's registerphonecontact never sets -- so the phone message printed a
+@ garbage trainer class and name over the contact name that FindPhoneContactNameFromFlag
+@ had already put in STR_VAR_1.
 Std_RegisteredInMatchCall::
-	buffertrainerclassname STR_VAR_1, VAR_0x8000
-	buffertrainername STR_VAR_2, VAR_0x8000
-	closemessage
-	delay 30
-	playfanfare MUS_REGISTER_MATCH_CALL
-	msgbox gText_RegisteredTrainerinPokeNav, MSGBOX_DEFAULT
+	waitse
+	playfanfare MUS_REGISTER_PHONE
+	textcolor MSG_COLOR_SYS
+	msgbox EventScript_Text_Trainer_Registered, MSGBOX_DEFAULT
 	waitfanfare
 	closemessage
-	delay 30
+	textcolor MSG_COLOR_PREV
 	return
+
+EventScript_Text_Trainer_Registered:
+	.string "{PLAYER} registered\n"
+	.string "{STR_VAR_1}'s phone number!$"
 
 EventScript_TryGetTrainerScript::
 	special ShouldTryGetTrainerScript

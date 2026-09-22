@@ -1913,7 +1913,7 @@ static u8 TrySetupObjectEventSprite(const struct ObjectEventTemplate *objectEven
     // ground elevation gets oam priority 2, so the tree would swallow the fruit
     // whole. Pin the fruit to priority 1 and take it out of the elevation system's
     // hands; it never moves, so nothing else wants to touch its priority.
-    if (objectEvent->graphicsId >= OBJ_EVENT_GFX_APRICORN_RED && objectEvent->graphicsId <= OBJ_EVENT_GFX_APRICORN_BLK)
+    if (IsApricornFruitObject(objectEvent))
     {
         objectEvent->fixedPriority = TRUE;
         sprite->subspriteTables = NULL;
@@ -6549,6 +6549,16 @@ bool8 IsMetatileDirectionallyImpassable(struct ObjectEvent *objectEvent, s16 x, 
     return FALSE;
 }
 
+// Crystal Expansion (D111/D114): the apricorn hanging in a tree is an object event
+// drawn over the tree's top tile. It is scenery, not a person: it must not block the
+// tile it sits on (the tree's trunk below it is what's impassable) and it must not
+// absorb an A press, so the fruit-tree background event stays reachable.
+bool32 IsApricornFruitObject(struct ObjectEvent *objectEvent)
+{
+    return (objectEvent->graphicsId >= OBJ_EVENT_GFX_APRICORN_RED
+         && objectEvent->graphicsId <= OBJ_EVENT_GFX_APRICORN_BLK);
+}
+
 u32 GetObjectObjectCollidesWith(struct ObjectEvent *objectEvent, s16 x, s16 y, bool32 addCoords)
 {
     u8 i;
@@ -6568,6 +6578,7 @@ u32 GetObjectObjectCollidesWith(struct ObjectEvent *objectEvent, s16 x, s16 y, b
         curObject = &gObjectEvents[i];
         if (curObject->active && (curObject->movementType != MOVEMENT_TYPE_FOLLOW_PLAYER || objectEvent != &gObjectEvents[gPlayerAvatar.objectEventId]) && curObject != objectEvent
          && !FollowerNPC_IsCollisionExempt(curObject, objectEvent)
+         && !IsApricornFruitObject(curObject) // D114: apricorns are scenery, walk under them
          )
         {
             // check for collision if curObject is active, not the object in question, and not exempt from collisions

@@ -280,16 +280,19 @@ void WallyBufferExecCompleted(enum BattlerId battler)
 
 #define sSpeedX data[0]
 
+// Crystal Expansion (D114): this controller drives Johto's catch tutorial, where
+// the "dude" throws the ball, not Wally. The art is CrystalDust's; only the pic
+// id was still Emerald's.
 static void WallyHandleDrawTrainerPic(enum BattlerId battler)
 {
-    BtlController_HandleDrawTrainerPic(battler, TRAINER_PIC_WALLY, FALSE,
-                                       80, 80 + 4 * (8 - GetTrainerBackPicCoords(TRAINER_PIC_WALLY)->size),
+    BtlController_HandleDrawTrainerPic(battler, TRAINER_PIC_DUDE, FALSE,
+                                       80, 80 + 4 * (8 - GetTrainerBackPicCoords(TRAINER_PIC_DUDE)->size),
                                        30);
 }
 
 static void WallyHandleTrainerSlide(enum BattlerId battler)
 {
-    BtlController_HandleTrainerSlide(battler, TRAINER_PIC_WALLY);
+    BtlController_HandleTrainerSlide(battler, TRAINER_PIC_DUDE);
 }
 
 #undef sSpeedX
@@ -366,7 +369,7 @@ static void WallyHandleFaintingCry(enum BattlerId battler)
 
 static void WallyHandleIntroTrainerBallThrow(enum BattlerId battler)
 {
-    const u16 *trainerPal = GetTrainerBackPicPalette(TRAINER_PIC_WALLY);
+    const u16 *trainerPal = GetTrainerBackPicPalette(TRAINER_PIC_DUDE);
     BtlController_HandleIntroTrainerBallThrow(battler, 0xD6F8, trainerPal, 31, Intro_TryShinyAnimShowHealthbox);
 }
 

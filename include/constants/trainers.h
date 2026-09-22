@@ -224,6 +224,7 @@ enum __attribute__((packed)) TrainerPicID
     TRAINER_PIC_SUPER_NERD,
     TRAINER_PIC_TEACHER,
     TRAINER_PIC_LEADER_JASMINE,
+    TRAINER_PIC_DUDE, // Crystal Expansion (D114): the catch tutorial's "dude"
     TRAINER_PIC_COUNT,
 };
 
