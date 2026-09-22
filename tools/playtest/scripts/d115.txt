@@ -1,0 +1,20 @@
+# D115: the Cherrygrove rival battle must not be Birch's Zigzagoon.
+include afterintro.txt
+
+setvar VAR_STARTER_MON 1
+setvar VAR_CHERRYGROVE_CITY_STATE 1
+write16 gPlaytestWarp+2 0
+write16 gPlaytestWarp+4 1
+write16 gPlaytestWarp+6 65535
+write16 gPlaytestWarp+8 47
+write16 gPlaytestWarp+10 12
+write16 gPlaytestWarp 1
+untilmap 0 1 600
+wait 60
+walk UP 2
+wait 60
+mash A 20
+wait 900
+shot rivalbattle
+wait 300
+shot rivalbattle2

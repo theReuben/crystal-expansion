@@ -1532,7 +1532,12 @@ void BattleSetup_StartTrainerBattle(void)
         }
     }
 
-    if (TRAINER_BATTLE_PARAM.earlyRival && GetRivalBattleFlags() & RIVAL_BATTLE_TUTORIAL)
+    // Crystal Expansion (D115): RIVAL_BATTLE_TUTORIAL is 3 -- the heal-after bit
+    // plus the tutorial bit -- so a plain `&` is also true for the heal-after-only
+    // battles CrystalDust's scripts ask for. Emerald had no such battle, but
+    // Johto's first rival fight is one, and BATTLE_TYPE_FIRST_BATTLE makes
+    // SetUpBattleVarsAndBirchZigzagoon overwrite the opponent with a Zigzagoon.
+    if (TRAINER_BATTLE_PARAM.earlyRival && (GetRivalBattleFlags() & RIVAL_BATTLE_TUTORIAL) == RIVAL_BATTLE_TUTORIAL)
         gBattleTypeFlags |= BATTLE_TYPE_FIRST_BATTLE;
 
     if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
