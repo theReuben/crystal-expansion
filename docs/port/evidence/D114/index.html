@@ -1,0 +1,50 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>D114 &mdash; sixth round of human-testing observations</title>
+<style>
+ body{font:15px/1.6 -apple-system,Segoe UI,sans-serif;max-width:56rem;margin:2rem auto;padding:0 1.2rem;color:#222}
+ h1{font-size:1.6rem;margin-bottom:.2rem} h2{margin-top:2.6rem;border-bottom:1px solid #ddd;padding-bottom:.3rem}
+ .quote{background:#f6f6f6;border-left:3px solid #999;padding:.5rem .9rem;margin:.8rem 0;font-style:italic}
+ img{image-rendering:pixelated;border:1px solid #ccc;max-width:100%;vertical-align:top}
+ .pair img{width:48%}
+ code{background:#f2f2f2;padding:.1rem .3rem;border-radius:3px}
+ pre{background:#f7f7f7;border:1px solid #e2e2e2;padding:.7rem;overflow-x:auto;font-size:13px}
+ .status{font-weight:600;color:#070}
+ .cause{color:#555;font-size:.93em}
+ figcaption{font-size:.85em;color:#555;margin-top:.2rem}
+ figure{display:inline-block;margin:0 .6rem .6rem 0}
+</style>
+<h1>D114 &mdash; sixth round of human-testing observations</h1>
+<p>Nine observations from the sixth round of human testing, seven of them fixed here. Captures are raw mGBA frames taken by <code>tools/playtest/playtest.py</code>; the start menu and Pok&eacute;dex ones come from <code>tools/playtest/scripts/d114.txt</code>. Full reasoning in <code>docs/port/decisions.md</code>, section D114.</p>
+<h2>1. The nickname left a tick behind it <span class="status">fixed</span></h2>
+<p class="quote">Little visual bug on the names, there&rsquo;s a little line? Idk why</p>
+<p class="cause"><code>UpdateNickInHealthbox</code> cleared 55 pixel columns of the name field, but the level field&rsquo;s own clear starts one column further right. The column between the two was cleared by nothing, so whatever the previous mon&rsquo;s name left in that VRAM stayed on screen. 55 &rarr; 56 on both halves of the pair.</p>
+<figure><img src="06-healthbox-nickname.png" alt="Chikorita's healthbox, nickname and level with nothing between them"><figcaption>the same field that carried the tick, clean &mdash; and this is the Cherrygrove battle from D115</figcaption></figure>
+<h2>2. The officer renamed the rival MAY <span class="status">fixed</span></h2>
+<p class="quote">When they asked the name, I said Hush, and then the officer changed it to MAY</p>
+<p class="cause">CrystalDust names its rival the way FRLG does: the officer in Elm&rsquo;s lab runs the naming screen and <code>SetRivalNickname</code> writes the answer to <code>gSaveBlock1Ptr-&gt;rivalName</code>. <code>ExpandPlaceholder_RivalName</code> only consulted that buffer under <code>IS_FRLG</code>, so every <code>{RIVAL}</code> in the Johto script fell through to Emerald&rsquo;s MAY/BRENDAN. The guard is gone; a stored name wins.</p>
+<h2>3. Wally threw the ball in the catch tutorial <span class="status">fixed</span></h2>
+<p class="quote">And wally does the catch tutorial</p>
+<p class="cause">CrystalDust&rsquo;s dude back pic was vendored with every other back pic (<code>graphics/trainers/back_pics/dude_back_pic.png</code>, byte-identical to upstream) but never wired into <code>gTrainerPicInfo</code>, so there was no pic id for the tutorial to ask for and it kept Emerald&rsquo;s <code>TRAINER_PIC_WALLY</code>. Added <code>TRAINER_PIC_DUDE</code> with CrystalDust&rsquo;s four-frame throw, and pointed both <code>battle_controller_wally.c</code> and <code>CATCH_TUTORIAL_TRAINER_PIC</code> at it.</p>
+<h2>4. A blonde Nurse Joy <span class="status">fixed</span></h2>
+<p class="quote">Blonde nurse joy?!?</p>
+<p class="cause">The art is CrystalDust&rsquo;s pink-haired nurse; the merge kept expansion&rsquo;s palette tag, which is Emerald&rsquo;s <code>NPC_1</code>. CrystalDust drew her against <code>NPC_2</code>. This one observation is what prompted the sweep in D115.</p>
+<figure><img src="03-nurse.png" alt="the Cherrygrove Pokemon Center, nurse pink-haired"><figcaption>Cherrygrove City Pok&eacute;mon Center</figcaption></figure>
+<h2>5. The apricorn blocked a tile and swallowed the A press <span class="status">fixed</span></h2>
+<p class="quote">So visually, apricot bushes look like they&rsquo;re one square but their hit box appears to be 2, can&rsquo;t walk down here (but also, can&rsquo;t interact with it from here either, hitting A does nothing)</p>
+<p class="cause">The apricorn is an object event drawn over the tree&rsquo;s top tile (D111), and an object event collides and can be talked to. It is scenery: it is now exempt from <code>GetObjectObjectCollidesWith</code> and from <code>GetInteractedObjectEventScript</code>, which leaves the trunk below as the impassable, talkable half of the tree &mdash; which is what the map says it is.</p>
+<div class="pair"><figure><img src="04-apricorn-stood-on.png" alt="the player standing on the tile the apricorn hangs over"><figcaption>stood on the apricorn&rsquo;s own tile, Route 30 (7,44); a step further down is still blocked by the trunk</figcaption></figure><figure><img src="05-apricorn-fruit-tree.png" alt="the fruit tree message"><figcaption>and A from there reaches the fruit tree at (7,45)</figcaption></figure></div>
+<h2>6. No POK&eacute;GEAR on the start menu <span class="status">fixed</span></h2>
+<p class="quote">I don&rsquo;t have a pokegear option anyway on the menus</p>
+<p class="cause">The merge kept expansion&rsquo;s start menu whole, and <code>MENU_ACTION_POKENAV</code> with it &mdash; gated on <code>FLAG_SYS_POKENAV_GET</code>, which nothing in Johto sets. Meanwhile <code>gText_MenuPokegear</code>, <code>FLAG_SYS_POKEGEAR_GET</code> (set by the script in the player&rsquo;s house) and <code>CB2_InitPokegear</code> were all present and unreferenced.</p>
+<figure><img src="01-start-menu-pokegear.png" alt="the start menu with a POKeGEAR entry"><figcaption>harness run, flag set by hand; POK&Eacute;MON is absent because the party is empty</figcaption></figure>
+<h2>7. A gibberish name from the bug catcher&rsquo;s phone number <span class="status">fixed</span></h2>
+<p class="quote">I failed to screenshot it but also got some gobbledegook name from a bug catcher for his phone</p>
+<p class="cause">Emerald&rsquo;s <code>Std_RegisteredInMatchCall</code> buffers a trainer class and name keyed off <code>VAR_0x8000</code>, which Johto&rsquo;s <code>registerphonecontact</code> never sets &mdash; and in doing so it overwrote <code>STR_VAR_1</code>, where <code>FindPhoneContactNameFromFlag</code> had already put the contact&rsquo;s name. CrystalDust&rsquo;s version of the script is back.</p>
+<h2>8. The Pok&eacute;dex did not render <span class="status">fixed</span></h2>
+<p class="quote">dex not rendering properly</p>
+<p class="cause"><code>graphics/pokedex/menu.png</code> is CrystalDust&rsquo;s art, but the code drew it through Emerald&rsquo;s tilemaps and palettes &mdash; Johto tiles addressed by a Hoenn map. <code>gPokedexListJohto_Tilemap</code>, <code>gPokedexBgJohto_Pal</code>, <code>gPokedexCaughtScreenJohto_Pal</code> and <code>gPokedexSearchMenuJohto_Tilemap</code> were all vendored and unreferenced.</p>
+<figure><img src="02-pokedex-johto.png" alt="the Johto Pokedex list screen, drawn correctly"><figcaption>seen/caught flags faked by the harness so the dex will open at all</figcaption></figure>
+<h2>9. Silver led with a Zigzagoon <span class="status">moved to D115</span></h2>
+<p class="quote">Also, is silver meant to have a zigzagoon?</p>
+<p class="cause">Not a data defect &mdash; every Cherrygrove rival party is correct. It took identifying the battle (first fight, Totodile started) to find it, so it is written up in <a href="../D115/index.html">D115</a> with the palette sweep this round also set off.</p>

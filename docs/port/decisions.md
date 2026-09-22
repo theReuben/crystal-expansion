@@ -4383,3 +4383,101 @@ used, 85.92% of the cart, up 40,188 bytes on D104's figure. D104's other gate,
 the save, is now a script rather than an ad-hoc run —
 `tools/playtest/scripts/saveload.txt` saves from the start menu, `reset`s, and
 takes CONTINUE, landing back in New Bark Town on the release ROM.
+
+## D114 — sixth round human-testing observations
+
+Nine observations, seven fixed here, one (Silver's Zigzagoon) carried into D115
+because it needed the battle identifying first. Evidence:
+`docs/port/evidence/D114/index.html`.
+
+**1. The tick after a nickname.** `UpdateNickInHealthbox` clears the name field
+55 pixel columns wide, and the level field's own clear starts one column further
+right; the column between belongs to neither, so a previous mon's name stayed in
+it. 55 → 56 on both halves of the sprite pair.
+
+**2. The officer renamed the rival MAY.** CrystalDust names its rival the FRLG
+way — the officer in Elm's lab runs the naming screen and `SetRivalNickname`
+writes to `gSaveBlock1Ptr->rivalName` — but `ExpandPlaceholder_RivalName` only
+read that buffer under `IS_FRLG`, so every `{RIVAL}` in the Johto script printed
+Emerald's MAY/BRENDAN. A stored name now wins regardless of version.
+
+**3. Wally did the catch tutorial.** Assets-kept-but-table-lost, the same shape
+as D108's Poké Ball: `graphics/trainers/back_pics/dude_back_pic.png` is in the
+tree and byte-identical to upstream's, but nothing in `gTrainerPicInfo` referred
+to it, so there was no pic id to name and the tutorial kept Emerald's
+`TRAINER_PIC_WALLY`. Added `TRAINER_PIC_DUDE` with CrystalDust's four-frame
+throw anim; `battle_controller_wally.c` and `CATCH_TUTORIAL_TRAINER_PIC` use it.
+
+**4. The blonde nurse.** CrystalDust's art with expansion's palette tag —
+Emerald's `NPC_1`, where CrystalDust drew her against `NPC_2`. The mirror of
+D106, and the observation that set off D115's sweep.
+
+**5. The apricorn's hitbox.** The apricorn is an object event drawn over the
+tree's top tile (D111), and an object event both collides and can be talked to,
+so it blocked its own tile and absorbed the A press that should have reached the
+fruit tree below. `IsApricornFruitObject` now exempts it from
+`GetObjectObjectCollidesWith` and from `GetInteractedObjectEventScript`, leaving
+the trunk as the impassable, talkable half — which is what the map already says.
+
+**6. No Pokégear on the start menu.** The merge kept expansion's start menu
+whole, `MENU_ACTION_POKENAV` included, gated on `FLAG_SYS_POKENAV_GET` that
+nothing in Johto sets. `gText_MenuPokegear`, `FLAG_SYS_POKEGEAR_GET` (set by the
+script in the player's house) and `CB2_InitPokegear` were all present and
+unreferenced. The Pokénav entry is replaced rather than added to: Johto has no
+Pokénav.
+
+**7. The gibberish phone name.** Emerald's `Std_RegisteredInMatchCall` buffers a
+trainer class and name keyed off `VAR_0x8000`, which Johto's
+`registerphonecontact` never sets — and writing them overwrote `STR_VAR_1`,
+where `FindPhoneContactNameFromFlag` had just put the contact's name. Restored
+CrystalDust's version of the script, which prints `STR_VAR_1` as it stands.
+
+**8. The Pokédex did not render.** `graphics/pokedex/menu.png` is CrystalDust's
+art; the tilemaps and palettes addressing it were Emerald's, so every dex screen
+drew Johto tiles through a Hoenn map. `gPokedexListJohto_Tilemap`,
+`gPokedexListNational_Tilemap`, `gPokedexBgJohto_Pal`,
+`gPokedexCaughtScreenJohto_Pal` and `gPokedexSearchMenuJohto_Tilemap` were
+vendored and unreferenced. `tools/playtest/scripts/d114.txt` opens the dex —
+which needs seen flags faking, since the start menu refuses to open an empty one.
+
+## D115 — Silver's Zigzagoon, and 80 object event palette tags
+
+The last observation of the sixth round, and the sweep the round's nurse defect
+set off. Evidence: `docs/port/evidence/D115/index.html`.
+
+**The Zigzagoon was an engine bug, not data.** Every Cherrygrove and Azalea
+rival party is correct and `LoadWallyZigzagoon` is reachable only from the debug
+menu, so the battle had to be pinned down first: the first fight, Totodile
+started. CrystalDust's rival scripts pass `TUTORIAL_BATTLE_HEAL_AFTER` (1) to
+`trainerbattle_wintext`, and `battle_setup.c` tested it with
+
+    GetRivalBattleFlags() & RIVAL_BATTLE_TUTORIAL
+
+where `RIVAL_BATTLE_TUTORIAL` is 3 — the heal-after bit *and* the tutorial bit.
+Emerald never passes heal-after on its own, so the loose test was safe in the
+tree it came from; Johto's first rival fight passes exactly that, so the battle
+came up with `BATTLE_TYPE_FIRST_BATTLE` and `SetUpBattleVarsAndBirchZigzagoon`
+replaced the opponent with Birch's level 2 Zigzagoon. The test now asks for both
+bits. This is worth remembering as a shape: **a constant that is a composite of
+bits, tested with a bare `&`, is only correct while no caller passes a subset.**
+
+**The palette sweep, and the rule for it.** Comparing `.paletteTag` across every
+`gObjectEventGraphicsInfo_*` shared with CrystalDust found 118 mismatches out of
+279. A blanket revert would be wrong: expansion has palette tags CrystalDust
+never had (`NPC_WHITE`, `NPC_BLUE`, `NPC_GREEN`, `NPC_PINK`) and its FRLG-derived
+Kanto NPCs use them for their own art. The rule the tester chose, out of three
+offered, was **revert only where the art file is byte-identical to
+CrystalDust's** — if the pixels are theirs, the palette they were drawn against
+is theirs too.
+
+That is 80 entries, each taking CrystalDust's tag *and* its palette slot: most
+of the overworld people (Girl1, the Women, the Men, BugCatcher, Hiker, Sailor,
+Mom), the decoration dolls and cushions, the Kanto NPCs expansion had moved onto
+its own tags (Celio, Mr Fuji, the captain), and the rival's mach bike. The four
+`npc_N` palette files are themselves identical between the trees, so a tag means
+here what it meant upstream.
+
+The other 38 have art that differs, so their expansion tag may well be right for
+those pixels. They are left alone and the reasoning is in the header of
+`src/data/object_events/object_event_graphics_info.h`, for whoever meets one on
+screen.

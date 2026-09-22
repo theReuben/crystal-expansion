@@ -1,0 +1,28 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>D115 &mdash; Silver&rsquo;s Zigzagoon, and 80 palette tags</title>
+<style>
+ body{font:15px/1.6 -apple-system,Segoe UI,sans-serif;max-width:56rem;margin:2rem auto;padding:0 1.2rem;color:#222}
+ h1{font-size:1.6rem;margin-bottom:.2rem} h2{margin-top:2.6rem;border-bottom:1px solid #ddd;padding-bottom:.3rem}
+ .quote{background:#f6f6f6;border-left:3px solid #999;padding:.5rem .9rem;margin:.8rem 0;font-style:italic}
+ img{image-rendering:pixelated;border:1px solid #ccc;max-width:100%;vertical-align:top}
+ .pair img{width:48%}
+ code{background:#f2f2f2;padding:.1rem .3rem;border-radius:3px}
+ pre{background:#f7f7f7;border:1px solid #e2e2e2;padding:.7rem;overflow-x:auto;font-size:13px}
+ .status{font-weight:600;color:#070}
+ .cause{color:#555;font-size:.93em}
+ figcaption{font-size:.85em;color:#555;margin-top:.2rem}
+ figure{display:inline-block;margin:0 .6rem .6rem 0}
+</style>
+<h1>D115 &mdash; Silver&rsquo;s Zigzagoon, and 80 palette tags</h1>
+<p>One observation left over from the sixth round, plus the sweep the round&rsquo;s nurse defect set off. Captures are raw mGBA frames taken by <code>tools/playtest/playtest.py</code>. Full reasoning in <code>docs/port/decisions.md</code>, section D115. The round itself is <a href="../D114/index.html">D114</a>.</p>
+<h2>1. Silver led with a Zigzagoon <span class="status">fixed</span></h2>
+<p class="quote">Also, is silver meant to have a zigzagoon?</p>
+<p class="cause">The Cherrygrove parties in <code>src/data/trainers_crystaldust.party</code> are all correct, and <code>LoadWallyZigzagoon</code> is reachable only from the debug menu, so the battle had to be identified first: the first fight, with Totodile started. CrystalDust&rsquo;s rival scripts pass <code>TUTORIAL_BATTLE_HEAL_AFTER</code> (1) to <code>trainerbattle_wintext</code>, and <code>battle_setup.c</code> tested it as <code>GetRivalBattleFlags() &amp; RIVAL_BATTLE_TUTORIAL</code> &mdash; where <code>RIVAL_BATTLE_TUTORIAL</code> is <em>3</em>, the heal-after bit and the tutorial bit together. Emerald never passed heal-after on its own, so the loose test was safe there; Johto&rsquo;s first rival fight passes exactly that, the battle came up with <code>BATTLE_TYPE_FIRST_BATTLE</code>, and <code>SetUpBattleVarsAndBirchZigzagoon</code> overwrote the opponent with Birch&rsquo;s level 2 Zigzagoon. The test now asks for both bits.</p>
+<pre>until warp ok frames=67 value=256
+shot rivalbattle2.ppm frame=7711</pre>
+<figure><img src="01-cherrygrove-chikorita.png" alt="the Cherrygrove rival battle opening on Chikorita"><figcaption><code>tools/playtest/scripts/d115.txt</code>: Totodile started, so the rival has Chikorita, level 5</figcaption></figure>
+<h2>2. 80 object event palette tags <span class="status">reverted to CrystalDust&rsquo;s</span></h2>
+<p class="cause">D114&rsquo;s blonde nurse was one entry of a class. Comparing every <code>gObjectEventGraphicsInfo_*</code> against CrystalDust&rsquo;s found <strong>118 of 279</strong> carrying a different <code>.paletteTag</code>. A blanket revert would be wrong &mdash; expansion has palette tags CrystalDust never had (<code>NPC_WHITE</code>, <code>NPC_BLUE</code>, <code>NPC_GREEN</code>, <code>NPC_PINK</code>), and the FRLG-derived Kanto NPCs use them for their own art &mdash; so the rule agreed with the tester was: <em>revert only where the art file is byte-identical to CrystalDust&rsquo;s.</em> If the pixels are theirs, the palette they were drawn against is theirs too. That is 80 entries, each given CrystalDust&rsquo;s tag and its palette slot. The four <code>npc_N</code> palette files themselves are identical between the trees, so a tag means upstream what it means here.</p>
+<p class="cause">Covered: most of the overworld people (Girl1, the Women, the Men, BugCatcher, Hiker, Sailor, Mom), the decoration dolls and cushions, the Kanto NPCs expansion had moved onto its own tags (Celio, Mr Fuji, the captain), and the rival&rsquo;s mach bike. The remaining <strong>38</strong> have art that differs from CrystalDust&rsquo;s, so their expansion tag may well be right for those pixels; they are left alone, and the reasoning is in the header of <code>src/data/object_events/object_event_graphics_info.h</code>.</p>
+<div class="pair"><figure><img src="02-players-house.png" alt="the player's house, ground floor"><figcaption>Mom, <code>NPC_4</code> &rarr; <code>NPC_1</code></figcaption></figure><figure><img src="03-pokemon-center.png" alt="a Pokemon Center, nurse and two NPCs"><figcaption>the nurse from D114, with two retagged NPCs in front of her</figcaption></figure></div>
