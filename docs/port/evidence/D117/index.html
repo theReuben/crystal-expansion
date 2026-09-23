@@ -1,0 +1,57 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>D117 &mdash; the Pok&eacute;dex list screen&rsquo;s geometry</title>
+<style>
+ body{font:15px/1.6 -apple-system,Segoe UI,sans-serif;max-width:56rem;margin:2rem auto;padding:0 1.2rem;color:#222}
+ h1{font-size:1.6rem;margin-bottom:.2rem} h2{margin-top:2.6rem;border-bottom:1px solid #ddd;padding-bottom:.3rem}
+ .quote{background:#f6f6f6;border-left:3px solid #999;padding:.5rem .9rem;margin:.8rem 0;font-style:italic}
+ img{image-rendering:pixelated;border:1px solid #ccc;max-width:100%;vertical-align:top}
+ .pair img{width:48%}
+ code{background:#f2f2f2;padding:.1rem .3rem;border-radius:3px}
+ pre{background:#f7f7f7;border:1px solid #e2e2e2;padding:.7rem;overflow-x:auto;font-size:13px}
+ .status{font-weight:600;color:#070}
+ .open{font-weight:600;color:#a60}
+ .cause{color:#555;font-size:.93em}
+ figcaption{font-size:.85em;color:#555;margin-top:.2rem}
+ figure{display:inline-block;margin:0 .6rem .6rem 0}
+</style>
+<h1>D117 &mdash; the Pok&eacute;dex list screen&rsquo;s geometry</h1>
+<p>The seventh human-testing round: two observations, everything else previously reported confirmed fixed. Captures are raw mGBA frames taken by <code>tools/playtest/playtest.py</code>. Full reasoning in <code>docs/port/decisions.md</code>, section D117. The round before is <a href="../D115/index.html">D115</a>.</p>
+
+<h2>1. Alignment on the Pok&eacute;dex <span class="status">fixed</span></h2>
+<p class="quote">alignment on Pok&eacute;dex?</p>
+<p class="cause">The same split that produced D105, D106 and D114: CrystalDust&rsquo;s art driven by Emerald&rsquo;s code. CrystalDust&rsquo;s list screen draws a framed picture box top-left with the seen/own counters in a panel beneath it; Emerald&rsquo;s draws the mon in a tall, open left column with the counters floating beside it. The background is CrystalDust&rsquo;s, every coordinate in <code>src/pokedex.c</code> was Emerald&rsquo;s, and nothing landed where the frame expected it.</p>
+<p class="cause">Six groups of coordinates were taken from <code>sources/crystaldust/src/pokedex.c</code>:</p>
+<ul class="cause">
+ <li><strong>List columns.</strong> Clear from tile 17&rarr;12, dex number 0x12&rarr;13, caught ball 0x11&rarr;16, name 0x16&rarr;18, at all six call sites in <code>CreateMonListEntry</code>. The old columns overhung the frame&rsquo;s right edge.</li>
+ <li><strong>The mon sprite.</strong> <code>scrollingMonX</code> 0x60&rarr;0x30 and y 0x50&rarr;0x38, putting it inside the picture box rather than across it and the list.</li>
+ <li><strong>The sprite carousel.</strong> Emerald keeps the neighbouring entries&rsquo; sprites on screen, swinging through &plusmn;76px of that tall empty column. Inside a 64px box they simply sat above and below the frame. The visible band in <code>SpriteCB_PokedexListMonSprite</code> is narrowed from &plusmn;64 to &plusmn;24, which bounds the swing to <code>gSineTable[24] * 76 / 256</code> = 31px and leaves only the centred mon showing &mdash; what CrystalDust draws.</li>
+ <li><strong>The caught ball.</strong> <code>graphics/pokedex/caught_ball.png</code> is CrystalDust&rsquo;s 16&times;16 ball, but <code>CreateCaughtBall</code> blitted Emerald&rsquo;s 8&times;16 rectangle, so each owned entry showed a 3px red sliver instead of a Pok&eacute; Ball. The blit is now 16 wide (<code>POKEDEX_PLUS_HGSS</code> packs its columns 6px apart and keeps 8).</li>
+ <li><strong>Counters.</strong> Johto mode: SEEN/OWN to (28,120) and (69,120), digits to y=126 with the owned column at x 64/72/80. National mode: both region rows in one panel (Johto y=125, National y=135), SEEN/OWN headings at (45,120) and (76,120), one pair of region labels at x=20 serving both columns, and the owned digits 30px right of the seen digits. Emerald&rsquo;s layout stacked two separate SEEN and OWN blocks with duplicated labels.</li>
+ <li><strong>Furniture.</strong> Scroll bar 230&rarr;228 so it sits inside the frame; the four button hints to y=152 at x 8/40/61/93; and the two <code>sRotatingPokeBallSpriteTemplate</code> sprites deleted &mdash; CrystalDust has no such sprites, and they are the red fragments at the left of every row in the before shot.</li>
+</ul>
+<div class="pair">
+ <figure><img src="01-before-johto.png" alt="Johto Pokedex list before the fix"><figcaption>before, Johto mode</figcaption></figure>
+ <figure><img src="03-after-johto.png" alt="Johto Pokedex list after the fix"><figcaption>after &mdash; <code>tools/playtest/scripts/d117.txt</code></figcaption></figure>
+</div>
+<div class="pair">
+ <figure><img src="02-before-national.png" alt="National Pokedex list before the fix"><figcaption>before, National mode: sprites over the box and the list, counters in two blocks</figcaption></figure>
+ <figure><img src="04-after-national.png" alt="National Pokedex list after the fix"><figcaption>after &mdash; <code>tools/playtest/scripts/d117nat.txt</code></figcaption></figure>
+</div>
+<figure><img src="05-after-scrolled.png" alt="the list scrolled two entries down"><figcaption>scrolled two entries: one mon in the box, Pok&eacute; Balls on the owned rows, the scroll bar inside the frame</figcaption></figure>
+<p class="cause">National mode needs more than the flag, so the script writes the save block directly:</p>
+<pre>setflag FLAG_SYS_NATIONAL_DEX
+setvar VAR_NATIONAL_DEX 0x302
+pwrite 0x03005238 0x18 32 0x00DA0100</pre>
+<p class="cause">Not changed: CrystalDust replaces the whole scrolling mechanism with a single mosaic sprite (<code>ReplaceMonSpriteAtPos</code>) rather than a three-sprite carousel. That is behaviour, not alignment, and the bounded carousel above now reads the same on screen, so it is left as a separate decision rather than folded into this one.</p>
+
+<h2>2. Picked apricorns staying on the tree <span class="open">not reproduced</span></h2>
+<p class="quote">when apricot has been taken, still appears on overworld (disappeared when I went in and out of building)</p>
+<p class="cause">Picking removes the apricorn correctly in every configuration tested. The fruit is a metatile (<code>METATILE_General_FruitTreeTop</code> &rarr; <code>_NoFruit</code>) plus an <code>OBJ_EVENT_GFX_APRICORN_*</code> object event one tile above the trunk; <code>SetFruitTreeMetatileTakenFromId</code> swaps the metatile and <code>RemoveFruitTreeObjectEvent</code> takes the sprite off screen, because the object event is already spawned and nothing re-reads the template flags until the next map load &mdash; which is what &ldquo;in and out of a building&rdquo; would do.</p>
+<p class="cause">Probed on Route 29, Route 30, Route 46 and Route 37. Route 46 initially looked like a reproduction; a control capture with the flag set <em>before</em> the map loaded produced a pixel-identical frame, and grid dumps showed the metatile going <code>2D32</code>&rarr;<code>2C32</code>, so the pale shape left behind is the no-fruit canopy art, not an unremoved apricorn. The tester&rsquo;s screenshot is Route 30 north of Mr Pok&eacute;mon&rsquo;s house, where the orange clusters are permanent scenery: an image diff of before and after picking there had exactly one delta, the 12&times;10px apricorn sprite.</p>
+<p class="cause">Route 37 is the one configuration the earlier probes missed &mdash; three fruit trees on one map, which exercises the <code>break</code>-on-first-match in the bgEvent loop. It behaves:</p>
+<div class="pair">
+ <figure><img src="06-route37-before.png" alt="Route 37, three apricorn trees"><figcaption>before: red above the player, black and blue to the right</figcaption></figure>
+ <figure><img src="07-route37-after.png" alt="Route 37 after picking the red apricorn"><figcaption>after &mdash; <code>tools/playtest/scripts/d118.txt</code>: the red one is gone, the other two keep theirs</figcaption></figure>
+</div>
+<p class="cause">Two guesses were checked and ruled out: the <code>OBJ_EVENT_GFX_APRICORN_RED</code>&hellip;<code>_BLK</code> range in the removal guard is contiguous, so no colour escapes it; and a tree reached across a map connection has no object event to remove in the first place, only the amber metatile. <strong>Which tree and which route was it, and was the bag full at the time?</strong> With that the case is reproducible in one script.</p>

@@ -2246,6 +2246,10 @@ static void PrintMonName(u8 windowId, u8 fontId, const u8 *str, u8 left, u8 top)
 }
 
 // u16 ignored is passed but never used
+// D117: CrystalDust's list screen art frames the entries further left than
+// Emerald's does, so the Emerald columns (dex number at 0x12, caught ball at
+// 0x11, name at 0x16, clear from 17) overhung the frame. These are
+// CrystalDust's columns: clear from 12, number at 13, ball at 16, name at 18.
 static void CreateMonListEntry(u8 position, u16 b, u16 ignored)
 {
     if (TryCreateMonListEntry_HGSS(position, b, ignored))
@@ -2264,22 +2268,22 @@ static void CreateMonListEntry(u8 position, u16 b, u16 ignored)
         {
             if (entryNum < 0 || entryNum >= NATIONAL_DEX_COUNT || sPokedexView->pokedexList[entryNum].dexNum == 0xFFFF)
             {
-                ClearMonListEntry(17, i * 2, ignored);
+                ClearMonListEntry(12, i * 2, ignored);
             }
             else
             {
-                ClearMonListEntry(17, i * 2, ignored);
+                ClearMonListEntry(12, i * 2, ignored);
                 if (sPokedexView->pokedexList[entryNum].seen)
                 {
-                    CreateMonDexNum(entryNum, 0x12, i * 2, ignored);
-                    CreateCaughtBall(sPokedexView->pokedexList[entryNum].owned, 0x11, i * 2, ignored);
-                    CreateMonName(sPokedexView->pokedexList[entryNum].dexNum, 0x16, i * 2);
+                    CreateMonDexNum(entryNum, 13, i * 2, ignored);
+                    CreateCaughtBall(sPokedexView->pokedexList[entryNum].owned, 16, i * 2, ignored);
+                    CreateMonName(sPokedexView->pokedexList[entryNum].dexNum, 18, i * 2);
                 }
                 else
                 {
-                    CreateMonDexNum(entryNum, 0x12, i * 2, ignored);
-                    CreateCaughtBall(FALSE, 0x11, i * 2, ignored);
-                    CreateMonName(0, 0x16, i * 2);
+                    CreateMonDexNum(entryNum, 13, i * 2, ignored);
+                    CreateCaughtBall(FALSE, 16, i * 2, ignored);
+                    CreateMonName(0, 18, i * 2);
                 }
             }
             entryNum++;
@@ -2289,22 +2293,22 @@ static void CreateMonListEntry(u8 position, u16 b, u16 ignored)
         entryNum = b - 5;
         if (entryNum < 0 || entryNum >= NATIONAL_DEX_COUNT || sPokedexView->pokedexList[entryNum].dexNum == 0xFFFF)
         {
-            ClearMonListEntry(17, sPokedexView->listVOffset * 2, ignored);
+            ClearMonListEntry(12, sPokedexView->listVOffset * 2, ignored);
         }
         else
         {
-            ClearMonListEntry(17, sPokedexView->listVOffset * 2, ignored);
+            ClearMonListEntry(12, sPokedexView->listVOffset * 2, ignored);
             if (sPokedexView->pokedexList[entryNum].seen)
             {
-                CreateMonDexNum(entryNum, 18, sPokedexView->listVOffset * 2, ignored);
-                CreateCaughtBall(sPokedexView->pokedexList[entryNum].owned, 0x11, sPokedexView->listVOffset * 2, ignored);
-                CreateMonName(sPokedexView->pokedexList[entryNum].dexNum, 0x16, sPokedexView->listVOffset * 2);
+                CreateMonDexNum(entryNum, 13, sPokedexView->listVOffset * 2, ignored);
+                CreateCaughtBall(sPokedexView->pokedexList[entryNum].owned, 16, sPokedexView->listVOffset * 2, ignored);
+                CreateMonName(sPokedexView->pokedexList[entryNum].dexNum, 18, sPokedexView->listVOffset * 2);
             }
             else
             {
-                CreateMonDexNum(entryNum, 18, sPokedexView->listVOffset * 2, ignored);
-                CreateCaughtBall(FALSE, 17, sPokedexView->listVOffset * 2, ignored);
-                CreateMonName(0, 0x16, sPokedexView->listVOffset * 2);
+                CreateMonDexNum(entryNum, 13, sPokedexView->listVOffset * 2, ignored);
+                CreateCaughtBall(FALSE, 16, sPokedexView->listVOffset * 2, ignored);
+                CreateMonName(0, 18, sPokedexView->listVOffset * 2);
             }
         }
         break;
@@ -2315,22 +2319,22 @@ static void CreateMonListEntry(u8 position, u16 b, u16 ignored)
             vOffset -= LIST_SCROLL_STEP;
         if (entryNum < 0 || entryNum >= NATIONAL_DEX_COUNT || sPokedexView->pokedexList[entryNum].dexNum == 0xFFFF)
         {
-            ClearMonListEntry(17, vOffset * 2, ignored);
+            ClearMonListEntry(12, vOffset * 2, ignored);
         }
         else
         {
-            ClearMonListEntry(17, vOffset * 2, ignored);
+            ClearMonListEntry(12, vOffset * 2, ignored);
             if (sPokedexView->pokedexList[entryNum].seen)
             {
-                CreateMonDexNum(entryNum, 18, vOffset * 2, ignored);
-                CreateCaughtBall(sPokedexView->pokedexList[entryNum].owned, 0x11, vOffset * 2, ignored);
-                CreateMonName(sPokedexView->pokedexList[entryNum].dexNum, 0x16, vOffset * 2);
+                CreateMonDexNum(entryNum, 13, vOffset * 2, ignored);
+                CreateCaughtBall(sPokedexView->pokedexList[entryNum].owned, 16, vOffset * 2, ignored);
+                CreateMonName(sPokedexView->pokedexList[entryNum].dexNum, 18, vOffset * 2);
             }
             else
             {
-                CreateMonDexNum(entryNum, 18, vOffset * 2, ignored);
-                CreateCaughtBall(FALSE, 0x11, vOffset * 2, ignored);
-                CreateMonName(0, 0x16, vOffset * 2);
+                CreateMonDexNum(entryNum, 13, vOffset * 2, ignored);
+                CreateCaughtBall(FALSE, 16, vOffset * 2, ignored);
+                CreateMonName(0, 18, vOffset * 2);
             }
         }
         break;
@@ -2371,13 +2375,20 @@ void CreateMonDexNum(u16 entryNum, u8 left, u8 top, u16 unused)
 void CreateCaughtBall(bool16 owned, u8 x, u8 y, u16 unused)
 {
     u32 xMultiplier = 8;
+    u32 width = 16;
     if (POKEDEX_PLUS_HGSS)
+    {
         xMultiplier = 6;
+        width = 8;
+    }
 
+    // D117: caught_ball.png is CrystalDust's 16x16 ball, not Emerald's 8x16
+    // one, so Emerald's 8-wide blit showed a sliver of it. The HGSS list packs
+    // its columns 6px apart and has no room for the full 16, so it keeps 8.
     if (owned)
-        BlitBitmapToWindow(0, sCaughtBall_Gfx, x * xMultiplier, y * 8, 8, 16);
+        BlitBitmapToWindow(0, sCaughtBall_Gfx, x * xMultiplier, y * 8, width, 16);
     else
-        FillWindowPixelRect(0, PIXEL_FILL(0), x * xMultiplier, y * 8, 8, 16);
+        FillWindowPixelRect(0, PIXEL_FILL(0), x * xMultiplier, y * 8, width, 16);
 }
 
 u8 CreateMonName(u16 num, u8 left, u8 top)
@@ -2408,7 +2419,7 @@ void CreateMonSpritesAtPos(u16 selectedMon, u16 ignored)
     u8 i;
     u16 dexNum;
     u8 spriteId;
-    u32 scrollingMonX = 0x60;
+    u32 scrollingMonX = 0x30;
     if (POKEDEX_PLUS_HGSS)
         scrollingMonX = 0x92;
 
@@ -2422,7 +2433,7 @@ void CreateMonSpritesAtPos(u16 selectedMon, u16 ignored)
     dexNum = GetPokemonSpriteToDisplay(selectedMon - 1);
     if (dexNum != 0xFFFF)
     {
-        spriteId = CreatePokedexMonSprite(dexNum, scrollingMonX, 0x50);
+        spriteId = CreatePokedexMonSprite(dexNum, scrollingMonX, 0x38);
         gSprites[spriteId].callback = SpriteCB_PokedexListMonSprite;
         gSprites[spriteId].data[5] = -32;
     }
@@ -2431,7 +2442,7 @@ void CreateMonSpritesAtPos(u16 selectedMon, u16 ignored)
     dexNum = GetPokemonSpriteToDisplay(selectedMon);
     if (dexNum != 0xFFFF)
     {
-        spriteId = CreatePokedexMonSprite(dexNum, scrollingMonX, 0x50);
+        spriteId = CreatePokedexMonSprite(dexNum, scrollingMonX, 0x38);
         gSprites[spriteId].callback = SpriteCB_PokedexListMonSprite;
         gSprites[spriteId].data[5] = 0;
     }
@@ -2440,7 +2451,7 @@ void CreateMonSpritesAtPos(u16 selectedMon, u16 ignored)
     dexNum = GetPokemonSpriteToDisplay(selectedMon + 1);
     if (dexNum != 0xFFFF)
     {
-        spriteId = CreatePokedexMonSprite(dexNum, scrollingMonX, 0x50);
+        spriteId = CreatePokedexMonSprite(dexNum, scrollingMonX, 0x38);
         gSprites[spriteId].callback = SpriteCB_PokedexListMonSprite;
         gSprites[spriteId].data[5] = 32;
     }
@@ -2498,7 +2509,7 @@ static void CreateScrollingPokemonSprite(u8 direction, u16 selectedMon)
 {
     u16 dexNum;
     u8 spriteId;
-    u32 scrollingMonX = 0x60;
+    u32 scrollingMonX = 0x30;
     if (POKEDEX_PLUS_HGSS)
         scrollingMonX = 0x92;
 
@@ -2509,7 +2520,7 @@ static void CreateScrollingPokemonSprite(u8 direction, u16 selectedMon)
         dexNum = GetPokemonSpriteToDisplay(selectedMon - 1);
         if (dexNum != 0xFFFF)
         {
-            spriteId = CreatePokedexMonSprite(dexNum, scrollingMonX, 0x50);
+            spriteId = CreatePokedexMonSprite(dexNum, scrollingMonX, 0x38);
             gSprites[spriteId].callback = SpriteCB_PokedexListMonSprite;
             gSprites[spriteId].data[5] = -64;
         }
@@ -2522,7 +2533,7 @@ static void CreateScrollingPokemonSprite(u8 direction, u16 selectedMon)
         dexNum = GetPokemonSpriteToDisplay(selectedMon + 1);
         if (dexNum != 0xFFFF)
         {
-            spriteId = CreatePokedexMonSprite(dexNum, scrollingMonX, 0x50);
+            spriteId = CreatePokedexMonSprite(dexNum, scrollingMonX, 0x38);
             gSprites[spriteId].callback = SpriteCB_PokedexListMonSprite;
             gSprites[spriteId].data[5] = 64;
         }
@@ -2740,31 +2751,19 @@ static void CreateInterfaceSprites(u8 page)
     gSprites[spriteId].sIsDownArrow = TRUE;
     gSprites[spriteId].vFlip = TRUE;
 
-    CreateSprite(&sScrollBarSpriteTemplate, 230, 20, 0);
+    CreateSprite(&sScrollBarSpriteTemplate, 228, 20, 0);
     // Start button
-    CreateSprite(&sInterfaceTextSpriteTemplate, 16, 120, 0);
+    CreateSprite(&sInterfaceTextSpriteTemplate, 8, 152, 0);
     // Menu text
-    spriteId = CreateSprite(&sInterfaceTextSpriteTemplate, 48, 120, 0);
+    spriteId = CreateSprite(&sInterfaceTextSpriteTemplate, 40, 152, 0);
     StartSpriteAnim(&gSprites[spriteId], 3);
     // Select button
-    spriteId = CreateSprite(&sInterfaceTextSpriteTemplate, 16, DISPLAY_HEIGHT - 16, 0);
+    spriteId = CreateSprite(&sInterfaceTextSpriteTemplate, 61, 152, 0);
     StartSpriteAnim(&gSprites[spriteId], 2);
     gSprites[spriteId].data[2] = 0x80;
     // Search text
-    spriteId = CreateSprite(&sInterfaceTextSpriteTemplate, 48, DISPLAY_HEIGHT - 16, 0);
+    spriteId = CreateSprite(&sInterfaceTextSpriteTemplate, 93, 152, 0);
     StartSpriteAnim(&gSprites[spriteId], 1);
-
-    spriteId = CreateSprite(&sRotatingPokeBallSpriteTemplate, 0, DISPLAY_HEIGHT / 2, 2);
-    gSprites[spriteId].oam.affineMode = ST_OAM_AFFINE_NORMAL;
-    gSprites[spriteId].oam.matrixNum = 30;
-    gSprites[spriteId].data[0] = 30;
-    gSprites[spriteId].data[1] = 0;
-
-    spriteId = CreateSprite(&sRotatingPokeBallSpriteTemplate, 0, DISPLAY_HEIGHT / 2, 2);
-    gSprites[spriteId].oam.affineMode = ST_OAM_AFFINE_NORMAL;
-    gSprites[spriteId].oam.matrixNum = 31;
-    gSprites[spriteId].data[0] = 31;
-    gSprites[spriteId].data[1] = 128;
 
     if (page == PAGE_MAIN)
     {
@@ -2773,14 +2772,14 @@ static void CreateInterfaceSprites(u8 page)
         if (!IsNationalPokedexEnabled())
         {
             // Seen text
-            CreateSprite(&sSeenOwnTextSpriteTemplate, 32, 40, 1);
+            CreateSprite(&sSeenOwnTextSpriteTemplate, 28, 120, 1);
             // Own text
-            spriteId = CreateSprite(&sSeenOwnTextSpriteTemplate, 32, 72, 1);
+            spriteId = CreateSprite(&sSeenOwnTextSpriteTemplate, 69, 120, 1);
             StartSpriteAnim(&gSprites[spriteId], 1);
 
             // Seen value - 100s
             drawNextDigit = FALSE;
-            spriteId = CreateSprite(&sHoennDexSeenOwnNumberSpriteTemplate, 24, 48, 1);
+            spriteId = CreateSprite(&sHoennDexSeenOwnNumberSpriteTemplate, 24, 126, 1);
             digitNum = sPokedexView->seenCount / 100;
             StartSpriteAnim(&gSprites[spriteId], digitNum);
             if (digitNum != 0)
@@ -2789,7 +2788,7 @@ static void CreateInterfaceSprites(u8 page)
                 gSprites[spriteId].invisible = TRUE;
 
             // Seen value - 10s
-            spriteId = CreateSprite(&sHoennDexSeenOwnNumberSpriteTemplate, 32, 48, 1);
+            spriteId = CreateSprite(&sHoennDexSeenOwnNumberSpriteTemplate, 32, 126, 1);
             digitNum = (sPokedexView->seenCount % 100) / 10;
             if (digitNum != 0 || drawNextDigit)
                 StartSpriteAnim(&gSprites[spriteId], digitNum);
@@ -2797,13 +2796,13 @@ static void CreateInterfaceSprites(u8 page)
                 gSprites[spriteId].invisible = TRUE;
 
             // Seen value - 1s
-            spriteId = CreateSprite(&sHoennDexSeenOwnNumberSpriteTemplate, 40, 48, 1);
+            spriteId = CreateSprite(&sHoennDexSeenOwnNumberSpriteTemplate, 40, 126, 1);
             digitNum = (sPokedexView->seenCount % 100) % 10;
             StartSpriteAnim(&gSprites[spriteId], digitNum);
 
             // Owned value - 100s
             drawNextDigit = FALSE;
-            spriteId = CreateSprite(&sHoennDexSeenOwnNumberSpriteTemplate, 24, 80, 1);
+            spriteId = CreateSprite(&sHoennDexSeenOwnNumberSpriteTemplate, 64, 126, 1);
             digitNum = sPokedexView->ownCount / 100;
             StartSpriteAnim(&gSprites[spriteId], digitNum);
             if (digitNum != 0)
@@ -2812,7 +2811,7 @@ static void CreateInterfaceSprites(u8 page)
                 gSprites[spriteId].invisible = TRUE;
 
             // Owned value - 10s
-            spriteId = CreateSprite(&sHoennDexSeenOwnNumberSpriteTemplate, 32, 80, 1);
+            spriteId = CreateSprite(&sHoennDexSeenOwnNumberSpriteTemplate, 72, 126, 1);
             digitNum = (sPokedexView->ownCount % 100) / 10;
             if (digitNum != 0 || drawNextDigit)
                 StartSpriteAnim(&gSprites[spriteId], digitNum);
@@ -2820,7 +2819,7 @@ static void CreateInterfaceSprites(u8 page)
                 gSprites[spriteId].invisible = TRUE;
 
             // Owned value - 1s
-            spriteId = CreateSprite(&sHoennDexSeenOwnNumberSpriteTemplate, 40, 80, 1);
+            spriteId = CreateSprite(&sHoennDexSeenOwnNumberSpriteTemplate, 80, 126, 1);
             digitNum = (sPokedexView->ownCount % 100) % 10;
             StartSpriteAnim(&gSprites[spriteId], digitNum);
         }
@@ -2834,30 +2833,34 @@ static void CreateInterfaceSprites(u8 page)
             u8 counterX100s  = counterX10s - counterXDist;
             u8 counterX1000s = counterX100s - counterXDist;
 
+            // D117: CrystalDust's dex list screen puts the counters in the
+            // framed box under the list, not beside the picture. Emerald's
+            // geometry left SEEN/OWN floating over the art, so take
+            // CrystalDust's coordinates: both counter columns on the same two
+            // rows (Johto y=125, National y=135), owned column 30px right of
+            // seen, and one pair of region labels serving both columns.
+            u8 ownedX1s    = counterX1s + 30;
+            u8 ownedX10s   = counterX10s + 30;
+            u8 ownedX100s  = counterX100s + 30;
+            u8 ownedX1000s = counterX1000s + 30;
+
             // Seen text
-            CreateSprite(&sSeenOwnTextSpriteTemplate, 32, 40, 1);
+            CreateSprite(&sSeenOwnTextSpriteTemplate, 45, 120, 1);
             // Own text
-            spriteId = CreateSprite(&sSeenOwnTextSpriteTemplate, 32, 76, 1);
+            spriteId = CreateSprite(&sSeenOwnTextSpriteTemplate, 76, 120, 1);
             StartSpriteAnim(&gSprites[spriteId], 1);
 
-            // Hoenn text (seen)
-            CreateSprite(&sHoennNationalTextSpriteTemplate, 17, 45, 1);
+            // Hoenn text
+            CreateSprite(&sHoennNationalTextSpriteTemplate, 20, 125, 1);
 
-            // National text (seen)
-            spriteId = CreateSprite(&sHoennNationalTextSpriteTemplate, 17, 55, 1);
-            StartSpriteAnim(&gSprites[spriteId], 1);
-
-            // Hoenn text (own)
-            CreateSprite(&sHoennNationalTextSpriteTemplate, 17, 81, 1);
-
-            // National text (own)
-            spriteId = CreateSprite(&sHoennNationalTextSpriteTemplate, 17, 91, 1);
+            // National text
+            spriteId = CreateSprite(&sHoennNationalTextSpriteTemplate, 20, 135, 1);
             StartSpriteAnim(&gSprites[spriteId], 1);
 
             // Hoenn seen value - 100s
             seenOwnedCount = GetRegionalPokedexCount(FLAG_GET_SEEN);
             drawNextDigit = FALSE;
-            spriteId = CreateSprite(&sNationalDexSeenOwnNumberSpriteTemplate, counterX100s, 45, 1);
+            spriteId = CreateSprite(&sNationalDexSeenOwnNumberSpriteTemplate, counterX100s, 125, 1);
             digitNum = seenOwnedCount / 100;
             StartSpriteAnim(&gSprites[spriteId], digitNum);
             if (digitNum != 0)
@@ -2866,7 +2869,7 @@ static void CreateInterfaceSprites(u8 page)
                 gSprites[spriteId].invisible = TRUE;
 
             // Hoenn seen value - 10s
-            spriteId = CreateSprite(&sNationalDexSeenOwnNumberSpriteTemplate, counterX10s, 45, 1);
+            spriteId = CreateSprite(&sNationalDexSeenOwnNumberSpriteTemplate, counterX10s, 125, 1);
             digitNum = (seenOwnedCount % 100) / 10;
             if (digitNum != 0 || drawNextDigit)
                 StartSpriteAnim(&gSprites[spriteId], digitNum);
@@ -2874,13 +2877,13 @@ static void CreateInterfaceSprites(u8 page)
                 gSprites[spriteId].invisible = TRUE;
 
             // Hoenn seen value - 1s
-            spriteId = CreateSprite(&sNationalDexSeenOwnNumberSpriteTemplate, counterX1s, 45, 1);
+            spriteId = CreateSprite(&sNationalDexSeenOwnNumberSpriteTemplate, counterX1s, 125, 1);
             digitNum = (seenOwnedCount % 100) % 10;
             StartSpriteAnim(&gSprites[spriteId], digitNum);
 
             // National seen value - 1000s
             drawNextDigit = FALSE;
-            spriteId = CreateSprite(&sNationalDexSeenOwnNumberSpriteTemplate, counterX1000s, 55, 1);
+            spriteId = CreateSprite(&sNationalDexSeenOwnNumberSpriteTemplate, counterX1000s, 135, 1);
             digitNum = sPokedexView->seenCount / 1000;
             StartSpriteAnim(&gSprites[spriteId], digitNum);
             if (digitNum != 0)
@@ -2889,7 +2892,7 @@ static void CreateInterfaceSprites(u8 page)
                 gSprites[spriteId].invisible = TRUE;
 
             // National seen value - 100s
-            spriteId = CreateSprite(&sNationalDexSeenOwnNumberSpriteTemplate, counterX100s, 55, 1);
+            spriteId = CreateSprite(&sNationalDexSeenOwnNumberSpriteTemplate, counterX100s, 135, 1);
             digitNum = (sPokedexView->seenCount % 1000) / 100;
             if (digitNum != 0 || drawNextDigit)
             {
@@ -2900,7 +2903,7 @@ static void CreateInterfaceSprites(u8 page)
                 gSprites[spriteId].invisible = TRUE;
 
             // National seen value - 10s
-            spriteId = CreateSprite(&sNationalDexSeenOwnNumberSpriteTemplate, counterX10s, 55, 1);
+            spriteId = CreateSprite(&sNationalDexSeenOwnNumberSpriteTemplate, counterX10s, 135, 1);
             digitNum = ((sPokedexView->seenCount % 1000) % 100) / 10;
             if (digitNum != 0 || drawNextDigit)
                 StartSpriteAnim(&gSprites[spriteId], digitNum);
@@ -2908,7 +2911,7 @@ static void CreateInterfaceSprites(u8 page)
                 gSprites[spriteId].invisible = TRUE;
 
             // National seen value - 1s
-            spriteId = CreateSprite(&sNationalDexSeenOwnNumberSpriteTemplate, counterX1s, 55, 1);
+            spriteId = CreateSprite(&sNationalDexSeenOwnNumberSpriteTemplate, counterX1s, 135, 1);
             digitNum = ((sPokedexView->seenCount % 1000) % 100) % 10;
             StartSpriteAnim(&gSprites[spriteId], digitNum);
 
@@ -2916,7 +2919,7 @@ static void CreateInterfaceSprites(u8 page)
 
             // Hoenn owned value - 100s
             drawNextDigit = FALSE;
-            spriteId = CreateSprite(&sNationalDexSeenOwnNumberSpriteTemplate, counterX100s, 81, 1);
+            spriteId = CreateSprite(&sNationalDexSeenOwnNumberSpriteTemplate, ownedX100s, 125, 1);
             digitNum = seenOwnedCount / 100;
             StartSpriteAnim(&gSprites[spriteId], digitNum);
             if (digitNum != 0)
@@ -2925,7 +2928,7 @@ static void CreateInterfaceSprites(u8 page)
                 gSprites[spriteId].invisible = TRUE;
 
             // Hoenn owned value - 10s
-            spriteId = CreateSprite(&sNationalDexSeenOwnNumberSpriteTemplate, counterX10s, 81, 1);
+            spriteId = CreateSprite(&sNationalDexSeenOwnNumberSpriteTemplate, ownedX10s, 125, 1);
             digitNum = (seenOwnedCount % 100) / 10;
             if (digitNum != 0 || drawNextDigit)
                 StartSpriteAnim(&gSprites[spriteId], digitNum);
@@ -2933,13 +2936,13 @@ static void CreateInterfaceSprites(u8 page)
                 gSprites[spriteId].invisible = TRUE;
 
             // Hoenn owned value - 1s
-            spriteId = CreateSprite(&sNationalDexSeenOwnNumberSpriteTemplate, counterX1s, 81, 1);
+            spriteId = CreateSprite(&sNationalDexSeenOwnNumberSpriteTemplate, ownedX1s, 125, 1);
             digitNum = (seenOwnedCount % 100) % 10;
             StartSpriteAnim(&gSprites[spriteId], digitNum);
 
             // National owned value - 1000s
             drawNextDigit = FALSE;
-            spriteId = CreateSprite(&sNationalDexSeenOwnNumberSpriteTemplate, counterX1000s, 91, 1);
+            spriteId = CreateSprite(&sNationalDexSeenOwnNumberSpriteTemplate, ownedX1000s, 135, 1);
             digitNum = sPokedexView->ownCount / 1000;
             StartSpriteAnim(&gSprites[spriteId], digitNum);
             if (digitNum != 0)
@@ -2948,7 +2951,7 @@ static void CreateInterfaceSprites(u8 page)
                 gSprites[spriteId].invisible = TRUE;
 
             // National owned value - 100s
-            spriteId = CreateSprite(&sNationalDexSeenOwnNumberSpriteTemplate, counterX100s, 91, 1);
+            spriteId = CreateSprite(&sNationalDexSeenOwnNumberSpriteTemplate, ownedX100s, 135, 1);
             digitNum = (sPokedexView->ownCount % 1000) / 100;
             if (digitNum != 0 || drawNextDigit)
             {
@@ -2959,7 +2962,7 @@ static void CreateInterfaceSprites(u8 page)
                 gSprites[spriteId].invisible = TRUE;
 
             // National owned value  - 10s
-            spriteId = CreateSprite(&sNationalDexSeenOwnNumberSpriteTemplate, counterX10s, 91, 1);
+            spriteId = CreateSprite(&sNationalDexSeenOwnNumberSpriteTemplate, ownedX10s, 135, 1);
             digitNum = ((sPokedexView->ownCount % 1000) % 100) / 10;
             if (digitNum != 0 || drawNextDigit)
                 StartSpriteAnim(&gSprites[spriteId], digitNum);
@@ -2967,7 +2970,7 @@ static void CreateInterfaceSprites(u8 page)
                 gSprites[spriteId].invisible = TRUE;
 
             // National owned value - 1s
-            spriteId = CreateSprite(&sNationalDexSeenOwnNumberSpriteTemplate, counterX1s, 91, 1);
+            spriteId = CreateSprite(&sNationalDexSeenOwnNumberSpriteTemplate, ownedX1s, 135, 1);
             digitNum = ((sPokedexView->ownCount % 1000) % 100) % 10;
             StartSpriteAnim(&gSprites[spriteId], digitNum);
         }
@@ -3038,7 +3041,17 @@ static void SpriteCB_PokedexListMonSprite(struct Sprite *sprite)
         SetOamMatrix(sprite->data[1] + 1, 0x100, 0, 0, var);
         sprite->oam.matrixNum = monId + 1;
 
-        if (sprite->data[5] > -64 && sprite->data[5] < 64)
+        // D117: Emerald's list sprites are a carousel -- the entries either side
+        // of the selection stay on screen, swinging through +/-76px of a tall,
+        // otherwise empty left column. CrystalDust's list screen puts the mon in
+        // a 64px framed box instead, and the neighbours landed above and below
+        // the frame. Narrowing the visible band to +/-24 keeps the swing inside
+        // the box (gSineTable[24] * 76 / 256 is 31px of a 32px half-height) and
+        // leaves only the centred mon showing, which is what CrystalDust draws.
+        // POKEDEX_PLUS_HGSS has its own layout and keeps the full sweep.
+        u32 visibleBand = POKEDEX_PLUS_HGSS ? 64 : 24;
+
+        if (sprite->data[5] > -(s32)visibleBand && sprite->data[5] < (s32)visibleBand)
         {
             sprite->invisible = FALSE;
             sprite->data[0] = 1;

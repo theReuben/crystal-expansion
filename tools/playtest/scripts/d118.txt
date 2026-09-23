@@ -1,0 +1,28 @@
+# D118: picking one apricorn on a map that carries three of them. Route 37 has
+# fruit trees at (14,7), (17,9) and (19,7), so it exercises the bgEvent loop in
+# SetFruitTreeMetatileTakenFromId, which breaks on the first matching treeId.
+include afterintro.txt
+
+write16 gPlaytestWarp+2 0
+write16 gPlaytestWarp+4 18
+write16 gPlaytestWarp+6 65535
+write16 gPlaytestWarp+8 14
+write16 gPlaytestWarp+10 8
+write16 gPlaytestWarp 1
+untilmap 0 18 600
+wait 60
+shot trees_before
+
+press UP
+wait 20
+mash A 60
+wait 240
+shot trees_after
+
+# Clear the remaining message without re-triggering the tree, then look again:
+# the picked tree is bare and the other two still carry their apricorns.
+mash A 6
+wait 60
+mash A 6
+wait 90
+shot trees_clear

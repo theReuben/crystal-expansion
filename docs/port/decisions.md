@@ -4481,3 +4481,75 @@ The other 38 have art that differs, so their expansion tag may well be right for
 those pixels. They are left alone and the reasoning is in the header of
 `src/data/object_events/object_event_graphics_info.h`, for whoever meets one on
 screen.
+
+## D117 — the Pokédex list screen's geometry
+
+The seventh human-testing round: two observations, everything else previously
+reported confirmed fixed. Evidence: `docs/port/evidence/D117/index.html`.
+
+**The alignment was the port's standing failure shape once more.** D105 (summary
+screen), D106 (message box) and D114 (dex tilemaps) were all the same thing, and
+so is this: CrystalDust's art driven by Emerald's code. CrystalDust's list screen
+draws a framed picture box top-left with the seen/own counters in a panel beneath
+it. Emerald's draws the mon in a tall, open left column with the counters
+floating beside it. The background here is CrystalDust's; every coordinate in
+`src/pokedex.c` was Emerald's; nothing landed where the frame expected it.
+
+Six groups of coordinates were taken from `sources/crystaldust/src/pokedex.c`:
+
+- **List columns.** Clear from tile 17→12, dex number 0x12→13, caught ball
+  0x11→16, name 0x16→18, at all six call sites in `CreateMonListEntry`.
+- **The mon sprite.** `scrollingMonX` 0x60→0x30, y 0x50→0x38.
+- **The sprite carousel.** Emerald keeps the neighbouring entries' sprites on
+  screen, swinging through ±76px of that tall empty column. In a 64px box they
+  sat above and below the frame. The visible band in
+  `SpriteCB_PokedexListMonSprite` is narrowed from ±64 to ±24, bounding the
+  swing to `gSineTable[24] * 76 / 256` = 31px of a 32px half-height.
+- **The caught ball.** `graphics/pokedex/caught_ball.png` is CrystalDust's 16×16
+  ball; `CreateCaughtBall` blitted Emerald's 8×16 rectangle, so owned entries
+  showed a 3px red sliver. Now 16 wide, with `POKEDEX_PLUS_HGSS` keeping 8 for
+  its 6px-pitch columns.
+- **Counters.** Johto: SEEN/OWN to (28,120)/(69,120), digits to y=126 with the
+  owned column at x 64/72/80. National: both region rows in one panel (Johto
+  y=125, National y=135), headings at (45,120)/(76,120), one pair of region
+  labels at x=20 serving both columns, owned digits 30px right of the seen ones.
+- **Furniture.** Scroll bar 230→228; the four button hints to y=152 at x
+  8/40/61/93; and both `sRotatingPokeBallSpriteTemplate` sprites deleted, which
+  is what the red fragments down the left of every row were. CrystalDust has no
+  such sprites. The template and `SpriteCB_RotatingPokeBall` are left in place —
+  `--gc-sections` drops them and they document what was removed.
+
+Not adopted: CrystalDust replaces the three-sprite carousel outright with a
+single mosaic sprite (`ReplaceMonSpriteAtPos`). That is behaviour rather than
+alignment, and the bounded carousel reads the same on screen, so it stays a
+separate decision instead of being folded into this one.
+
+A note on method, because it cost a rebuild: the first attempt at the national
+counter block spliced the file between two `str.index` anchors, and the closing
+anchor — `sDexListStartMenuCursorSpriteTemplate` — first occurs at line 603, in
+the static declarations, long *before* the opening one. The slice was empty and
+the tail was re-appended, duplicating 2,200 lines. **An anchor for a splice must
+be checked for uniqueness, not just for existence.**
+
+**The apricorn observation did not reproduce.** Picking removes the fruit
+correctly in every configuration tested — Route 29, Route 30, Route 46 and
+Route 37. The fruit is a metatile (`METATILE_General_FruitTreeTop` →
+`_NoFruit`) plus an `OBJ_EVENT_GFX_APRICORN_*` object event one tile above the
+trunk; `SetFruitTreeMetatileTakenFromId` swaps the metatile and
+`RemoveFruitTreeObjectEvent` takes the sprite off screen, since the object event
+is already spawned and nothing re-reads the template flags until the next map
+load — which is exactly what going in and out of a building does.
+
+Route 46 first looked like a reproduction. A control capture with the flag set
+*before* the map loaded produced a pixel-identical frame, and grid dumps showed
+the metatile going `2D32`→`2C32`, so the pale shape left behind is the no-fruit
+canopy art. The tester's screenshot is Route 30 north of Mr Pokémon's house,
+where the orange clusters are permanent scenery — an image diff of before and
+after picking there had exactly one delta, the 12×10px apricorn sprite. Route 37
+was the configuration the earlier probes had missed, three fruit trees on one
+map exercising the `break`-on-first-match in the bgEvent loop, and it behaves.
+Two candidate causes are ruled out: the `OBJ_EVENT_GFX_APRICORN_RED`…`_BLK`
+range in the removal guard is contiguous, so no colour escapes it, and a tree
+reached across a map connection has no object event to remove at all, only the
+amber metatile. The question back to the tester is which tree, which route, and
+whether the bag was full.

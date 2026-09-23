@@ -1,0 +1,46 @@
+# D117: the Pokedex list screen's geometry.
+#
+# The dex refuses to open with nothing seen (HandleStartMenuInput checks
+# GetNationalPokedexCount), so this fakes 64 seen/caught species. The two
+# offsets into SaveBlock1 are the ones GetSetPokedexFlag carries in its own
+# constant pool -- dexSeen 0x32E8, dexCaught 0x3369 -- and will move if the
+# expansion's FREE_* save options change; 0x0300523C is gSaveBlock1Ptr, spelled
+# out because raw pwrite lines are not symbol-resolved.
+include newgame.txt
+
+setflag FLAG_SYS_POKEGEAR_GET
+setflag FLAG_SYS_POKEDEX_GET
+setflag FLAG_SYS_NATIONAL_DEX
+setvar VAR_NATIONAL_DEX 0x302
+# pokedex.order/mode/nationalMagic live at SaveBlock2+0x18; national mode needs
+# mode = DEX_MODE_NATIONAL (1) and the 0xDA magic byte. 0x03005238 is
+# gSaveBlock2Ptr, spelled out because raw pwrite lines are not symbol-resolved.
+pwrite 0x03005238 0x18 32 0x00DA0100
+pwrite 0x0300523c 0x32E8 32 0xFFFFFFFF
+pwrite 0x0300523c 0x32EC 32 0xFFFFFFFF
+pwrite 0x0300523c 0x3369 32 0xFFFFFFFF
+pwrite 0x0300523c 0x336D 32 0xFFFFFFFF
+
+press START
+wait 40
+shot menu_nat
+
+press A
+wait 180
+shot dex_nat
+
+# D117: scroll the list so the selection is not the first entry, and open an
+# entry's info page, to check the list columns and the picture box together.
+press DOWN
+wait 30
+press DOWN
+wait 30
+shot dex_nat_scrolled
+
+wait 180
+shot dex_settled
+
+# The info screen slides this same sprite; check the new y does not break it.
+press A
+wait 180
+shot dex_info
